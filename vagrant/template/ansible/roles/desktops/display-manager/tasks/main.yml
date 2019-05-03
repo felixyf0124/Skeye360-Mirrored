@@ -1,0 +1,16 @@
+- name: Install basic X server
+  apt:
+    name: xorg
+
+# - name: Install xfce4 minimal desktop
+#   apt:
+#     name: xfce4
+#     install_recommends: no    
+
+- name: Install lightdm display manager
+  apt:
+    name: "{{ item }}"
+    install_recommends: no
+  with_items:
+    - lightdm
+    - lightdm-gtk-greeter

@@ -1,0 +1,69 @@
+---
+
+- name: Register the current GO version (if any)
+  command: "{{ go_bin_path }}/go version"
+  ignore_errors: yes
+  register: go_version
+  changed_when: false
+
+- name: Download the GO tarball
+  get_url:
+    url: "{{ go_download_location }}"
+    dest: "{{ go_download_path }}/{{ go_tarball }}"
+    checksum: "{{ go_tarball_checksum }}"
+  when: go_version|failed or go_version.stdout != go_version_target
+
+- name: Remove old installation of GO
+  file:
+    path: "{{ go_bin_path }}"
+    state: absent
+  when: go_version|failed or go_version.stdout != go_version_target
+
+- name: Extract the GO tarball if GO is not yet installed or not the desired version
+  unarchive:
+    src: "{{ go_download_path }}/{{ go_tarball }}"
+    dest: "{{ usr_bin_path }}"
+    copy: no
+  when: go_version|failed or go_version.stdout != go_version_target
+
+
+- name: Set GOPATH and add the GO bin directory to the PATH environment variable for all users
+  lineinfile:
+    path: "{{ userhome }}/.bashrc"
+    line: "{{ item }}"
+    state: present
+    create: yes
+  with_items:
+    - export PATH=$PATH:{{ go_bin_path }}
+    - export GOPATH=$HOME/go
+    - export PATH=$GOPATH/bin:$PATH
+  become: yes
+  become_user: "{{ username }}"
+
+- name: Install gRPC packages
+  command: "{{ go_bin_path }}/go get -v -u {{ item }}"
+  with_items:
+    - google.golang.org/grpc
+    - github.com/golang/protobuf/protoc-gen-go
+
+
+- name: Install Protocol Buffers compiler
+  apt:
+    name: protobuf-compiler
+    install_recommends: no
+
+- name: Remove temporary package
+  file:
+    path: "{{ go_download_path }}/{{ go_tarball }}"
+    state: absent
+
+# For some reason scripts in /etc/profile.d will not execute
+# - name: Add the Go bin directory to the PATH environment variable for all users
+# copy:
+#   src: go-bin.sh
+#   dest: /etc/profile.d
+#- name: Set GOPATH for all users
+#  copy:
+#    src: go-path.sh
+#    dest: /etc/profile.d
+#  when: set_go_path

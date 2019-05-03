@@ -1,0 +1,20 @@
+# Install xubuntu core
+- name: Install xubuntu core desktop
+  shell: apt-get install -y --no-install-recommends xubuntu-core^
+  args:
+    warn: False
+  register: xubuntu
+  changed_when: xubuntu.stdout.find("0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded") == -1
+
+# Update manager is useful to keep the OS up-to-date automatically
+- name: Install update manager
+  apt:
+    name: update-manager
+    install_recommends: no
+
+- name: Enable auto-login for user {{ autologin_user }}
+  ini_file:
+    path: /etc/lightdm/lightdm.conf
+    section: SeatDefaults
+    option: autologin-user
+    value: "{{ autologin_user }}"

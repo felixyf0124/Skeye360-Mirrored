@@ -1,0 +1,47 @@
+- name: Check if ilom jre is already installed
+  stat:
+    path:  "/home/{{ username }}/tools/ilom-utils/jre1.8.0_73"
+  register: ilom_jre_installation
+  changed_when: False
+
+- name: Create ilom-utils directory
+  become_user: "{{ username }}"
+  file:
+    path: "/home/{{ username }}/tools/ilom-utils"
+    state: directory
+
+- name: Copy utility script
+  copy:
+    src: ilom-connect.sh
+    dest: "/home/{{ username }}/tools/ilom-utils/ilom-connect"
+    mode: "uog+x"
+
+- name: Fetch ilom jre
+  get_url:
+    url: https://arm.mo.ca.am.ericsson.se/artifactory/proj-javacba-external-local/ilom_jre1.8.0_73.tar.gz
+    dest: /tmp/ilom_jre1.8.0_73.tar.gz
+  when: ilom_jre_installation.stat.exists == False
+
+- name: Install ilom jre
+  become_user: "{{ username }}"
+  unarchive:
+    src: /tmp/ilom_jre1.8.0_73.tar.gz
+    dest: "/home/{{ username }}/tools/ilom-utils"
+    creates: "/home/{{ username }}/tools/ilom-utils/jre1.8.0_73"
+  ignore_errors: yes
+
+- name: Delete ilom jre downloaded archive
+  file:
+    path: /tmp/ilom_jre1.8.0_73.tar.gz
+    state: absent
+
+- name: Add packages required by ilom jre
+  apt:
+    name: "{{ item }}"
+    install_recommends: no
+  with_items:
+    - libgtk2.0-0:i386
+    - libidn11:i386
+    - libglu1-mesa:i386
+    - libxmu6:i386
+    - libxtst6:i386

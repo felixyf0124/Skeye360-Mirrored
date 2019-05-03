@@ -1,0 +1,10 @@
+# Install Notepadqq (the Linux equivalent of Notepad)
+
+- name: Install snap
+  apt:
+    name: snap
+    install_recommends: yes
+    allow_unauthenticated: yes
+
+- name: Install Notepadqq with option --classic
+  command: snap install notepadqq

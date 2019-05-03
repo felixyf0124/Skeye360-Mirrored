@@ -1,0 +1,5 @@
+dependencies:
+  - role: tools/java
+  - role: tools/nodejs
+  - role: tools/watchman
+  - role: tools/android-studio

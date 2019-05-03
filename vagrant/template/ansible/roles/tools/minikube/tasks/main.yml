@@ -1,0 +1,32 @@
+# Refs:
+# https://github.com/kubernetes/minikube/issues/2575
+
+- name: Add kubernetes apt key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Add kubernetes apt repository
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+
+- name: Install kubectl and supporting tools
+  apt:
+    name: "{{item}}"
+  with_items:
+    - kubectl
+    - socat
+
+- name: Install minikube
+  get_url:
+    url:  https://storage.googleapis.com/minikube/releases/{{minikube_version}}/minikube-linux-amd64
+    dest: /usr/local/bin/minikube
+    mode: ugo+x
+
+# Ref: https://github.com/kubernetes/minikube/blob/v0.28.2/README.md
+
+- name: Install kubernetes with minikube
+  shell: minikube start --vm-driver none --apiserver-ips 127.0.0.1 --apiserver-name localhost
+  environment:
+    CHANGE_MINIKUBE_NONE_USER: true

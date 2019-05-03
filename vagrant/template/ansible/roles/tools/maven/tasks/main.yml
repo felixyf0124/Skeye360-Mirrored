@@ -1,0 +1,42 @@
+- name: Install maven and ant
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - maven
+    - ant
+
+- name: create user's maven .m2 directory
+  become_user: "{{ username }}"
+  file:
+    path: /home/{{ username }}/.m2
+    state: directory
+
+- name: Download maven settings file
+  become_user: "{{ username }}"
+  get_url:
+    url: "{{ maven_settings_url }}"
+    dest: /home/{{ username }}/.m2/settings.xml
+  when: maven_settings_url != ""
+
+- name: Remove user's existing environment variables
+  become_user: "{{ username }}"
+  lineinfile:
+    path: /home/{{ username}}/.profile
+    state: absent
+    regexp: "{{ item }}"
+  with_items:
+    - "^export M2_HOME=.*"
+    - "^export ANT_HOME=.*"
+    - "^export MAVEN_OPTS=.*"
+
+- name: Setup user's environment variables
+  become_user: "{{ username }}"
+  lineinfile:
+    path: /home/{{ username }}/.profile
+    line: "{{ item }}"
+    state: present
+    create: yes
+  with_items:
+    - export M2_HOME=/usr/share/maven
+    - export ANT_HOME=/usr/share/ant
+    - export MAVEN_OPTS="-Xmx2048m"

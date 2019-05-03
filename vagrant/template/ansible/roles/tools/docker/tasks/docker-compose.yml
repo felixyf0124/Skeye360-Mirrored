@@ -1,0 +1,63 @@
+# Install docker-compose
+
+- name: Get kernel name information
+  shell: uname -s
+  register: kernel_name_output
+  changed_when: False
+
+- name: Get machine name information
+  shell: uname -m
+  register: machine_name_output
+  changed_when: False
+
+- name: Get latest version info
+  uri:
+    url: https://api.github.com/repos/docker/compose/releases/latest
+    method: GET
+    return_content: yes
+  register: latest_version_info
+
+- name: Set latest version as fact
+  set_fact:
+    docker_compose_version: "{{ (latest_version_info.content|from_json).tag_name }}"
+
+- name: Check docker-compose file
+  stat: path="/usr/local/bin/docker-compose"
+  register: st
+
+- name: Check Docker Compose version against latest
+  shell: |
+    docker-compose --version |
+    grep "version {{ docker_compose_version }}"
+  register: current_version_not_latest
+  when: st.stat.exists
+  failed_when: false
+  changed_when: false
+
+- name: Remove Old Version
+  file:
+    state: absent
+    path: "{{ item }}"
+  when: 'st.stat.exists and current_version_not_latest.rc == 1'
+  with_items:
+    - "/usr/local/bin/docker-compose"
+    - "/etc/bash_completion.d/docker-compose"
+
+- name: Download docker-compose
+  uri:
+    url: https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ kernel_name_output.stdout }}-{{ machine_name_output.stdout }}
+    dest: /usr/local/bin/docker-compose
+    status_code: 200,304
+    creates: /usr/local/bin/docker-compose
+    
+- name: Set mode on docker-compose
+  file:
+    path: /usr/local/bin/docker-compose
+    state: file
+    mode: "uog+x"
+
+- name: Download docker-compose bash completion
+  uri:
+    url: https://raw.githubusercontent.com/docker/compose/{{ docker_compose_version }}/contrib/completion/bash/docker-compose
+    dest: /etc/bash_completion.d/docker-compose
+    creates: /etc/bash_completion.d/docker-compose

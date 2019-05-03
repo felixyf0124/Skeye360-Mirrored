@@ -1,0 +1,28 @@
+
+- name: Ubuntu MATE needs pyOpenSSL latest version, which isnt in any PPA
+  pip: 
+    name: pyOpenSSL
+    state: latest 
+
+- name: Enable auto-login for user {{ autologin_user }}
+  ini_file:
+    path: /etc/lightdm/lightdm.conf
+    section: SeatDefaults
+    option: autologin-user
+    value: "{{ autologin_user }}"
+
+# Install ubuntu-mate 
+#- name: Add Ubuntu MATE PPA
+#  apt_repository:
+#    repo: ppa:ubuntu-mate-dev/xenial-mate 
+#
+- name: Install ubuntu mate desktop
+  apt: 
+    name: ubuntu-mate-core
+    update_cache: yes
+    state: latest
+
+# Update manager is useful to keep the OS up-to-date automatically
+- name: Install update manager
+  apt:
+    name: update-manager
