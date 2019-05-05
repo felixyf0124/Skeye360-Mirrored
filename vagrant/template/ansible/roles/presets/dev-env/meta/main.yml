@@ -10,5 +10,7 @@ dependencies:
 - role: tools/vscode
 - role: tools/maven
 - role: tools/eclipse
+- role: tools/nodejs
+- role: tools/typescript
 ...
 
