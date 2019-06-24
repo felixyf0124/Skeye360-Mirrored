@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-This project provides a framework to create reproducible development environments.
+This dev_env provides a framework to create reproducible development environments.
 
 More specifically, it creates VirtualBox virtual machines that contain all the development tools required to work on a given programming project. In addition, it sets optimal VM settings for the created VM, such as turning on hardware acceleration, enabling some VM features that are hidden from the GUI and only available on the VirtualBox CLI, and setting up shared folders to the host automatically (a task not that easy in an Ubuntu VM).
 
