@@ -1,8 +1,61 @@
-# soen490_dev_env
-Step 1: 
-Run `vagrant plugin install vagrant-vbguest`
-Step 2:
-Run `vagrant plugin install vagrant-disksize`
+# Soen490 development enviroment
+
+## Getting Started
+
+This project provides a framework to create reproducible development environments.
+
+More specifically, it creates VirtualBox virtual machines that contain all the development tools required to work on a given programming project. In addition, it sets optimal VM settings for the created VM, such as turning on hardware acceleration, enabling some VM features that are hidden from the GUI and only available on the VirtualBox CLI, and setting up shared folders to the host automatically (a task not that easy in an Ubuntu VM).
+
+A developer only has to provide some user-specific information, and issue one command to get a customized VM ready for use, complete with its own user account. The developer can then keep up-to-date with any important changes to the development environment by using another simple command.
+
+## Getting Started
+
+### Prerequisites
+
+Note that this procedure has been tested from a Windows host only, but should work equally well from a Linux or Mac OS host.   
+
+1.	Ensure that Hyper-V is off:
+  
+    * Click on Search Window (magnifier glass) and type "windows features". Allow the changes.
+  
+    * Click on Turn Windows features on or off.
+  
+    * If the Turn Windows features on or off, if not already so, untick Hyper-V.
+    
+      or 
+    
+    * in PowerShell run the command:
+    
+    ```
+    Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All
+    ```
+    
+2.	Install Oracle [VM VirtualBox Manager](https://download.virtualbox.org/virtualbox/6.0.2/VirtualBox-6.0.2-128162-Win.exe) (preferably v  6.0.2).
+
+3.	Install [VirtualBox Extension Pack](https://download.virtualbox.org/virtualbox/6.0.2/Oracle_VM_VirtualBox_Extension_Pack-6.0.2.vbox-extpack) (preferably v  6.0.2).
+
+    **If the aboved links does not working, check the [virtualbox v 6.0.2](https://www.google.com/search?q=virtualbox+6.0.2&oq=vi&aqs=chrome.1.69i59l2j69i57j69i60l3.4687j0j1&sourceid=chrome&ie=UTF-8) from google and download it on your local machine.**
+
+4.	```vboxmanage``` must be in your PATH. Add the virtualbox installation directory to your PATH. By default on Windows this is c:\program files\oracle\virtualbox\
+
+5.  Install latest [Vagrant](https://www.vagrantup.com/downloads.html).
+
+6. ```vagrant``` must be in your PATH. Add the virtualbox installation directory to your PATH.
+
+7.	Install the following vagrant plugins:
+
+    * vagrant-vbguest, a Vagrant plugin which automatically installs the host's VirtualBox Guest Additions on the guest system.
+    
+    ```vagrant plugin install vagrant-vbguest```
+    
+    Reference: https://github.com/dotless-de/vagrant-vbguest
+
+    * vagrant-disksize: a Vagrant plugin to resize disks in VirtualBox.
+    
+    ```vagrant plugin install vagrant-disksize```
+    
+    Reference: https://github.com/sprotheroe/vagrant-disksize
+
 
 How can I stop my vagrant machine?
 Run `vagrant halt`
