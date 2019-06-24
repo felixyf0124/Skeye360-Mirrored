@@ -1,6 +1,6 @@
 # Soen490 development enviroment
 
-## Getting Started
+## Introduction
 
 This dev_env provides a framework to create reproducible development environments.
 
@@ -55,15 +55,51 @@ Note that this procedure has been tested from a Windows host only, but should wo
     ```vagrant plugin install vagrant-disksize```
     
     Reference: https://github.com/sprotheroe/vagrant-disksize
+   
 
+### Before start
 
-How can I stop my vagrant machine?
-Run `vagrant halt`
+1.  **Setup your ssh key**
 
-How can I destroy vagrant machine?
-Run `vagrant destroy`
+    * open vagrant.yml file which is under devenv folder(\soen490_dev_env\vagrant\devenv), and change user, email and ssh directory
+    
+    For the ssh directory, use forward slashes For example: c:/Users/vince/.ssh. (you can find it in your windows machine)
+
+### Start
+
+1.  **First start VM machine**
+
+   `vagrant up`
+  
+
+## Solutions for some basic issues 
+
+* How can I handle alphabet issues between host machine and vm machine?
+
+    Before you clone any repo in your local machine(Window), Please using the following command to configure git to handle line endings issues:
+   
+   ```git config --global core.autocrlf input```
+
+* How can I stop my vagrant machine?
+
+  `vagrant halt`
+
+* How can I destroy vagrant machine?
+
+  `vagrant destroy`
+
+* How can I ssh to my vm machine from local machine?
+
+  `vagrant ssh`
+  
+* How can I update my new machine setting without destory it?
+  
+  `vagrant reload`
+
+## More reference
+
+   [vagrant documentation](https://www.vagrantup.com/docs/index.html)
 
 ## Authors
 
 * Li Sun - *1st version*
-
