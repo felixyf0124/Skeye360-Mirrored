@@ -67,12 +67,14 @@ Note that this procedure has been tested from a Windows host only, but should wo
 
 ### Start
 
-1.  **First start VM machine**
-
-   `vagrant up`
+1.  **First time start VM machine**
+      
+     `vagrant up --provision-with ansible_local`
+     
+2.  **Second time start VM machine**
+      `vagrant up`
   
-
-## Solutions for some basic issues 
+### Solutions for some common issues 
 
 * How can I handle alphabet issues between host machine and vm machine?
 
