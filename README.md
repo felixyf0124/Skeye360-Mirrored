@@ -14,7 +14,7 @@ A developer only has to provide some user-specific information, and issue one co
 
 Note that this procedure has been tested from a Windows host only, but should work equally well from a Linux or Mac OS host.   
 
-1.	Ensure that Hyper-V is off:
+1.	**Ensure that Hyper-V is off:**
   
     * Click on Search Window (magnifier glass) and type "windows features". Allow the changes.
   
@@ -30,19 +30,19 @@ Note that this procedure has been tested from a Windows host only, but should wo
     Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All
     ```
     
-2.	Install Oracle [VM VirtualBox Manager](https://download.virtualbox.org/virtualbox/6.0.2/VirtualBox-6.0.2-128162-Win.exe) (preferably v  6.0.2).
+2.	**Install Oracle [VM VirtualBox Manager](https://download.virtualbox.org/virtualbox/6.0.2/VirtualBox-6.0.2-128162-Win.exe) (preferably v  6.0.2).**
 
-3.	Install [VirtualBox Extension Pack](https://download.virtualbox.org/virtualbox/6.0.2/Oracle_VM_VirtualBox_Extension_Pack-6.0.2.vbox-extpack) (preferably v  6.0.2).
+3.	**Install [VirtualBox Extension Pack](https://download.virtualbox.org/virtualbox/6.0.2/Oracle_VM_VirtualBox_Extension_Pack-6.0.2.vbox-extpack) (preferably v  6.0.2).**
 
-    **If the aboved links does not working, check the [virtualbox v 6.0.2](https://www.google.com/search?q=virtualbox+6.0.2&oq=vi&aqs=chrome.1.69i59l2j69i57j69i60l3.4687j0j1&sourceid=chrome&ie=UTF-8) from google and download it on your local machine.**
+    * If the aboved links does not working, check the [virtualbox v 6.0.2](https://www.google.com/search?q=virtualbox+6.0.2&oq=vi&aqs=chrome.1.69i59l2j69i57j69i60l3.4687j0j1&sourceid=chrome&ie=UTF-8) from google and download it on your local machine.
 
-4.	```vboxmanage``` must be in your PATH. Add the virtualbox installation directory to your PATH. By default on Windows this is c:\program files\oracle\virtualbox\
+4.	**```vboxmanage``` must be in your PATH. Add the virtualbox installation directory to your PATH. By default on Windows this is c:\program files\oracle\virtualbox\**
 
-5.  Install latest [Vagrant](https://www.vagrantup.com/downloads.html).
+5.  **Install latest [Vagrant](https://www.vagrantup.com/downloads.html).**
 
-6. ```vagrant``` must be in your PATH. Add the virtualbox installation directory to your PATH.
+6. **```vagrant``` must be in your PATH. Add the virtualbox installation directory to your PATH.**
 
-7.	Install the following vagrant plugins:
+7. **Install the following vagrant plugins:**
 
     * vagrant-vbguest, a Vagrant plugin which automatically installs the host's VirtualBox Guest Additions on the guest system.
     
@@ -62,3 +62,8 @@ Run `vagrant halt`
 
 How can I destroy vagrant machine?
 Run `vagrant destroy`
+
+## Authors
+
+* Li Sun - *1st version*
+
