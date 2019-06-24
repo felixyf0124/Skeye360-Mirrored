@@ -72,6 +72,7 @@ Note that this procedure has been tested from a Windows host only, but should wo
      `vagrant up --provision-with ansible_local`
      
 2.  **Second time start VM machine**
+      
       `vagrant up`
   
 ### Solutions for some common issues 
