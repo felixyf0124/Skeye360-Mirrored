@@ -74,7 +74,7 @@ Note that this procedure has been tested from a Windows host only, but should wo
     **If you stuck during installing ansible, close the Virtualbox VM and launch it again(do manually). Login VM use username:vagrant and password:vagrant. After you login, type `sudo dpkg --configure -a` in your VirtualBox VM(manually). Choosing Yes then closing VM after you finsh installation. Go back to terminal, use `vagrant reload --provision-with ansible_local`**
     
      
-2.  **Second time start VM machine**
+2.  **After first time start VM machine**
       
       `vagrant up`
   
@@ -101,6 +101,11 @@ Note that this procedure has been tested from a Windows host only, but should wo
 * How can I update my new machine setting without destory it?
   
   `vagrant reload`
+
+* How can I solve `A VirtualBox machine with the name 'devenv' already exists.` ?
+  
+  1. Go to VirtualBox VM(manually) delete devenv machine
+  2. Go to C:\Users\{username}\VirtualBox VMs delete devenv folder
 
 ## More reference
 
