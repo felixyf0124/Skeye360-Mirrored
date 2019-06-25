@@ -63,7 +63,7 @@ Note that this procedure has been tested from a Windows host only, but should wo
 
     * open vagrant.yml file which is under devenv folder(\soen490_dev_env\vagrant\devenv), and change user, email and ssh directory
     
-    For the ssh directory, use forward slashes For example: c:/Users/vince/.ssh. (you can find it in your windows machine)
+    For the ssh directory, use forward slashes For example: c:/Users/vince/.ssh  (you can find it in your windows machine)
 
 ### Start
 
