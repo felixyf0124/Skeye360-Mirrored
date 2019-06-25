@@ -36,7 +36,7 @@ Note that this procedure has been tested from a Windows host only, but should wo
 
     * If the aboved links does not working, check the [virtualbox v 6.0.2](https://www.google.com/search?q=virtualbox+6.0.2&oq=vi&aqs=chrome.1.69i59l2j69i57j69i60l3.4687j0j1&sourceid=chrome&ie=UTF-8) from google and download it on your local machine.
 
-4.	**```vboxmanage``` must be in your PATH. Add the virtualbox installation directory to your PATH. By default on Windows this is c:\program files\oracle\virtualbox\**
+4.  `vboxmanage` **must be in your PATH. Add the virtualbox installation directory to your PATH. By default on Windows this is `c:\program files\oracle\virtualbox\`**
 
 5.  **Install latest [Vagrant](https://www.vagrantup.com/downloads.html).**
 
