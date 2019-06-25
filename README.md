@@ -71,7 +71,7 @@ Note that this procedure has been tested from a Windows host only, but should wo
       
      `vagrant up --provision-with ansible_local`
     
-    **If you stuck during install ansible, close the VM and launch it though VirtualBox(manually). Login linux use username vagrant and password vagrant. After you login, type ```sudo dpkg --configure -a``` in your VM(manually). Closing VM when you finsh installation. Go back to terminal, use ```vagrant reload --provision-with ansible_local``` **
+    **If you stuck during install ansible, close the VM and launch it though VirtualBox(manually). Login linux use username vagrant and password vagrant. After you login, type `sudo dpkg --configure -a` in your VM(manually). Closing VM when you finsh installation. Go back to terminal, use `vagrant reload --provision-with ansible_local`**
     
      
 2.  **Second time start VM machine**
