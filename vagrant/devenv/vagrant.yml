@@ -36,6 +36,7 @@ ssh:
 #       and its associated disk name.
 framework:
   box_name: ubuntu/bionic64
+  box_version: 20190522.0.0
   box_disk_name: ubuntu-bionic-18.04-cloudimg
   box_controller_name: SCSI
   vdi_controller_name: SCSI
