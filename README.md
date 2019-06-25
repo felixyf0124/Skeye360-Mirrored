@@ -59,7 +59,13 @@ Note that this procedure has been tested from a Windows host only, but should wo
 
 ### Before start
 
-1.  **Setup your ssh key**
+1.  **Setup your SSH key on Command Prompt**
+    
+    a) Type: cd .ssh, if it returns "The system cannot find the path specified.", then go to step c)
+    b) Backup your old keys and type: mkdir key_backup and then type: copy id_rsa* key_backup
+    c) Type and put your email address, but without the quotations: ssh-keygen -t rsa -C "your_email@example.com" 
+
+2.  **Setup vagrant.yml file**
 
     * open vagrant.yml file which is under devenv folder(\soen490_dev_env\vagrant\devenv), and change user, email and ssh directory
     
