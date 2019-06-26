@@ -78,7 +78,8 @@ Note that this procedure has been tested from a Windows host only, but should wo
 ### Start
 
 1.  **First time start VM machine**
-      
+    * Go to the folder where the repo is cloned, inside devenv folder(\soen490_dev_env\vagrant\devenv), run Git Bash and key the following command
+    
      `vagrant up --provision-with ansible_local`
     
     **If you stuck during installing ansible, close the Virtualbox VM and launch it again(do manually). Login VM use username:vagrant and password:vagrant. After you login, type `sudo dpkg --configure -a` in your VirtualBox VM(manually). Choosing Yes then closing VM after you finsh installation. Go back to terminal, use `vagrant reload --provision-with ansible_local`**
