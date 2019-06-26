@@ -1,0 +1,15 @@
+- name: Add heroku apt repository
+  apt_repository:
+    repo: deb https://cli-assets.heroku.com/branches/stable/apt ./
+    state: present
+
+- name: Add heroku apt signing key
+  apt_key:
+    url: https://cli-assets.heroku.com/apt/release.key
+    state: present
+
+- name: Install heroku-cli
+  apt:
+    name: heroku
+    install_recommends: yes
+    allow_unauthenticated: yes

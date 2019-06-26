@@ -1,0 +1,3 @@
+- name: Install Eclipse from Snap package manager
+  command:
+    snap install eclipse --classic

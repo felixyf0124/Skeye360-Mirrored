@@ -1,0 +1,85 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require_relative 'devenv'
+
+if not is_valid_environment()
+  exit
+end
+
+settings = load_settings('vagrant.yml')
+
+vm_home = vbox_get_vm_folder()
+
+box_controller_name = settings['framework']['box_controller_name']
+vdi_controller_name = settings['framework']['vdi_controller_name']
+create_vdi_controller = settings['framework']['create_vdi_controller']
+
+box_disk_size_gb = settings['vm']['disksize']
+
+vagrant_command = ARGV[0]
+
+fw_home = settings['framework']['home']
+ansible_template = "#{fw_home}/template"
+vb_name = File.basename(Dir.getwd)
+box_disk_name = settings['framework']['box_disk_name']
+
+Vagrant.configure("2") do |config|
+  config.ssh.insert_key = false
+  config.vm.hostname = vb_name
+  config.vm.box = settings['framework']['box_name']
+  config.vm.box_version = settings['framework']['box_version']
+  config.vm.box_check_update = false
+  
+  # Enabling this causes boot time to be very long.
+  # Known issue: https://github.com/hashicorp/vagrant/issues/9981
+#  config.vm.network "private_network", type: "dhcp"
+  
+  # Setup synced folders
+  config.vm.synced_folder ansible_template, "/template"
+  (settings['ssh']['dir'] != nil) && (config.vm.synced_folder settings['ssh']['dir'], "/ssh_config")
+
+  # Add mounts specified in the settings
+  settings['vm']['mounts'].each do |mount|
+    config.vm.synced_folder mount[0], mount[1], mount_options: [ "dmode=777" ]
+  end
+
+  # Add port forwarding specified in the settings
+  settings['vm']['ports'].each do |port|
+    config.vm.network "forwarded_port", guest: port[0], host: port[1]
+  end
+
+  config.disksize.size = "#{box_disk_size_gb}GB"
+
+  # Configure the VirtualBox provider
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine
+    vb.gui = settings['vm']['gui']
+    vb.name = vb_name
+    vb.memory = settings['vm']['memory']
+    vb.cpus = settings['vm']['cpus']
+
+    vb.customize ["modifyvm", :id, "--usbxhci", "on"]
+    vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+    vb.customize ["modifyvm", :id, "--vram", "64"]
+    vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", settings['vm']['cpuexecutioncap']]
+    vb.customize ['storagectl', :id, '--name', vdi_controller_name, '--hostiocache', 'on']
+  end
+
+  # Provision the VM with Ansible local
+  # For debugging, uncomment the ansible.verbose line.
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.compatibility_mode = "2.0"
+    ansible.version = "2.7.6"
+    ansible.install_mode = "pip"
+    ansible.config_file = "/template/ansible.cfg"
+	  ansible.playbook = "playbook.yml"
+	  ansible.verbose = "vvv"
+	  ansible.extra_vars = {
+		      username: settings['user']['name'],
+          useremail: settings['user']['email'],
+		}
+    ansible.raw_arguments = ['--diff']
+  end
+end

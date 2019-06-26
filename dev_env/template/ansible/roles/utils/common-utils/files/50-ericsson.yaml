@@ -1,0 +1,10 @@
+network:
+  version: 2
+  ethernets:
+    enp0s3:
+      nameservers:
+        search:
+          - "javacc.sero.gic.ericsson.se"
+          - "vss.mo.ca.am.ericsson.se"
+          - "mo.ca.am.ericsson.se"
+          - "ericsson.se"

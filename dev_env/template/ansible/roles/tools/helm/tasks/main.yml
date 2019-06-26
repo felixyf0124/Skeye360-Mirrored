@@ -1,0 +1,43 @@
+- name: Check existence of helm executable
+  stat:
+    path: "/usr/local/bin/helm"
+  register: st
+
+- name: Check helm version against wanted one
+  shell: |
+    helm version --short --client |
+    grep "{{ helm_version }}"
+  register: current_version_not_latest
+  when: st.stat.exists
+  failed_when: false
+  changed_when: false
+
+- name: Remove old Version
+  file:
+    state: absent
+    path: "{{ item }}"
+  when: 'st.stat.exists and current_version_not_latest.rc == 1'
+  with_items:
+    - "/usr/local/bin/helm"
+
+- name: Download helm installer
+  get_url:
+    url: https://raw.githubusercontent.com/helm/helm/master/scripts/get
+    dest: /usr/local/bin/helm-installer.sh
+    mode: uog+x
+
+- name: Install helm
+  shell: /usr/local/bin/helm-installer.sh -v {{ helm_version }}
+  args:
+    creates: "/usr/local/bin/helm"
+
+- name: Set helm bash completion for user
+  lineinfile:
+    path: "{{ userhome }}/.bashrc"
+    line: "{{ item }}"
+    state: present
+    create: yes
+  with_items:
+    - source <(helm completion bash)
+  become: yes
+  become_user: "{{ username }}"

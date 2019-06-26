@@ -1,0 +1,19 @@
+- name: "Check that node is not already installed"
+  shell:
+    nodejs --version
+  ignore_errors: yes
+  register:
+    node_exists
+
+- name: "Setup Node PPA"
+  shell: |
+    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+  args:
+    chdir: /tmp/
+  when:
+    node_exists is failed
+
+
+- name: "Install NodeJS"
+  apt:
+    name: nodejs

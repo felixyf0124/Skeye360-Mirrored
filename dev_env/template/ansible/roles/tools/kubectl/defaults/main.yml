@@ -1,0 +1,3 @@
+username: "{{ lookup('env', 'USER') }}"
+userhome: "/home/{{ username }}"
+kubectl_version: "*"   # '*' for latest

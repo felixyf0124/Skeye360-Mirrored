@@ -1,0 +1,16 @@
+- name: Install IntelliJ from Snap package manager
+  command:
+    snap install intellij-idea-community --classic
+
+# See https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit
+- name: Set Inotify watch limit
+  copy:
+    src: 60-idea.conf
+    dest: /etc/sysctl.d/
+  register: inotify
+
+- name: Restart procps service
+  service:
+    name: procps
+    state: restarted
+  when: inotify.changed

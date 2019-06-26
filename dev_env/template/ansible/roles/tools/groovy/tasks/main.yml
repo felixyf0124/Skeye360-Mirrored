@@ -1,0 +1,52 @@
+- name: Check existing groovy
+  stat: path="{{groovy_install_dir}}/groovy-{{groovy_version}}"
+  register: st
+
+- name: Download groovy
+  uri:
+    url: https://bintray.com/artifact/download/groovy/maven/apache-groovy-binary-{{groovy_version}}.zip
+    dest: /tmp/groovy.zip
+    status_code: 200, 304
+  when: not st.stat.exists
+  
+- name: Create destination directory
+  file:
+    path: "{{groovy_install_dir}}"
+    state: directory
+
+- name: Install unzip
+  apt:
+    name: unzip
+
+- name: Install groovy
+  unarchive:
+    src: /tmp/groovy.zip
+    dest: "{{groovy_install_dir}}"
+  when: not st.stat.exists
+
+- name: symlink all executables
+  shell: find "{{groovy_install_dir}}/groovy-{{groovy_version}}/bin" -type f -executable -exec ln -s {} "{{groovy_symlink_bin_dir}}" \;
+
+- name: Remove downloaded archives
+  file:
+    path: /tmp/groovy.zip
+    state: absent
+
+- name: Remove user's existing environment variables
+  become_user: "{{ username }}"
+  lineinfile:
+    path: /home/{{ username}}/.profile
+    state: absent
+    regexp: "{{ item }}"
+  with_items:
+    - "^export GROOVY_HOME=.*"
+
+- name: Add user environment variables
+  become_user: "{{ username }}"
+  lineinfile:
+    path: /home/{{ username }}/.profile
+    line: "{{ item }}"
+    state: present
+    create: yes
+  with_items:
+    - export GROOVY_HOME={{groovy_install_dir}}/groovy-{{groovy_version}}

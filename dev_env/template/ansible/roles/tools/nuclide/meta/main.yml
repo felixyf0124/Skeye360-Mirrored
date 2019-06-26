@@ -1,0 +1,6 @@
+dependencies:
+  - role: utils/useraccount
+  - role: tools/atom
+  - role: tools/git
+  - role: tools/nodejs
+  - role: tools/watchman

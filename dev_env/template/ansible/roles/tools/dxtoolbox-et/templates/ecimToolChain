@@ -1,0 +1,3 @@
+#!/bin/bash
+
+{{ tool_dir }}/eclipse/eclipse

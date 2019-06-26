@@ -1,0 +1,16 @@
+---
+dependencies:
+- role: utils/common-utils
+- role: tools/docker
+- role: tools/java
+- role: tools/gradle
+- role: tools/git
+- role: tools/intellij
+- role: tools/chromium
+- role: tools/vscode
+- role: tools/maven
+- role: tools/eclipse
+- role: tools/nodejs
+- role: tools/typescript
+...
+

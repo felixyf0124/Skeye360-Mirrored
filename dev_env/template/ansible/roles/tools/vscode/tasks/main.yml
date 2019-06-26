@@ -1,0 +1,3 @@
+- name: Install VSCode from Snap package manager
+  command:
+    snap install vscode --classic

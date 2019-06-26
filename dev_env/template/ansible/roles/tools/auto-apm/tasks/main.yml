@@ -1,0 +1,17 @@
+
+- name: "Install Auto-apm to avoid installing when unnecessary"
+  npm:
+    name: auto-apm
+    global: yes
+    state: latest
+
+- name: "Install useful Atom packages/extensions"
+  command: auto-apm -i {{ item }}
+  become: yes
+  become_user: "{{ username }}"
+  with_items:
+    - nuclide
+    - tool-bar
+    - language-babel
+    - atom-beautify
+

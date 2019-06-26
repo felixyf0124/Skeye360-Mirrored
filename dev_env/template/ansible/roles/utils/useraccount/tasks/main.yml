@@ -1,0 +1,86 @@
+### Create the user and setup its ssh config for vagrant provisioning
+- name: create_group
+  group:
+    name: "{{ username }}"
+
+- name: Install package for password generator utility
+  apt:
+    name: whois
+    install_recommends: no
+
+- name: Generate user's default password
+  shell: mkpasswd --method=sha-512 {{ username }}
+  register: default_password
+  changed_when: False
+
+- name: create user
+  user:
+    name: "{{ username }}"
+    createhome: yes
+    skeleton: /etc/skel
+    shell: /bin/bash
+    group: "{{ username }}"
+    groups: sudo
+    append: yes
+    password: "{{ default_password.stdout }}"
+    update_password: on_create
+
+- name: Allow password-less sudo for user
+  lineinfile:
+    path: /etc/sudoers
+    line: "{{ username }} ALL=(ALL) NOPASSWD: ALL"
+    state: present
+    create: yes
+
+- name: create user's .ssh directory
+  file:
+    path: /home/{{ username }}/.ssh
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: u+rwx,og-rwx
+
+# This is so vagrant can provision the VM logging in as this user
+- name: copy vagrant ssh keys to user's ssh dir
+  copy:
+    remote_src: True
+    src: /home/vagrant/.ssh/authorized_keys
+    dest: /home/{{ username }}/.ssh/authorized_keys
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: u+rwx,og-rwx
+
+### This is to copy user-specific configuration from the host
+- name: copy user's ssh dir from host
+  copy:
+    src: /ssh_config/
+    dest: /home/{{ username }}/.ssh/
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: u+rw,u-x,og-rwx
+
+### To faciliate ssh'ing between VMs
+# Note: I tried with authorized_key module and lookup('file', '/home/{{ username }}/.ssh/id_rsa.pub')
+# but that always failed with file not found error on id_rsa.pub.  There are bug reports about this.
+- name: Read user public key
+  shell: cat /home/{{ username }}/.ssh/id_rsa.pub
+  register: public_key
+
+- name: Add user's public key as an authorized key
+  lineinfile:
+    path: /home/{{ username }}/.ssh/authorized_keys
+    line: "{{ public_key.stdout }}"
+    state: present
+    create: yes
+
+# To solve this error with gerrit: Unable to negotiate with legacyhost: no matching key exchange method found.  Their offer: diffie-hellman-group1-sha1
+# See http://www.openssh.com/legacy.html
+- name: Update ssh config to fix gerrit connection error
+  lineinfile:
+    path: /home/{{ username }}/.ssh/config
+    line: "KexAlgorithms +diffie-hellman-group1-sha1"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: u+rw,u-x,og-rwx
+    state: present
+    create: yes

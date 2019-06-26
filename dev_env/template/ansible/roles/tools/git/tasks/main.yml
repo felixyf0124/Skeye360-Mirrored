@@ -1,0 +1,28 @@
+- name: Add git ppa
+  apt_repository:
+    repo: ppa:git-core/ppa
+
+- name: Install git
+  apt:
+    name: git
+    install_recommends: no
+
+- name: Install gitk
+  apt:
+    name: gitk
+    install_recommends: no
+
+- name: Install gitconfig
+  copy:
+    src: gitconfig
+    dest: /home/{{ username }}/.gitconfig
+
+- name: Setup user information in gitconfig
+  become_user: "{{ username }}"
+  git_config:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    scope: global
+  with_items:
+    - { name: "user.name", value: "{{ username }}" }
+    - { name: "user.email", value: "{{ useremail }}" }

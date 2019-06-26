@@ -1,0 +1,11 @@
+- name: Clone Fuzzy finder git repo
+# git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  git:
+    repo: https://github.com/junegunn/fzf.git
+    dest: "{{fzf_path}}"
+    update: "{{fzf_update_git_install}}"
+
+# Run  installation script
+- name: Install Fuzzy finder
+  shell:
+    "yes | {{fzf_path}}/install"

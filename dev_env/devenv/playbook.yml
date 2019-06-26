@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  roles:
+   - { role: desktops/xubuntu-core, autologin_user: "{{username}}" }
+   - role: presets/dev-env
+   - role: utils/os-upgrade
+   - role: utils/os-cleanup
+...
+
+
+
