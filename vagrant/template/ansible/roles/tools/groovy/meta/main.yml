@@ -1,3 +1,0 @@
-dependencies:
-  - role: utils/useraccount
-  - role: tools/java

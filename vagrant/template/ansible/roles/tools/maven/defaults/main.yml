@@ -1,2 +1,0 @@
-username: "{{ lookup('env', 'USER') }}"
-maven_settings_url: ""

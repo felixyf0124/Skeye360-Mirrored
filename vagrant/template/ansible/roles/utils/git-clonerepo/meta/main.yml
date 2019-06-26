@@ -1,3 +1,0 @@
-dependencies:
-  - role: tools/git
-  - role: utils/useraccount
