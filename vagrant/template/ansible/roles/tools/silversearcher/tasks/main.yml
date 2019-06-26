@@ -1,6 +1,0 @@
-
-- name: "Install SilverSearcher (AG)"
-  apt:
-    name: silversearcher-ag
-    state: present
- 

@@ -1,5 +1,0 @@
-#!/bin/bash
-
-cd /opt/ENB_{{ enb_version }}
-./enb.sh
-

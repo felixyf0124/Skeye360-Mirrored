@@ -1,3 +1,0 @@
-- name: Install insomnia
-  command:
-    sudo snap install insomnia

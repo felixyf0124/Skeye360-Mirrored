@@ -1,2 +1,0 @@
-username: "{{ lookup('env', 'USER') }}"
-useremail: "{{username}}@ericsson.com"

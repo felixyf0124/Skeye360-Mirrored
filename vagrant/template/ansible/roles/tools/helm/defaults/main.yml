@@ -1,3 +1,0 @@
-username: "{{ lookup('env', 'USER') }}"
-userhome: "/home/{{ username }}"
-helm_version: "v2.12.3"
