@@ -66,6 +66,8 @@ Note that this procedure has been tested from a Windows host only, but should wo
     b) Backup your old keys and type: mkdir key_backup and then type: copy id_rsa* key_backup
     
     c) Type and put your email address, but without the quotations: ssh-keygen -t rsa -C "your_email@example.com" 
+    
+    d) Press "Enter" 3 times, or until the Command Prompt stops asking for an input
 
 2.  **Setup vagrant.yml file**
 
