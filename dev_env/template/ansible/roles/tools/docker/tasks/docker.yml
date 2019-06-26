@@ -1,0 +1,67 @@
+- name: Ensure old versions of Docker are not installed
+  package:
+    name: '{{ item }}'
+    state: absent
+  with_items:
+    - docker
+    - docker-engine
+    - docker.io
+    - docker-common
+
+- name: Get kernel release information
+  shell: uname -r
+  register: kernel_release_output
+  changed_when: false
+
+- name: Add docker key repository
+  apt_key:
+    url: http://download.docker.com/linux/ubuntu/gpg
+    state: present
+  
+- name: Add docker repository
+  apt_repository:
+    repo: "deb [arch=amd64] http://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: yes
+
+# Note: python-requests is used by mmas sdk script that creates its docker image
+- name: Install docker and its dependencies
+  apt:
+    name: "{{ item }}"
+    install_recommends: no
+    state: latest
+  with_items:
+    - python-requests
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - docker-ce
+
+- name: Add user to docker group
+  user:
+    name: "{{ username }}"
+    append: yes
+    groups: docker
+
+# Disable dnsmasq in network manager so docker container dns works correctly
+# See https://docs.docker.com/engine/installation/linux/ubuntulinux/, section "Specify DNS servers for Docker"
+
+- name: Check whether NetworkManager config file exists
+  stat:
+    path: /etc/NetworkManager/NetworkManager.conf
+  register: networkmanagerconf
+
+- name: Disable dnsmasq in network manager
+  replace:
+    path: /etc/NetworkManager/NetworkManager.conf
+    regexp: "^(dns.*)$"
+    replace: '# \1'
+  register: networkManager
+  when: networkmanagerconf.stat.exists
+
+- name: Restart network manager service
+  service:
+    name: network-manager
+    state: restarted
+  when: networkManager.changed

@@ -1,0 +1,5 @@
+- name: Install gradle finder utility script
+  copy:
+    src: files/gradle
+    dest: /usr/local/bin
+    mode: "uog+x"

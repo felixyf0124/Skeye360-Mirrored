@@ -1,0 +1,144 @@
+- name: Set target dirs facts
+  set_fact:
+    dxtoolbox_cc_target_dir: "{{ dxtoolbox_cc_tools_dir }}/compiler-{{ dxtoolbox_cc_version }}"
+    ldews_api_target_dir: "{{ dxtoolbox_cc_tools_dir }}/ldews-api-{{ ldews_api_version }}"
+    coremw_target_dir: "{{ dxtoolbox_cc_tools_dir }}/coremw-sdk-{{ coremw_sdk_version }}"
+
+- name: Create destination directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ ldews_api_target_dir }}"
+    - "{{ coremw_target_dir }}"
+
+
+
+- name: Check if dxtoolbox-cc is already installed
+  stat:
+    path:  "{{ dxtoolbox_cc_tools_dir }}/cross_compiler"
+  register: dxtoolbox_installation
+  changed_when: False
+
+- name: Fetch dxtoolbox-cc
+  get_url:
+    url: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-cba-dev-local/com/ericsson/cba/dxtoolbox/dxtoolbox-cc/{{ dxtoolbox_cc_version }}/dxtoolbox-cc-{{ dxtoolbox_cc_version }}-runtime-linux-cxp9013369.tar.gz
+    dest: /tmp/dxtoolbox-cc-{{ dxtoolbox_cc_version }}-runtime-linux-cxp9013369.tar.gz
+    url_username: "{{ seki_armuser }}"
+    url_password: "{{ seki_armpassword }}"
+  when: dxtoolbox_installation.stat.exists == False
+  
+- name: Install dxtoolbox-cc
+  unarchive:
+    src: /tmp/dxtoolbox-cc-{{ dxtoolbox_cc_version }}-runtime-linux-cxp9013369.tar.gz
+    remote_src: True
+    dest: "{{ dxtoolbox_cc_tools_dir }}"
+    creates: "{{ dxtoolbox_cc_tools_dir }}/cross_compiler"
+
+- name: Delete dxtoolbox-cc downloaded archive
+  file:
+    path: /tmp/dxtoolbox-cc-{{ dxtoolbox_cc_version }}-runtime-linux-cxp9013369.tar.gz
+    state: absent
+
+
+# - name: Install dxtoolbox cross compilers
+#   unarchive:
+#     src: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-cba-dev-local/com/ericsson/cba/dxtoolbox/dxtoolbox-cc/{{ dxtoolbox_cc_version }}/dxtoolbox-cc-{{ dxtoolbox_cc_version }}-runtime-linux-cxp9013369.tar.gz
+#     url_username: "{{ seki_armuser }}"
+#     url_password: "{{ seki_armpassword }}"
+#     remote_src: True
+#     dest: "{{ dxtoolbox_cc_tools_dir }}"
+#     creates: "{{ dxtoolbox_cc_tools_dir }}/cross_compiler"
+
+- name: Keep only latest dxtoolbox compiler
+  file:
+    path: "{{ dxtoolbox_cc_tools_dir }}/cross_compiler/x86_64-dx/{{ item }}/"
+    state: absent
+  with_items: 
+    - "4.3"
+    - "4.6"
+
+- name: Check if LDE is already installed
+  stat:
+    path:  "{{ ldews_api_target_dir }}/lib64"
+  register: lde_installation
+  changed_when: False
+
+- name: Fetch LDE API
+  get_url:
+    url: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-cba-dev-local/com/ericsson/cba/ldews/ldews/{{ ldews_api_version }}/ldews-{{ ldews_api_version }}-api-sle-cxp9013312.tar.gz
+    dest: /tmp/ldews-{{ ldews_api_version }}-api-sle-cxp9013312.tar.gz
+    url_username: "{{ seki_armuser }}"
+    url_password: "{{ seki_armpassword }}"
+  when: lde_installation.stat.exists == False
+
+# The unarchive module doesn't have an include parameter, so we use tar to extract only what we need
+- name: Install LDE API
+  shell: tar xf /tmp/ldews-{{ ldews_api_version }}-api-sle-cxp9013312.tar.gz ./lib64 ./usr/include ./usr/lib64
+  args:
+    chdir: "{{ ldews_api_target_dir }}"
+    creates: "{{ ldews_api_target_dir }}/lib64"
+
+- name: Delete LDE downloaded archive
+  file:
+    path: /tmp/ldews-{{ ldews_api_version }}-api-sle-cxp9013312.tar.gz
+    state: absent
+
+- name: Check if coremw libraries are already installed
+  stat:
+    path:  "{{ coremw_target_dir }}/lib64"
+  register: coremw_installation
+  changed_when: False
+
+- name: Fetch coremw API
+  get_url:
+    url: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-cba-dev-local/com/ericsson/cba/coremw_x86_64/coremw_x86_64/{{ coremw_sdk_version }}/coremw_x86_64-{{ coremw_sdk_version }}-sdk-sle-cxp9020356.tar.gz
+    dest: /tmp/coremw_x86_{{ coremw_sdk_version }}-sdk-sle-cxp9020356.tar.gz
+    url_username: "{{ seki_armuser }}"
+    url_password: "{{ seki_armpassword }}"
+  when: coremw_installation.stat.exists == False
+  
+- name: Install core mw libraries
+  unarchive:
+    src: /tmp/coremw_x86_{{ coremw_sdk_version }}-sdk-sle-cxp9020356.tar.gz
+    remote_src: True
+    dest: "{{ coremw_target_dir }}"
+    creates: "{{ coremw_target_dir }}/lib64"
+
+- name: Delete core mw downloaded archive
+  file:
+    path: /tmp/coremw_x86_{{ coremw_sdk_version }}-sdk-sle-cxp9020356.tar.gz
+    state: absent
+
+- name: Remove user's existing environment variables
+  become_user: "{{ username }}"
+  lineinfile:
+    path: /home/{{ username}}/.profile
+    state: absent
+    regexp: "{{ item }}"
+  with_items:
+    - "^export DX_SYSROOT_X86_64=.*$"
+    - "^export DX_GCC_ROOT=.*$"
+    - "^export SAF_API_INC_DIR_JAVACAF=.*$"
+    - "^export SAF_API_LIB_DIR_JAVACAF=.*$"
+
+- name: Setup user's environment variables
+  become_user: "{{ username }}"
+  lineinfile:
+    path: /home/{{ username }}/.profile
+    line: "{{ item }}"
+    state: present
+    create: yes
+  with_items:
+    - export DX_SYSROOT_X86_64={{ ldews_api_target_dir }}
+    - export DX_GCC_ROOT={{ dxtoolbox_cc_tools_dir }}/cross_compiler
+    - export SAF_API_INC_DIR_JAVACAF={{ coremw_target_dir }}/include
+    - export SAF_API_LIB_DIR_JAVACAF={{ coremw_target_dir }}/lib64
+
+# These are needed for proper compilation of C code
+- name: Install extra libraries
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - zlib1g:i386
+    - g++-multilib

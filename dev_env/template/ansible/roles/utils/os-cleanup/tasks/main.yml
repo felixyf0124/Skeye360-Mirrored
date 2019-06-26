@@ -1,0 +1,8 @@
+- name: Clean obsolete packages
+  apt:
+    autoclean: yes
+    autoremove: yes
+
+- name: Trim filesystem
+  shell: fstrim /
+  ignore_errors: yes

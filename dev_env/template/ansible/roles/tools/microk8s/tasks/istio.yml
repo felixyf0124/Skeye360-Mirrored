@@ -1,0 +1,12 @@
+# See: https://itnext.io/microk8s-puts-up-its-istio-and-sails-away-104c5a16c3c2
+- name: Enable istio
+  shell: echo N | microk8s.enable istio
+
+- name: Enable istio sidecar automatic injection
+  shell: microk8s.kubectl label namespace default istio-injection=enabled --overwrite
+
+- name: Generate istio bash completion file
+  shell: microk8s.istioctl collateral completion --bash
+  args:
+    chdir: /etc/bash_completion.d/
+    creates: /etc/bash_completion.d/istioctl.bash

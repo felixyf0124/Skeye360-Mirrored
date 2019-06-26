@@ -1,0 +1,9 @@
+- name: Set git repos facts
+  set_fact:
+    git_repos_home: /home/{{ username }}/git
+
+- name: Create git repos home directory
+  become_user: "{{ username }}"
+  file:
+    path: "{{ git_repos_home }}"
+    state: directory

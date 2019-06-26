@@ -1,0 +1,21 @@
+- name: Set tools dir fact
+  set_fact:
+    tool_dir: /opt/dxtoolbox-et-{{dxtoolbox_et_version}}
+
+- name: Create destination directory
+  file:
+    path: "{{ tool_dir }}"
+    state: directory
+
+- name: Install dxtoolbox ECIM Tool
+  unarchive:
+    src: https://arm.mo.ca.am.ericsson.se/artifactory/list/proj-cba-dev-local-seki/com/ericsson/cba/dxtoolbox/dxtoolbox-et/{{ dxtoolbox_et_version }}/dxtoolbox-et-{{ dxtoolbox_et_version }}-runtime-linux-cxp9017709.tar.gz
+    remote_src: True
+    dest: "{{ tool_dir }}"
+    creates: "{{ tool_dir }}/eclipse"
+
+- name: Install startup script
+  template:
+    src: ecimToolChain
+    dest: /usr/local/bin/ecimToolChain
+    mode: "ugo+x"

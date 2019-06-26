@@ -1,0 +1,45 @@
+
+
+- name: "Check that watchman is not already installed"
+  shell:
+    watchman --version
+  ignore_errors: yes
+  register:
+    watchman_exists
+
+- name: "Install build tools"
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - autoconf
+    - automake
+    - build-essential
+    - pkg-config
+    - python-dev
+    - libssl-dev
+    - libtool
+  when: watchman_exists is failed
+
+- name: "Build & Install Watchman (nuclide quick open) (this will take a long time, as it will build from source)"
+  shell: |
+    git clone https://github.com/facebook/watchman.git
+    cd watchman
+    git checkout v{{ item }}
+    ./autogen.sh
+    ./configure
+    make
+    sudo make install
+  args:
+    chdir: /tmp/
+  with_items:
+    - "{{ watchman_version }}"
+  when: watchman_exists is failed
+
+- name: "Configure Watchman"
+  shell: |
+    # raise inotify limit so watchman can watch all the files it needs!
+    echo 999999 | sudo tee -a /proc/sys/fs/inotify/max_user_watches     && \
+    echo 999999 | sudo tee -a /proc/sys/fs/inotify/max_queued_events  && \
+    echo 999999 | sudo tee -a /proc/sys/fs/inotify/max_user_instances && \
+    watchman shutdown-server
+  when: watchman_exists is failed

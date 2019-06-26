@@ -1,0 +1,39 @@
+# See: http://ubuntuhandbook.org/index.php/2016/09/install-wireshark-2-2-0-ppa-ubuntu-16-04/
+
+- name: Add wireshark repository
+  apt_repository:
+    repo: 'ppa:wireshark-dev/stable'
+    state: present
+
+- name: Setup wireshark to use setuid
+  debconf:
+    name: wireshark-common
+    question: wireshark-common/install-setuid
+    value: true
+    vtype: boolean
+  changed_when: False
+    
+- name: Install wireshark
+  apt:
+    name: wireshark
+    install_recommends: no
+
+- name: Set mode on dumpcap
+  file:
+    path: /usr/bin/dumpcap
+    mode: "uog+sx"
+    state: file
+
+- name: Set capabilities on dumpcap
+  capabilities:
+    path: /usr/bin/dumpcap
+    capability: "{{ item }}"
+  with_items:
+    - CAP_NET_RAW+eip
+    - CAP_NET_ADMIN+eip
+
+- name: Add user to wireshark group
+  user:
+    name: "{{ username }}"
+    append: yes
+    groups: wireshark

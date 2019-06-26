@@ -1,0 +1,43 @@
+# The name and email address of the user to create in the vm
+# The email address is used for git configuration.  Make sure you
+# use the same email as in gerrit.
+user:
+  name: lisun
+  email: vincent.sun870530@gmail.com
+
+# gui: Whether to show the VM's console at VM startup.
+# cpus: number of CPUs for the VM
+# memory: memory in MB for the VM
+# disksize: Size of VM disk in GB
+# mounts: Setup shared folders between host and VM.  Simply uncomment the line(s)
+#         below and provide absolute paths.  Note that /vagrant is already
+#         mounted in the VM and mounts the current directory from the host.
+#         DO NOT USE THIS FEATURE UNTIL THE FIRST "vagrant up" IS SUCCESSFUL.
+vm:
+  gui: true
+  cpus: 2
+  memory: 4096
+  disksize: 100
+  mounts:
+    # - [ "host_dir1", "vm_dir1" ]
+    # - [ "host_dir2", "vm_dir2" ]
+  ports:
+    # - [ vm_port, host_port ]
+
+ssh:
+  dir: C:/users/vince/.ssh/
+
+# ADVANCED USE ONLY.
+# home: The framework by default expects the VM folders
+#       to be siblings to the template directory.  If you move them to
+#       an other location, you have to uncomment these lines
+#       and specify the path to the framework home.
+# box_name and box_disk_name: Override the name of the base vagrant box
+#       and its associated disk name.
+framework:
+  box_name: ubuntu/bionic64
+  box_version: 20190522.0.0
+  box_disk_name: ubuntu-bionic-18.04-cloudimg
+  box_controller_name: SCSI
+  vdi_controller_name: SCSI
+  create_vdi_controller: false

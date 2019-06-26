@@ -1,0 +1,5 @@
+---
+username: "{{ lookup('env', 'USER') }}"
+groovy_version: 2.4.15
+groovy_install_dir: /usr/local/lib
+groovy_symlink_bin_dir: /usr/local/bin

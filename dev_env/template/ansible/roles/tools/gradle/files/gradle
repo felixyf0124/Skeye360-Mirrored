@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Try to find gradle wrapper script starting from current directory
+#       until we reach the root directory
+CWD=$PWD
+until [[ $CWD == / ]]; do
+    GRADLEW=$CWD/gradlew
+    [[ -e $GRADLEW ]] && exec $GRADLEW "$@"
+    CWD=$(dirname $CWD)
+done
+
+# If we don't find gradle wrapper, we display an error
+echo "[ERROR]: no gradle wrapper was found for this project!"
+exit 1
