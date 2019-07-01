@@ -100,7 +100,15 @@ Note that this procedure has been tested from a Windows host only, but should wo
   
 * How can I update my new machine setting without destory it?
   
+  The following command is used for updating vagrantfile setting
+  
   `vagrant reload`
+  
+  or
+  
+  The following command is used for updating your machine softwares or dependencies.
+  
+  `vagrant reload --provision-with ansible_local`
 
 ## More reference
 
