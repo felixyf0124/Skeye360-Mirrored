@@ -2,6 +2,7 @@
 dependencies:
 - role: utils/common-utils
 - role: tools/docker
+- role: tools/pyenv
 - role: tools/java
 - role: tools/gradle
 - role: tools/git
@@ -12,5 +13,6 @@ dependencies:
 - role: tools/eclipse
 - role: tools/nodejs
 - role: tools/typescript
+- role: tools/yarn
 ...
 
