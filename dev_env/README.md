@@ -55,6 +55,8 @@ Note that this procedure has been tested from a Windows host only, but should wo
     ```vagrant plugin install vagrant-disksize```
     
     Reference: https://github.com/sprotheroe/vagrant-disksize
+    
+8. **If you use Windows machine as a host machine, make sure your powershell version is higher than 3.0**
    
 
 ### Before start
