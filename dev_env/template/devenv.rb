@@ -35,21 +35,21 @@ def is_valid_environment()
         is_valid = false
     end
 
-    if ! Vagrant::Util::Platform.wsl?
+    #if ! Vagrant::Util::Platform.wsl?
         # There's a bug in newer versions that makes vagrant hang on first run.
         # The solution is to upgrade powershell, so make sure powershell is
         # at least version 3.
-        powershell_version=`powershell (get-host).version.major`
+    #    powershell_version=`powershell (get-host).version.major`
 
-        if (powershell_version.to_i < 3)
-            puts "Invalid powershell version.  Please upgrade powershell.  Go here"
-            puts "and install Windows Management Framework 3.0."
-            puts "https://www.microsoft.com/en-us/download/details.aspx?id=34595"
-            puts "Click Download and choose option: Windows6.1-KB2506143-x64.msu"
-            puts "Then reboot to apply the changes."
-            is_valid = false
-        end
-    end
+    #    if (powershell_version.to_i < 3)
+    #        puts "Invalid powershell version.  Please upgrade powershell.  Go here"
+    #        puts "and install Windows Management Framework 3.0."
+    #        puts "https://www.microsoft.com/en-us/download/details.aspx?id=34595"
+    #        puts "Click Download and choose option: Windows6.1-KB2506143-x64.msu"
+    #        puts "Then reboot to apply the changes."
+    #        is_valid = false
+    #    end
+    #end
     
     if ! which($vboxmanage_exe)
         puts "Couldn't find 'vboxmanage' executable. Add virtualbox install directory to your PATH.  This is usually c:\\program files\\oracle\\virtualbox\\"
