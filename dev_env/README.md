@@ -73,10 +73,6 @@ Note that this procedure has been tested from a Windows host only, but should wo
       
      `vagrant up --provision-with ansible_local`
     
-    **If you stuck during install ansible, close the VM and launch it though VirtualBox(manually). Login linux use username vagrant and password vagrant. After you login, type `sudo dpkg --configure -a` in your VirtualBox VM(manually). Choose Yes then closing VM when you finsh installation. Go back to terminal, use `vagrant reload --provision-with ansible_local`**
-    
-    **if you get error: pip: command not found. Please run get-pip.py script to install pip properly. The script is under SOEN490/dev_env folder**
-    
 2.  **Second time start VM machine**
       
       `vagrant up`
@@ -112,6 +108,10 @@ Note that this procedure has been tested from a Windows host only, but should wo
   The following command is used for updating your machine softwares or dependencies.
   
   `vagrant reload --provision-with ansible_local`
+  
+ * If you stuck during install ansible, close the VM and launch it though VirtualBox(manually). Login linux use username vagrant and password vagrant. After you login, type `sudo dpkg --configure -a` in your VirtualBox VM(manually). Choose Yes then closing VM when you finsh installation. Go back to terminal, use `vagrant reload --provision-with ansible_local`
+    
+ * if you get an error: **pip: command not found**. Please run get-pip.py script to reinstall pip. The script is under SOEN490/dev_env folder
 
 ## More reference
 
