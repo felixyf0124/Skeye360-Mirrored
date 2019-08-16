@@ -3,6 +3,15 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:
+### `yarn start`
+
+### `yarn install` if `yarn start` fails
+   
+* You have to run VM in admin mode
+ - open git bash in administration 
+ - vagrant up
+
+--------------------------------------------
 
 ### `npm start`
 
