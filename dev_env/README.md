@@ -97,6 +97,10 @@ Note that this procedure has been tested from a Windows host only, but should wo
 
   `vagrant ssh`
   
+  or generate a private key for Putty and MobaXterm using ssh:
+  
+  [Generating private key using PuttyGen](https://github.com/Varying-Vagrant-Vagrants/VVV/wiki/Connect-to-Your-Vagrant-Virtual-Machine-with-PuTTY)
+  
 * How can I update my new machine setting without destory it?
   
   The following command is used for updating vagrantfile setting
