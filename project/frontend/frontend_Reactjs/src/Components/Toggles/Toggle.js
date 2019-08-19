@@ -4,22 +4,28 @@ import './Toggle.css'
 class Toggle extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            currentToggleState: 'OFF'
-        };
+        if(this.props.toggleState != null) {
+            this.state = {
+                toggleState: this.props.toggleState
+            };
+        }else{
+            this.state = {
+                toggleState: 'OFF'
+            };
+        }
 
         //bind
         this.setToggleState = this.setToggleState.bind(this);
     }
 
     getToggleState() {
-        return this.state.currentToggleState;
+        return this.state.toggleState;
     }
     setToggleState(){
-        if(this.state.currentToggleState === 'ON') {
-            this.setState({currentToggleState: 'OFF'});
+        if(this.state.toggleState === 'ON') {
+            this.setState({toggleState: 'OFF'});
         }else {
-            this.setState({currentToggleState: 'ON'});
+            this.setState({toggleState: 'ON'});
         }
     }
 
@@ -34,29 +40,33 @@ class Toggle extends Component{
     // }
 
     render(){
+
+        const btnChecked = this.getToggleState()==='ON'?'checked':'';
+
+
         const _toggle = (
             <div className="toggle">
                 <table className="container">
                     <tbody>
                     <tr className="container row w-auto m-auto text-center">
 
-                        <td className="col-2"></td>
+                        <td className="col-2"/>
                         <th className="col-5  text-left">
                             <label>{this.props.name}</label>
                         </th>
                         <td className="col-1 text-left">
                             <label className="w_fix">
-                                {this.state.currentToggleState}
+                                {this.state.toggleState}
                             </label>
                         </td>
                         <td className="col-2 text-right">
                             <label className="switch">
-                                <input type="checkbox" onClick={this.setToggleState}/>
-                                {/*{this.state.currentToggleState}*/}
-                                <span className="slider round"></span>
+                                <input type="checkbox" onClick={this.setToggleState} defaultChecked={btnChecked}/>
+                                {/*{this.state.toggleState}*/}
+                                <span className="slider round"/>
                             </label>
                         </td>
-                        <td className="col-2"></td>
+                        <td className="col-2"/>
                     </tr>
                     </tbody>
                 </table>
