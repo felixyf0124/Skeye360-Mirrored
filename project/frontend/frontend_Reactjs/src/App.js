@@ -6,6 +6,7 @@ import DashBoard from './Components/DashBoard/DashBoard'
 import Toggle from './Components/Toggles/Toggle'
 import TogglePage from './Pages/TogglePage'
 
+
 function App() {
   return (
     <div className="App">
