@@ -117,6 +117,12 @@ Note that this procedure has been tested from a Windows host only, but should wo
   
   1. Go to VirtualBox VM(manually) delete devenv machine
   2. Go to C:\Users\{username}\VirtualBox VMs delete devenv folder
+  
+* How can I solve the `pip command not found` issue?
+  1. Go to \soen490\dev_env\template and open Vangrantfile with a text editor
+  2. Set up the following:
+  `ansible.version = "2.8.5"`
+  `ansible.install_mode = "pip3"`
 
 ## More reference
 
