@@ -1,0 +1,10 @@
+---
+# defaults file for pyenv
+pyenv_path: "/home/{{ username }}/tools/pyenv"
+pyenv_owner: "{{ username }}"
+pyenv_update_git_install: no
+pyenv_enable_autocompletion: yes
+pyenv_python_versions:
+  - 3.7.3
+pyenv_virtualenvs:
+  - { venv_name: "3.7_latest", py_version: "3.7.3" }
