@@ -11,15 +11,42 @@ export default class car extends Component {
   constructor(props) {
     super(props);
     this.pixi_cnt = null;
-    this.app = new PIXI.Application({width:600,height:600});
+    
+    let _w = window.innerWidth;
+    let _h = window.innerHeight;
+    
+    this.app = new PIXI.Application({width:_w,height:_h,resolution:window.devicePixelRatio});
+    
+    
+    //this.app = new PIXI.app.renderer({width:window.innerWidth,height:window.innerHeight});
   }
 
   
 
  initialize = () => {
+
      this.vehicle = new PIXI.Sprite(this.app.loader.resources["vehicle"].texture);
+     this.vehicle2 = new PIXI.Sprite(this.app.loader.resources["vehicle"].texture);
+     window.addEventListener('resize',this.resize);
+     
+    this.pos_x =0; 
+    this.pos_y=0;
+     //sprite position
+     this.vehicle.x = this.app.renderer.width/2 + this.pos_x;
+     this.vehicle.y = this.app.renderer.height/2 + this.pos_y;
+
+     
+     this.vehicle2.x = this.app.renderer.width/2 + this.pos_x;
+     this.vehicle2.y = this.app.renderer.height/2 + this.pos_y;
+     //sprite center point
+     this.vehicle.anchor.x = 0.5;
+     this.vehicle.anchor.y = 0.5;
+     this.vehicle2.anchor.x = 0.5;
+     this.vehicle2.anchor.y = 0.5;
+
      this.app.stage.addChild(this.vehicle);
- 
+     this.app.stage.addChild(this.vehicle2);
+     this.app.ticker.add(this.animation);
  };
 
  setup = () => {
@@ -28,6 +55,11 @@ export default class car extends Component {
        .load(this.initialize);
 };
 
+resize = () =>{
+  let _w = window.innerWidth;
+  let _h = window.innerHeight;
+  this.app.renderer.resize(_w,_h);
+ }
   updateCar= (element) => {
       
       this.pixi_cnt = element;
@@ -36,6 +68,18 @@ export default class car extends Component {
         this.setup();
       }
   };
+
+  animation = () =>{
+    this.pos_x += 0.3;
+
+    //sprite position
+    this.vehicle.x = this.app.renderer.width/2 + this.pos_x-400;
+    this.vehicle.y = this.app.renderer.height/2 + this.pos_y;
+    this.vehicle.rotation =PIXI.DEG_TO_RAD*180;
+    this.vehicle2.x = this.app.renderer.width/2 - (this.pos_x-400);
+    this.vehicle2.y = this.app.renderer.height/2 + this.pos_y+100;
+    this.vehicle2.rotation =PIXI.DEG_TO_RAD*180;
+  }
   
   render() {
     console.log("this works");
