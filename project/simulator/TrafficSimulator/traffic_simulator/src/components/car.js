@@ -17,7 +17,8 @@ export default class car extends Component {
     
     this.app = new PIXI.Application({width:_w,height:_h,resolution:window.devicePixelRatio});
     
-    
+    this.timeC=Date.now();
+    this.fps = 0;
     //this.app = new PIXI.app.renderer({width:window.innerWidth,height:window.innerHeight});
   }
 
@@ -70,15 +71,24 @@ resize = () =>{
   };
 
   animation = () =>{
-    this.pos_x += 0.3;
+    this.pos_x += 1.1;
 
     //sprite position
-    this.vehicle.x = this.app.renderer.width/2 + this.pos_x-400;
-    this.vehicle.y = this.app.renderer.height/2 + this.pos_y;
+    this.vehicle.x = ((this.app.renderer.width/2 + this.pos_x-400)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
+    this.vehicle.y = (this.app.renderer.height/2 + this.pos_y);
     this.vehicle.rotation =PIXI.DEG_TO_RAD*180;
-    this.vehicle2.x = this.app.renderer.width/2 - (this.pos_x-400);
-    this.vehicle2.y = this.app.renderer.height/2 + this.pos_y+100;
-    this.vehicle2.rotation =PIXI.DEG_TO_RAD*180;
+    this.vehicle2.x = ((this.app.renderer.width/2 -this.pos_x+400)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
+    
+    this.vehicle2.y = (this.app.renderer.height/2 + this.pos_y-100)%this.app.renderer.height;
+    this.vehicle2.rotation =PIXI.DEG_TO_RAD*0;
+    let temp = Date.now() -this.timeC;
+    this.fps++;
+    if(temp>1000){
+    
+    console.log (temp+"/"+this.timeC.toString()+" / "+this.fps+"fps");
+    this.timeC =Date.now();
+    this.fps=0;
+    }
   }
   
   render() {
