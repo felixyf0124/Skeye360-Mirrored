@@ -25,7 +25,7 @@ SECRET_KEY = '6q122#uaxn428#cqkityse((rlw=if)@bd0=ju++l&4w_@hqg8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -75,8 +75,11 @@ WSGI_APPLICATION = 'djangosite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo',
+        'NAME': 'connectdjangoexample',
+        'HOST': 'mongodb://myUserAdmin:abc123@172.17.0.2:27017',
+        'USER': 'myUserAdmin',
+        'PASSWARD': 'abc123',
     }
 }
 
