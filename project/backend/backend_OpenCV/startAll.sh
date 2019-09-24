@@ -6,4 +6,4 @@ sudo sed -i -e 's/\r$//' install_opencv.sh
 sudo bash install_opencv.sh
 
 # Execute openCV
-python3 video.py
+sudo python3 video.py
