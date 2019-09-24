@@ -17,5 +17,5 @@ COPY . /app
 #Build the app with yarn
 RUN yarn build
 
-#Execute the code with npm start
+#Execute the code with yarn start
 CMD [ "yarn", "start" ]
