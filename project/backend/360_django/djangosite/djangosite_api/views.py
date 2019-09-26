@@ -4,13 +4,18 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from djangsite_api import serializers
+from django.http import HttpResponse
+from .models import Student 
 
 
 # Create your views here.
 
 class HelloWorld(APIView):
     def get(self, request):
-        return Response({'hello': 'Hello World!'})
+        student_data = Student.objects.all()
+        for field in student_data:
+            print('name of student is', field.name)
+        return Response({'name of student is', field.name})
 
 
     def post(self, request):
@@ -38,4 +43,11 @@ class HelloWorld(APIView):
     
     def delete(self, request, pk=None):
         return Response({'method':'DELETE'})
+
+# For testing purpose
+def home(request):
+    student_data = Student.objects.all()
+    for field in student_data:
+        print('name of student is', field.age)
+    return HttpResponse("check terminal localhost:8000/odm")
 
