@@ -6,6 +6,7 @@ import * as PIXI from "pixi.js-legacy";
 //import * as PIXI from "pixi.js";
 import vehicle from '../images/vehicle.png';
 import ppl from '../images/ppl.png';
+import TrafficLight from '../components/TrafficLight.js';
 
 export default class scene extends Component {
   constructor(props) {
@@ -18,18 +19,31 @@ export default class scene extends Component {
     this.app = new PIXI.Application({width:_w,height:_h,resolution:window.devicePixelRatio});
     this.map = new PIXI.Container();
     this.objectCt = new PIXI.Container();
-    this.app.stage.addChild(this.map)
+    this.displayPlane = new PIXI.Container();
+    this.app.stage.addChild(this.map);
     this.app.stage.addChild(this.objectCt);
-
+    this.app.stage.addChild(this.displayPlane);
+    this.road = new PIXI.Graphics();
     this.trafficLight = new PIXI.Graphics();
+    this.map.addChild(this.road);
+    this.map.addChild(this.trafficLight);
+    // this.roadData = [3,2,0,0];
+    this.roadData = [3,2,0,0];
+    this.trafficLightData = [[10,5],[10,5]];
+    
     this.timeC=Date.now();
     this.trafficLightCounterOffset = 0;
     this.trafficLightCounter = Date.now();
     this.fps = 0;
-    //this.app = new PIXI.app.renderer({width:window.innerWidth,height:window.innerHeight});
-  }
-
+    
+    this._trafL = new TrafficLight(this.trafficLightData,Date.now(),this.trafficLightCounterOffset)
+    this.textStyle = {
+      fontFamily: 'Courier',
+      fontSize: '12px',
+      fill : '#F7EDCA',
+    }
   
+  }
 
  initialize = () => {
 
@@ -41,7 +55,7 @@ export default class scene extends Component {
      this.ppl = new PIXI.Sprite(this.app.loader.resources["ppl"].texture);
      this.ppl2 = new PIXI.Sprite(this.app.loader.resources["ppl"].texture);
 
-     this.drawRoad(2,3,2,2,this.map);
+     this.drawRoad(this.road,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.map);
 
     //  this.objectCt.addChild(this.vehicle);
     //  this.objectCt.addChild(this.vehicle2);
@@ -49,6 +63,8 @@ export default class scene extends Component {
     //  this.objectCt.addChild(this.ppl2);
     this.pos_x =0; 
     this.pos_y=0;
+    // this.map.x = this.app.renderer.width/2;
+    // this.map.y = this.app.renderer.height/2;
      //sprite position
      this.vehicle.x = this.app.renderer.width/2 + this.pos_x;
      this.vehicle.y = this.app.renderer.height/2 + this.pos_y;
@@ -81,6 +97,7 @@ resize = () =>{
   let _w = window.innerWidth;
   let _h = window.innerHeight;
   this.app.renderer.resize(_w,_h);
+  this.drawRoad(this.road,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.map);
   
  }
   updateCar= (element) => {
@@ -92,7 +109,7 @@ resize = () =>{
       }
   };
 
-drawRoad=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
+drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
   const lane_w = 60;
   const line_w = 4;
   const zLine_w = 10;
@@ -100,7 +117,8 @@ drawRoad=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
   const road_w_v =(laneDirTop+laneDirDown)*lane_w;
   const _w = this.app.renderer.width;
   const _h = this.app.renderer.height;
-  const road = new PIXI.Graphics();
+  const road = gObj;
+  gObj.clear()
   //draw road base
   road.beginFill(0x575757);
   road.drawRect(0,_h/2-(road_w_h/2),_w,road_w_h);
@@ -292,7 +310,7 @@ drawRoad=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
       road.lineTo(tempPos_seDir[0]-i*zLine_w*2,tempPos_seDir[1]+zOffset_y);
   }
   
-  container.addChild(road);
+  
 }
 
 drawDashLine=(dashLine,startPos,endPos,dashLengthRatio,dashNum,container,width,color)=>{
@@ -327,38 +345,82 @@ drawTrafficLight=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container,init
   //clear
   this.trafficLight.clear();
 
+  var TLPosOffset_x,TLPosOffset_y;
+  const trafficLightStates = [this._trafL.getTrafficLightStateAtDirection(0), this._trafL.getTrafficLightStateAtDirection(1)];
+  var str = ["","","",""];
+  
+  
   //draw hori direction
-  if(tempCounter%((gTime+yTime+gTime2+yTime2)*1000)<gTime*1000)
+  if(trafficLightStates[0][0] === 1)
   {
     this.trafficLight.beginFill(0x00ff00);
-  }else if (tempCounter%((gTime+yTime+gTime2+yTime2)*1000)<(gTime+yTime)*1000)
+    str[0] = "Towards West : Green  |" + trafficLightStates[0][1];
+    str[1] = "Towards East : Green  |" + trafficLightStates[0][1];
+  }else if (trafficLightStates[0][0] === 2)
   {
     this.trafficLight.beginFill(0xffbb00);
+    str[0] = "Towards West : Orange | " + trafficLightStates[0][1];
+    str[1] = "Towards East : Orange | " + trafficLightStates[0][1];
   }else{
     this.trafficLight.beginFill(0xff0000);
+    str[0] = "Towards West : Red    | " + trafficLightStates[0][1];
+    str[1] = "Towards East : Red    | " + trafficLightStates[0][1];
   }
-  this.trafficLight.drawCircle(_w/2 - (road_w_v/2 + lane_w),_h/2 - (road_w_h/2+lane_w/4),_r);
-  this.trafficLight.drawCircle(_w/2 + (road_w_v/2 + lane_w),_h/2 + (road_w_h/2+lane_w/4),_r); 
+  if(road_w_v!==0&&road_w_h!==0){
+    TLPosOffset_x = road_w_v/2 + lane_w;
+    TLPosOffset_y = road_w_h/2 + lane_w;
+  }else if(road_w_v===0){
+    TLPosOffset_x = road_w_v/2 + lane_w/2;
+    TLPosOffset_y = road_w_h/2 + lane_w;
+  }else if(road_w_h===0){
+    TLPosOffset_x = road_w_v/2 + lane_w *0.2;
+    TLPosOffset_y = road_w_h/2 + lane_w *1.3;
+  }
+  //towards west
+  this.trafficLight.drawCircle(_w/2 - (TLPosOffset_x),_h/2 - (TLPosOffset_y - lane_w*0.8),_r);
+  
+  //towards east
+  this.trafficLight.drawCircle(_w/2 + (TLPosOffset_x),_h/2 + (TLPosOffset_y - lane_w*0.8),_r); 
   
 
-  if(tempCounter%((gTime+yTime+gTime2+yTime2)*1000)<(gTime+yTime)*1000)
-  {
-    this.trafficLight.beginFill(0xff0000);
-  }else if (tempCounter%((gTime+yTime+gTime2+yTime2)*1000)<(gTime+yTime+gTime2)*1000)
+  if(trafficLightStates[1][0] === 1)
   {
     this.trafficLight.beginFill(0x00ff00);
-  }else{
+    str[2] = "Towards North: Green  | " + trafficLightStates[1][1];
+    str[3] = "Towards South: Green  | " + trafficLightStates[1][1];
+  }else if (trafficLightStates[1][0] === 2)
+  {
     this.trafficLight.beginFill(0xffbb00);
+    str[2] = "Towards North: Orange | " + trafficLightStates[1][1];
+    str[3] = "Towards South: Orange | " + trafficLightStates[1][1];
+  }else{
+    this.trafficLight.beginFill(0xff0000);
+    str[2] = "Towards North: Red    | " + trafficLightStates[1][1];
+    str[3] = "Towards South: Red    | " + trafficLightStates[1][1];
   }
-  this.trafficLight.drawCircle(_w/2 - (road_w_v/2 + lane_w), _h/2 + (road_w_h/2+lane_w/4),_r);
-  this.trafficLight.drawCircle(_w/2 + (road_w_v/2 + lane_w), _h/2 - (road_w_h/2+lane_w/4),_r); 
-  container.addChild(this.trafficLight);
-
+  if(road_w_v!==0&&road_w_h!==0){
+    TLPosOffset_x = road_w_v/2 + lane_w;
+    TLPosOffset_y = road_w_h/2 + lane_w;
+  }else if(road_w_v===0){
+    TLPosOffset_x = road_w_v/2 + lane_w *1.3;
+    TLPosOffset_y = road_w_h/2 + lane_w *0.2;
+  }else if(road_w_h===0){
+    TLPosOffset_x = road_w_v/2 + lane_w;
+    TLPosOffset_y = road_w_h/2 + lane_w/2;
+  }
+  //towards north
+  this.trafficLight.drawCircle(_w/2 - (TLPosOffset_x - lane_w*0.8), _h/2 + (TLPosOffset_y),_r);
+  //towards south
+  this.trafficLight.drawCircle(_w/2 + (TLPosOffset_x - lane_w*0.8), _h/2 - (TLPosOffset_y),_r); 
+  //container.addChild(this.trafficLight);
+  this.displayPlane.removeChildren();
+  const tlText = new PIXI.Text(str[0]+"\n"+str[1]+"\n"+str[2]+"\n"+str[3],this.textStyle);
+  this.displayPlane.addChild(tlText);
 }
 
   animation = () =>{
       
-    this.drawTrafficLight(3,2,3,2,this.map,true,10,5,10,5);
+    this.drawTrafficLight(this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.map,true,10,5,10,5);
     this.pos_x += 4;
 
     //sprite position
@@ -381,7 +443,7 @@ drawTrafficLight=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container,init
     this.fps++;
     if(temp>1000){
     
-    console.log (temp+"/"+this.timeC.toString()+" / "+this.fps+"fps   from scene");
+    //console.log (temp+"/"+this.timeC.toString()+" / "+this.fps+"fps   from scene");
     this.timeC =Date.now();
     this.fps=0;
     }
