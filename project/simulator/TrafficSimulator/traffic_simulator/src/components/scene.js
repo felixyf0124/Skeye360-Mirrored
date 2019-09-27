@@ -23,14 +23,21 @@ export default class scene extends Component {
     this.app.stage.addChild(this.map);
     this.app.stage.addChild(this.objectCt);
     this.app.stage.addChild(this.displayPlane);
+    this.backGround = new PIXI.Graphics();
     this.road = new PIXI.Graphics();
     this.trafficLight = new PIXI.Graphics();
+    this.map.addChild(this.backGround);
     this.map.addChild(this.road);
     this.map.addChild(this.trafficLight);
     // this.roadData = [3,2,0,0];
-    this.roadData = [3,2,0,0];
-    this.trafficLightData = [[10,5],[10,5]];
-    
+    this.roadData = [2,2,1,0];
+    this.trafficLightData = [[5,3],[10,5]];
+
+    this.lane_w = 60;
+    // this.road_w_h =(this.roadData[0]+this.roadData[1])*this.lane_w;
+    // this.road_w_v =(this.roadData[2]+this.roadData[3])*this.lane_w;
+    this.road_w_h =0;
+    this.road_w_v =0;
     this.timeC=Date.now();
     this.trafficLightCounterOffset = 0;
     this.trafficLightCounter = Date.now();
@@ -57,10 +64,10 @@ export default class scene extends Component {
 
      this.drawRoad(this.road,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.map);
 
-    //  this.objectCt.addChild(this.vehicle);
-    //  this.objectCt.addChild(this.vehicle2);
-    //  this.objectCt.addChild(this.ppl);
-    //  this.objectCt.addChild(this.ppl2);
+     this.objectCt.addChild(this.vehicle);
+     this.objectCt.addChild(this.vehicle2);
+     this.objectCt.addChild(this.ppl);
+     this.objectCt.addChild(this.ppl2);
     this.pos_x =0; 
     this.pos_y=0;
     // this.map.x = this.app.renderer.width/2;
@@ -113,32 +120,35 @@ drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
   const lane_w = 60;
   const line_w = 4;
   const zLine_w = 10;
-  const road_w_h =(laneDirLeft+laneDirRight)*lane_w;
-  const road_w_v =(laneDirTop+laneDirDown)*lane_w;
+  this.road_w_h =(laneDirLeft+laneDirRight)*lane_w;
+  this.road_w_v =(laneDirTop+laneDirDown)*lane_w;
   const _w = this.app.renderer.width;
   const _h = this.app.renderer.height;
   const road = gObj;
+  this.backGround.clear();
+  this.backGround.beginFill(0x1111ab);
+  this.backGround.drawRect(0,0,_w,_h);
   gObj.clear()
   //draw road base
   road.beginFill(0x575757);
-  road.drawRect(0,_h/2-(road_w_h/2),_w,road_w_h);
-  road.drawRect(_w/2-(road_w_v/2),0,road_w_v,_h);
+  road.drawRect(0,_h/2-(this.road_w_h/2),_w,this.road_w_h);
+  road.drawRect(_w/2-(this.road_w_v/2),0,this.road_w_v,_h);
   
   //draw side walk
   road.beginFill(0xcccccc);
   if(laneDirLeft+laneDirRight!==0)
   {
-      road.drawRect(0, _h/2-(road_w_h/2), _w/2-road_w_v/2, -lane_w);
-      road.drawRect(0, _h/2+(road_w_h/2), _w/2-road_w_v/2, lane_w);
-      road.drawRect(_w, _h/2-(road_w_h/2), -(_w/2-road_w_v/2), -lane_w);
-      road.drawRect(_w, _h/2+(road_w_h/2), -(_w/2-road_w_v/2), lane_w);
+      road.drawRect(0, _h/2-(this.road_w_h/2), _w/2-this.road_w_v/2, -lane_w);
+      road.drawRect(0, _h/2+(this.road_w_h/2), _w/2-this.road_w_v/2, lane_w);
+      road.drawRect(_w, _h/2-(this.road_w_h/2), -(_w/2-this.road_w_v/2), -lane_w);
+      road.drawRect(_w, _h/2+(this.road_w_h/2), -(_w/2-this.road_w_v/2), lane_w);
   }
   if(laneDirTop+laneDirDown!==0)
   {
-  road.drawRect(_w/2-road_w_v/2, 0, -lane_w, _h/2-road_w_h/2);
-  road.drawRect(_w/2+road_w_v/2, 0, lane_w, _h/2-road_w_h/2);
-  road.drawRect(_w/2-road_w_v/2, _h, -lane_w, -(_h/2-road_w_h/2));
-  road.drawRect(_w/2+road_w_v/2, _h, lane_w, -(_h/2-road_w_h/2));
+  road.drawRect(_w/2-this.road_w_v/2, 0, -lane_w, _h/2-this.road_w_h/2);
+  road.drawRect(_w/2+this.road_w_v/2, 0, lane_w, _h/2-this.road_w_h/2);
+  road.drawRect(_w/2-this.road_w_v/2, _h, -lane_w, -(_h/2-this.road_w_h/2));
+  road.drawRect(_w/2+this.road_w_v/2, _h, lane_w, -(_h/2-this.road_w_h/2));
   }
   
   //draw road lines
@@ -149,9 +159,9 @@ drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
     const midlinePos_h = (laneDirLeft - (laneDirLeft+laneDirRight)/2)*lane_w - line_w/2;
     var lineLength; 
     if(laneDirTop+laneDirDown!==0){
-        lineLength = _w/2-road_w_v/2-lane_w*1.2;
+        lineLength = _w/2-this.road_w_v/2-lane_w*1.2;
     }else{
-        lineLength = _w/2-road_w_v/2-lane_w*0.7;
+        lineLength = _w/2-this.road_w_v/2-lane_w*0.7;
     }
     road.drawRect(0,_h/2+(midlinePos_h),lineLength,line_w);
     road.drawRect(_w,_h/2+(midlinePos_h),-(lineLength),line_w);
@@ -161,9 +171,9 @@ drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
     const midlinePos_v = -(laneDirTop - (laneDirTop+laneDirDown)/2)*lane_w - line_w/2;
     var lineLength; 
     if(laneDirLeft+laneDirRight!==0){
-        lineLength = _h/2-road_w_h/2-lane_w*1.2;
+        lineLength = _h/2-this.road_w_h/2-lane_w*1.2;
     }else{
-        lineLength = _h/2-road_w_h/2-lane_w*0.7;
+        lineLength = _h/2-this.road_w_h/2-lane_w*0.7;
     }
     road.drawRect(_w/2+(midlinePos_v),0,line_w,lineLength);
     road.drawRect(_w/2+(midlinePos_v),_h,line_w,-(lineLength));
@@ -178,9 +188,9 @@ drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
         var lineLength;
         if(laneDirTop+laneDirDown!==0)
         {
-            lineLength = _w/2-road_w_v/2-lane_w*1.2;
+            lineLength = _w/2-this.road_w_v/2-lane_w*1.2;
         }else{
-            lineLength = _w/2-road_w_v/2-lane_w*0.7;
+            lineLength = _w/2-this.road_w_v/2-lane_w*0.7;
         }
         this.drawDashLine(road,[0,_h/2+linePos],[(lineLength),_h/2+linePos],0.6,lineLength/lane_w,this.map,line_w,0xffffff);
         
@@ -202,9 +212,9 @@ drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
         var lineLength;
         if(laneDirLeft+laneDirRight!==0)
         {
-            lineLength = _h/2-road_w_h/2-lane_w*1.2;
+            lineLength = _h/2-this.road_w_h/2-lane_w*1.2;
         }else{
-            lineLength = _h/2-road_w_h/2-lane_w*0.7;
+            lineLength = _h/2-this.road_w_h/2-lane_w*0.7;
         }
         this.drawDashLine(road,[_w/2+(linePos),0],[_w/2+(linePos),lineLength],0.6,lineLength/lane_w,this.map,line_w,0xffffff);
         
@@ -224,9 +234,9 @@ drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
     var linePos_x;
     if(laneDirTop+laneDirDown!==0)
     {
-        linePos_x = _w/2+road_w_v/2+lane_w*1.2;
+        linePos_x = _w/2+this.road_w_v/2+lane_w*1.2;
     }else{
-        linePos_x = _w/2+road_w_v/2+lane_w*0.7;
+        linePos_x = _w/2+this.road_w_v/2+lane_w*0.7;
     }
     road.drawRect(linePos_x,_h/2+(linePos_y),8,-lane_w*laneDirLeft+line_w/2);
   }
@@ -236,9 +246,9 @@ drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
     var linePos_x;
     if(laneDirTop+laneDirDown!==0)
     {
-        linePos_x = _w/2-road_w_v/2-lane_w*1.2;
+        linePos_x = _w/2-this.road_w_v/2-lane_w*1.2;
     }else{
-        linePos_x = _w/2-road_w_v/2-lane_w*0.7;
+        linePos_x = _w/2-this.road_w_v/2-lane_w*0.7;
     }
     road.drawRect(linePos_x, _h/2+(linePos_y),-8,lane_w*laneDirRight-line_w/2);
   }
@@ -248,9 +258,9 @@ drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
     var linePos_y;
     if(laneDirLeft+laneDirRight!==0)
     {
-        linePos_y = _h/2+road_w_h/2+lane_w*1.2;
+        linePos_y = _h/2+this.road_w_h/2+lane_w*1.2;
     }else{
-        linePos_y = _h/2+road_w_h/2+lane_w*0.7;
+        linePos_y = _h/2+this.road_w_h/2+lane_w*0.7;
     }
     road.drawRect(_w/2-(linePos_x), linePos_y,lane_w*laneDirTop-line_w/2,8);
   }
@@ -260,9 +270,9 @@ drawRoad=(gObj,laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container) =>{
     var linePos_y;
     if(laneDirLeft+laneDirRight!==0)
     {
-        linePos_y = _h/2-road_w_h/2-lane_w*1.2;
+        linePos_y = _h/2-this.road_w_h/2-lane_w*1.2;
     }else{
-        linePos_y = _h/2-road_w_h/2-lane_w*0.7;
+        linePos_y = _h/2-this.road_w_h/2-lane_w*0.7;
     }
     road.drawRect(_w/2-(linePos_x), linePos_y,-lane_w*laneDirDown+line_w/2,-8);
   }
@@ -354,8 +364,8 @@ drawTrafficLight=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container,init
   if(trafficLightStates[0][0] === 1)
   {
     this.trafficLight.beginFill(0x00ff00);
-    str[0] = "Towards West : Green  |" + trafficLightStates[0][1];
-    str[1] = "Towards East : Green  |" + trafficLightStates[0][1];
+    str[0] = "Towards West : Green  | " + trafficLightStates[0][1];
+    str[1] = "Towards East : Green  | " + trafficLightStates[0][1];
   }else if (trafficLightStates[0][0] === 2)
   {
     this.trafficLight.beginFill(0xffbb00);
@@ -420,6 +430,7 @@ drawTrafficLight=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container,init
 
   animation = () =>{
       
+   const lane_w =60;
     this.drawTrafficLight(this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.map,true,10,5,10,5);
     this.pos_x += 4;
 
@@ -433,17 +444,16 @@ drawTrafficLight=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container,init
     this.vehicle2.rotation =PIXI.DEG_TO_RAD*0;
 
 
-    this.ppl.x = ((this.app.renderer.width/2 -this.pos_y+30)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
+    this.ppl.x = ((this.app.renderer.width/2-this.road_w_v/2-lane_w/2)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
     this.ppl.y = ((this.app.renderer.height/2 + this.pos_x/2-100)%this.app.renderer.height+this.app.renderer.height)%this.app.renderer.height;
-    this.ppl2.x = ((this.app.renderer.width/2 -this.pos_y-30)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
-    
+    this.ppl2.x = ((this.app.renderer.width/2+this.road_w_v/2+lane_w/2)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
     this.ppl2.y = ((this.app.renderer.height/2 - this.pos_x/2+100)%this.app.renderer.height+this.app.renderer.height)%this.app.renderer.height;
 
     let temp = Date.now() -this.timeC;
     this.fps++;
     if(temp>1000){
     
-    //console.log (temp+"/"+this.timeC.toString()+" / "+this.fps+"fps   from scene");
+    console.log (temp+"/"+this.timeC.toString()+" / "+this.fps+"fps   from scene");
     this.timeC =Date.now();
     this.fps=0;
     }
