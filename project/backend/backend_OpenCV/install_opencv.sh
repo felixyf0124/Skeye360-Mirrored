@@ -1,4 +1,6 @@
-# How to install OpenCV:
+#!/bin/bash
+# Change file different character between windows and VM
+sudo sed -i -e 's/\r$//' install_opencv.sh
 
 # Update repository
 sudo apt update
@@ -8,6 +10,3 @@ sudo apt -y install python3-pip
 
 # Install opencv
 sudo pip3 install opencv-python
-
-# Open backend_OpenCV folder and run video.py
-sudo python3 video.py
