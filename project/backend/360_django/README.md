@@ -12,10 +12,10 @@
 
 2.	**Build Django Container**
 
-    ```docker run --name [Create a container name] -p 8000:8000 [Image name you created]]```
+    ```docker run -d --name [Create a container name] -p 8000:8000 [Image name you created]]```
 
     Example:
-    docker run --name my-django -p 8000:8000 django-test
+    docker run -d --name my-django -p 8000:8000 django-test
 
 3.	**Manually migrate DB and Create Super User (The first time setting for Django)**
 
@@ -27,8 +27,11 @@
 
     * Create DB collection in MongoDB
     ```cd djangosite```
+
     ```python manage.py makemigrations```
+
     ```python manage.py migrate```
+
     ```python manage.py createsuperuser```
     
 4.	**Access Django though web browser**

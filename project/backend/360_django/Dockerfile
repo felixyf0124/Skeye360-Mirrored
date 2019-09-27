@@ -11,9 +11,11 @@ RUN pip install -r requirements.txt
 
 EXPOSE 8000
 
+RUN python /usr/src/app/djangosite/manage.py makemigrations
+RUN python /usr/src/app/djangosite/manage.py migrate
 # Migrate database
-CMD ["python", "/usr/src/app/djangosite/manage.py", "makemigrations"]
-CMD ["python", "/usr/src/app/djangosite/migrate.py", "migrate"]
+#CMD ["python", "/usr/src/app/djangosite/manage.py", "makemigrations"]
+#CMD ["python", "/usr/src/app/djangosite/manage.py", "migrate"]
 
 # Run server
 CMD ["python", "/usr/src/app/djangosite/manage.py", "runserver", "0.0.0.0:8000"]
