@@ -52,7 +52,7 @@ export default class TrafficLight {
             greenTimeStart += Number(this.timePairs[i][0]);
             greenTimeStart += Number(this.timePairs[i][1]);
         }
-        //greenTimeStart +=timePairs[index][0];
+        
         return Number(greenTimeStart);
     }
 

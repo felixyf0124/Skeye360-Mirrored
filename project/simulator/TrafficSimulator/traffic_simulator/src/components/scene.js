@@ -3,7 +3,7 @@
 import React, {Component} from 'react'
 //pixi.js-legacy for VM
 import * as PIXI from "pixi.js-legacy";
-//import * as PIXI from "pixi.js";
+
 import vehicle from '../images/vehicle.png';
 import ppl from '../images/ppl.png';
 import TrafficLight from '../components/TrafficLight.js';
@@ -29,13 +29,11 @@ export default class scene extends Component {
     this.map.addChild(this.backGround);
     this.map.addChild(this.road);
     this.map.addChild(this.trafficLight);
-    // this.roadData = [3,2,0,0];
+    
     this.roadData = [2,2,1,0];
     this.trafficLightData = [[5,3],[10,5]];
 
     this.lane_w = 60;
-    // this.road_w_h =(this.roadData[0]+this.roadData[1])*this.lane_w;
-    // this.road_w_v =(this.roadData[2]+this.roadData[3])*this.lane_w;
     this.road_w_h =0;
     this.road_w_v =0;
     this.timeC=Date.now();
@@ -70,8 +68,7 @@ export default class scene extends Component {
      this.objectCt.addChild(this.ppl2);
     this.pos_x =0; 
     this.pos_y=0;
-    // this.map.x = this.app.renderer.width/2;
-    // this.map.y = this.app.renderer.height/2;
+    
      //sprite position
      this.vehicle.x = this.app.renderer.width/2 + this.pos_x;
      this.vehicle.y = this.app.renderer.height/2 + this.pos_y;
@@ -330,11 +327,10 @@ drawDashLine=(dashLine,startPos,endPos,dashLengthRatio,dashNum,container,width,c
 
     for(var i =-1; i<dashNum-1;i++){
         const tempPos = [startPos[0]+unitLength[0]*i+unitLength[0]*(1-dashLengthRatio),startPos[1]+unitLength[1]*i+unitLength[1]*(1-dashLengthRatio)];
-        //if(tempPos[0]+unitLength[0]*dashLengthRatio<=endPos[0]&&tempPos[1]+unitLength[1]*dashLengthRatio<=endPos[1])
         dashLine.moveTo(tempPos[0],tempPos[1]);
         dashLine.lineTo(tempPos[0]+unitLength[0]*dashLengthRatio,tempPos[1]+unitLength[1]*dashLengthRatio);
     }
-    //container.addChild(dashLine);
+    
 }
 
 drawTrafficLight=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container,initGreenDirV, gTime,yTime,gTime2,yTime2)=>{
@@ -422,7 +418,7 @@ drawTrafficLight=(laneDirLeft,laneDirRight,laneDirTop,laneDirDown,container,init
   this.trafficLight.drawCircle(_w/2 - (TLPosOffset_x - lane_w*0.8), _h/2 + (TLPosOffset_y),_r);
   //towards south
   this.trafficLight.drawCircle(_w/2 + (TLPosOffset_x - lane_w*0.8), _h/2 - (TLPosOffset_y),_r); 
-  //container.addChild(this.trafficLight);
+  
   this.displayPlane.removeChildren();
   const tlText = new PIXI.Text(str[0]+"\n"+str[1]+"\n"+str[2]+"\n"+str[3],this.textStyle);
   this.displayPlane.addChild(tlText);
