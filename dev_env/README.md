@@ -115,7 +115,11 @@ Note that this procedure has been tested from a Windows host only, but should wo
   
  * If you stuck during install ansible, close the VM and launch it though VirtualBox(manually). Login linux use username vagrant and password vagrant. After you login, type `sudo dpkg --configure -a` in your VirtualBox VM(manually). Choose Yes then closing VM when you finsh installation. Go back to terminal, use `vagrant reload --provision-with ansible_local`
     
- * if you get an error: **pip: command not found**. Please run get-pip.py script to reinstall pip. The script is under SOEN490/dev_env folder
+ * if you get an error: **pip: command not found**. Please run get-pip.py script to reinstall pip. The script is under SOEN490/dev_env folder or
+  1. Go to \soen490\dev_env\template and open Vangrantfile with a text editor
+  2. Set up the following:
+  `ansible.version = "2.8.5"`
+  `ansible.install_mode = "pip3"`
 
 ## More reference
 
