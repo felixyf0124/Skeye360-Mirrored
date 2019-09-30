@@ -2,7 +2,7 @@ import cv2
 import argparse
 import numpy as np
 import sys
-# refercen: http://emaraic.com/blog/yolov3-custom-object-detector
+
 path = sys.argv[0][:-8]
 ap = argparse.ArgumentParser()
 ap.add_argument('-c', '--config', 
