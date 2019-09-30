@@ -23,8 +23,6 @@ class HelloWorld(APIView):
     def get(self, request):
         return Response({'hello': 'Hello World!'})
 
-    
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^hello/', include('djangosite_api.urls')),
