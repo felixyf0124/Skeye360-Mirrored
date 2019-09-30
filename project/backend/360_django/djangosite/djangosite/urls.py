@@ -25,5 +25,5 @@ class HelloWorld(APIView):
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^hello/', HelloWorld.as_view()),
+    url(r'^hello/', include('djangosite_api.urls')),
 ]
