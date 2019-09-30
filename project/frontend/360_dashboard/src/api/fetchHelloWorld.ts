@@ -3,11 +3,11 @@ export interface HelloResponse {
 }
 
 const fetchHelloWorld = async (
-  APIDomain = '172.17.0.3:8000',
+  APIDomain = '0.0.0.0:8000',
 ): Promise<HelloResponse> => {
   console.log("fetchHelloWorld");
-  const url = `//${APIDomain}/hello/odm`;
-  const response = await fetch(url, {
+  const url = `//${APIDomain}/hello/hello-view`;
+  const response = await fetch(url, { mode: 'no-cors'
   });
   const resp = (await response.json()) as HelloResponse;
   return resp;
