@@ -1,42 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from './reducers/rootReducer';
-import { getHello } from './contexts/hello';
-import logo from './logo.svg';
 import './App.css';
+// import Hello from './components/Hello';
+import SkeyeMap from './containers/SkeyeMap';
 
 interface StateProps {
   // stateMsg: string;
-}
-
-interface DispatchProps {
-  getHello: () => any;
 }
 
 /**
  * @class App
  * @extends {Component}
  */
-class App extends React.Component<StateProps & DispatchProps> {
-  public componentDidMount(): void {
-    // eslint-disable-next-line no-shadow
-    const { getHello } = this.props;
-    getHello();
-  }
-
+class App extends React.Component<StateProps> {
   render(): JSX.Element {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-          <pre>
-            {
-              JSON.stringify(this.props)
-            }
-          </pre>
-        </header>
-      </div>
+      // <Hello state={this.props} />
+      <SkeyeMap />
     );
   }
 }
@@ -48,5 +29,4 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 export default connect(
   mapStateToProps,
-  { getHello },
 )(App);
