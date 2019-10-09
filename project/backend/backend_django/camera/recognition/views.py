@@ -8,9 +8,9 @@ import numpy as np
 #https://stackoverflow.com/questions/54426573/is-there-a-way-to-capture-video-from-a-usb-camera-with-multiple-processes-in-pyt
 #http://emaraic.com/blog/yolov3-custom-object-detector
 
-yolo_config = '/SOEN490/project/backend/backend_OpenCV/yolov3-tiny.cfg'
-yolo_weights = '/SOEN490/project/backend/backend_OpenCV/yolov3-tiny.weights'
-yolo_classes = '/SOEN490/project/backend/backend_OpenCV/coco.names'
+yolo_config = '/SOEN490/project/backend/360_OpenCV/yolov3-tiny.cfg'
+yolo_weights = '/SOEN490/project/backend/360_OpenCV/yolov3-tiny.weights'
+yolo_classes = '/SOEN490/project/backend/360_OpenCV/coco.names'
 video_stream = '/SOEN490/project/backend/backend_django/camera/highway_cars.mp4'
 # Load names classes
 classes = None
