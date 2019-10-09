@@ -49,11 +49,13 @@ COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
 net = cv2.dnn.readNet(args.weights,args.config)
 
 # Define video capture for default cam
-cap = cv2.VideoCapture(path+'mall.mp4')
+cap = cv2.VideoCapture(path+'run.mp4')
 
 while cv2.waitKey(1) < 0:
     
     hasframe, image = cap.read()
+    if (hasframe != True) :
+        exit()
     # image=cv2.resize(image, (620, 480)) 
     
     blob = cv2.dnn.blobFromImage(image, 1.0/255.0, (416,416), [0,0,0], True, crop=False)
