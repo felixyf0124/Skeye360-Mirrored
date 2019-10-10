@@ -26,6 +26,8 @@ export default async () => {
         compose,
     ),
   );
+  //sagaMiddleware.run(Scene);
+
   sagaMiddleware.run(rootSaga);
   return store;
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from './reducers/rootReducer';
 import { getHello } from './contexts/hello';
-import  Scene  from './components/scene.js';
+import  Scene  from './simulator/Scene';
 import logo from './logo.svg';
 import './App.css';
 
@@ -28,8 +28,7 @@ class App extends React.Component<StateProps & DispatchProps> {
   render(): JSX.Element {
     return (
       <div className="App">
-        
-        <Scene></Scene>
+        <Scene/>
       </div>
     );
   }
