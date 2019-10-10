@@ -13,6 +13,6 @@ const Marker = (props: any) => {
             </div>
         </a>
     );
-  };
+};
 
   export default Marker;
