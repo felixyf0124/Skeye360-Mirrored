@@ -13,17 +13,39 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+
 from django.conf.urls import url, include
 from django.contrib import admin
-from rest_framework import routers
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.contrib.auth.models import User
+from rest_framework import routers, serializers, viewsets
+from djangosite_api.views import StudentViewSet
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-class HelloWorld(APIView):
-    def get(self, request):
-        return Response({'hello': 'Hello World!'})
+
+# Serializers define the API representation.
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['url', 'username', 'email', 'is_staff']
+
+
+# ViewSets define the view behavior.
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'students', StudentViewSet)
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^hello/', include('djangosite_api.urls')),
+    url(r'^students/', include('djangosite_api.urls')),
+    #url(r'^api/', include(router.urls)),
+    url('', include(router.urls)),
 ]
