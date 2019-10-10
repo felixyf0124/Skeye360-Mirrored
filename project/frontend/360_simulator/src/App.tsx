@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from './reducers/rootReducer';
 import { getHello } from './contexts/hello';
-import  Scene  from './simulator/Scene';
+import TryScene from './simulator/TryScene';
+import  Scene2  from './components/scene.js';
+// import  Scene  from './simulator/Scene';
 import logo from './logo.svg';
 import './App.css';
 
@@ -28,7 +30,9 @@ class App extends React.Component<StateProps & DispatchProps> {
   render(): JSX.Element {
     return (
       <div className="App">
-        <Scene/>
+        <TryScene></TryScene>
+        <Scene2></Scene2>
+        
       </div>
     );
   }
