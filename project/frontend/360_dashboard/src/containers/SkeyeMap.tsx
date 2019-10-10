@@ -20,6 +20,7 @@ const SkeyeMap = (props: any) => {
             lng={-73.5673}
             text="Camera_id"
             color="red"
+            link="https://www.w3schools.com"
           />
         </GoogleMapReact>
       </div>
