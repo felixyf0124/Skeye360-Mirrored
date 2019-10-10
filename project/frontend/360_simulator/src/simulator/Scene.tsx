@@ -10,7 +10,7 @@ import vehicle from '../images/vehicle.png';
 import ppl from '../images/ppl.png';
 import TrafficLight from './TrafficLight.js';
 import { Root } from 'react-dom';
-
+import VehicleObj from './VehicleObj';
 // interface Props {
   
 //   roadStructureData: Array<number>;
@@ -27,6 +27,8 @@ import { Root } from 'react-dom';
 class Scene extends Component {
   // class Scene extends Component<Props> {
   pixiContent: any;
+  window_w:number;
+  window_h:number;
   app: PIXI.Application;
   mapContainer: PIXI.Container;
   objectContainer: PIXI.Container;
@@ -55,7 +57,7 @@ class Scene extends Component {
   pedestrianTexture:PIXI.Texture;
   vehicle:PIXI.Sprite;
   vehicle2:PIXI.Sprite;
-  vehicle3:any;
+  car:VehicleObj;
   ppl:PIXI.Sprite;
   ppl2:PIXI.Sprite;
   pos_x:number;
@@ -64,8 +66,9 @@ class Scene extends Component {
   constructor(props: any) {
     super(props);
     this.pixiContent = null;
-    
-    this.app = new PIXI.Application({width:window.innerWidth,height:window.innerHeight,resolution:window.devicePixelRatio});
+    this.window_w = window.innerWidth;
+    this.window_h = window.innerHeight;
+    this.app = new PIXI.Application({width:this.window_w,height:this.window_w,resolution:window.devicePixelRatio});
     this.mapContainer = new PIXI.Container();
     this.objectContainer = new PIXI.Container();
     this.displayPlaneContainer = new PIXI.Container();
@@ -78,7 +81,14 @@ class Scene extends Component {
     this.mapContainer.addChild(this.backGround_G);
     this.mapContainer.addChild(this.road_G);
     this.mapContainer.addChild(this.trafficLight_G);
-      
+    // [this.window_w/2,this.window_h/2]
+    this.car = new VehicleObj([0.0,0.0],[0,0],0,0,80,40);
+    let _car =this.car.render();
+    _car.beginFill(0x0ff5f5);
+    _car.drawRect(100, 100, 200, 50);
+    this.mapContainer.addChild(_car);
+      console.log(this.car);
+      console.log(_car);
     this.roadData = [2,2,1,0];
     this.trafficLightData = [[5,3],[10,5]];
 
@@ -100,16 +110,11 @@ class Scene extends Component {
     this.app.loader
     .add("vehicle",vehicle)
     .add("ppl",ppl);
-    // this.app.loader
-    // .add("vehicle",vehicle)
-    // .add("ppl",ppl);
-    //this.initialize();
     this.vehicleTexture = this.app.loader.resources["vehicle"].texture;
     this.pedestrianTexture = this.app.loader.resources["ppl"].texture;
     
     this.vehicle = new PIXI.Sprite(this.vehicleTexture);
     this.vehicle2 = new PIXI.Sprite(this.vehicleTexture);
-    this.vehicle3 = PIXI.Sprite.from("../images/vehicle.png");
     this.ppl = new PIXI.Sprite(this.pedestrianTexture);
     this.ppl2 = new PIXI.Sprite(this.pedestrianTexture);
     this.pos_x =0; 
@@ -130,13 +135,11 @@ class Scene extends Component {
       this.drawRoad(this.road_G,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer);
       this.app.loader
       .add("car",vehicle)
-    let car = new PIXI.Sprite(this.app.loader.resources["car"].texture);
-    car.zIndex = 1000;
-    car.visible = true;
+    //const car = new PIXI.Sprite(this.app.loader.resources["car"].texture);
+    //car.zIndex = 1000;
+    //car.visible = true;
       this.objectContainer.addChild(this.vehicle);
       this.objectContainer.addChild(this.vehicle2);
-      this.objectContainer.addChild(car);
-      this.displayPlaneContainer.addChild(this.vehicle3);
       this.objectContainer.addChild(this.ppl);
       this.objectContainer.addChild(this.ppl2);
     this.pos_x =0; 
@@ -163,6 +166,8 @@ class Scene extends Component {
       this.ppl2.anchor.y = 0.5;
 
       this.app.ticker.add(this.animation);
+      this.objectContainer.addChild(this.car.render());
+      
   };
   setup = () => {
   this.app.loader
@@ -393,6 +398,8 @@ class Scene extends Component {
         road.lineTo(tempPos_seDir[0]-i*zLine_w*2,tempPos_seDir[1]+zOffset_y);
     }
     
+    console.log("this.road_G");
+    console.log(this.road_G);
     
   }
 
