@@ -13,15 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-import os
-import sys
-sys.path.append(os.path.realpath('.'))
+
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.contrib.auth.models import User, Group
-from django.db import models
+from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from djangosite_api.views import StudentViewSet
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
 
 # Serializers define the API representation.
@@ -31,12 +30,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'username', 'email', 'is_staff']
 
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ['url', 'name']
-
-
 # ViewSets define the view behavior.
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -44,21 +37,15 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-
-
 # Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
+router = DefaultRouter()
 router.register(r'users', UserViewSet)
-router.register(r'groups', GroupViewSet)
 router.register(r'students', StudentViewSet)
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^student/', include('djangosite_api.urls')),
-    url(r'^api/auth/', include('rest_framework.urls')),
-    url(r'^api/', include(router.urls)),
+    url(r'^students/', include('djangosite_api.urls')),
+    #url(r'^api/', include(router.urls)),
+    url('', include(router.urls)),
 ]

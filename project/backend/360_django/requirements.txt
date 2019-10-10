@@ -4,4 +4,5 @@ djongo
 sqlparse==0.2.4
 markdown
 django-filter
+pygments # for highlighting
 
