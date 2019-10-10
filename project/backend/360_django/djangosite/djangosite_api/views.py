@@ -1,18 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from django.http import HttpResponse
+from rest_framework import status, viewsets
+from django.http import HttpResponse, JsonResponse
 from .models import Student
-from .serializers import StudentSerializer
+from .serializers import StudentSerializers, StudentSerilizer
+
 
 class StudentAPI(APIView):
+
     def get(self, request, format=None):
+        print('Get data from student API')
         student_data = Student.objects.all()
-        serializer = StudentSerializer(student_data, many=True)
+        serializer = StudentSerializers(student_data, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = StudentSerializer(data=request.data)
+        serializer = StudentSerializers(data=request.data)
         if serializer.is_valid():
             name = serializer.validated_data.get('name')
             age = serializer.validated_data.get('age')
@@ -42,3 +45,11 @@ def home(request):
     for field in student_data:
         print('name of student is', field.age)
     return HttpResponse("check terminal localhost:8000/odm")
+
+# For /api purpose
+class StudentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Student.objects.all()
+    serializer_class = StudentSerilizer

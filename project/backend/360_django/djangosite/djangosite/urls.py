@@ -13,17 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import os
+import sys
+sys.path.append(os.path.realpath('.'))
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
+from django.db import models
 from rest_framework import routers, serializers, viewsets
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
-
-class HelloWorld(APIView):
-    def get(self, request):
-        return Response({'hello': 'Hello World!'})
+from djangosite_api.views import StudentViewSet
 
 
 # Serializers define the API representation.
@@ -38,15 +36,15 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = ['url', 'name']
 
+
 # ViewSets define the view behavior.
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+
 class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
@@ -55,11 +53,12 @@ class GroupViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
+router.register(r'students', StudentViewSet)
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^hello/', include('djangosite_api.urls')),
+    url(r'^student/', include('djangosite_api.urls')),
     url(r'^api/auth/', include('rest_framework.urls')),
     url(r'^api/', include(router.urls)),
 ]
