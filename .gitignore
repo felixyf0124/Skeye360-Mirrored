@@ -2,3 +2,5 @@
 dev_env/*
 dev_env/devenv/*
 project/simulator/TrafficSimulator/traffic_simulator/yarn.lock
+venv/*
+.vscode/*
