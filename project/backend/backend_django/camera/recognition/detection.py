@@ -3,6 +3,7 @@ import numpy as np
 import time
 import threading
 from .counter import Counter
+from .db import *
 
 #https://stackoverflow.com/questions/54426573/is-there-a-way-to-capture-video-from-a-usb-camera-with-multiple-processes-in-pyt
 #http://emaraic.com/blog/yolov3-custom-object-detector
@@ -49,12 +50,14 @@ class Detector:
         print(label, round(x+w/2), round(y+h/2))
 
     # count detection output at the same time detecting objects in the frame
-    def counting(self,count):
+    def counting(self,col,count):
         WAIT_SECONDS = 5
         print(time.ctime())
+        insert_count(col,count)
+        find_all_count(col)
         count.print_counter()
         count.reset_counter()
-        threading.Timer(WAIT_SECONDS, self.counting,[count]).start()
+        threading.Timer(WAIT_SECONDS, self.counting,[col,count]).start()
 
     # Open a video
     def open_video(self):
@@ -68,9 +71,14 @@ class Detector:
         
     # Generate StreamingHttpResponse
     def gen(self, classes, net):
-        # initialize a counter and start counting the objects to be detected
+        # initialize a counter 
         count = Counter()
-        self.counting(count)
+        # connect db
+        col = connection()
+        # cleanup db
+        drop_count(col)
+        # start counting the objects to be detected
+        self.counting(col,count)
         cap = self.open_video()        
 
         while True:

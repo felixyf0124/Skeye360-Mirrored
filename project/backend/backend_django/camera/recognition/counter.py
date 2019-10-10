@@ -12,5 +12,8 @@ class Counter:
         print(self.count)  
 
     def reset_counter(self):
-        self.count = 0  
+        self.count = 0
+
+    def get_counter(self):  
+        return self.count
     
