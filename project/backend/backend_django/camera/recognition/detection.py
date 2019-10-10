@@ -48,6 +48,14 @@ class Detector:
         label = str(classes[class_id])
         print(label, round(x+w/2), round(y+h/2))
 
+    # count detection output at the same time detecting objects in the frame
+    def counting(self,count):
+        WAIT_SECONDS = 5
+        print(time.ctime())
+        count.print_counter()
+        count.reset_counter()
+        threading.Timer(WAIT_SECONDS, self.counting,[count]).start()
+
     # Open a video
     def open_video(self):
         cap = cv2.VideoCapture(self.stream)
@@ -60,7 +68,9 @@ class Detector:
         
     # Generate StreamingHttpResponse
     def gen(self, classes, net):
-        
+        # initialize a counter and start counting the objects to be detected
+        count = Counter()
+        self.counting(count)
         cap = self.open_video()        
 
         while True:
@@ -110,6 +120,8 @@ class Detector:
                 # print(round(y+h))		
                 self.draw_pred(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h),classes)
                 self.print_pred(class_ids[i], x, y, w, h, classes)
+            # increment the counter
+            count.inc(len(indices))
             
             # apply  non-maximum suppression algorithm on the bounding boxes
             t, _ = net.getPerfProfile()
