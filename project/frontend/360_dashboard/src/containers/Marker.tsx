@@ -2,12 +2,15 @@ import React from 'react';
 import '../css/Marker.css';
 
 const Marker = (props: any) => {
-    const { color, name, id } = props;
+    const { color, name, link, id } = props;
     return (
-      <div className="marker"
+
+        <a href={link}>
+        <div className="marker"
         style={{ backgroundColor: color, cursor: 'pointer'}}
-        title={name}
-      />
+        title={name}>
+        </div>
+        </a>
     );
   };
 
