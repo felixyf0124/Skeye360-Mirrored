@@ -29,6 +29,7 @@ class Scene extends Component {
   pixiContent: any;
   window_w:number;
   window_h:number;
+  window_scale_ratio:number;
   app: PIXI.Application;
   mapContainer: PIXI.Container;
   objectContainer: PIXI.Container;
@@ -37,6 +38,7 @@ class Scene extends Component {
   road_G: PIXI.Graphics;
   trafficLight_G: PIXI.Graphics;
   trafficLightManager: TrafficLight;
+  
 
 // the following should be moved outside when enable to connect with db
   roadData: Array<number>
@@ -71,10 +73,11 @@ class Scene extends Component {
 
   constructor(props: any) {
     super(props);
+    this.window_scale_ratio = 0.5;
     this.pixiContent = null;
-    this.window_w = window.innerWidth;
-    this.window_h = window.innerHeight;
-    // this.window_w = window.screen.width;
+    this.window_w = window.innerWidth*this.window_scale_ratio;
+    this.window_h = window.innerHeight*this.window_scale_ratio;
+  // this.window_w = window.screen.width;
     // this.window_h = window.screen.height;
     this.app = new PIXI.Application({width:this.window_w,height:this.window_w,resolution:window.devicePixelRatio});
     this.mapContainer = new PIXI.Container();
@@ -97,8 +100,8 @@ class Scene extends Component {
     this.trafficLightData = [[5,3],[10,5]];
 
     this.lane_w = 60;
-    this.road_w_h =0;
-    this.road_w_v =0;
+    this.road_w_h = 0;
+    this.road_w_v = 0;
 
     this.timeLastMoment=Date.now();
     this.trafficLightCounterOffset = 0;
@@ -141,8 +144,8 @@ class Scene extends Component {
   };
 
   resize = () => {
-    this.window_w = window.innerWidth*0.9;
-    this.window_h = window.innerHeight*0.9;
+    this.window_w = window.innerWidth*this.window_scale_ratio;
+    this.window_h = window.innerHeight*this.window_scale_ratio;
     this.app.renderer.resize(this.window_w,this.window_h);
     this.drawRoad(this.road_G,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer);
     

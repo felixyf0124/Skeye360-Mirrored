@@ -1,4 +1,3 @@
-import { Attribute } from "pixi.js-legacy";
 
 
 export default class Object {
@@ -51,7 +50,8 @@ export default class Object {
 
     updatePosition(velocity_array){
         this.position.x += velocity_array[0];
-        this.position.y += velocity_array[1];
+        // canvas coordinates' y axis is inversed
+        this.position.y -= velocity_array[1];
     }
 
     setLocalBoundingBox(length, width){
