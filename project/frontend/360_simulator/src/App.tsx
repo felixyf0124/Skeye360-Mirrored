@@ -4,7 +4,7 @@ import { RootState } from './reducers/rootReducer';
 import { getHello } from './contexts/hello';
 import TryScene from './simulator/TryScene';
 import  Scene2  from './components/scene.js';
-// import  Scene  from './simulator/Scene';
+import  Scene  from './simulator/Scene';
 import logo from './logo.svg';
 import './App.css';
 
@@ -30,8 +30,8 @@ class App extends React.Component<StateProps & DispatchProps> {
   render(): JSX.Element {
     return (
       <div className="App">
+        <Scene></Scene>
         <TryScene></TryScene>
-        <Scene2></Scene2>
         
       </div>
     );

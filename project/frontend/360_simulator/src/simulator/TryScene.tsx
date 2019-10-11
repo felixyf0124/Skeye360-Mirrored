@@ -46,12 +46,12 @@ class TryScene extends Component {
   
   //vehicleTexture:PIXI.Texture;
   pedestrianTexture:PIXI.Texture;
-  // vehicle:PIXI.Sprite;
+   vehicle:PIXI.Sprite;
   // vehicle2:PIXI.Sprite;
   // car:VehicleObj;
   ppl:PIXI.Sprite;
   ppl2:PIXI.Sprite;
-  vehicle:any;
+  // vehicle1:PIXI.Graphics;
   vehicle2:PIXI.Graphics;
   car:VehicleObj;
   // ppl:PIXI.Graphics;
@@ -62,8 +62,8 @@ class TryScene extends Component {
   constructor(props: any) {
     super(props);
     this.pixiContent = null;
-    this.window_w = window.innerWidth;
-    this.window_h = window.innerHeight;
+    this.window_w = 800;
+    this.window_h = 800;
     this.app = new PIXI.Application({width:this.window_w,height:this.window_w,resolution:window.devicePixelRatio});
     this.mapContainer = new PIXI.Container();
     this.objectContainer = new PIXI.Container();
@@ -72,7 +72,8 @@ class TryScene extends Component {
     this.app.stage.addChild(this.displayPlaneContainer);
     this.backGround_G = new PIXI.Graphics();
     // [this.window_w/2,this.window_h/2]
-    this.car = new VehicleObj([0.0,0.0],[0,0],0,0,80,40);
+    const coordinateOffset = {x:this.window_w/2,y:this.window_h/2};
+    this.car = new VehicleObj([0.0,0.0],coordinateOffset,0,0,80,40);
     
       console.log(this.car);
     //   console.log(_car);
@@ -100,11 +101,11 @@ class TryScene extends Component {
     //this.vehicleTexture = this.app.loader.resources["ppl"].texture;
     this.pedestrianTexture = this.app.loader.resources["ppl"].texture;
     
-    // this.vehicle = new PIXI.Sprite(this.vehicleTexture);
+    this.vehicle = new PIXI.Sprite();
     // this.vehicle2 = new PIXI.Sprite(this.vehicleTexture);
     this.ppl = new PIXI.Sprite(this.pedestrianTexture);
     this.ppl2 = new PIXI.Sprite(this.pedestrianTexture);
-    this.vehicle = new PIXI.Graphics();
+    //this.vehicle = new PIXI.Graphics();
     this.vehicle2 = new PIXI.Graphics();
     // this.ppl = new PIXI.Graphics();
     // this.ppl2 = new PIXI.Graphics();
@@ -119,22 +120,39 @@ class TryScene extends Component {
   initialize = () => {
 
     window.addEventListener('resize',this.resize);
-    const _t = this.app.loader.resources["ppl"].texture;
-    //this stupid variable will never show
+    const _texture = this.app.loader.resources["ppl"].texture;
+    //this stupid variable texture will never show
     this.ppl2 = new PIXI.Sprite(this.pedestrianTexture);
+    // this local instance texture will show
+    this.ppl2 = new PIXI.Sprite(_texture);
     this.objectContainer.addChild(this.ppl2);
-    // this local instance will show
-    const _p = new PIXI.Sprite(_t);
-    this.objectContainer.addChild(_p);
+    const _p = new PIXI.Sprite(_texture);
+    //this.objectContainer.addChild(_p);
     const _car = new PIXI.Graphics();
+    const _car_poly = this.car.render();
     //_car => {this.car.render(_car)}
     //this.car.render(this.objectContainer);
-    // _car.beginFill(0x0ff5f5);
-    // _car.drawRect(100, 100, 200, 50);
-    // _car.endFill();
-    //this.objectContainer.addChild(_car));
+    _car.beginFill(0x0ff5f5);
+    _car.drawPolygon(_car_poly);
+    _car.endFill();
+    this.objectContainer.addChild(_car);
     // this.ppl2 = new PIXI.Sprite(this.pedestrianTexture);
 
+    const _vehicle_texture = this.app.loader.resources["vehicle"].texture;
+    const _vehicle = new PIXI.Sprite(_vehicle_texture);
+    this.vehicle = new PIXI.Sprite(_vehicle_texture);
+
+    // _vehicle.x = this.car.getWorldPosition().x;
+    // _vehicle.y = this.car.getWorldPosition().y;
+    this.vehicle.x = this.car.getWorldPosition().x;
+    this.vehicle.y = this.car.getWorldPosition().y;
+    this.car.setPosition(2,3);
+    this.car.setPositionByObj({x:4,y:3});
+    console.log(this.vehicle.x + " || "+this.vehicle.y);
+    console.log(this.car.position.x + " |car| "+this.car.position.y);
+
+    //this.objectContainer.addChild(_vehicle);
+    this.objectContainer.addChild(this.vehicle);
       // this.app.loader
       // .add("car",vehicle)
     //const car = new PIXI.Sprite(this.app.loader.resources["car"].texture);
@@ -143,19 +161,6 @@ class TryScene extends Component {
     this.pos_x =0; 
     this.pos_y=0;
     
-      //sprite position
-      // this.vehicle3.y = 0;
-      // this.vehicle3.y = 0;
-      //sprite center point
-      // this.vehicle.anchor.x = 0.5;
-      // this.vehicle.anchor.y = 0.5;
-      // this.vehicle2.anchor.x = 0.5;
-      // this.vehicle2.anchor.y = 0.5;
-      // this.vehicle2.alpha = 1.0;
-      // this.ppl.anchor.x = 0.5;
-      // this.ppl.anchor.y = 0.5;
-      // this.ppl2.anchor.x = 0.5;
-      // this.ppl2.anchor.y = 0.5;
 
       this.app.ticker.add(this.animation);
     //   this.objectContainer.addChild(this.car.render());
@@ -201,15 +206,6 @@ class TryScene extends Component {
   }
 };
 
-// const mapStateToProps = (state: RootState): Props => ({
-//   ...state,
-// });
 
-// function Scene(): JSX.Element {
-//   console.log("this works");
-//   return (
-//     <div ref={(element) => {this.updateCar(element)}} />
-//   );
-// }
 
 export default TryScene;

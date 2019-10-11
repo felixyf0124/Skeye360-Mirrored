@@ -51,28 +51,31 @@ class Scene extends Component {
   timeLastMoment:number;
 
   fps:number;
+  fpsCounter:number;
   textStyle: any;
   
-  // vehicleTexture:PIXI.Texture;
-  // pedestrianTexture:PIXI.Texture;
-  // vehicle:PIXI.Sprite;
-  // vehicle2:PIXI.Sprite;
-  // car:VehicleObj;
+  
+  coordinateOffset:{x:number,y:number};
+  vehicle:PIXI.Sprite;
+  //vehicle2:PIXI.Sprite;
   // ppl:PIXI.Sprite;
   // ppl2:PIXI.Sprite;
-  vehicle:any;
-  vehicle2:PIXI.Graphics;
+  vehicleData:Array<{x:number,y:number}>;
   car:VehicleObj;
-  ppl:PIXI.Graphics;
-  ppl2:PIXI.Graphics;
-  pos_x:number;
-  pos_y:number;
+  //vehicle:any;
+  //vehicle2:PIXI.Graphics;
+  // ppl:PIXI.Graphics;
+  // ppl2:PIXI.Graphics;
+  // pos_x:number;
+  // pos_y:number;
 
   constructor(props: any) {
     super(props);
     this.pixiContent = null;
     this.window_w = window.innerWidth;
     this.window_h = window.innerHeight;
+    // this.window_w = window.screen.width;
+    // this.window_h = window.screen.height;
     this.app = new PIXI.Application({width:this.window_w,height:this.window_w,resolution:window.devicePixelRatio});
     this.mapContainer = new PIXI.Container();
     this.objectContainer = new PIXI.Container();
@@ -86,14 +89,10 @@ class Scene extends Component {
     this.mapContainer.addChild(this.backGround_G);
     this.mapContainer.addChild(this.road_G);
     this.mapContainer.addChild(this.trafficLight_G);
-    // [this.window_w/2,this.window_h/2]
-    this.car = new VehicleObj([0.0,0.0],[0,0],0,0,80,40);
-    // let _car =this.car.render();
-    // _car.beginFill(0x0ff5f5);
-    // _car.drawRect(100, 100, 200, 50);
-    // this.mapContainer.addChild(_car);
-      console.log(this.car);
-    //   console.log(_car);
+    this.coordinateOffset = {x:this.window_w/2,y:this.window_h/2};
+
+    this.vehicleData = [{x:0,y:0}];
+    this.car = new VehicleObj([0.0,0.0],this.coordinateOffset,0,0,80,40);
     this.roadData = [2,2,1,0];
     this.trafficLightData = [[5,3],[10,5]];
 
@@ -105,77 +104,33 @@ class Scene extends Component {
     this.trafficLightCounterOffset = 0;
     this.trafficLightCounter = Date.now();
     this.fps = 0;
-    
+    this.fpsCounter = 0;
     this.trafficLightManager = new TrafficLight(this.trafficLightData,Date.now(),this.trafficLightCounterOffset);
     this.textStyle = {
       fontFamily: 'Courier',
       fontSize: '12px',
       fill : '#F7EDCA',
     }
-    // this.app.loader
-    // .add("vehicle",vehicle)
-    // .add("ppl",ppl);
-    // this.vehicleTexture = this.app.loader.resources["vehicle"].texture;
-    // this.pedestrianTexture = this.app.loader.resources["ppl"].texture;
+    this.app.loader
+    .add("vehicle",vehicle)
+    .add("ppl",ppl);
     
-    // this.vehicle = new PIXI.Sprite(this.vehicleTexture);
-    // this.vehicle2 = new PIXI.Sprite(this.vehicleTexture);
-    // this.ppl = new PIXI.Sprite(this.pedestrianTexture);
-    // this.ppl2 = new PIXI.Sprite(this.pedestrianTexture);
-    this.vehicle = new PIXI.Graphics();
-    this.vehicle2 = new PIXI.Graphics();
-    this.ppl = new PIXI.Graphics();
-    this.ppl2 = new PIXI.Graphics();
-    this.pos_x =0; 
-    this.pos_y=0;
+    this.vehicle = new PIXI.Sprite();
+
   }
 
-  // public componentDidMount(): void{
-  //   // const {store} = this.props;
-  // }
+
 
   initialize = () => {
 
     window.addEventListener('resize',this.resize);
     
 
-    // this.ppl2 = new PIXI.Sprite(this.pedestrianTexture);
 
       this.drawRoad(this.road_G,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer);
-      // this.app.loader
-      // .add("car",vehicle)
-    //const car = new PIXI.Sprite(this.app.loader.resources["car"].texture);
-    //car.zIndex = 1000;
-    //car.visible = true;
-      this.objectContainer.addChild(this.vehicle);
-      this.objectContainer.addChild(this.vehicle2);
-      this.objectContainer.addChild(this.ppl);
-      this.objectContainer.addChild(this.ppl2);
-    this.pos_x =0; 
-    this.pos_y=0;
-    
-      //sprite position
-      this.vehicle.x = this.app.renderer.width/2 + this.pos_x;
-      this.vehicle.y = this.app.renderer.height/2 + this.pos_y;
 
-      
-      this.vehicle2.x = this.app.renderer.width/2 + this.pos_x;
-      this.vehicle2.y = this.app.renderer.height/2 + this.pos_y;
-      // this.vehicle3.y = 0;
-      // this.vehicle3.y = 0;
-      //sprite center point
-      // this.vehicle.anchor.x = 0.5;
-      // this.vehicle.anchor.y = 0.5;
-      // this.vehicle2.anchor.x = 0.5;
-      // this.vehicle2.anchor.y = 0.5;
-      // this.vehicle2.alpha = 1.0;
-      // this.ppl.anchor.x = 0.5;
-      // this.ppl.anchor.y = 0.5;
-      // this.ppl2.anchor.x = 0.5;
-      // this.ppl2.anchor.y = 0.5;
 
       this.app.ticker.add(this.animation);
-    //   this.objectContainer.addChild(this.car.render());
       
   };
   setup = () => {
@@ -186,9 +141,9 @@ class Scene extends Component {
   };
 
   resize = () => {
-    let _w = window.innerWidth;
-    let _h = window.innerHeight;
-    this.app.renderer.resize(_w,_h);
+    this.window_w = window.innerWidth*0.9;
+    this.window_h = window.innerHeight*0.9;
+    this.app.renderer.resize(this.window_w,this.window_h);
     this.drawRoad(this.road_G,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer);
     
   }
@@ -511,40 +466,44 @@ class Scene extends Component {
     //towards south
     this.trafficLight_G.drawCircle(_w/2 + (TLPosOffset_x - lane_w*0.8), _h/2 - (TLPosOffset_y),_r); 
     
-    this.displayPlaneContainer.removeChildren();
     const tlText = new PIXI.Text(str[0]+"\n"+str[1]+"\n"+str[2]+"\n"+str[3],this.textStyle);
     this.displayPlaneContainer.addChild(tlText);
   }
+  renderObjects = () => {
+    this.objectContainer.removeChildren();
+
+    const _vehicle_texture = this.app.loader.resources["vehicle"].texture;
+    const _vehicle = new PIXI.Sprite(_vehicle_texture);
+    this.vehicle = new PIXI.Sprite(_vehicle_texture);
+
+    _vehicle.x = this.car.getWorldPosition().x;
+    _vehicle.y = this.car.getWorldPosition().y;
+    this.vehicle.x = this.car.getWorldPosition().x;
+    this.vehicle.y = this.car.getWorldPosition().y;
+    this.objectContainer.addChild(_vehicle);
+    //this.objectContainer.addChild(this.vehicle);
+  }
 
   animation = () => {
-      
+    this.displayPlaneContainer.removeChildren();
+    let deltaTime = Date.now() -this.timeLastMoment;
+    this.fpsCounter++;
+    if(deltaTime>1000){
+       this.fps = this.fpsCounter;
+      this.timeLastMoment =Date.now();
+      this.fpsCounter=0;
+    }
+    
+    const fpsText = new PIXI.Text("FPS: "+ this.fps,this.textStyle);
+    fpsText.x = this.window_w - 80;
+    this.displayPlaneContainer.addChild(fpsText);
+
     const lane_w =60;
     this.drawTrafficLight(this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer,true,10,5,10,5);
-    this.pos_x += 4;
-
-    //sprite position
-    this.vehicle.x = ((this.app.renderer.width/2 + this.pos_x-400)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
-    this.vehicle.y = (this.app.renderer.height/2 + this.pos_y+30);
-    this.vehicle.rotation =PIXI.DEG_TO_RAD*180;
-    this.vehicle2.x = ((this.app.renderer.width/2 -this.pos_x+400)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
     
-    this.vehicle2.y = (this.app.renderer.height/2 + this.pos_y-30)%this.app.renderer.height;
-    this.vehicle2.rotation =PIXI.DEG_TO_RAD*0;
+    this.car.updatePosition([6,0]);
+    this.renderObjects();
 
-
-    this.ppl.x = ((this.app.renderer.width/2-this.road_w_v/2-lane_w/2)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
-    this.ppl.y = ((this.app.renderer.height/2 + this.pos_x/2-100)%this.app.renderer.height+this.app.renderer.height)%this.app.renderer.height;
-    this.ppl2.x = ((this.app.renderer.width/2+this.road_w_v/2+lane_w/2)%this.app.renderer.width+this.app.renderer.width)%this.app.renderer.width;
-    this.ppl2.y = ((this.app.renderer.height/2 - this.pos_x/2+100)%this.app.renderer.height+this.app.renderer.height)%this.app.renderer.height;
-
-    let deltaTime = Date.now() -this.timeLastMoment;
-    this.fps++;
-    if(deltaTime>1000){
-    
-    //console.log (temp+"/"+this.timeC.toString()+" / "+this.fps+"fps   from scene");
-    this.timeLastMoment =Date.now();
-    this.fps=0;
-    }
   }
 
   render = () => {
@@ -556,19 +515,6 @@ class Scene extends Component {
   }
 };
 
-// const mapStateToProps = (state: RootState): Props => ({
-//   ...state,
-// });
-
-// function Scene(): JSX.Element {
-//   console.log("this works");
-//   return (
-//     <div ref={(element) => {this.updateCar(element)}} />
-//   );
-// }
 
 export default 
-// connect(
-//   mapStateToProps,
-// )
 (Scene);
