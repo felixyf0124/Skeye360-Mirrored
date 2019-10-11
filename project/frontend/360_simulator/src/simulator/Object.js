@@ -48,6 +48,12 @@ export default class Object {
         this.positionOffset = positionOffset_obj;
     }
 
+    setVelocity(velocity_tsVec2){
+        this.velocity = velocity_tsVec2;
+    }
+
+    
+
     updatePosition(velocity_array){
         this.position.x += velocity_array[0];
         // canvas coordinates' y axis is inversed
@@ -74,5 +80,11 @@ export default class Object {
         return worldPosition;
     }
 
+    getPosition(){
+        return {
+            x:this.position.x, 
+            y:this.position.y
+        };
+    }
 
 }

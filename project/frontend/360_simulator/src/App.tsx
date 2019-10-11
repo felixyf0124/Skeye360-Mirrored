@@ -21,6 +21,7 @@ interface DispatchProps {
  * @extends {Component}
  */
 class App extends React.Component<StateProps & DispatchProps> {
+  
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { getHello } = this.props;
@@ -28,10 +29,13 @@ class App extends React.Component<StateProps & DispatchProps> {
   }
 
   render(): JSX.Element {
+
     return (
-      <div className="App">
+      <div className="App" >
+        
         <Scene></Scene>
-        <TryScene></TryScene>
+
+        {/* <TryScene></TryScene> */}
         
       </div>
     );

@@ -11,14 +11,7 @@ import ppl from '../images/ppl.png';
 import TrafficLight from './TrafficLight.js';
 import { Root } from 'react-dom';
 import VehicleObj from './VehicleObj';
-// interface Props {
-  
-//   roadStructureData: Array<number>;
-//   trafficLightCountDown: Array<number>;
-//   laneWidth: number;
-//   numOfHorizontalRoad: number;
-//   numOfVerticalRoad: number;
-// }
+import * as ts from './TSGeometry'
 
 /**
  * @class Scene
@@ -29,6 +22,7 @@ class Scene extends Component {
   pixiContent: any;
   window_w:number;
   window_h:number;
+  window_min:number;
   window_scale_ratio:number;
   app: PIXI.Application;
   mapContainer: PIXI.Container;
@@ -64,12 +58,6 @@ class Scene extends Component {
   // ppl2:PIXI.Sprite;
   vehicleData:Array<{x:number,y:number}>;
   car:VehicleObj;
-  //vehicle:any;
-  //vehicle2:PIXI.Graphics;
-  // ppl:PIXI.Graphics;
-  // ppl2:PIXI.Graphics;
-  // pos_x:number;
-  // pos_y:number;
 
   constructor(props: any) {
     super(props);
@@ -77,6 +65,7 @@ class Scene extends Component {
     this.pixiContent = null;
     this.window_w = window.innerWidth*this.window_scale_ratio;
     this.window_h = window.innerHeight*this.window_scale_ratio;
+    this.window_min=100;
   // this.window_w = window.screen.width;
     // this.window_h = window.screen.height;
     this.app = new PIXI.Application({width:this.window_w,height:this.window_w,resolution:window.devicePixelRatio});
@@ -92,12 +81,15 @@ class Scene extends Component {
     this.mapContainer.addChild(this.backGround_G);
     this.mapContainer.addChild(this.road_G);
     this.mapContainer.addChild(this.trafficLight_G);
-    this.coordinateOffset = {x:this.window_w/2,y:this.window_h/2};
+    this.coordinateOffset = {x:this.window_w*this.window_scale_ratio/2,y:this.window_h*this.window_scale_ratio/2};
 
     this.vehicleData = [{x:0,y:0}];
-    this.car = new VehicleObj([0.0,0.0],this.coordinateOffset,0,0,80,40);
+    this.car = new VehicleObj([this.window_w/2,0.0],this.coordinateOffset,0,0,80,40);
     this.roadData = [2,2,1,0];
     this.trafficLightData = [[5,3],[10,5]];
+    //const _velocity = ts.tsVec2(-6,0);
+
+    this.car.setVelocity(ts.tsVec2(-6,0));
 
     this.lane_w = 60;
     this.road_w_h = 0;
@@ -144,11 +136,28 @@ class Scene extends Component {
   };
 
   resize = () => {
-    this.window_w = window.innerWidth*this.window_scale_ratio;
-    this.window_h = window.innerHeight*this.window_scale_ratio;
+    if(window.innerWidth<this.window_min)
+    {
+      this.window_w = this.window_min;
+      this.coordinateOffset.x = this.window_w*this.window_scale_ratio/2;
+    }else
+    {
+      this.window_w = window.innerWidth*this.window_scale_ratio;
+      this.coordinateOffset.x = this.window_w*this.window_scale_ratio/2;
+    }
+    if(window.innerHeight<this.window_min)
+    {
+      this.window_h = this.window_min;
+      this.coordinateOffset.y = this.window_h*this.window_scale_ratio/2;
+    }else
+    {
+      this.window_h = window.innerHeight*this.window_scale_ratio;
+      this.coordinateOffset.y = this.window_h*this.window_scale_ratio/2;
+    }
     this.app.renderer.resize(this.window_w,this.window_h);
     this.drawRoad(this.road_G,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer);
     
+    this.car.setPositionOffset(this.coordinateOffset.x, this.coordinateOffset.y + this.window_h*this.window_scale_ratio*0.3);
   }
 
   updateCar = (element:any) => {
@@ -484,7 +493,6 @@ class Scene extends Component {
     this.vehicle.x = this.car.getWorldPosition().x;
     this.vehicle.y = this.car.getWorldPosition().y;
     this.objectContainer.addChild(_vehicle);
-    //this.objectContainer.addChild(this.vehicle);
   }
 
   animation = () => {
@@ -492,7 +500,7 @@ class Scene extends Component {
     let deltaTime = Date.now() -this.timeLastMoment;
     this.fpsCounter++;
     if(deltaTime>1000){
-       this.fps = this.fpsCounter;
+      this.fps = this.fpsCounter;
       this.timeLastMoment =Date.now();
       this.fpsCounter=0;
     }
@@ -500,20 +508,43 @@ class Scene extends Component {
     const fpsText = new PIXI.Text("FPS: "+ this.fps,this.textStyle);
     fpsText.x = this.window_w - 80;
     this.displayPlaneContainer.addChild(fpsText);
-
+    //console.log(this.car.velocity);
+    const _stopline = {
+      x:(this.road_w_v/2 + 1.2)*this.lane_w,
+      y:0
+    }
+    this.car.setStopLine(_stopline);
     const lane_w =60;
     this.drawTrafficLight(this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer,true,10,5,10,5);
-    
-    this.car.updatePosition([6,0]);
+    const _light_state = this.trafficLightManager.getTrafficLightStateAtDirection(0);
+    this.car.updateTranslate({light:_light_state[0],countDown:_light_state[1]});
+    if(ts.tsLength(this.car.getPosition())>this.window_w*1.5)
+    {
+      this.car.setPosition(this.window_w*0.8,0.0);
+    }
     this.renderObjects();
 
   }
 
   render = () => {
+    
     console.log("this works");
       return (
-        <div ref={(element) => {this.updateCar(element)}} />
-           
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <div style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} ref={(element) => {this.updateCar(element)}} />
+                </td>
+                <td>
+                  <img   style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} src="http://52.170.42.166:8000/"></img>
+                </td>
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
       );
   }
 };

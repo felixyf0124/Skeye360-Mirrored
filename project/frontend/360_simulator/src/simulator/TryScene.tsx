@@ -11,6 +11,7 @@ import ppl from '../images/ppl.png';
 import TrafficLight from './TrafficLight.js';
 import { Root } from 'react-dom';
 import VehicleObj from './VehicleObj';
+import RoadGenerator from './RoadGenerator';
 
 
 /**
@@ -26,7 +27,8 @@ class TryScene extends Component {
   mapContainer: PIXI.Container;
   objectContainer: PIXI.Container;
   displayPlaneContainer: PIXI.Container;
-  backGround_G: PIXI.Graphics;
+    road : PIXI.Graphics;
+    backGround_G: PIXI.Graphics;
   trafficLightManager: TrafficLight;
 
 // the following should be moved outside when enable to connect with db
@@ -35,7 +37,7 @@ class TryScene extends Component {
   lane_w:number;
   road_w_h:number;
   road_w_v:number;
-
+  roadGenerator: RoadGenerator;
   trafficLightCounterOffset:number;
   trafficLightCounter:number;
   
@@ -62,15 +64,17 @@ class TryScene extends Component {
   constructor(props: any) {
     super(props);
     this.pixiContent = null;
-    this.window_w = 800;
-    this.window_h = 800;
-    this.app = new PIXI.Application({width:this.window_w,height:this.window_w,resolution:window.devicePixelRatio});
+    this.window_w = window.innerWidth;
+    this.window_h = window.innerHeight;
+    this.app = new PIXI.Application({width:this.window_w,height:this.window_h,resolution:window.devicePixelRatio});
     this.mapContainer = new PIXI.Container();
     this.objectContainer = new PIXI.Container();
     this.displayPlaneContainer = new PIXI.Container();
+    this.app.stage.addChild(this.mapContainer);
     this.app.stage.addChild(this.objectContainer);
     this.app.stage.addChild(this.displayPlaneContainer);
     this.backGround_G = new PIXI.Graphics();
+    this.road = new PIXI.Graphics();
     // [this.window_w/2,this.window_h/2]
     const coordinateOffset = {x:this.window_w/2,y:this.window_h/2};
     this.car = new VehicleObj([0.0,0.0],coordinateOffset,0,0,80,40);
@@ -79,7 +83,7 @@ class TryScene extends Component {
     //   console.log(_car);
     this.roadData = [2,2,1,0];
     this.trafficLightData = [[5,3],[10,5]];
-
+    this.roadGenerator = new RoadGenerator(coordinateOffset, [2,1],[1,1],[1,1],[1,1],60);
     this.lane_w = 60;
     this.road_w_h =0;
     this.road_w_v =0;
@@ -160,7 +164,7 @@ class TryScene extends Component {
     //car.visible = true;
     this.pos_x =0; 
     this.pos_y=0;
-    
+    this.drawRoad();
 
       this.app.ticker.add(this.animation);
     //   this.objectContainer.addChild(this.car.render());
@@ -174,9 +178,10 @@ class TryScene extends Component {
   };
 
   resize = () => {
-    let _w = window.innerWidth;
-    let _h = window.innerHeight;
-    this.app.renderer.resize(_w,_h);
+    this.window_w = window.innerWidth;
+    this.window_h = window.innerHeight;
+    this.app.renderer.resize(this.window_w,this.window_h);
+    this.drawRoad();
     
   }
 
@@ -186,11 +191,32 @@ class TryScene extends Component {
       if(this.pixiContent && this.pixiContent.children.length<=0) {
         this.pixiContent.appendChild(this.app.view);
         this.setup();
-        //this.app.renderer.render(this.app.stage);
       }
   };
 
+  drawRoad=()=>{
+    const road_data_g = this.roadGenerator.cookGraphicRenderData(this.window_w,this.window_h);
+    console.log(road_data_g);
+    this.mapContainer.removeChildren();
+    let i = 0;
 
+    const road =    new PIXI.Graphics();
+    for(i = 0;i<road_data_g.length;i++)
+    {
+
+    console.log("this is i " + i + "\n");
+    road.lineStyle(road_data_g[i].width,road_data_g[i].color);
+   
+        road.moveTo(road_data_g[i].start.x,     road_data_g[i].start.y);
+        road.lineTo(road_data_g[i].end.x,     road_data_g[i].end.y);
+    }
+    
+    
+    road.x = this.window_w/2;
+    road.y = this.window_h/2;
+    this.mapContainer.addChild(road);
+
+  }
 
   animation = () => {
       
