@@ -36,32 +36,40 @@ export default class vehicle extends Object{
       {
       console.log("count 2 | x =" +this.position.x);
 
-        const _distance = this.getDistanceToStopLine();
-        if(_distance >4 && _distance <0)
+        const _distance = this.getPosition().x;
+        if(_distance >340 || _distance <300)
+        
         {
+      console.log("count 2 | x =" +this.position.x + "|"+ _distance);
+
         this.resetVelocityOffset();
 
           this.updatePos();
 
         }else{
-            this.slowDown(0.05);
+      console.log("count 2 s| x =" +this.position.x + "|"+ _distance);
+
+            this.slowDown(0.3);
             this.updatePos();
 
         }
         
       }else{
-      console.log("count 3 | x =" +this.position.x);
+      
+      const _distance = this.getPosition().x;
 
-        const _distance = this.getDistanceToStopLine();
 
-        if(_distance >4 && _distance <0)
-        {
+      if(_distance >340 || _distance <300)
+      {
         this.resetVelocityOffset();
+        console.log("count 3 | x =" +this.position.x + "|"+ _distance);
 
           this.updatePos();
 
         }else{
-            this.slowDown(0.05);
+      console.log("count 3 s| x =" +this.position.x + "|"+ _distance);
+
+            this.slowDown(0.3);
             this.updatePos();
 
         }

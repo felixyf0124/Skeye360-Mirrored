@@ -86,7 +86,7 @@ class Scene extends Component {
     this.vehicleData = [{x:0,y:0}];
     this.car = new VehicleObj([this.window_w/2,0.0],this.coordinateOffset,0,0,80,40);
     this.roadData = [2,2,1,0];
-    this.trafficLightData = [[5,3],[10,5]];
+    this.trafficLightData = [[5,5],[5,5]];
     //const _velocity = ts.tsVec2(-6,0);
 
     this.car.setVelocity(ts.tsVec2(-6,0));
