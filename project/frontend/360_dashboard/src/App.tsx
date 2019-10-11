@@ -5,45 +5,38 @@ import { RootState } from './reducers/rootReducer';
 import { getHello } from './contexts/hello';
 import './App.css';
 import Header from './components/Header';
-import Login from './components/Login'; 
+import Login from './components/Login';
 //import Footer from './components/Footer';
 //import LeftPanel from './components/LeftPanel';
 
+import './App.css';
+import SkeyeMap from './containers/SkeyeMap';
 
 interface StateProps {
-  // stateMsg: string;
-}
-
-interface DispatchProps {
-  getHello: () => any;
 }
 
 /**
  * @class App
  * @extends {Component}
  */
-class App extends React.Component<StateProps & DispatchProps> {
-  public componentDidMount(): void {
-    // eslint-disable-next-line no-shadow
-    const { getHello } = this.props;
-    getHello();
-  }
-
+class App extends React.Component<StateProps> {
   render(): JSX.Element {
     return (
+
       <div>
         <Header />
         <Login />
+        <SkeyeMap />
       </div>
-    )}
+    )
+  }
+
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
-  // stateMsg: "stateMsg",
 });
 
 export default connect(
   mapStateToProps,
-  { getHello },
 )(App);
