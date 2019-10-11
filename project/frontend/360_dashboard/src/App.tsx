@@ -11,6 +11,8 @@ import Login from './components/Login';
 
 import './App.css';
 import SkeyeMap from './containers/SkeyeMap';
+import { render } from 'react-dom';
+import { jsxAttribute } from '@babel/types';
 
 interface StateProps {
 }
@@ -19,10 +21,10 @@ interface StateProps {
  * @class App
  * @extends {Component}
  */
+
 class App extends React.Component<StateProps> {
   render(): JSX.Element {
     return (
-
       <div>
         <Header />
         <Login />

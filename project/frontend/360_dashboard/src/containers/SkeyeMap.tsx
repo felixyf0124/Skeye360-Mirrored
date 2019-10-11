@@ -22,7 +22,7 @@ const SkeyeMap = (props: any) => {
             lng={center.lng}
             text="Camera_id"
             color="red"
-            link="https://www.w3schools.com"
+            link="http://127.0.0.1:4000"
           />
         </GoogleMapReact>
       </div>
