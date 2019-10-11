@@ -87,17 +87,30 @@ a{
 }
 
 .left-panel-container{
-    height: 100%;
     width: 225px;
     background-color: $SKEYE_BLUE;
     display: flex;
     flex-direction: column; 
-    height: fit-content;
+    height: 700px;
+    left: 0;
 
+}
+
+.panel-btn{
+    margin-top: 10px;
+    background-color: $SKEYE_GREY !important;
+    border-color: $SKEYE_GREY !important;
 }
 
 .content-container{
     display: flex;
+    
+}
+
+.dashboard-content{
+    display: flex;
+    color: $SKEYE_WHITE;
+    font-size: 40px;
     
 }
 
