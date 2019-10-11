@@ -1,9 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
+//import { BrowserRoute, Route, Switch } from 'react-router-dom';
 import { RootState } from './reducers/rootReducer';
 import { getHello } from './contexts/hello';
-import logo from './logo.svg';
 import './App.css';
+import Header from './components/Header';
+import Login from './components/Login'; 
+//import Footer from './components/Footer';
+//import LeftPanel from './components/LeftPanel';
+
 
 interface StateProps {
   // stateMsg: string;
@@ -26,19 +31,11 @@ class App extends React.Component<StateProps & DispatchProps> {
 
   render(): JSX.Element {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-          <pre>
-            {
-              JSON.stringify(this.props)
-            }
-          </pre>
-        </header>
+      <div>
+        <Header />
+        <Login />
       </div>
-    );
-  }
+    )}
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
