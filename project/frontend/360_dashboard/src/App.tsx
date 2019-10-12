@@ -8,6 +8,7 @@ import Header from './components/Header';
 import Login from './components/Login';
 //import Footer from './components/Footer';
 //import LeftPanel from './components/LeftPanel';
+import Scene from './simulator/Scene'
 
 import './App.css';
 import SkeyeMap from './containers/SkeyeMap';
