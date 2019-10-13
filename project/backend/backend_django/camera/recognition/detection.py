@@ -121,11 +121,7 @@ class Detector:
                 y = box[1]
                 w = box[2]
                 h = box[3]
-                #print(str(classes[class_id]),round(x+w/2), round(y+h/2))            
-                # print(round(x))
-                # print(round(y))
-                # print(round(x+w))
-                # print(round(y+h))		
+                	
                 self.draw_pred(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h),classes)
                 self.print_pred(class_ids[i], x, y, w, h, classes)
             # increment the counter
