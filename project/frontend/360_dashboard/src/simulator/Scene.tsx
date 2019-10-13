@@ -32,7 +32,6 @@ class Scene extends Component {
   road_G: PIXI.Graphics;
   trafficLight_G: PIXI.Graphics;
   trafficLightManager: TrafficLight;
-  
 
 // the following should be moved outside when enable to connect with db
   roadData: Array<number>
@@ -50,12 +49,8 @@ class Scene extends Component {
   fpsCounter:number;
   textStyle: any;
   
-  
   coordinateOffset:{x:number,y:number};
   vehicle:PIXI.Sprite;
-  //vehicle2:PIXI.Sprite;
-  // ppl:PIXI.Sprite;
-  // ppl2:PIXI.Sprite;
   vehicleData:Array<{x:number,y:number}>;
   car:VehicleObj;
 
@@ -66,8 +61,6 @@ class Scene extends Component {
     this.window_w = window.innerWidth*this.window_scale_ratio;
     this.window_h = window.innerHeight*this.window_scale_ratio;
     this.window_min=100;
-  // this.window_w = window.screen.width;
-    // this.window_h = window.screen.height;
     this.app = new PIXI.Application({width:this.window_w,height:this.window_w,resolution:window.devicePixelRatio});
     this.mapContainer = new PIXI.Container();
     this.objectContainer = new PIXI.Container();
@@ -87,7 +80,6 @@ class Scene extends Component {
     this.car = new VehicleObj([this.window_w/2,0.0],this.coordinateOffset,0,0,80,40);
     this.roadData = [2,2,1,0];
     this.trafficLightData = [[5,5],[5,5]];
-    //const _velocity = ts.tsVec2(-6,0);
 
     this.car.setVelocity(ts.tsVec2(-6,0));
 
@@ -120,10 +112,7 @@ class Scene extends Component {
 
     window.addEventListener('resize',this.resize);
     
-
-
       this.drawRoad(this.road_G,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer);
-
 
       this.app.ticker.add(this.animation);
       
@@ -166,7 +155,6 @@ class Scene extends Component {
       if(this.pixiContent && this.pixiContent.children.length<=0) {
         this.pixiContent.appendChild(this.app.view);
         this.setup();
-        //this.app.renderer.render(this.app.stage);
       }
   };
 
@@ -414,7 +402,6 @@ class Scene extends Component {
     const trafficLightStates = [this.trafficLightManager.getTrafficLightStateAtDirection(0), this.trafficLightManager.getTrafficLightStateAtDirection(1)];
     var str = ["","","",""];
     
-    
     //draw hori direction
     if(trafficLightStates[0][0] === 1)
     {
@@ -446,7 +433,6 @@ class Scene extends Component {
     
     //towards east
     this.trafficLight_G.drawCircle(_w/2 + (TLPosOffset_x),_h/2 + (TLPosOffset_y - lane_w*0.8),_r); 
-    
 
     if(trafficLightStates[1][0] === 1)
     {
@@ -508,7 +494,6 @@ class Scene extends Component {
     const fpsText = new PIXI.Text("FPS: "+ this.fps,this.textStyle);
     fpsText.x = this.window_w - 80;
     this.displayPlaneContainer.addChild(fpsText);
-    //console.log(this.car.velocity);
     const _stopline = {
       x:(this.road_w_v/2 + 1.2)*this.lane_w,
       y:0
