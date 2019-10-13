@@ -1,12 +1,10 @@
 import { combineReducers } from 'redux';
-import simpleReducer from './simpleReducer';
-import hello, { STATE as helloState } from '../contexts/hello';
+import authentication, { STATE as authState } from '../contexts/authentication';
 
 export interface RootState {
-  hello: helloState;
+  authentication: authState;
 }
 
 export default combineReducers({
-  simpleReducer,
-  hello,
+  authentication,
 });
