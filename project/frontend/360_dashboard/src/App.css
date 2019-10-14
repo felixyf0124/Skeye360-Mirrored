@@ -1,3 +1,14 @@
+/*
+  Colour scheme:
+
+  Blue:   #51bcd8
+  Grey:   #808080
+  White:  #FFFFFF
+  Black:  #000000
+  Green:  #04a777
+
+*/
+
 .App {
   text-align: center;
 }
@@ -31,3 +42,4 @@
     transform: rotate(360deg);
   }
 }
+

@@ -1,52 +1,45 @@
 import React from 'react';
 import { connect } from 'react-redux';
+//import { BrowserRoute, Route, Switch } from 'react-router-dom';
 import { RootState } from './reducers/rootReducer';
 import { getHello } from './contexts/hello';
-import logo from './logo.svg';
 import './App.css';
+import Header from './components/Header';
+import Login from './components/Login';
+//import Footer from './components/Footer';
+//import LeftPanel from './components/LeftPanel';
+import Scene from './simulator/Scene'
+
+import './App.css';
+import SkeyeMap from './containers/SkeyeMap';
+import { render } from 'react-dom';
+import { jsxAttribute } from '@babel/types';
 
 interface StateProps {
-  // stateMsg: string;
-}
-
-interface DispatchProps {
-  getHello: () => any;
 }
 
 /**
  * @class App
  * @extends {Component}
  */
-class App extends React.Component<StateProps & DispatchProps> {
-  public componentDidMount(): void {
-    // eslint-disable-next-line no-shadow
-    const { getHello } = this.props;
-    getHello();
-  }
 
+class App extends React.Component<StateProps> {
   render(): JSX.Element {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-          <pre>
-            {
-              JSON.stringify(this.props)
-            }
-          </pre>
-        </header>
+      <div>
+        <Header />
+        <Login />
+        <SkeyeMap />
       </div>
-    );
+    )
   }
+
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
-  // stateMsg: "stateMsg",
 });
 
 export default connect(
   mapStateToProps,
-  { getHello },
 )(App);
