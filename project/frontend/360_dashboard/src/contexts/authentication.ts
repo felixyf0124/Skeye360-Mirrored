@@ -66,16 +66,16 @@ export const authFail = (): authgFailAction => ({
 // SAGA
 export function* handleAuthentication({ email, password }: AuthAction): Iterator<any> {
     try {
-      const APIDomain = '127.0.0.1:8000';
-      console.log("handleAuthentication");
-      const data = yield call(authenticateUser, APIDomain, email, password);
-      console.log("DATA:" + data);
-      if (data !== undefined) {
+        const APIDomain = '127.0.0.1:8000';
+        console.log("handleAuthentication");
+        const data = yield call(authenticateUser, APIDomain, email, password);
+        console.log("DATA:" + data);
+        if (data !== undefined) {
         yield put(authSuccess(data));
-      }
+        }
     } catch (e) {
-      yield put(authFail());
-      throw e;
+        yield put(authFail());
+        throw e;
     }
 }
 
