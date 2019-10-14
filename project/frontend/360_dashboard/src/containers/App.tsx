@@ -8,31 +8,27 @@ import Login from '../components/Login';
 // import Scene from '../simulator/Scene'
 
 import '../css/App.css';
-// import SkeyeMap from '../containers/SkeyeMap';
+import SkeyeMap from '../containers/SkeyeMap';
 
 interface StateProps {
+  authenticated: boolean
 }
 
-/**
- * @class App
- * @extends {Component}
- */
-
-class App extends React.Component<StateProps> {
-  render(): JSX.Element {
-    return (
-      <div>
-        <Header />
-        <Login />
-        {/* <SkeyeMap /> */}
-      </div>
-    )
-  }
-
-}
+const App = ({ authenticated }: StateProps): JSX.Element => (
+  <div>
+    <Header />
+    {authenticated ? (
+      <SkeyeMap />
+    ) : (
+      <Login />
+    )}
+    
+  </div>
+);
 
 const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
+  authenticated: state.authentication.authenticated,
 });
 
 export default connect(

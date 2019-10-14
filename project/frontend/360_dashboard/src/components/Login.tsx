@@ -3,22 +3,19 @@ import { RootState } from '../reducers/rootReducer';
 import { connect } from 'react-redux';
 import { authenticate } from '../contexts/authentication';
 
-interface Props {
-    authenticated: boolean;
-}
-
 interface StateProps {
+    authenticated: boolean,
     email: string;
     password: string;
     error: string;
 }
 
 interface DispatchProps {
-    authenticate: (email: string, password: string) => any;
+    authenticate: (email: string, password: string) => void;
 }
 
-function Login(props: StateProps & DispatchProps): React.ReactElement {
-    const [state, setState] = React.useState(props);
+const Login = (props: StateProps & DispatchProps): JSX.Element => {
+    const [ state, setState ] = React.useState(props);
     const { email, password } = state;
 
     console.log("ASD:" + email + "," + password);
@@ -27,7 +24,7 @@ function Login(props: StateProps & DispatchProps): React.ReactElement {
         setState({ ...state, [e.target.name]: e.target.value });
     };
 
-    return( 
+    return ( 
         <div className="login-container">
             <form onSubmit={(e) => {
                 e.preventDefault();
@@ -60,6 +57,7 @@ function Login(props: StateProps & DispatchProps): React.ReactElement {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
+    authenticated: state.authentication.authenticated,
     email: '',
     password: '',
     error: '',
