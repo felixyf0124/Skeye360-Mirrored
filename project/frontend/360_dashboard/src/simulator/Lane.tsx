@@ -1,3 +1,4 @@
+import Vehicle from './Vehicle';
 
 /**
  * @class Lane
@@ -10,9 +11,11 @@ export default class Lane {
     laneDirection: number;
     roadSection_id: number;
     roadIntersection_id:number
-    object_ids:Array<number>;
-    head_id:number;
-    tail_id:number;
+    objects:Array<Object>;
+    head:number;
+    tail:number;
+    start:{x:number,y:number};
+    end:{x:number,y:number};
     trafficLight_id:number;
 
     constructor(id:number, laneType:string, laneDirection:number, roadSection_id:number, roadIntersection_id:number){
@@ -21,10 +24,19 @@ export default class Lane {
         this.laneDirection = laneDirection;
         this.roadSection_id = roadSection_id;
         this.roadIntersection_id = roadIntersection_id;
-        this.object_ids = new Array<number>();
-        this.head_id = -1;
-        this.tail_id = -1;
-        this.trafficLight_id = -1;
+        this.objects = new Array<Object>();
+        // is there anyway to make this null?
+        this.head = 0;
+        this.tail = 0;
+        this.start = {x:0,y:0};
+        this.end = {x:0,y:0};
+        this.trafficLight_id = 0;
     }
+
+    addVehicle(VehicleObj:Vehicle)
+    {
+        this.objects.push(VehicleObj);
+    }
+
 }
 
