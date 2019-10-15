@@ -20,7 +20,6 @@ export default class Object {
         this.setPositionOffsetByObj(positionOffset_obj);
         this.directionDeg =directionDeg;
         this.directionDegOffset =directionDegOffset;
-        //this.setLocalBoundingBox(length, width);
          
     }
 

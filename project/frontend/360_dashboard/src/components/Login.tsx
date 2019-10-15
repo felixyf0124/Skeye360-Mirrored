@@ -3,7 +3,6 @@ import { Button } from 'react-bootstrap';
 import SkeyeMap from "../containers/SkeyeMap";
 import { any } from "prop-types";
 import { jsxAttribute } from "@babel/types";
-// import { showMap } from '../App';
 
 class Login extends Component {
     state = {
