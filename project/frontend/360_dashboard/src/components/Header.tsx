@@ -29,7 +29,7 @@ interface DispatchProps {
 const Header = (props: StateProps & DispatchProps): JSX.Element => (
     <nav className = "navbar">
         <Head>
-            {props.streaming_map ? (
+            {props.streaming_map && props.authenticated ? (
                 <div className="map">
                     <a href="#map" onClick={
                         props.exitStreetView

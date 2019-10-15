@@ -4,6 +4,7 @@ import {
     takeLatest,
 } from 'redux-saga/effects';
 import authenticateUser, { authResponse } from '../api/authenticateUser';
+import { exitStreetView } from '../contexts/streetview';
 
 export interface STATE {
     session_token: string;
@@ -109,7 +110,6 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         }
         case LOGOUT: {
             return {
-                ...state,
                 session_token: initState.session_token,
                 name: initState.name,
                 email: initState.email,

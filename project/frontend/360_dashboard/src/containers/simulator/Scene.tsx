@@ -377,8 +377,8 @@ class Scene extends Component {
         road.lineTo(tempPos_seDir[0]-i*zLine_w*2,tempPos_seDir[1]+zOffset_y);
     }
     
-    console.log("this.road_G");
-    console.log(this.road_G);
+    // console.log("this.road_G");
+    // console.log(this.road_G);
     
   }
 
