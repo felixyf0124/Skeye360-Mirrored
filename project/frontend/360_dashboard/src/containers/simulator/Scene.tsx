@@ -4,14 +4,29 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 //pixi.js-legacy for VM
 import * as PIXI from "pixi.js-legacy";
-import { RootState } from '../reducers/rootReducer';
+import { RootState } from '../../reducers/rootReducer';
 import { Store } from 'redux';
-import vehicle from '../images/vehicle.png';
-import ppl from '../images/ppl.png';
-import TrafficLight from './TrafficLight.js';
+import vehicle from '../../images/vehicle.png';
+import ppl from '../../images/ppl.png';
+import TrafficLight from './TrafficLight';
 import { Root } from 'react-dom';
 import VehicleObj from './VehicleObj';
 import * as ts from './TSGeometry'
+import styled from 'styled-components';
+
+const Feed = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: 1.5rem;
+  text-align: left;
+  position: relative;
+  height: 3rem;
+  align-items: left;
+`;
+
+interface Props {
+}
 
 /**
  * @class Scene
@@ -512,28 +527,22 @@ class Scene extends Component {
   }
 
   render = () => {
-    
-    console.log("this works");
+    // console.log("this works");
       return (
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <div style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} ref={(element) => {this.updateCar(element)}} />
-                </td>
-                <td>
-                  <img   style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} src="http://52.170.42.166:8000/"></img>
-                </td>
-                
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <Feed>
+          <div style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} ref={(element) => {this.updateCar(element)}} />
+          <div>
+            <img   style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} src="http://52.170.42.166:8000/" />
+          </div>
+        </Feed>
       );
   }
 };
 
 
-export default 
-(Scene);
+const mapStateToProps = (state: RootState): Props => ({
+});
+
+export default connect(
+  mapStateToProps,
+)(Scene);

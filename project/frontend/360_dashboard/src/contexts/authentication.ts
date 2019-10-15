@@ -20,6 +20,7 @@ const initState: STATE = {
 }
 
 export const AUTHENTICATE = 'AUTHENTICATE';
+export const AUTHENTICATE_TEST = 'AUTHENTICATE_TEST';
 export const AUTHENTICATE_SUCCESS = 'AUTHENTICATE_SUCCESS';
 export const AUTHENTICATE_FAIL = 'AUTHENTICATE_FAIL';
 export const LOGOUT = 'LOGOUT';
@@ -31,7 +32,7 @@ export interface AuthAction {
 }
 
 export const authenticate = (email: string, password: string): AuthAction => ({
-    type: AUTHENTICATE,
+    type: AUTHENTICATE_TEST,
     email,
     password,
 });
@@ -87,6 +88,15 @@ export function* saga(): Iterator<any> {
 export default function reducer(state: STATE = initState, action: any): STATE {
     console.log("REDUCER " + action.type);
     switch (action.type) {
+        case AUTHENTICATE_TEST: {
+            return {
+                ...state,
+                session_token: 'ASD',
+                name: action.name,
+                email: action.email,
+                authenticated: true,
+            }
+        }
         case AUTHENTICATE_SUCCESS: {
             const { data } = action as AuthSuccessAction;
             console.log(action.type);
@@ -99,6 +109,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         }
         case LOGOUT: {
             return {
+                ...state,
                 session_token: initState.session_token,
                 name: initState.name,
                 email: initState.email,

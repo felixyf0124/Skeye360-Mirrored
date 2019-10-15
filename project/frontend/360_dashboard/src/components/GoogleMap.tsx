@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import GoogleMapReact from 'google-map-react';
 import Marker from './Marker';
+import { RootState } from '../reducers/rootReducer';
+import { connect } from 'react-redux';
+import { viewStreet } from '../contexts/streetview'
 
 const API_KEY: string = "AIzaSyDF3Bsq5rm-uhEMAqqyMqzgc-dXUPl9Byw";
 
-const GoogleMap = (props: any) => {
+const GoogleMap = () => {
     const [ center ] = useState({lat: 45.5017, lng: -73.5673 });
     const [ zoom ] = useState(11);
 
@@ -20,11 +23,11 @@ const GoogleMap = (props: any) => {
             lng={center.lng}
             text="Camera_id"
             color="red"
-            link="http://127.0.0.1:4000"
+            link="#streetview"
           />
         </GoogleMapReact>
       </div>
     );
 }
 
-export default GoogleMap;
+export default connect()(GoogleMap);
