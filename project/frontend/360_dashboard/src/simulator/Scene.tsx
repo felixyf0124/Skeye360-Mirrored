@@ -10,7 +10,7 @@ import vehicle from '../images/vehicle.png';
 import ppl from '../images/ppl.png';
 import TrafficLight from './TrafficLight.js';
 import { Root } from 'react-dom';
-import VehicleObj from './Vehicle';
+import VehicleObj from './simulator_management/Vehicle';
 import * as ts from './TSGeometry'
 
 /**

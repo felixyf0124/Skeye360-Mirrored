@@ -30,9 +30,11 @@ export default class Object {
     
 
     getPosition(){
-        return 
-            this.position;
-        ;
+        return this.position;
+    }
+
+    getRoadSectionId(){
+        return this.roadSection_id;
     }
 
 }
