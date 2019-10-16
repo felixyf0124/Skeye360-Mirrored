@@ -23,4 +23,5 @@ export default class RoadSection {
         this.lane_in = new Array<Lane>();
         this.lane_out = new Array<Lane>();
     }
+
 }
