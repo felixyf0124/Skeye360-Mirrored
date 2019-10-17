@@ -112,7 +112,6 @@ class Scene extends Component {
 
     window.addEventListener('resize',this.resize);
     
-      this.drawRoad(this.road_G,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer);
 
       this.app.ticker.add(this.animation);
       
@@ -144,7 +143,6 @@ class Scene extends Component {
       this.coordinateOffset.y = this.window_h*this.window_scale_ratio/2;
     }
     this.app.renderer.resize(this.window_w,this.window_h);
-    this.drawRoad(this.road_G,this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer);
     
     //this.car.setPositionOffset(this.coordinateOffset.x, this.coordinateOffset.y + this.window_h*this.window_scale_ratio*0.3);
   }
@@ -158,227 +156,7 @@ class Scene extends Component {
       }
   };
 
-  drawRoad=(object_G:PIXI.Graphics,laneDirLeft:number,laneDirRight:number,laneDirTop:number,laneDirDown:number,container:PIXI.Container)=>{
-    const lane_w = 60;
-    const line_w = 4;
-    const zLine_w = 10;
-    this.road_w_h =(laneDirLeft+laneDirRight)*lane_w;
-    this.road_w_v =(laneDirTop+laneDirDown)*lane_w;
-    const _w = this.app.renderer.width;
-    const _h = this.app.renderer.height;
-    const road = object_G;
-    this.backGround_G.clear();
-    this.backGround_G.beginFill(0x1111ab);
-    this.backGround_G.drawRect(0,0,_w,_h);
-    object_G.clear()
-    //draw road base
-    road.beginFill(0x575757);
-    road.drawRect(0,_h/2-(this.road_w_h/2),_w,this.road_w_h);
-    road.drawRect(_w/2-(this.road_w_v/2),0,this.road_w_v,_h);
-    
-    //draw side walk
-    road.beginFill(0xcccccc);
-    if(laneDirLeft+laneDirRight!==0)
-    {
-        road.drawRect(0, _h/2-(this.road_w_h/2), _w/2-this.road_w_v/2, -lane_w);
-        road.drawRect(0, _h/2+(this.road_w_h/2), _w/2-this.road_w_v/2, lane_w);
-        road.drawRect(_w, _h/2-(this.road_w_h/2), -(_w/2-this.road_w_v/2), -lane_w);
-        road.drawRect(_w, _h/2+(this.road_w_h/2), -(_w/2-this.road_w_v/2), lane_w);
-    }
-    if(laneDirTop+laneDirDown!==0)
-    {
-    road.drawRect(_w/2-this.road_w_v/2, 0, -lane_w, _h/2-this.road_w_h/2);
-    road.drawRect(_w/2+this.road_w_v/2, 0, lane_w, _h/2-this.road_w_h/2);
-    road.drawRect(_w/2-this.road_w_v/2, _h, -lane_w, -(_h/2-this.road_w_h/2));
-    road.drawRect(_w/2+this.road_w_v/2, _h, lane_w, -(_h/2-this.road_w_h/2));
-    }
-    
-    //draw road lines
-    //yellow line
-    road.beginFill(0xffca57);
-    if(laneDirLeft!==0&&laneDirRight!==0)
-    {
-      const midlinePos_h = (laneDirLeft - (laneDirLeft+laneDirRight)/2)*lane_w - line_w/2;
-      var lineLength; 
-      if(laneDirTop+laneDirDown!==0){
-          lineLength = _w/2-this.road_w_v/2-lane_w*1.2;
-      }else{
-          lineLength = _w/2-this.road_w_v/2-lane_w*0.7;
-      }
-      road.drawRect(0,_h/2+(midlinePos_h),lineLength,line_w);
-      road.drawRect(_w,_h/2+(midlinePos_h),-(lineLength),line_w);
-    }
-    if(laneDirTop!==0&&laneDirDown!==0)
-    {
-      const midlinePos_v = -(laneDirTop - (laneDirTop+laneDirDown)/2)*lane_w - line_w/2;
-      var lineLength; 
-      if(laneDirLeft+laneDirRight!==0){
-          lineLength = _h/2-this.road_w_h/2-lane_w*1.2;
-      }else{
-          lineLength = _h/2-this.road_w_h/2-lane_w*0.7;
-      }
-      road.drawRect(_w/2+(midlinePos_v),0,line_w,lineLength);
-      road.drawRect(_w/2+(midlinePos_v),_h,line_w,-(lineLength));
-    }
-    
-    //white line
-    road.beginFill(0xffffff);
-    for(var i=1;i<(laneDirLeft+laneDirRight);i++){
-      if(i!==laneDirLeft){
-          const linePos = (i - (laneDirLeft+laneDirRight)/2)*lane_w ;
-          
-          var lineLength;
-          if(laneDirTop+laneDirDown!==0)
-          {
-              lineLength = _w/2-this.road_w_v/2-lane_w*1.2;
-          }else{
-              lineLength = _w/2-this.road_w_v/2-lane_w*0.7;
-          }
-          this.drawDashLine(road,[0,_h/2+linePos],[(lineLength),_h/2+linePos],0.6,lineLength/lane_w,this.mapContainer,line_w,0xffffff);
-          
-          this.drawDashLine(road,[_w,_h/2+linePos],[(_w-lineLength),_h/2+linePos],0.6,lineLength/lane_w,this.mapContainer,line_w,0xffffff);
-          road.lineStyle(0,0xffffff);
-          if(i<laneDirLeft)
-          {
-              road.drawRect(_w-lineLength,_h/2+(linePos - line_w/2),lane_w*2,line_w);
-          }else{
-              road.drawRect(lineLength,_h/2+(linePos - line_w/2),-lane_w*2,line_w);
-          }
-      }
-    }
 
-    for(var i=1;i<(laneDirTop+laneDirDown);i++){
-      if(i!==laneDirTop){
-          const linePos = -(i - (laneDirTop+laneDirDown)/2)*lane_w;
-          
-          var lineLength;
-          if(laneDirLeft+laneDirRight!==0)
-          {
-              lineLength = _h/2-this.road_w_h/2-lane_w*1.2;
-          }else{
-              lineLength = _h/2-this.road_w_h/2-lane_w*0.7;
-          }
-          this.drawDashLine(road,[_w/2+(linePos),0],[_w/2+(linePos),lineLength],0.6,lineLength/lane_w,this.mapContainer,line_w,0xffffff);
-          
-          this.drawDashLine(road,[_w/2+(linePos),_h],[_w/2+(linePos),_h-lineLength],0.6,lineLength/lane_w,this.mapContainer,line_w,0xffffff);
-          road.lineStyle(0,0xffffff);
-          if(i<laneDirTop)
-          {
-              road.drawRect(_w/2+(linePos - line_w/2),_h-lineLength,line_w,lane_w*2);
-          }else{
-              road.drawRect(_w/2+(linePos - line_w/2),lineLength,line_w,-lane_w*2);
-          }
-      }
-    }
-    if(laneDirLeft!==0)
-    {
-      const linePos_y = (laneDirLeft - (laneDirLeft+laneDirRight)/2)*lane_w;
-      var linePos_x;
-      if(laneDirTop+laneDirDown!==0)
-      {
-          linePos_x = _w/2+this.road_w_v/2+lane_w*1.2;
-      }else{
-          linePos_x = _w/2+this.road_w_v/2+lane_w*0.7;
-      }
-      road.drawRect(linePos_x,_h/2+(linePos_y),8,-lane_w*laneDirLeft+line_w/2);
-    }
-    if(laneDirRight!==0)
-    {
-      const linePos_y = (laneDirLeft - (laneDirLeft+laneDirRight)/2)*lane_w ;
-      var linePos_x;
-      if(laneDirTop+laneDirDown!==0)
-      {
-          linePos_x = _w/2-this.road_w_v/2-lane_w*1.2;
-      }else{
-          linePos_x = _w/2-this.road_w_v/2-lane_w*0.7;
-      }
-      road.drawRect(linePos_x, _h/2+(linePos_y),-8,lane_w*laneDirRight-line_w/2);
-    }
-    if(laneDirTop!==0)
-    {
-      const linePos_x = (laneDirTop - (laneDirTop+laneDirDown)/2)*lane_w;
-      var linePos_y;
-      if(laneDirLeft+laneDirRight!==0)
-      {
-          linePos_y = _h/2+this.road_w_h/2+lane_w*1.2;
-      }else{
-          linePos_y = _h/2+this.road_w_h/2+lane_w*0.7;
-      }
-      road.drawRect(_w/2-(linePos_x), linePos_y,lane_w*laneDirTop-line_w/2,8);
-    }
-    if(laneDirDown!==0)
-    {
-      const linePos_x = (laneDirTop - (laneDirTop+laneDirDown)/2)*lane_w;
-      var linePos_y;
-      if(laneDirLeft+laneDirRight!==0)
-      {
-          linePos_y = _h/2-this.road_w_h/2-lane_w*1.2;
-      }else{
-          linePos_y = _h/2-this.road_w_h/2-lane_w*0.7;
-      }
-      road.drawRect(_w/2-(linePos_x), linePos_y,-lane_w*laneDirDown+line_w/2,-8);
-    }
-    
-    //zebra crossing
-    road.lineStyle(zLine_w,0xffffff);
-    var zOffset_x,zOffset_y;
-    if(laneDirTop+laneDirDown!==0)
-      {
-          zOffset_x = lane_w;
-      }else{
-          zOffset_x = lane_w/2;
-      }
-      if(laneDirLeft+laneDirRight!==0)
-      {
-          zOffset_y = lane_w;
-      }else{
-          zOffset_y = lane_w/2;
-      }
-    const tempPos_nwDir = [_w/2-lane_w*(laneDirTop+laneDirDown)/2, _h/2-lane_w*(laneDirLeft+laneDirRight)/2];
-    //west
-    for(i=1; i<(lane_w/zLine_w)*(laneDirLeft+laneDirRight)/2;i++)
-    {
-        road.moveTo(tempPos_nwDir[0],       tempPos_nwDir[1]+i*zLine_w*2);
-        road.lineTo(tempPos_nwDir[0]-zOffset_x,tempPos_nwDir[1]+i*zLine_w*2);
-    }
-    //north
-    for(i=1; i<(lane_w/zLine_w)*(laneDirTop+laneDirDown)/2;i++)
-    {
-        road.moveTo(tempPos_nwDir[0]+i*zLine_w*2,tempPos_nwDir[1]);
-        road.lineTo(tempPos_nwDir[0]+i*zLine_w*2,tempPos_nwDir[1]-zOffset_y);
-    }
-
-    const tempPos_seDir = [_w/2+lane_w*(laneDirTop+laneDirDown)/2, _h/2+lane_w*(laneDirLeft+laneDirRight)/2];
-    //east
-    for(i=1; i<(lane_w/zLine_w)*(laneDirLeft+laneDirRight)/2;i++)
-    {
-        road.moveTo(tempPos_seDir[0],       tempPos_seDir[1]-i*zLine_w*2);
-        road.lineTo(tempPos_seDir[0]+zOffset_x,tempPos_seDir[1]-i*zLine_w*2);
-    }
-    //south
-    for(i=1; i<(lane_w/zLine_w)*(laneDirTop+laneDirDown)/2;i++)
-    {
-        road.moveTo(tempPos_seDir[0]-i*zLine_w*2,tempPos_seDir[1]);
-        road.lineTo(tempPos_seDir[0]-i*zLine_w*2,tempPos_seDir[1]+zOffset_y);
-    }
-    
-    console.log("this.road_G");
-    console.log(this.road_G);
-    
-  }
-
-  drawDashLine=(dashLine:PIXI.Graphics,startPos:Array<number>,endPos:Array<number>,dashLengthRatio:number,dashNum:number,container:any,width:number,color:any)=>{
-      
-      dashLine.lineStyle(width,color);
-      const unitLength = [(endPos[0]-startPos[0])/dashNum,(endPos[1]-startPos[1])/dashNum];
-
-      for(var i =-1; i<dashNum-1;i++){
-          const tempPos = [startPos[0]+unitLength[0]*i+unitLength[0]*(1-dashLengthRatio),startPos[1]+unitLength[1]*i+unitLength[1]*(1-dashLengthRatio)];
-          dashLine.moveTo(tempPos[0],tempPos[1]);
-          dashLine.lineTo(tempPos[0]+unitLength[0]*dashLengthRatio,tempPos[1]+unitLength[1]*dashLengthRatio);
-      }
-      
-  }
 
   drawTrafficLight=(laneDirLeft:number,laneDirRight:number,laneDirTop:number,laneDirDown:number,container:any,initGreenDirV:boolean, gTime:number,yTime:number,gTime2:number,yTime2:number)=>{
     const lane_w = 60;
@@ -474,10 +252,6 @@ class Scene extends Component {
     const _vehicle = new PIXI.Sprite(_vehicle_texture);
     this.vehicle = new PIXI.Sprite(_vehicle_texture);
 
-    // _vehicle.x = this.car.getWorldPosition().x;
-    // _vehicle.y = this.car.getWorldPosition().y;
-    // this.vehicle.x = this.car.getWorldPosition().x;
-    // this.vehicle.y = this.car.getWorldPosition().y;
     this.objectContainer.addChild(_vehicle);
   }
 
@@ -502,12 +276,6 @@ class Scene extends Component {
     const lane_w =60;
     this.drawTrafficLight(this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer,true,10,5,10,5);
     const _light_state = this.trafficLightManager.getTrafficLightStateAtDirection(0);
-    //this.car.updateTranslate({light:_light_state[0],countDown:_light_state[1]});
-    // if(ts.tsLength(this.car.getPosition())>this.window_w*1.5)
-    // {
-    //   this.car.setPosition(this.window_w*0.8,0.0);
-    // }
-    // this.renderObjects();
 
   }
 
