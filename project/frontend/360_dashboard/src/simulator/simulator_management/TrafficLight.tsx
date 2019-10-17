@@ -7,31 +7,45 @@ export default class TrafficLight {
     TLManagerId:number;
     countDownSetting:Array<number>;
     bindToLaneId:Array<number>;
-    stateCountDown:number;
+    trafficLightStatusCountDown:number;
+    //TrafficLightStatus: stop (blinks red), red, yellow, green
+    trafficLightStatus:string;
 
     constructor(id:number, TLManagerId:number){
         this.id = id;
         this.TLManagerId = TLManagerId;
         this.countDownSetting = new Array<number>();
         this.bindToLaneId = new Array<number>();
-        this.stateCountDown = 0;
+        this.trafficLightStatusCountDown = 0;
+        this.trafficLightStatus = "stop";
     }
 
     //Getters
-    getTrafficLightId() {
+    private getTrafficLightId() {
         return this.id;
     }
-    getTrafficLightManagerId() {
+    private getTrafficLightManagerId() {
         return this.TLManagerId;
     }
-    getCountDownSetting() {
+    private getCountDownSetting() {
         return this.countDownSetting;
     }
-    getBindToLaneId() {
+    private getBindToLaneId() {
         return this.bindToLaneId;
     }
-    getStateCountDown() {
-        return this.stateCountDown;
+    private getStateCountDown() {
+        return this.trafficLightStatusCountDown;
+    }
+    private getTrafficLightStatus() {
+        return this.trafficLightStatus;
+    }
+
+    //Setters
+    private setTrafficLightStatusCountDown(trafficLightStatusCountDown: number) {
+        this.trafficLightStatusCountDown = trafficLightStatusCountDown;
+    }
+    private setTrafficLightStatus(trafficLightStatus: string) {
+        this.trafficLightStatus = trafficLightStatus;
     }
 }
 

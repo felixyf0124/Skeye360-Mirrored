@@ -20,20 +20,28 @@ export default class TrafficLightManger {
     }
 
     //Getters
-    getTrafficLightManagerId() {
+    private getTrafficLightManagerId() {
         return this.id;
     }
-    getRoadIntersectionId() {
+    private getRoadIntersectionId() {
         return this.roadIntersection_id;
     }
-    getTrafficLightQueue() {
+    private getTrafficLightQueue() {
         return this.trafficLightQueue;
     }
-    getCountDown() {
+    private getCountDown() {
         return this.countDown;
     }
-    getCountDownOffset() {
+    private getCountDownOffset() {
         return this.countDownOffset;
+    }
+
+    //Setters
+    private setCountDown(countDown: number) {
+        this.countDown = countDown;
+    }
+    private setCountDownOffset(countDownOffset: number) {
+        this.countDownOffset = countDownOffset;
     }
 }
 
