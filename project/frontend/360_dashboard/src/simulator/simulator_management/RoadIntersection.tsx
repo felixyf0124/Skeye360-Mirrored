@@ -21,13 +21,13 @@ export default class RoadIntersection {
     }
 
     //Getters
-    private getRoadIntersectionId() {
+    private getRoadIntersectionId(): number {
         return this.id;
     }
-    private getMapCoordinate() {
+    private getMapCoordinate(): Coordinate {
         return this.mapCoordinate;
     }
-    private getRoadSections() {
+    private getRoadSections(): Array<RoadSection> {
         return this.roadSections;
     }
 

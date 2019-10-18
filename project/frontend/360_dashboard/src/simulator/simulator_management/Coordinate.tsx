@@ -12,10 +12,10 @@ export default class Coordinate {
     }
 
     //Getters
-    private getCoordinateX() {
+    private getCoordinateX(): number {
         return this.x;
     }
-    private getCoordinateY() {
+    private getCoordinateY(): number {
         return this.y;
     }
 

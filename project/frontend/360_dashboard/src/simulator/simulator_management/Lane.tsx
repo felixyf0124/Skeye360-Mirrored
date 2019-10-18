@@ -39,37 +39,37 @@ export default class Lane {
     }
 
     //Getters
-    private getLaneId() {
+    private getLaneId(): number {
         return this.id;
     }
-    private getLaneType() {
+    private getLaneType(): string {
         return this.laneType;
     }
-    private getLaneDirection() {
+    private getLaneDirection(): number {
         return this.laneDirection;
     }
-    private getRoadSectionId() {
+    private getRoadSectionId(): number {
         return this.roadSection_id;
     }
-    private getRoadIntersectionId() {
+    private getRoadIntersectionId(): number {
         return this.roadIntersection_id
     }
-    private getObjectsOnLane() {
+    private getObjectsOnLane(): Array<Object> {
         return this.objects;
     }
-    private getHead() {
+    private getHead(): number {
         return this.head;
     }
-    private getTail() {
+    private getTail(): number {
         return this.tail;
     }
-    private getStart() {
+    private getStart(): Coordinate {
         return this.start;
     }
-    private getEnd() {
+    private getEnd(): Coordinate {
         return this.end;
     }
-    private getTrafficLightId() {
+    private getTrafficLightId(): number {
         return this.trafficLight_id;
     }
 

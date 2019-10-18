@@ -18,10 +18,10 @@ export default class vehicle extends Object{
     }
 
     //Getters
-    private getVehicleId() {
+    private getVehicleId(): number {
         return this.id;
     }
-    private getCoordinateOffset() {
+    private getCoordinateOffset(): Coordinate {
         return this.coordinate;
     }
 

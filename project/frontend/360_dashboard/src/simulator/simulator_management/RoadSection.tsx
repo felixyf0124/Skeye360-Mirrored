@@ -30,22 +30,22 @@ export default class RoadSection {
     }
 
     //Getters
-    private getRoadSectionId() {
+    private getRoadSectionId(): number {
         return this.id;
     }
-    private getRoadIntersectionId() {
+    private getRoadIntersectionId(): number {
         return this.roadIntersection_id;
     }
-    private getHead() {
+    private getHead(): Coordinate {
         return this.head;
     }
-    private getTail() {
+    private getTail(): Coordinate {
         return this.tail;
     }
-    private getLaneIn() {
+    private getLaneIn(): Array<Lane> {
         return this.lane_in;
     }
-    private getLaneOut() {
+    private getLaneOut(): Array<Lane> {
         return this.lane_out;
     }
 

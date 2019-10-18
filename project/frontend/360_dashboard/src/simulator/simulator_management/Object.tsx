@@ -31,16 +31,16 @@ export default class Object {
     }
 
     //Getters
-    private getObjectId() {
+    private getObjectId(): number {
         return this.id;
     }
-    private getLaneId() {
+    private getLaneId(): number {
         return this.lane_id;
     }
-    private getRoadSectionId(){
+    private getRoadSectionId(): number {
         return this.roadSection_id;
     }
-    private getCoordinate(){
+    private getCoordinate(): Coordinate{
         return this.coordinate;
     }
 
