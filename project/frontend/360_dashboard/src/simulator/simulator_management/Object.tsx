@@ -31,33 +31,33 @@ export default class Object {
     }
 
     //Getters
-    private getObjectId(): number {
+    getObjectId(): number {
         return this.id;
     }
-    private getLaneId(): number {
+    getLaneId(): number {
         return this.lane_id;
     }
-    private getRoadSectionId(): number {
+    getRoadSectionId(): number {
         return this.roadSection_id;
     }
-    private getCoordinate(): Coordinate{
+    getCoordinate(): Coordinate{
         return this.coordinate;
     }
 
     //Setters
-    private setCoordinate(coordinate: Coordinate) {
+    setCoordinate(coordinate: Coordinate) {
         this.coordinate = coordinate;
     }
-    private setLaneId(lane_id: number) {
+    setLaneId(lane_id: number) {
         this.lane_id = lane_id;
     }
-    private setRoadSectionId(roadSection_id: number) {
+    setRoadSectionId(roadSection_id: number) {
         this.roadSection_id = roadSection_id;
     }
-    private setState(state: string) {
+    setState(state: string) {
         this.state = state;
     }
-    private setObjectSpeed(speed: number) {
+    setObjectSpeed(speed: number) {
         this.speed = speed;
     }
 

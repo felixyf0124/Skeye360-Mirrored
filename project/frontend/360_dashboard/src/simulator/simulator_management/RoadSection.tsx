@@ -30,31 +30,41 @@ export default class RoadSection {
     }
 
     //Getters
-    private getRoadSectionId(): number {
+    getRoadSectionId(): number {
         return this.id;
     }
-    private getRoadIntersectionId(): number {
+    getRoadIntersectionId(): number {
         return this.roadIntersection_id;
     }
-    private getHead(): Coordinate {
+    getHead(): Coordinate {
         return this.head;
     }
-    private getTail(): Coordinate {
+    getTail(): Coordinate {
         return this.tail;
     }
-    private getLaneIn(): Array<Lane> {
+    getLaneIn(): Array<Lane> {
         return this.lane_in;
     }
-    private getLaneOut(): Array<Lane> {
+    getLaneOut(): Array<Lane> {
         return this.lane_out;
     }
 
     //Setters
-    private setHead(head: Coordinate) {
+    setHead(head: Coordinate) {
         this.head = head;
     }
-    private setTail(tail: Coordinate) {
+    setTail(tail: Coordinate) {
         this.tail = tail;
+    }
+
+    addNewLane(newLane: Lane){
+        if(newLane.laneDirection > 0){
+            this.lane_in.push(newLane);
+        }else if(newLane.laneDirection < 0){
+            this.lane_out.push(newLane);
+        }else{
+            console.error("laneDirection not defined \n");
+        }
     }
 
 }

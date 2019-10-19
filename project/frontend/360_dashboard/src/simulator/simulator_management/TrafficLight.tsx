@@ -35,57 +35,57 @@ export default class TrafficLight {
     }
 
     //Getters
-    private getTrafficLightId(): number {
+    getTrafficLightId(): number {
         return this.id;
     }
-    private getTrafficLightManagerId(): number {
+    getTrafficLightManagerId(): number {
         return this.TLManagerId;
     }
-    private getCountDownSetting(): Array<number> {
+    getCountDownSetting(): Array<number> {
         return this.countDownSetting;
     }
-    private getBindToLaneId(): Array<number> {
+    getBindToLaneId(): Array<number> {
         return this.bindToLaneId;
     }
-    private getStateCountDown(): number {
+    getStateCountDown(): number {
         return this.trafficLightStatusCountDown;
     }
-    private getTrafficLightStatus(): string {
+    getTrafficLightStatus(): string {
         return this.trafficLightStatus;
     }
-    private getTimePairs(): Array<Array<number>> {
+    getTimePairs(): Array<Array<number>> {
         return this.timePairs;
     }
-    private getStartTime(): number {
+    getStartTime(): number {
         return this.startTime;
     }
-    private getTimeOffset(): number {
+    getTimeOffset(): number {
         return this.timeOffset;
     }
-    private getTotalTimePeriod(): number {
+    getTotalTimePeriod(): number {
         return this.totalTimePeriod;
     }
-    private getDeltaT(): number {
+    getDeltaT(): number {
         return this.deltaT
     }
 
     //Setters
-    private setTrafficLightStatusCountDown(trafficLightStatusCountDown: number) {
+    setTrafficLightStatusCountDown(trafficLightStatusCountDown: number) {
         this.trafficLightStatusCountDown = trafficLightStatusCountDown;
     }
-    private setTrafficLightStatus(trafficLightStatus: string) {
+    setTrafficLightStatus(trafficLightStatus: string) {
         this.trafficLightStatus = trafficLightStatus;
     }
-    private setTimePairs(timePairs: Array<Array<number>>) {
+    setTimePairs(timePairs: Array<Array<number>>) {
         this.timePairs = timePairs;
     }
-    private setStartTime(startTime: number) {
+    setStartTime(startTime: number) {
         this.startTime = startTime;
     }
-    private setTimeOffset(timeOffset: number) {
+    setTimeOffset(timeOffset: number) {
         this.timeOffset = timeOffset;
     }
-    private setDeltaT(deltaT: number) {
+    setDeltaT(deltaT: number) {
         this.deltaT = deltaT;
     }
 

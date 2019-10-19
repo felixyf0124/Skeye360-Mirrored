@@ -39,60 +39,60 @@ export default class Lane {
     }
 
     //Getters
-    private getLaneId(): number {
+    getLaneId(): number {
         return this.id;
     }
-    private getLaneType(): string {
+    getLaneType(): string {
         return this.laneType;
     }
-    private getLaneDirection(): number {
+    getLaneDirection(): number {
         return this.laneDirection;
     }
-    private getRoadSectionId(): number {
+    getRoadSectionId(): number {
         return this.roadSection_id;
     }
-    private getRoadIntersectionId(): number {
+    getRoadIntersectionId(): number {
         return this.roadIntersection_id
     }
-    private getObjectsOnLane(): Array<Object> {
+    getObjectsOnLane(): Array<Object> {
         return this.objects;
     }
-    private getHead(): number {
+    getHead(): number {
         return this.head;
     }
-    private getTail(): number {
+    getTail(): number {
         return this.tail;
     }
-    private getStart(): Coordinate {
+    getStart(): Coordinate {
         return this.start;
     }
-    private getEnd(): Coordinate {
+    getEnd(): Coordinate {
         return this.end;
     }
-    private getTrafficLightId(): number {
+    getTrafficLightId(): number {
         return this.trafficLight_id;
     }
 
     //Setters
-    private setLaneType(laneType: string) {
+    setLaneType(laneType: string) {
         this.laneType = laneType;
     }
-    private setRoadSectionId(roadSection_id: number) {
+    setRoadSectionId(roadSection_id: number) {
         this.roadSection_id = roadSection_id;
     }
-    private setroadIntersectionId(roadIntersection_id: number) {
+    setroadIntersectionId(roadIntersection_id: number) {
         this.roadIntersection_id = roadIntersection_id;
     }
-    private setHead(head: number) {
+    setHead(head: number) {
         this.head = head;
     }
-    private setTail(tail: number) {
+    setTail(tail: number) {
         this.tail = tail;
     }
-    private setStart(start: Coordinate) {
+    setStart(start: Coordinate) {
         this.start = start;
     }
-    private setEnd(end: Coordinate) {
+    setEnd(end: Coordinate) {
         this.end = end;
     }
 
