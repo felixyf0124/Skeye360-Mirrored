@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  360_mongo:
+    build: 
+      context: ./database/360_mongo
+    container_name: 'my-mongo'
+    network_mode: bridge
+    ports:
+      - '27017:27017'
+    restart: always
+    volumes:
+      - /data/db:/data/db
+  
+  360_django:
+    build: 
+      context: ./backend/360_django
+    container_name: 'my-django'
+    network_mode: bridge
+    ports:
+      - '8000:8000'
+    restart: always
+    depends_on:
+      - 360_mongo
+  
+  360_dashboard:
+    build: 
+      context: ./frontend/360_dashboard
+    container_name: 'my-dashboard'
+    network_mode: bridge
+    ports:
+      - '3000:3000'
+    restart: always
+    depends_on:
+      - 360_mongo
+      - 360_django
+
