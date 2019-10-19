@@ -1,36 +1,73 @@
-import React, { Component } from "react";
-import { Button } from 'react-bootstrap';
-import SkeyeMap from "../containers/SkeyeMap";
-import { any } from "prop-types";
-import { jsxAttribute } from "@babel/types";
-// import { showMap } from '../App';
+import React from 'react';
+import { RootState } from '../reducers/rootReducer';
+import { connect } from 'react-redux';
+import { authenticate } from '../contexts/authentication';
 
-class Login extends Component {
-    state = {
-        email: "",
-        password: "",
-        map: false,
-    };
-    public showMap() {
-        this.state.map = true;
-    }
-    render(){
-        return( 
-            <div className="login-container">
-            <form>
-                    <div className="form-group">
-                        <label>Username</label>
-                        <input type="text" />
-                    </div>
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input type="password" />
-                    </div>
-
-                    <Button className="login-btn" color="primary" type="submit" onClick={this.showMap}>Log In</Button>
-                </form>
-            </div>
-        );
-    }
+interface StateProps {
+    authenticated: boolean,
+    email: string;
+    password: string;
+    error: string;
 }
-export default Login;
+
+interface DispatchProps {
+    authenticate: (email: string, password: string) => void;
+}
+
+const Login = (props: StateProps & DispatchProps): JSX.Element => {
+    const [ state, setState ] = React.useState(props);
+    const { email, password } = state;
+
+    console.log("ASD:" + email + "," + password);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setState({ ...state, [e.target.name]: e.target.value });
+    };
+
+    return ( 
+        <div className="login-container">
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                props.authenticate(email, password);
+            }}>
+                <div className="form-group">
+                    <label>Username</label>
+                    <input
+                        type="text"
+                        name="email"
+                        value={email}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        value={password}
+                        onChange={handleChange}
+                    />
+                </div>
+                <button type="submit">
+                    Login
+                </button>
+            </form>
+        </div>
+    );
+}
+
+const mapStateToProps = (state: RootState): StateProps => ({
+    authenticated: state.authentication.authenticated,
+    email: '',
+    password: '',
+    error: '',
+});
+
+const mapDispatchToProps: DispatchProps = {
+    authenticate,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(Login);

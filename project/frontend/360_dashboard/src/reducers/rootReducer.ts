@@ -1,12 +1,13 @@
 import { combineReducers } from 'redux';
-import simpleReducer from './simpleReducer';
-import hello, { STATE as helloState } from '../contexts/hello';
+import authentication, { STATE as authState } from '../contexts/authentication';
+import streetview, { STATE as streetviewState } from '../contexts/streetview';
 
 export interface RootState {
-  hello: helloState;
+  authentication: authState;
+  streetview: streetviewState;
 }
 
 export default combineReducers({
-  simpleReducer,
-  hello,
+  authentication,
+  streetview,
 });
