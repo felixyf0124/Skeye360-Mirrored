@@ -11,7 +11,9 @@ import ppl from '../images/ppl.png';
 import TrafficLight from './TrafficLight.js';
 import { Root } from 'react-dom';
 import VehicleObj from './simulator_management/Vehicle';
+import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry'
+import Coordinate from './simulator_management/Coordinate';
 
 /**
  * @class Scene
@@ -31,8 +33,9 @@ class Scene extends Component {
   backGround_G: PIXI.Graphics;
   road_G: PIXI.Graphics;
   trafficLight_G: PIXI.Graphics;
+  //should be removed after the roadintersection implemented
   trafficLightManager: TrafficLight;
-
+  roadIntersection: RoadIntersection;
 // the following should be moved outside when enable to connect with db
   roadData: Array<number>
   trafficLightData: Array<Array<number>>
@@ -52,7 +55,7 @@ class Scene extends Component {
   coordinateOffset:{x:number,y:number};
   vehicle:PIXI.Sprite;
   vehicleData:Array<{x:number,y:number}>;
-  car:VehicleObj;
+  //car:VehicleObj;
 
   constructor(props: any) {
     super(props);
@@ -77,7 +80,7 @@ class Scene extends Component {
     this.coordinateOffset = {x:this.window_w*this.window_scale_ratio/2,y:this.window_h*this.window_scale_ratio/2};
 
     this.vehicleData = [{x:0,y:0}];
-    this.car = new VehicleObj(1,{x:this.window_w/2,y:0.0},1,0);
+    //this.car = new VehicleObj(1,{x:this.window_w/2,y:0.0},1,0);
     this.roadData = [2,2,1,0];
     this.trafficLightData = [[5,5],[5,5]];
 
@@ -93,6 +96,8 @@ class Scene extends Component {
     this.fps = 0;
     this.fpsCounter = 0;
     this.trafficLightManager = new TrafficLight(this.trafficLightData,Date.now(),this.trafficLightCounterOffset);
+    this.roadIntersection = new RoadIntersection(0, ts.vec2(0,0));
+
     this.textStyle = {
       fontFamily: 'Courier',
       fontSize: '12px',
@@ -113,7 +118,7 @@ class Scene extends Component {
     window.addEventListener('resize',this.resize);
     
 
-      this.app.ticker.add(this.animation);
+    this.app.ticker.add(this.animation);
       
   };
   setup = () => {

@@ -1,6 +1,16 @@
+import vec2 from './simulator_management/Coordinate';
+import Coordinate from './simulator_management/Coordinate';
+
 
 export function tsVec2(x,y){
     return {x,y};
+}
+
+export function vec2(x,y){
+    _vec2 = new Coordinate();
+    _vec2.x = x;
+    _vec2.y = y;
+    return _vec2;
 }
 
 export function tsRotate(point_obj_x_y, ang_in_rad, origin_obj_x_y){

@@ -12,18 +12,18 @@ export default class Coordinate {
     }
 
     //Getters
-    private getCoordinateX(): number {
+    getCoordinateX(): number {
         return this.x;
     }
-    private getCoordinateY(): number {
+    getCoordinateY(): number {
         return this.y;
     }
 
     //Setters 
-    private setCoordinateX(x: number) {
+    setCoordinateX(x: number) {
         this.x = x;
     }
-    private setCoordinateY(y: number) {
+    setCoordinateY(y: number) {
         this.y = y;
     }
 }
