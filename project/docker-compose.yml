@@ -12,6 +12,7 @@ services:
     command: mongod --auth
     ports:
       - '27017:27017'
+      - '8300:27017'
     restart: always
     volumes:
       - /data/db:/data/db
