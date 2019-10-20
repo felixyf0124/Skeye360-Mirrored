@@ -4,12 +4,20 @@ services:
     build: 
       context: ./database/360_mongo
     container_name: 'my-mongo'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myUserAdmin
+      MONGO_INITDB_ROOT_PASSWORD: abc123
+      MONGO_INITDB_DATABASE: 360backend
     network_mode: bridge
+    command: mongod --auth
     ports:
       - '27017:27017'
     restart: always
     volumes:
       - /data/db:/data/db
+      # This is for  FileOpenFailed: Unable to open() file /home/mongodb/.dbshell bug from mongodb docker image
+      # Reference: https://github.com/docker-library/mongo/issues/323
+      - ./database/360_mongo/history:/home/mongodb/
   
   360_django:
     build: 
