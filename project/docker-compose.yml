@@ -37,6 +37,7 @@ services:
     network_mode: bridge
     ports:
       - '3000:3000'
+      - '8200:3000'
     restart: always
     depends_on:
       - 360_mongo
