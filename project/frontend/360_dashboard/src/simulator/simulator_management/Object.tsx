@@ -2,7 +2,7 @@
  * @class Object
  */
 
-import Coordinate from "./Coordinate";
+import Coordinate from "./vec2";
 
 export default class Object {
     

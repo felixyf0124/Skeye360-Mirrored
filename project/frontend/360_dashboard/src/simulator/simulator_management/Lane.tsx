@@ -1,5 +1,6 @@
 import Vehicle from './Vehicle';
-import Coordinate from './Coordinate';
+import Coordinate from './vec2';
+import LanePointer from './LanePointer';
 
 /**
  * @class Lane
@@ -11,35 +12,35 @@ export default class Lane {
     //1 or -1 same or opposite with road section
     laneDirection: number;
     roadSection_id: number;
-    roadIntersection_id:number
+    //roadIntersection_id:number
     objects:Array<Object>;
-    head:number;
-    tail:number;
+    head:Coordinate;
+    tail:Coordinate;
     // start:{x:number,y:number};
     // end:{x:number,y:number};
-    start: Coordinate;
-    end: Coordinate;
+    headLinks: Array<LanePointer>;
+    tailLinks: Array<LanePointer>;
     trafficLight_id:number;
 
-    constructor(id:number, laneType:string, laneDirection:number, roadSection_id:number, roadIntersection_id:number){
+    constructor(id:number, laneType:string, laneDirection:number, roadSection_id:number){
         this.id = id;
         this.laneType = laneType;
         this.laneDirection = laneDirection;
         this.roadSection_id = roadSection_id;
-        this.roadIntersection_id = roadIntersection_id;
+        //this.roadIntersection_id = roadIntersection_id;
         this.objects = new Array<Object>();
         // is there anyway to make this null?
-        this.head = 0;
-        this.tail = 0;
         // this.start = {x:0,y:0};
         // this.end = {x:0,y:0};
-        this.start = new Coordinate();
-        this.end = new Coordinate();
+        this.head = new Coordinate();
+        this.tail = new Coordinate();
+        this.headLinks = new Array<LanePointer>();
+        this.tailLinks = new Array<LanePointer>();
         this.trafficLight_id = 0;
     }
 
     //Getters
-    getLaneId(): number {
+    getId(): number {
         return this.id;
     }
     getLaneType(): string {
@@ -51,54 +52,89 @@ export default class Lane {
     getRoadSectionId(): number {
         return this.roadSection_id;
     }
-    getRoadIntersectionId(): number {
-        return this.roadIntersection_id
-    }
+    // getRoadIntersectionId(): number {
+    //     return this.roadIntersection_id
+    // }
     getObjectsOnLane(): Array<Object> {
         return this.objects;
     }
-    getHead(): number {
+    
+    getHead(): Coordinate {
         return this.head;
     }
-    getTail(): number {
+    getTail(): Coordinate {
         return this.tail;
     }
-    getStart(): Coordinate {
-        return this.start;
+    getHeadLink(): Array<LanePointer> {
+        return this.headLinks;
     }
-    getEnd(): Coordinate {
-        return this.end;
+    getTailLink(): Array<LanePointer> {
+        return this.tailLinks;
     }
     getTrafficLightId(): number {
         return this.trafficLight_id;
     }
 
     //Setters
+    setId(id:number){
+        this.id = id;
+    }
     setLaneType(laneType: string) {
         this.laneType = laneType;
     }
     setRoadSectionId(roadSection_id: number) {
         this.roadSection_id = roadSection_id;
     }
-    setroadIntersectionId(roadIntersection_id: number) {
-        this.roadIntersection_id = roadIntersection_id;
-    }
-    setHead(head: number) {
+    // setroadIntersectionId(roadIntersection_id: number) {
+    //     this.roadIntersection_id = roadIntersection_id;
+    // }
+    setHead(head: Coordinate) {
         this.head = head;
     }
-    setTail(tail: number) {
+    setTail(tail: Coordinate) {
         this.tail = tail;
     }
-    setStart(start: Coordinate) {
-        this.start = start;
+    addHeadLink(headLink: LanePointer) {
+        var _isExisted = false;
+        for(let i = 0; i < this.headLinks.length; ++i)
+        {
+            if(this.headLinks[i] === headLink)
+            {
+                _isExisted = true;
+            }
+        }
+        if(!_isExisted)
+        {
+            this.headLinks.push(headLink);
+        }
     }
-    setEnd(end: Coordinate) {
-        this.end = end;
+
+    addTailLink(tailLink: LanePointer) {
+        var _isExisted = false;
+        for(let i = 0; i < this.tailLinks.length; ++i)
+        {
+            if(this.tailLinks[i] === tailLink)
+            {
+                _isExisted = true;
+            }
+        }
+        if(!_isExisted)
+        {
+            this.tailLinks.push(tailLink);
+        }
     }
 
     addVehicle(VehicleObj:Vehicle)
     {
         this.objects.push(VehicleObj);
+    }
+
+    clearHeadLinks(){
+        this.headLinks = new Array<LanePointer>();
+    }
+
+    clearTailLinks(){
+        this.tailLinks = new Array<LanePointer>();
     }
 
 }

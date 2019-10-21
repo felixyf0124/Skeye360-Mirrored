@@ -1,8 +1,10 @@
 import RoadSection from './RoadSection';
-import Coordinate from './Coordinate';
+import vec2 from './vec2';
 import TLManager from './TrafficLightManager';
 import * as ts from '../TSGeometry';
 import Lane from './Lane';
+import './LanePointer';
+import LanePointer from './LanePointer';
 
 /**
  * @class RoadIntersection
@@ -11,11 +13,11 @@ export default class RoadIntersection {
 
     id:number;
     // mapCoordinate:{x:number,y:number};
-    mapCoordinate: Coordinate;
+    mapCoordinate: vec2;
     roadSections:Array<RoadSection>;
     TLManager:TLManager;
 
-    constructor(id:number, mapCoordinate:Coordinate)
+    constructor(id:number, mapCoordinate:vec2)
     {
         this.id = id;
         this.mapCoordinate = mapCoordinate;
@@ -27,7 +29,7 @@ export default class RoadIntersection {
     getRoadIntersectionId(): number {
         return this.id;
     }
-    getMapCoordinate(): Coordinate {
+    getMapCoordinate(): vec2 {
         return this.mapCoordinate;
     }
     getRoadSections(): Array<RoadSection> {
@@ -35,11 +37,11 @@ export default class RoadIntersection {
     }
 
     //Setters
-    setMapCoordinate(mapCoordinate: Coordinate) {
+    setMapCoordinate(mapCoordinate: vec2) {
         this.mapCoordinate = mapCoordinate;
     }
 
-    addNewRoadSection(tailVec2: Coordinate) {
+    addNewRoadSection(tailVec2: vec2) {
         var _roadSection = new RoadSection(this.roadSections.length,this.id,tailVec2);
         
         this.roadSections.push(_roadSection);
@@ -49,31 +51,21 @@ export default class RoadIntersection {
         this.roadSections.push(roadSection);
     }
 
-    addNewLane(roadSection_id: number, laneDirection: number, laneType:string) {
-        var _id = 0;
-        if(laneDirection > 0)
+    addNewLane(roadSection_id: number, laneDirection: number, laneType:string, numOfLanes: number) {
+        
+        for(let i = 0; i < numOfLanes; ++i)
         {
-            _id = this.roadSections[_id].lane_in.length;
-            var _lane = new Lane(_id, laneType, laneDirection, roadSection_id, this.id);
-            this.roadSections[_id].lane_in.push(_lane);
-        }else if(laneDirection < 0){
-            _id = this.roadSections[_id].lane_out.length;
-            var _lane = new Lane(_id, laneType, laneDirection, roadSection_id, this.id);
-            this.roadSections[_id].lane_out.push(_lane);
-        }else{
-            console.error("invalide laneDiection input \n");
+            this.roadSections[roadSection_id].addNewLane(laneDirection,laneType,numOfLanes);
         }
        
     }
-    addLane(lane: Lane){
-        if(lane.laneDirection > 0)
-        {
-            this.roadSections[lane.roadSection_id].lane_in.push(lane);
-        }else if(lane.laneDirection < 0)
-        {
-            this.roadSections[lane.roadSection_id].lane_out.push(lane);
-        }else {
-            console.error("invalide laneDiection \n");
-        }
+
+    linkLanes(tail:LanePointer, head:LanePointer){
+        this.roadSections[tail.getLaneId()].lane_in[tail.getLaneId()].addHeadLink(head);
+        this.roadSections[head.getLaneId()].lane_out[head.getLaneId()].addTailLink(tail);
+        
+        //TODO
+        //should we menually set road direction like straight turn left or right,
+        //or make it auto adjusted when the lanes are linked to each other?
     }
 }

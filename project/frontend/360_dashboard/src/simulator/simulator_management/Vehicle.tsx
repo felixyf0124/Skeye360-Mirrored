@@ -4,7 +4,7 @@
 import Object from "./Object";
 import * as ts from '../TSGeometry';
 import Lane from "./Lane";
-import Coordinate from "./Coordinate";
+import Coordinate from "./vec2";
 
 export default class vehicle extends Object{
 

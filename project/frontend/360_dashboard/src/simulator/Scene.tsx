@@ -13,7 +13,7 @@ import { Root } from 'react-dom';
 import VehicleObj from './simulator_management/Vehicle';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry'
-import Coordinate from './simulator_management/Coordinate';
+import Coordinate from './simulator_management/vec2';
 
 /**
  * @class Scene
@@ -108,6 +108,10 @@ class Scene extends Component {
     .add("ppl",ppl);
     
     this.vehicle = new PIXI.Sprite();
+
+    //
+    this.roadIntersection.addNewRoadSection(ts.vec2(this.window_w/2, 0.0));
+    
 
   }
 

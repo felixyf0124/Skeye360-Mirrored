@@ -1,5 +1,5 @@
-import vec2 from './simulator_management/Coordinate';
-import Coordinate from './simulator_management/Coordinate';
+import vec2 from './simulator_management/vec2';
+import Coordinate from './simulator_management/vec2';
 
 
 export function tsVec2(x,y){
