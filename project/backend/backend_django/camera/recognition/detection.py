@@ -259,20 +259,20 @@ class Detector:
                     current = (centroid[0], centroid[1])
                     to.centroids.append(centroid)
 
-                    if (cv2.pointPolygonTest(mid_ROI, start_point, False)) >= 0:
+                    if (cv2.pointPolygonTest(mid_ROI, current, False)) >= 0:
                         print("in the middle")
                         to.crossing = True
 
-                    if to.crossing and (cv2.pointPolygonTest(east_ROI, start_point, False)) >= 0:
+                    if to.crossing and (cv2.pointPolygonTest(east_ROI, current, False)) >= 0:
                         to.go_to = "east"
                         to.counted = True
-                    if to.crossing and (cv2.pointPolygonTest(west_ROI, start_point, False)) >= 0:
+                    if to.crossing and (cv2.pointPolygonTest(west_ROI, current, False)) >= 0:
                         to.go_to = "west"
                         to.counted = True
-                    if to.crossing and (cv2.pointPolygonTest(north_ROI, start_point, False)) >= 0:
+                    if to.crossing and (cv2.pointPolygonTest(north_ROI, current, False)) >= 0:
                         to.go_to = "north"
                         to.counted = True
-                    # if to.crossing and (cv2.pointPolygonTest(south_ROI, start_point, False)) >= 0:
+                    # if to.crossing and (cv2.pointPolygonTest(south_ROI, current, False)) >= 0:
                     #     to.go_to = "south"
                     #     to.counted = True
 
