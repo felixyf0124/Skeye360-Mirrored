@@ -208,6 +208,8 @@ class Detector:
                 x = box[0]
                 y = box[1]
                 w = box[2]
+                h = box[3]
+
                 self.draw_pred(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h),classes)
                 self.print_pred(class_ids[i], x, y, w, h, classes)
 

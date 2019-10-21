@@ -1,5 +1,0 @@
-django==2.0.0
-djangorestframework==3.9.2
-djongo
-sqlparse==0.2.4
-

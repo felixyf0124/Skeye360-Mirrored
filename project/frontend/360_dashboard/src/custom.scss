@@ -1,0 +1,118 @@
+//Override default variables before the import
+
+//Colours
+
+$SKEYE_BLACK:#2c2c2c;
+$SKEYE_BLUE: #51bcd8;
+$SKEYE_GREEN:#04a777;
+$SKEYE_GREY: #808080;
+$SKEYE_WHITE:#FFFFFF;
+
+//Headings
+.login-heading{
+    color: $SKEYE_BLACK;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+body{
+    font-family: "Segoe UI", "Roboto";
+    //for bg color use !important
+    background-color: $SKEYE_BLACK !important;
+    
+}
+
+a{
+    text-decoration: none; 
+}
+//Classes
+.navbar{
+    background-color: $SKEYE_GREEN;
+    height:90px;
+    text-decoration: none;    
+}
+
+.header-text{
+    color: $SKEYE_WHITE;
+    font-size: 32px;
+}
+
+.login-container{
+    background-color: $SKEYE_WHITE;
+    border-radius: 25px;
+    border: 1px solid $SKEYE_GREEN;
+    box-shadow: 5px 5px $SKEYE_GREEN; 
+    margin-left: auto;
+    margin-right: auto; 
+    margin-top: 10%;
+    padding-bottom: 20px; 
+    padding-top: 20px;
+    text-align: center;
+    width: 300px;
+}
+
+.login-btn{
+    background-color: $SKEYE_BLUE !important;
+    border-color: $SKEYE_BLUE !important;
+}
+
+.form-group{
+    align-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    text-align: center;
+    width: 50%;
+}
+
+.page-container{
+    position: relative;
+    min-height: 100vh;
+    overflow:scroll;
+}
+.content-wrap{
+    padding-bottom: 2.5rem;
+    overflow:scroll;
+    overflow: hidden;
+}
+
+.footer-container{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+     //footer height
+    background-color: $SKEYE_GREY;
+}
+
+.left-panel-container{
+    width: 225px;
+    background-color: $SKEYE_BLUE;
+    display: flex;
+    flex-direction: column; 
+    height: 700px;
+    left: 0;
+
+}
+
+.panel-btn{
+    margin-top: 10px;
+    background-color: $SKEYE_GREY !important;
+    border-color: $SKEYE_GREY !important;
+}
+
+.content-container{
+    display: flex;
+    
+}
+
+.dashboard-content{
+    display: flex;
+    color: $SKEYE_WHITE;
+    font-size: 40px;
+    
+}
+
+//Import Bootstrap and its default variables 
+@import '~bootstrap/scss/bootstrap.scss'; 

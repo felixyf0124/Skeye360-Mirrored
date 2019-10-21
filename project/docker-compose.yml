@@ -1,0 +1,46 @@
+version: "3.7"
+services:
+  360_mongo:
+    build: 
+      context: ./database/360_mongo
+    container_name: 'my-mongo'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: myUserAdmin
+      MONGO_INITDB_ROOT_PASSWORD: abc123
+      MONGO_INITDB_DATABASE: 360backend
+    network_mode: bridge
+    command: mongod --auth
+    ports:
+      - '27017:27017'
+      - '8300:27017'
+    restart: always
+    volumes:
+      - /data/db:/data/db
+      # This is for  FileOpenFailed: Unable to open() file /home/mongodb/.dbshell bug from mongodb docker image
+      # Reference: https://github.com/docker-library/mongo/issues/323
+      - ./database/360_mongo/history:/home/mongodb/
+  
+  360_django:
+    build: 
+      context: ./backend/360_django
+    container_name: 'my-django'
+    network_mode: bridge
+    ports:
+      - '8000:8000'
+    restart: always
+    depends_on:
+      - 360_mongo
+  
+  360_dashboard:
+    build: 
+      context: ./frontend/360_dashboard
+    container_name: 'my-dashboard'
+    network_mode: bridge
+    ports:
+      - '3000:3000'
+      - '8200:3000'
+    restart: always
+    depends_on:
+      - 360_mongo
+      - 360_django
+

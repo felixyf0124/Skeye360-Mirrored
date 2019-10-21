@@ -8,8 +8,8 @@ WORKDIR /app
 #Copy package.json into app directory 
 COPY package.json /app
 
-#Run npm install to install all the dependencies 
-RUN npm install
+#Run yarn install to install all the dependencies 
+RUN yarn install
 
 #Copy all the files into app
 COPY . /app
@@ -17,5 +17,5 @@ COPY . /app
 #Build the app with yarn
 RUN yarn build
 
-#Execute the code with npm start
-CMD [ "npm", "start" ]
+#Execute the code with yarn start
+CMD [ "yarn", "start" ]
