@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import { RootState } from '../reducers/rootReducer';
 import Header from '../components/Header';
 import Login from '../components/Login';
+import BarChart from '../components/BarChart';
+import LineChart from '../components/LineChart';
+
 //import Footer from './components/Footer';
 //import LeftPanel from './components/LeftPanel';
 // import Scene from '../simulator/Scene'
@@ -17,10 +20,13 @@ interface StateProps {
 const App = ({ authenticated }: StateProps): JSX.Element => (
   <div>
     <Header />
+    <BarChart />
+    <LineChart />
     {authenticated ? (
       <SkeyeMap />
     ) : (
       <Login />
+      
     )}
     
   </div>
