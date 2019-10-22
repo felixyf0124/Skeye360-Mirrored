@@ -22,15 +22,14 @@ from djangosite_api.views import UserViewSet
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-
-
 # Routers provide an easy way of automatically determining the URL conf.
+from rest_framework.urlpatterns import format_suffix_patterns
+
 router = DefaultRouter()
 router.register(r'user', UserViewSet)
-router.register(r'user/(?P<username>)', UserViewSet)
-
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url('', include(router.urls)),
+    path('admin/', admin.site.urls),
+    path('user/', include('djangosite_api.urls')),
+    path('', include(router.urls)),
 ]

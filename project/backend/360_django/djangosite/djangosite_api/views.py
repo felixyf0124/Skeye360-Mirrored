@@ -5,9 +5,10 @@ from rest_framework import status, viewsets
 from django.http import HttpResponse
 from .models import User
 from .serializers import UserSerilizer
+from rest_framework import filters
 
 
-# The APIView class for working with class-based views.(need improve)
+# The APIView class for working with class-based views.Not success(need improve)
 class StudentDetail(APIView):
 
     def get_student(self, name):
@@ -52,13 +53,14 @@ def home(request):
     return HttpResponse("check terminal localhost:8000/odm")
 
 
+# Functional based view, Not good. Needs to be improve
 @api_view(['GET', 'PUT', 'DELETE'])
-def user_detail(request, username, token):
+def user_detail(request, username, token, format=None):
     """
     Retrieve, update or delete a code snippet.
     """
     try:
-        user = User.objects.get(username=username)
+        user = User.objects.get(username=username, token=token)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -68,8 +70,10 @@ def user_detail(request, username, token):
 
     elif request.method == 'PUT':
         serializer = UserSerilizer(user, data=request.data)
+        data = {}
         if serializer.is_valid():
             serializer.save()
+            data["success"] = "update successful"
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
