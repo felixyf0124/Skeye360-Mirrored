@@ -6,9 +6,7 @@ from . import views
 # from .views import api_root
 
 urlpatterns = [
-    # path('', api_root),
-    #path('students-view/', views.student_list),
-    path('<int:id>', views.student_detail),
+    path('<char:username>', views.student_detail),
     # path('student-view/<int:id>/', student_detail, name='student_detail'),
     path('odm', views.home, name='home'),
 ]
