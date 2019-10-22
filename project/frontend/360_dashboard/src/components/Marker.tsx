@@ -1,39 +1,35 @@
 import React from 'react';
 import { RootState } from '../reducers/rootReducer';
 import { connect } from 'react-redux';
-import { viewStreet } from '../contexts/streetview'
 import '../css/Marker.css';
+import { Link } from 'react-router-dom';
 
 interface Props {
-    streaming_map: boolean;
 }
 
 interface DispatchProps {
-    viewStreet: () => any;
 }
 
 const Marker = (props: any & Props & DispatchProps) => {
     const { color, name, link } = props;
     return (
-        <a href={link} onClick={props.viewStreet}>
+        <Link to="/streetview" >
             <div
                 className="marker"
                 style={{ backgroundColor: color, cursor: 'pointer'}}
                 title={name}
             />
-        </a>
+        </Link>
     );
 };
 
 const mapStateToProps = (state: RootState): Props => ({
-    streaming_map: state.streetview.streaming_map,
-  });
+});
   
-  const mapDispatchToProps: DispatchProps = {
-    viewStreet,
-  };
+const mapDispatchToProps: DispatchProps = {
+};
   
-  export default connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps,
-  )(Marker);
+)(Marker);
