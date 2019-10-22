@@ -8,9 +8,10 @@ export default class TrafficLightManager {
     //id:number;
     roadIntersection_id:number;
     trafficLightQueue: Array<TrafficLight>;
+    allTrafficLightsAtIntersection: Array<TrafficLight>;
     countDown: number;
     countDownOffset: number;
-    trafficLight: TrafficLight;
+    // trafficLight: TrafficLight;
 
     //TimePairs is an array of an array of numbers?
     timePairs: Array<Array<number>>;
@@ -19,13 +20,14 @@ export default class TrafficLightManager {
     totalTimePeriod: number;
     deltaT: number;
 
-    constructor(roadIntersectionid:number, timePairs:Array<Array<number>>, startTime:number, timeOffset:number){
+    constructor(roadIntersectionid:number, allTrafficLightsAtIntersection: Array<TrafficLight>, timePairs:Array<Array<number>>, startTime:number, timeOffset:number){
         //this.id = id;
         this.roadIntersection_id = roadIntersectionid;
         this.trafficLightQueue = new Array<TrafficLight>();
+        this.allTrafficLightsAtIntersection = allTrafficLightsAtIntersection;
         this.countDown = 0;
         this.countDownOffset = 0;
-        this.trafficLight = new TrafficLight(0, 1);
+        // this.trafficLight = new TrafficLight(0, 1);
         
         this.timePairs = timePairs;
         this.startTime = startTime;
@@ -85,10 +87,19 @@ export default class TrafficLightManager {
     setDeltaT(deltaT: number) {
         this.deltaT = deltaT;
     }
+    setAllTrafficLightsAsStop() {
+        //This will set all traffic lights at a specific intersection as a stop sign (blinks red)
+        for(let index = 0; index < this.allTrafficLightsAtIntersection.length; index++) {
+            this.allTrafficLightsAtIntersection[index].setTrafficLightStatus("stop");
+        }
+    }
     setGreenLight(trafficLightId: number, timeGiven:number) {
+        var lookup = this.allTrafficLightsAtIntersection.filter(function(trafficLight) {
+            return trafficLight.id === trafficLightId;
+        });
         //TODO: 
         //Make it green for specific traffic light for a given time
-        this.trafficLight.setTrafficLightStatus("green");
+
     }
 
 

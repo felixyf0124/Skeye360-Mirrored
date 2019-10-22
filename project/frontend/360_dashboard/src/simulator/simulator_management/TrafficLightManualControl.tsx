@@ -1,4 +1,5 @@
 import TrafficLightManager from "./TrafficLightManager";
+import TrafficLight from "./TrafficLight";
 
 /**
  * @class TrafficLightManualControl
@@ -8,19 +9,17 @@ export default class TrafficLightManualControl {
     trafficLightManager: TrafficLightManager;
     roadIntersectionId: number;
 
-    constructor(roadIntersectionId: number) {
+    constructor(roadIntersectionId: number, allTrafficLightsAtIntersection: Array<TrafficLight>) {
         //The time pairs for the traffic lights will be set to zero
-        this.trafficLightManager = new TrafficLightManager(roadIntersectionId, [[0,0],[0,0]], 0, 0);
+        this.trafficLightManager = new TrafficLightManager(roadIntersectionId, allTrafficLightsAtIntersection, [[0,0],[0,0]], 0, 0);
+        this.stopAllTrafficLights();
     }
 
-    stopAllTrafficLights(roadIntersectionId: number) {
-        //TODO:
-        //Find way to get all traffic lights ids at a specific intersection
-        this.trafficLightManager.trafficLight.setTrafficLightStatus("stop");
+    stopAllTrafficLights() {
+        this.trafficLightManager.setAllTrafficLightsAsStop();
     }
 
     setSpecificTrafficLightGreenTime(trafficLightId: number, timeGiven: number) {
-        this.stopAllTrafficLights(this.roadIntersectionId);
         this.trafficLightManager.setGreenLight(trafficLightId, timeGiven);
     }
 }
