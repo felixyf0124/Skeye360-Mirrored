@@ -2,6 +2,9 @@ import React from 'react';
 import { RootState } from '../reducers/rootReducer';
 import { connect } from 'react-redux';
 import { authenticate } from '../contexts/authentication';
+import { Redirect } from 'react-router-dom';
+import Header from './Header';
+import { push } from 'connected-react-router';
 
 interface StateProps {
     authenticated: boolean,
@@ -12,6 +15,7 @@ interface StateProps {
 
 interface DispatchProps {
     authenticate: (email: string, password: string) => void;
+    historyPush: (url: string) => void;
 }
 
 const Login = (props: StateProps & DispatchProps): JSX.Element => {
@@ -24,34 +28,45 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
         setState({ ...state, [e.target.name]: e.target.value });
     };
 
-    return ( 
-        <div className="login-container">
-            <form onSubmit={(e) => {
-                e.preventDefault();
-                props.authenticate(email, password);
-            }}>
-                <div className="form-group">
-                    <label>Username</label>
-                    <input
-                        type="text"
-                        name="email"
-                        value={email}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={handleChange}
-                    />
-                </div>
-                <button type="submit">
-                    Login
-                </button>
-            </form>
+    const handleLoginClick = () => {
+        const { historyPush } = props;
+        historyPush('/login');
+    };
+
+    if (props.authenticated) return <Redirect push to={'/'} />;
+
+    return (
+        <div>
+            <Header />
+            <div className="login-container">
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    props.authenticate(email, password);
+                    handleLoginClick();
+                }}>
+                    <div className="form-group">
+                        <label>Username</label>
+                        <input
+                            type="text"
+                            name="email"
+                            value={email}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={password}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <button type="submit">
+                        Login
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }
@@ -65,6 +80,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 const mapDispatchToProps: DispatchProps = {
     authenticate,
+    historyPush: push,
 };
 
 export default connect(

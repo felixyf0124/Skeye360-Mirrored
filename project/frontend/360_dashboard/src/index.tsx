@@ -4,15 +4,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import createStore from './store';
+import createStore, { history } from './store';
 import './index.css';
 import App from './containers/App';
 import './custom.scss';
+import { ConnectedRouter } from 'connected-react-router';
 
 createStore().then(store => {
   ReactDOM.render(
     <Provider store={store}>
-      <App />
+      <ConnectedRouter history={history}>
+        <App />
+      </ConnectedRouter>
     </Provider>,
     document.getElementById('root'),
   );

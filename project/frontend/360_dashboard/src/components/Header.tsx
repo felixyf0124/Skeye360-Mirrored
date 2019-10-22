@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { RootState } from '../reducers/rootReducer';
 import styled from 'styled-components';
 import { logout } from '../contexts/authentication';
-import { exitStreetView } from '../contexts/streetview';
+import { Redirect, Link } from 'react-router-dom';
 
 const Head = styled.div`
   display: flex;
@@ -18,50 +18,54 @@ const Head = styled.div`
 
 interface StateProps {
     authenticated: boolean;
-    streaming_map: boolean;
 }
 
 interface DispatchProps {
     logout: () => any;
-    exitStreetView: () => any;
+    handleMapButton: () => void;
 }
 
-const Header = (props: StateProps & DispatchProps): JSX.Element => (
-    <nav className = "navbar">
-        <Head>
-            {props.streaming_map && props.authenticated ? (
-                <div className="map">
-                    <a href="#map" onClick={
-                        props.exitStreetView
-                    } className="header-text">Map</a>
+const handleMapButton = () => {
+    console.log("handleMapButton");
+    return <Redirect push to={'/'} />;
+};
+
+const Header = (props: StateProps & DispatchProps): JSX.Element => {
+
+    return (
+        <nav className = "navbar">
+            <Head>
+                { props.authenticated ? (
+                    <div className="map">
+                        <Link to="/" className="header-text">Map</Link>
+                    </div>
+                ) : (
+                    <div />
+                ) }
+                <div className="container">
+                    <Link to="/" className="header-text">Skeye 360</Link>
                 </div>
-            ) : (
-                <div />
-            ) }
-            <div className="container">
-                <a href="/" className="header-text">Skeye 360</a>
-            </div>
-            {props.authenticated ? (
-                <div className="logout">
-                    <a href="#logout" onClick={
-                        props.logout
-                    } className="header-text">Logout</a>
-                </div>
-            ) : (
-                <div />
-            ) }
-        </Head>
-    </nav> 
-);
+                {props.authenticated ? (
+                    <div className="logout">
+                        <a href="/" onClick={
+                            props.logout
+                        } className="header-text">Logout</a>
+                    </div>
+                ) : (
+                    <div />
+                ) }
+            </Head>
+        </nav>
+    );
+}
 
 const mapStateToProps = (state: RootState): StateProps => ({
     authenticated: state.authentication.authenticated,
-    streaming_map: state.streetview.streaming_map,
 });
 
 const mapDispatchToProps: DispatchProps = {
     logout,
-    exitStreetView,
+    handleMapButton: () => handleMapButton(),
 };
 
 export default connect(
