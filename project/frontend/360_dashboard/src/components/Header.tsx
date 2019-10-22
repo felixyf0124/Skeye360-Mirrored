@@ -36,8 +36,13 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
         <nav className = "navbar">
             <Head>
                 { props.authenticated ? (
-                    <div className="map">
-                        <Link to="/" className="header-text">Map</Link>
+                    <div>
+                        <div className="map">
+                            <Link to="/" className="header-text">Map</Link>
+                        </div>
+                        <div className="map">
+                            <Link to="/streetview/add" className="header-text">Add</Link>
+                        </div>
                     </div>
                 ) : (
                     <div />

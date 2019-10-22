@@ -3,7 +3,7 @@ import { RootState } from '../reducers/rootReducer';
 import { connect } from 'react-redux';
 import { authenticate } from '../contexts/authentication';
 import { Redirect } from 'react-router-dom';
-import Header from './Header';
+import Header from '../components/Header';
 import { push } from 'connected-react-router';
 
 interface StateProps {
