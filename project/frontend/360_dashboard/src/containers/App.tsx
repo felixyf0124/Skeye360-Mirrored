@@ -9,8 +9,9 @@ import Login from '../containers/Login';
 
 import '../css/App.css';
 import SkeyeMap from '../containers/SkeyeMap';
-import Simulator from '../containers/simulator/Scene';
 import AddCamera from './AddCamera';
+import EditCamera from './EditCamera';
+import StreetView from './StreetView';
 
 interface StateProps {
   authenticated: boolean
@@ -34,8 +35,9 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
     <Route>
       <Switch>
         <Route exact path="/" component={SkeyeMap} />
-        <Route exact path="/streetview" component={Simulator} />
+        <Route exact path="/streetview" component={StreetView} />
         <Route exact path="/streetview/add" component={AddCamera} />
+        <Route exact path="/streetview/edit" component={EditCamera} />
       </Switch>
     </Route>
   </Switch>

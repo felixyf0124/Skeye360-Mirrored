@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { logout } from '../contexts/authentication';
 import { Redirect, Link } from 'react-router-dom';
 
-const Head = styled.div`
+export const Head = styled.div`
   display: flex;
   box-sizing: border-box;
   width: 100%;

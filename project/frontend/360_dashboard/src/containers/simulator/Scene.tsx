@@ -531,7 +531,6 @@ class Scene extends Component {
     // console.log("this works");
       return (
         <div>
-          <Header />
           <Feed>
             <div style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} ref={(element) => {this.updateCar(element)}} />
             <div>
