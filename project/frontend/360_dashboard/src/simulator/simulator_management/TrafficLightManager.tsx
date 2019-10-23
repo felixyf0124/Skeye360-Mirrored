@@ -97,11 +97,17 @@ export default class TrafficLightManager {
         var lookup = this.allTrafficLightsAtIntersection.filter(function(trafficLight) {
             return trafficLight.id === trafficLightId;
         });
-        //TODO: 
-        //Make it green for specific traffic light for a given time
+
+        //TODO:
+        //Check for other traffic lights if its green
+
+        //Check that lookup is not empty or undefined
+        if(!lookup.length || !(lookup === undefined)) {
+            lookup[0].setTrafficLightStatusCountDown(timeGiven);
+            lookup[0].setTrafficLightStatus("green");
+        }
 
     }
-
 
     calculateTotalPeriodTime(index: number): number {
         var totalTime:number = 0;
