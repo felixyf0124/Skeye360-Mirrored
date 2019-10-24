@@ -13,6 +13,7 @@ import { Root } from 'react-dom';
 import VehicleObj from './VehicleObj';
 import * as ts from './TSGeometry'
 import styled from 'styled-components';
+import Header from '../../components/Header';
 
 const Feed = styled.div`
   display: flex;
@@ -529,12 +530,14 @@ class Scene extends Component {
   render = () => {
     // console.log("this works");
       return (
-        <Feed>
-          <div style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} ref={(element) => {this.updateCar(element)}} />
-          <div>
-            <img   style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} src="http://52.170.42.166:8000/" />
-          </div>
-        </Feed>
+        <div>
+          <Feed>
+            <div style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} ref={(element) => {this.updateCar(element)}} />
+            <div>
+              <img   style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} src="http://52.170.42.166:8000/" />
+            </div>
+          </Feed>
+        </div>
       );
   }
 };

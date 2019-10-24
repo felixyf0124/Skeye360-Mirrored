@@ -1,5 +1,5 @@
 module.exports = {
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
     es6: true,
@@ -7,21 +7,28 @@ module.exports = {
   },
   extends: [
     'airbnb',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
   parserOptions: {
+    ecmaVersion: 2019,
+    sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2019,
-    sourceType: 'module',
   },
   plugins: [
     'react',
   ],
   rules: {
+  },
+  settings:  {
+    react:  {
+      version:  'detect',
+    },
   },
 };

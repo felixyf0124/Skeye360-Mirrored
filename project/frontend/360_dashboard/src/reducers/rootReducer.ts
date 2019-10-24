@@ -1,13 +1,15 @@
 import { combineReducers } from 'redux';
 import authentication, { STATE as authState } from '../contexts/authentication';
-import streetview, { STATE as streetviewState } from '../contexts/streetview';
+import { connectRouter, RouterState } from 'connected-react-router';
+import { History } from 'history';
 
 export interface RootState {
   authentication: authState;
-  streetview: streetviewState;
+  router: RouterState;
 }
 
-export default combineReducers({
+export default (history: History) =>
+combineReducers({
   authentication,
-  streetview,
+  router: connectRouter(history),
 });

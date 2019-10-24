@@ -3,20 +3,25 @@ import { connect } from 'react-redux';
 import { RootState } from '../reducers/rootReducer';
 import GoogleMap from '../components/GoogleMap';
 // import Simulator from '../containers/simulator/Scene';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import Header from '../components/Header';
+import Simulator from './simulator/Scene';
+import { Head } from '../components/Header';
 
 interface Props {
   authenticated: boolean;
 }
 
-const SkeyeMap = ({ authenticated }: Props):JSX.Element => {
+const StreetView = ({ authenticated }: Props):JSX.Element => {
   if (!authenticated) return <Redirect push to={'/login'} />;
 
   return (
     <div>
       <Header />
-      <GoogleMap />
+        <Head>
+          <Link to="/streetview/edit" className="header-text">Edit</Link>
+        </Head>
+      <Simulator />
     </div>
   );
 }
@@ -27,4 +32,4 @@ const mapStateToProps = (state: RootState): Props => ({
 
 export default connect(
   mapStateToProps,
-)(SkeyeMap);
+)(StreetView);
