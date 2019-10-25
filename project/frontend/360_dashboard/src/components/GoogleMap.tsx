@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import GoogleMapReact from 'google-map-react';
 import Marker from './Marker';
-import { RootState } from '../reducers/rootReducer';
 import { connect } from 'react-redux';
-import { viewStreet } from '../contexts/streetview'
 
 const API_KEY: string = "AIzaSyDF3Bsq5rm-uhEMAqqyMqzgc-dXUPl9Byw";
 
@@ -23,7 +21,7 @@ const GoogleMap = () => {
             lng={center.lng}
             text="Camera_id"
             color="red"
-            link="#streetview"
+            link="streetview"
           />
         </GoogleMapReact>
       </div>

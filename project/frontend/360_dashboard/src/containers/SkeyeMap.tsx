@@ -2,24 +2,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from '../reducers/rootReducer';
 import GoogleMap from '../components/GoogleMap';
-import Simulator from './simulator/Scene';
+// import Simulator from '../containers/simulator/Scene';
+import { Redirect } from 'react-router-dom';
+import Header from '../components/Header';
 
 interface Props {
-  streaming_map: boolean;
+  authenticated: boolean;
 }
 
-const SkeyeMap = ({ streaming_map, }: Props):JSX.Element => (
-  <div>
-    {!streaming_map ? (
+const SkeyeMap = ({ authenticated }: Props):JSX.Element => {
+  if (!authenticated) return <Redirect push to={'/login'} />;
+
+  return (
+    <div>
+      <Header />
       <GoogleMap />
-    ) : (
-      <Simulator />
-    )}
-  </div>
-);
+    </div>
+  );
+}
 
 const mapStateToProps = (state: RootState): Props => ({
-  streaming_map: state.streetview.streaming_map,
+  authenticated: state.authentication.authenticated,
 });
 
 export default connect(

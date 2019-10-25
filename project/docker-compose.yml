@@ -30,6 +30,7 @@ services:
     restart: always
     depends_on:
       - 360_mongo
+    command: bash -c "python /usr/src/app/djangosite/manage.py makemigrations && python /usr/src/app/djangosite/manage.py migrate && python /usr/src/app/djangosite/manage.py runserver 0.0.0.0:8000"
   
   360_dashboard:
     build: 

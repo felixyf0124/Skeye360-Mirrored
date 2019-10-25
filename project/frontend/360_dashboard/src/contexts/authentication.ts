@@ -4,7 +4,6 @@ import {
     takeLatest,
 } from 'redux-saga/effects';
 import authenticateUser, { authResponse } from '../api/authenticateUser';
-import { exitStreetView } from '../contexts/streetview';
 
 export interface STATE {
     session_token: string;
