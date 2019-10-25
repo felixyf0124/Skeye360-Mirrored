@@ -3,11 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from django.http import HttpResponse
-from .models import Student
-from .serializers import StudentSerializers, StudentSerilizer
+from .models import User
+from .serializers import UserSerilizer
+from rest_framework import filters
 
 
-# The APIView class for working with class-based views.(need improve)
+# The APIView class for working with class-based views.Not success(need improve)
 class StudentDetail(APIView):
 
     def get_student(self, name):
@@ -46,69 +47,45 @@ class StudentDetail(APIView):
 
 # For testing purpose
 def home(request):
-    student_data = Student.objects.all()
+    student_data = User.objects.all()
     for field in student_data:
         print('name of student is', field.age)
     return HttpResponse("check terminal localhost:8000/odm")
 
 
-# The @api_view decorator for working with function based views.
-
-# @api_view(['GET'])
-# def api_root(request, format=None):
-#     return Response({
-#         'users': reverse('user-list', request=request, format=format),
-#         'students': reverse('student-list', request=request, format=format)
-#     })
-
-# @api_view(['GET', 'POST'])
-# def student_list(request, format=None):
-#     """
-#     List all code snippets, or create a new snippet.
-#     """
-#     if request.method == 'GET':
-#         students = Student.objects.all()
-#         serializer = StudentSerilizer(students, many=True)
-#         return Response(serializer.data)
-#
-#     elif request.method == 'POST':
-#         serializer = StudentSerilizer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+# Functional based view, Not good. Needs to be improve
 @api_view(['GET', 'PUT', 'DELETE'])
-def student_detail(request, id, format=None):
+def user_detail(request, username, token, format=None):
     """
     Retrieve, update or delete a code snippet.
     """
     try:
-        student = Student.objects.get(id=id)
-    except Student.DoesNotExist:
+        user = User.objects.get(username=username, token=token)
+    except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = StudentSerilizer(student)
+        serializer = UserSerilizer(user)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = StudentSerilizer(student, data=request.data)
+        serializer = UserSerilizer(user, data=request.data)
+        data = {}
         if serializer.is_valid():
             serializer.save()
+            data["success"] = "update successful"
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        student.delete()
+        user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # For /api purpose
-class StudentViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Student.objects.all()
-    serializer_class = StudentSerilizer
+    queryset = User.objects.all()
+    serializer_class = UserSerilizer

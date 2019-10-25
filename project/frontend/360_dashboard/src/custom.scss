@@ -33,6 +33,15 @@ a{
     text-decoration: none;    
 }
 
+.nav-links{
+    display: flex;
+    color: $SKEYE_WHITE;
+}
+.nav-text{
+    font-size: 20px;
+    color: $SKEYE_WHITE;
+    margin-right: 10px; 
+}
 .header-text{
     color: $SKEYE_WHITE;
     font-size: 32px;
@@ -114,5 +123,30 @@ a{
     
 }
 
+//CHARTS CSS
+//TODO: Rename bar-chart to chart simply. 
+.bar-chart{
+    background-color: $SKEYE_WHITE;
+    width: fit-content;
+    margin: 20px; 
+}
+
+.charts-prototype{
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+}
+
+.charts-row{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
+.charts-header{
+    color: $SKEYE_WHITE;
+    text-align: center; 
+}
 //Import Bootstrap and its default variables 
 @import '~bootstrap/scss/bootstrap.scss'; 

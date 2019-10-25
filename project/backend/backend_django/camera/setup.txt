@@ -1,0 +1,3 @@
+pip3 install --upgrade imutils
+pip3 install --upgrade dlib
+pip3 install --upgrade scipy
