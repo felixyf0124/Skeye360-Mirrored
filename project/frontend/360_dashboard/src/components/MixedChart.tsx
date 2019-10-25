@@ -63,7 +63,7 @@ class MixedChart extends Component<ChartProps, ChartState>{
   render(){
     return (
       <div className="bar-chart">
-        <Chart options={this.state.options} series={this.state.series} type="line" width="700" height="" />
+        <Chart options={this.state.options} series={this.state.series} type="line" width="500"/>
       </div>
     )
   }

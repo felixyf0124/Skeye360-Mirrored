@@ -12,6 +12,7 @@ import SkeyeMap from '../containers/SkeyeMap';
 import AddCamera from './AddCamera';
 import EditCamera from './EditCamera';
 import StreetView from './StreetView';
+import ChartsPrototype from '../components/ChartsPrototype';
 
 interface StateProps {
   authenticated: boolean
@@ -38,6 +39,7 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
         <Route exact path="/streetview" component={StreetView} />
         <Route exact path="/streetview/add" component={AddCamera} />
         <Route exact path="/streetview/edit" component={EditCamera} />
+        <Route exact path="/chartsprototype" component={ChartsPrototype} />
       </Switch>
     </Route>
   </Switch>
