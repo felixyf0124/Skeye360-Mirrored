@@ -1,5 +1,6 @@
 import Lane from './Lane';
 import vec2 from './vec2';
+import * as ts from '../TSGeometry';
 
 /**
  * @class RoadSection
@@ -99,14 +100,27 @@ export default class RoadSection {
         }
     }
 
-    // addLane(newLane: Lane){
-    //     if(newLane.laneDirection > 0){
-    //         this.lane_in.push(newLane);
-    //     }else if(newLane.laneDirection < 0){
-    //         this.lane_out.push(newLane);
-    //     }else{
-    //         console.error("laneDirection not defined \n");
-    //     }
-    // }
+    updateLanePosition(laneWidth:number){
+        for(let i = 0; i<this.lane_in.length;++i)
+        {
+            var _lane_direction = ts.tsNormalize(this.head.minus(this.tail));
+            const _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_direction, Math.PI/2);
+            var _perpendicular_offset = _perpendicular_unit_vec.multiply((i+0.5)*laneWidth);
+
+            this.lane_in[i].setHead(this.head.plus(_perpendicular_offset));
+            this.lane_in[i].setTail(this.tail.plus(_perpendicular_offset));
+        }
+
+        for(let i = 0; i<this.lane_out.length;++i)
+        {
+            var _lane_direction = ts.tsNormalize(this.tail.minus(this.head));
+            var _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_direction, Math.PI/2);
+
+            var _perpendicular_offset = _perpendicular_unit_vec.multiply((i+0.5)*laneWidth);
+
+            this.lane_out[i].setHead(this.tail.plus(_perpendicular_offset));
+            this.lane_out[i].setTail(this.head.plus(_perpendicular_offset));
+        }
+    }
 
 }

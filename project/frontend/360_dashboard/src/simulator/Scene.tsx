@@ -124,9 +124,11 @@ class Scene extends Component {
       this.roadIntersection.addNewLane(i,-1,"straight",2);
     }
 
+    this.roadIntersection.updateLaneWidth(this.lane_w);
+
     this.app.stage.x = this.window_w/2;
     this.app.stage.y = this.window_h/2;
-    
+    //this.app.stage.scale.y=-1;
   }
 
 
@@ -205,14 +207,7 @@ class Scene extends Component {
     _t.moveTo(-this.window_w,-this.window_h);
     _t.lineTo(this.window_w,this.window_h);
     // _t.endFill();
-
-    // this.road_G.beginFill(0xffffff,1);
-    // this.road_G.lineStyle(0,0xffffff);
-    // this.road_G.moveTo(_vertices[0].x,_vertices[0].y);
-    // this.road_G.lineTo(_vertices[1].x,_vertices[1].y);
-    // this.road_G.lineTo(_vertices[2].x,_vertices[2].y);
-    // this.road_G.lineTo(_vertices[0].x,_vertices[0].y);
-    
+   
     _t.endFill();
     this.mapContainer.addChild(_t);
   }
@@ -249,11 +244,11 @@ class Scene extends Component {
         //     _color = _red;
         // }
 
-        var _direction:vec2 = ts.tsNormalize(ts.vec2_minus(_lane.getHead(),(_lane.getTail())));
-        var _division:number = ts.tsLength(ts.vec2_minus(_lane.getHead(),(_lane.getTail())))/(this.lane_w*0.4) + 1;
+        var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
+        var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4);
         for(var k:number = 0; k < _division; ++k)
         {
-          var _topVertex = ts.vec2_minus(_lane.getHead(), ts.vec2_multiply(_direction,this.lane_w*0.4*k));
+          var _topVertex = _lane.getHead().minus(_direction.multiply(this.lane_w*0.4*k));
           const _graphic_obj = 
           this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color);
           this.mapContainer.addChild(_graphic_obj);
@@ -266,9 +261,9 @@ class Scene extends Component {
         //var _light_state:string = this.roadIntersection.getLaneState(i,j);
         _color = _green;
         
-        var _direction:vec2 = ts.tsNormalize(ts.vec2_minus(_lane.getHead(),(_lane.getTail())));
-        var _division:number = ts.tsLength(ts.vec2_minus(_lane.getHead(),(_lane.getTail())))/(this.lane_w*0.4);
-        for(var k:number = 0; k < _division; ++k)
+        var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
+        var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4)+1;
+        for(var k:number = 1; k < _division; ++k)
         {
           var _topVertex = _lane.getTail().plus(_direction.multiply(this.lane_w*0.4*k));
           const _graphic_obj = 
@@ -342,14 +337,16 @@ class Scene extends Component {
     //var _triangle = _obj_g;
     //console.log("ok 278 \n");
     var _direction = ts.tsNormalize(direction);
+    //flip y
+    _direction.y *= -1; 
     var _bottom = ts.vec2_minus(topVertex,_direction.multiply(height));
     var _direction_perpendicular = ts.tsRotateByOrigin(_direction,Math.PI/2);
-    
+    //_direction_perpendicular.y *= -1; 
     var _vertices = new Array<vec2>();
     
     _vertices.push(topVertex);
-    _vertices.push(new vec2(_bottom.x+_direction_perpendicular.x*width,_bottom.y+_direction_perpendicular.y*width/2));
-    _vertices.push(new vec2(_bottom.x-_direction_perpendicular.x*width,_bottom.y-_direction_perpendicular.y*width/2));
+    _vertices.push(_bottom.plus(_direction_perpendicular.multiply(width/2)));
+    _vertices.push(_bottom.plus(_direction_perpendicular.multiply(-width/2)));
 
     // console.log(_direction);
     _triangle.beginFill(color,1);

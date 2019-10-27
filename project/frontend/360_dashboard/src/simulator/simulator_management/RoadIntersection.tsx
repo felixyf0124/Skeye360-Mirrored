@@ -16,6 +16,7 @@ export default class RoadIntersection {
     mapCoordinate: vec2;
     roadSections:Array<RoadSection>;
     TLManager:TLManager;
+    laneWidth:number;
 
     constructor(id:number, mapCoordinate:vec2)
     {
@@ -23,6 +24,7 @@ export default class RoadIntersection {
         this.mapCoordinate = mapCoordinate;
         this.roadSections = new Array<RoadSection>();
         this.TLManager = new TLManager(id);
+        this.laneWidth =0;
     }
 
     //Getters
@@ -52,6 +54,13 @@ export default class RoadIntersection {
         this.mapCoordinate = mapCoordinate;
     }
 
+    updateLaneWidth(width:number) {
+        this.laneWidth = width;
+        for(let i=0;i<this.roadSections.length;++i){
+            this.roadSections[i].updateLanePosition(width);
+        }
+    }
+
     addNewRoadSection(tailVec2: vec2) {
         var _roadSection = new RoadSection(this.roadSections.length,this.id,tailVec2);
         console.log(_roadSection);
@@ -64,10 +73,7 @@ export default class RoadIntersection {
 
     addNewLane(roadSection_id: number, laneDirection: number, laneType:string, numOfLanes: number) {
         
-        for(let i = 0; i < numOfLanes; ++i)
-        {
-            this.roadSections[roadSection_id].addNewLane(laneDirection,laneType,numOfLanes);
-        }
+        this.roadSections[roadSection_id].addNewLane(laneDirection,laneType,numOfLanes);
        
     }
 
@@ -79,4 +85,6 @@ export default class RoadIntersection {
         //should we menually set road direction like straight turn left or right,
         //or make it auto adjusted when the lanes are linked to each other?
     }
+
+    
 }

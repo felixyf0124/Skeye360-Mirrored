@@ -1,4 +1,5 @@
 import Vec2 from './simulator_management/vec2';
+import { func } from 'prop-types';
 
 // export function tsVec2(x:number,y:number){
 //     return {x,y};
@@ -17,11 +18,10 @@ export function tsRotate(point:Vec2, ang_in_rad:number, origin:Vec2):Vec2{
     const _y = point.y-origin.y;
     
     
-    var _point = new Vec2(
-        Math.cos(ang_in_rad) * _x - Math.sin(ang_in_rad) * _y,
-        Math.sin(ang_in_rad) * _x + Math.cos(ang_in_rad) * _y
-    );
-
+    var _point = new Vec2();
+    _point.x = cos(ang_in_rad) * _x - sin(ang_in_rad) * _y;
+    _point.y = sin(ang_in_rad) * _x + cos(ang_in_rad) * _y;
+    
     return _point; 
     
 }
@@ -73,6 +73,14 @@ export function vec2_minus(vec2_a:Vec2, vec2_b:Vec2):Vec2{
     return _vec2;
 }
 
+//fixing floating error
+export function cos(ang_in_rad:number) {
+    return Math.round(Math.cos(ang_in_rad)*10000)/10000;
+}
+
+export function sin(ang_in_rad:number) {
+    return Math.round(Math.sin(ang_in_rad)*10000)/10000;
+}
 
 
 
