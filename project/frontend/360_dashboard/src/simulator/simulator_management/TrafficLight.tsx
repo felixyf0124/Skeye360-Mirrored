@@ -46,6 +46,8 @@ export default class TrafficLight {
     }
     setTrafficLightStatus(trafficLightStatus: string) {
         this.trafficLightStatus = trafficLightStatus;
+        var idTL = Number(this.getTrafficLightId());
+        console.log("TESTINGinTL(id:"+idTL+"|status:"+this.trafficLightStatus);
     }
 }
 

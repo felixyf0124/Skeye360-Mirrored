@@ -5,10 +5,9 @@ import TrafficLight from './TrafficLight';
  */
 export default class TrafficLightManager {
 
-    //id:number;
+    id:number;
     roadIntersection_id:number;
     trafficLightQueue: Array<TrafficLight>;
-    allTrafficLightsAtIntersection: Array<TrafficLight>;
     countDown: number;
     countDownOffset: number;
     // trafficLight: TrafficLight;
@@ -21,13 +20,12 @@ export default class TrafficLightManager {
     deltaT: number;
 
     //constructor(roadIntersectionid:number, startTime:number, timeOffset:number);
-    constructor(roadIntersectionid:number, startTime?:number, timeOffset?:number){
+    constructor(id:number, roadIntersectionid:number, startTime?:number, timeOffset?:number){
     //constructor(roadIntersectionid:number, allTrafficLightsAtIntersection?: Array<TrafficLight>, timePairs:Array<Array<number>>, startTime:number, timeOffset:number){
-        //this.id = id;
+        this.id = id;
         this.roadIntersection_id = roadIntersectionid;
         this.trafficLightQueue = new Array<TrafficLight>();
         //this.allTrafficLightsAtIntersection = allTrafficLightsAtIntersection||new Array<TrafficLight>();
-        this.allTrafficLightsAtIntersection = new Array<TrafficLight>();
         this.countDown = 0;
         this.countDownOffset = 0;
         // this.trafficLight = new TrafficLight(0, 1);
@@ -92,12 +90,14 @@ export default class TrafficLightManager {
     }
     setAllTrafficLightsAsStop() {
         //This will set all traffic lights at a specific intersection as a stop sign (blinks red)
-        for(let index = 0; index < this.allTrafficLightsAtIntersection.length; index++) {
-            this.allTrafficLightsAtIntersection[index].setTrafficLightStatus("stop");
+        console.log("TESTINGinTLM:before the for loop"+this.trafficLightQueue.length);
+        for(let index = 0; index < this.trafficLightQueue.length; index++) {
+            console.log("TESTINinTLM(id:"+this.trafficLightQueue[index].getTrafficLightId()+"|status:"+this.trafficLightQueue[index].getTrafficLightStatus());
+            this.trafficLightQueue[index].setTrafficLightStatus("stop");
         }
     }
     setGreenLight(trafficLightId: number, timeGiven:number) {
-        var lookup = this.allTrafficLightsAtIntersection.filter(function(trafficLight) {
+        var lookup = this.trafficLightQueue.filter(function(trafficLight) {
             return trafficLight.id === trafficLightId;
         });
 
@@ -110,6 +110,9 @@ export default class TrafficLightManager {
             lookup[0].setTrafficLightStatus("green");
         }
 
+    }
+    setTrafficLightQueue(trafficLightsArray: Array<TrafficLight>) {
+        this.trafficLightQueue = trafficLightsArray;
     }
 
     // calculateTotalPeriodTime(index: number): number {
@@ -145,8 +148,13 @@ export default class TrafficLightManager {
     // }
 
     getTrafficLightState(id: number):string{
-        const state:string = this.trafficLightQueue[id].getTrafficLightStatus();
-        return state;
+        // TO CHECK LATER, THERE IS AN ISSUE WITH THE QUEUE
+        // return "HELLO" + id;
+        console.log("TESTINGinTLMiD"+id);
+        console.log("TESTINGinTLML"+this.trafficLightQueue.length);
+        return "testing";
+        // const state:string = this.trafficLightQueue[id].getTrafficLightStatus();
+        // return state;
     }
 
     // getGreenTimeStartOffset(index: number){

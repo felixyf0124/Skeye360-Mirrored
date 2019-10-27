@@ -8,7 +8,7 @@ import { RootState } from '../reducers/rootReducer';
 import { Store } from 'redux';
 import vehicle from '../images/vehicle.png';
 import ppl from '../images/ppl.png';
-import TrafficLight from './TrafficLight.js';
+import TrafficLight from './simulator_management/TrafficLight';
 import TrafficLightMG from './simulator_management/TrafficLightManager';
 // import { Root } from 'react-dom';
 import VehicleObj from './simulator_management/Vehicle';
@@ -18,6 +18,8 @@ import * as ts from './TSGeometry'
 import { Container, Button } from 'react-bootstrap';
 import vec2 from './simulator_management/vec2';
 import stopBlueImage from '../images/stopBlue.png';
+import TrafficLightManager from './simulator_management/TrafficLightManager';
+import TrafficLightManualControl from './simulator_management/TrafficLightManualControl';
 
 /**
  * @class Scene
@@ -63,6 +65,12 @@ class Scene extends Component {
   vehicleData:Array<{x:number,y:number}>;
   //car:VehicleObj;
 
+  trafficLightManualControl: TrafficLightManualControl;
+  trafficLightManager: TrafficLightManager;
+  trafficLightsArray:Array<TrafficLight>;
+  hasTLColorChanged:Boolean;
+  count:number;
+
   constructor(props: any) {
     super(props);
     this.window_scale_ratio = 0.5;
@@ -105,7 +113,7 @@ class Scene extends Component {
     this.trafficLightCounter = Date.now();
     this.fps = 0;
     this.fpsCounter = 0;
-    this.roadIntersection = new RoadIntersection(0, ts.tsVec2(0,0));
+    this.roadIntersection = new RoadIntersection(0, 0, ts.tsVec2(0,0));
     //this.trafficLightManager = new TrafficLightMG(this.roadIntersection.getRoadIntersectionId(),Date.now(),this.trafficLightCounterOffset);
 
     this.textStyle = {
@@ -137,6 +145,19 @@ class Scene extends Component {
     this.app.stage.y = this.window_h/2;
     //this.app.stage.scale.y=-1;
 
+    ///////////////////////////Traffic Lights////////////////////////////////////////
+    //TrafficLightManager(0 --> is for the trafficLightManagerId, 0 --> is for the roadIntersectionId, Date.now, 0 --> is for the offset)
+    this.trafficLightManager = new TrafficLightManager(0, 0, Date.now(), 0);
+    //Initialize traffic lights
+    this.trafficLightsArray = [];
+    for(let index = 0; index < 8; index++) {
+      this.trafficLightsArray[index] = new TrafficLight(index, 0);
+    }
+    this.trafficLightManager.setTrafficLightQueue(this.trafficLightsArray);
+    console.log("TESTINGScene:"+this.trafficLightManager.trafficLightQueue.length);
+    console.log("TESTINGSceneID:"+this.trafficLightManager.trafficLightQueue[4].getTrafficLightId());
+    ///////////////////////////////////////////////////////////////////////////////////
+
     ///////////// FOR THE CONTROL PANEL ///////////////////////////////////
     this.controlPanelContainer.x = -400;
     this.controlPanelContainer.y = 50;
@@ -159,16 +180,29 @@ class Scene extends Component {
     this.controlPanelContainer.addChild(button);
 
     button
-      .on('click', this.onClick);
+      .on('click', onclick = () => {
+        if(this.trafficLightManager == undefined) {
+          console.log("hell0");
+        }
+        this.hasTLColorChanged = true;
+        this.trafficLightManualControl.stopAllTrafficLights(this.trafficLightManager);
+      });
     //////////////////////////////////////////////////////////////////////
 
+    //TrafficLightManualControl(0 --> is the intersectionId)
+    this.trafficLightManualControl = new TrafficLightManualControl(0);
+    this.hasTLColorChanged = true;
+    this.count = 0;
+
   }
 
-  onClick() {
-    
-  }
-
-
+  // onClick() {
+  //   if(this.trafficLightManager == undefined) {
+  //     console.log("hell0");
+  //   }
+  //   this.hasTLColorChanged = true;
+  //   this.trafficLightManualControl.stopAllTrafficLights(this.trafficLightManager);
+  // }
 
   initialize = () => {
 
@@ -260,19 +294,26 @@ class Scene extends Component {
       for(var j:number = 0; j < _lane_in.length; ++j)
       {
         let _lane = _lane_in[j];
-        // var _light_state:string = this.roadIntersection.getLaneState(i,j);
-        _color = 0xffffff;
+        var _light_state:string = this.roadIntersection.getLaneState(i,j);
+
+        /////////// FOR TESTING ///////////////
+        let text = new PIXI.Text("                                      Hello" + this.count);
+        text.style.fill = 0x00FF00;
+        this.controlPanelContainer.addChild(text);
+        ///////////////////////////////////////
+
+        // _color = 0xffffff;
         
-        // switch(_light_state){
-        //   case "green":
-        //     _color = _green;
-        //     break;
-        //   case "yellow":
-        //     _color = _yellow;
-        //     break;
-        //   case "red":
-        //     _color = _red;
-        // }
+        switch(_light_state){
+          case "green":
+            _color = _green;
+            break;
+          case "yellow":
+            _color = _yellow;
+            break;
+          case "red":
+            _color = _red;
+        }
 
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
         var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4);
@@ -288,7 +329,7 @@ class Scene extends Component {
       for(let j:number = 0; j < _lane_out.length; ++j)
       {
         let _lane = _lane_out[j];
-        _color = _green;
+        var _color2 = _green;
         
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
         var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4)+1;
@@ -296,7 +337,7 @@ class Scene extends Component {
         {
           var _topVertex = _lane.getTail().plus(_direction.multiply(this.lane_w*0.4*k));
           const _graphic_obj = 
-          this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color);
+          this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color2);
           this.mapContainer.addChild(_graphic_obj);
         }
       }
@@ -315,6 +356,17 @@ class Scene extends Component {
   }
 
   animation = () => {
+
+    // if(this.hasTLColorChanged) {
+    //   this.drawRoad();
+    //   ///////////// FOR TESTING ///////////////
+    //   let text = new PIXI.Text("CALLLEEEDDD" + this.count);
+    //   text.style.fill = 0x00FF00;
+    //   this.controlPanelContainer.addChild(text);
+    //   this.count++;
+    //   this.hasTLColorChanged = false;
+    //   /////////////////////////////////////////
+    // }
     this.displayPlaneContainer.removeChildren();
     let deltaTime = Date.now() -this.timeLastMoment;
     this.fpsCounter++;

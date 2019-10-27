@@ -18,12 +18,12 @@ export default class RoadIntersection {
     TLManager:TLManager;
     laneWidth:number;
 
-    constructor(id:number, mapCoordinate:vec2)
+    constructor(id:number, TLManagerId: number, mapCoordinate:vec2)
     {
         this.id = id;
         this.mapCoordinate = mapCoordinate;
         this.roadSections = new Array<RoadSection>();
-        this.TLManager = new TLManager(id);
+        this.TLManager = new TLManager(TLManagerId, id);
         this.laneWidth =0;
     }
 
@@ -45,7 +45,7 @@ export default class RoadIntersection {
     getLaneState(section_id:number,lane_id:number, isLaneIn?:boolean):string{
         const _isLaneIn:boolean = isLaneIn||true;
         const _trafficLight_id = this.roadSections[section_id].getLaneAt(lane_id,_isLaneIn).getTrafficLightId();
-        
+        console.log("TESTINGinRI:"+_trafficLight_id);
         return this.getTrafficLightState(_trafficLight_id);
     }
 
