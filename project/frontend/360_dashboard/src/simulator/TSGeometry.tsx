@@ -57,23 +57,6 @@ export function tsCrossVec2(vec2_a:Vec2, vec2_b:Vec2){
     return _product;
 }
 
-
-// export function vec2_multiply(vec2:Vec2,n:number){
-//     var _vec2= new Vec2(vec2.x * n,vec2.y * n);
-//     return _vec2;
-// }
-
-// export function vec2_plus(vec2_a:Vec2, vec2_b:Vec2):Vec2{
-//     var _vec2 = new Vec2(vec2_a.x + vec2_b.x, vec2_a.x + vec2_b.x);
-//     return _vec2;
-// }
-
-
-// export function vec2_minus(vec2_a:Vec2, vec2_b:Vec2):Vec2{
-//     var _vec2 = new Vec2(vec2_a.x - vec2_b.x, vec2_a.y + vec2_b.y);
-//     return _vec2;
-// }
-
 //fixing floating error
 export function cos(ang_in_rad:number) {
     return Math.round(Math.cos(ang_in_rad)*10000)/10000;
@@ -83,12 +66,10 @@ export function sin(ang_in_rad:number) {
     return Math.round(Math.sin(ang_in_rad)*10000)/10000;
 }
 
-export function lineIntersection(line1_p1:Vec2,line1_p2:Vec2,line2_p1:Vec2,line2_p2:Vec2):Vec2{
-    const _line1 = line(line1_p1,line1_p2);
-    const _line2 = line(line2_p1,line2_p2);
-
-    const _x = (_line2.b - _line1.b) / (_line1.a - _line2.a);
-    const _y = _line1.a * _x + _line1.b;
+export function lineIntersection(line1:{a:number,b:number},line2:{a:number,b:number}):Vec2{
+    
+    const _x = (line2.b - line1.b) / (line1.a - line2.a);
+    const _y = line1.a * _x + line1.b;
 
     const _insterectionPoint = new Vec2(_x, _y);
 
@@ -97,9 +78,20 @@ export function lineIntersection(line1_p1:Vec2,line1_p2:Vec2,line2_p1:Vec2,line2
 
 export function line(p1:Vec2,p2:Vec2){
     const _slop_vec = p1.minus(p2);
-    var a = _slop_vec.y/_slop_vec.x;
-    var b = p1.y - a * p1.x;
+    const _a = _slop_vec.y/_slop_vec.x;
+    const _b = p1.y - _a * p1.x;
+    const _line = {a:_a, b:_b};
+    return _line;
+}
 
-    return {a,b};
+export function lineShift(line:{a:number, b:number}, vector:vec2){
+    //shift with a point ( 0, b )
+    const _point = new vec2(vector.x, line.b + vector.y);
+
+    // y = ax + b
+    // b' = y' - ax';
+    const _b = _point.y - line.a * _point.x;
+    const _line = {a:line.a, b:_b};
+    return _line;
 }
 

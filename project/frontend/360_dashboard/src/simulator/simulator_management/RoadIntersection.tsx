@@ -5,6 +5,7 @@ import * as ts from '../TSGeometry';
 import Lane from './Lane';
 import './LanePointer';
 import LanePointer from './LanePointer';
+import { number } from 'prop-types';
 
 /**
  * @class RoadIntersection
@@ -53,13 +54,65 @@ export default class RoadIntersection {
     setMapCoordinate(mapCoordinate: vec2) {
         this.mapCoordinate = mapCoordinate;
     }
-
-    updateLaneWidth(width:number) {
+    /**
+     * This also updates all lane positions
+     * @param width 
+     */
+    setLaneWidth(width:number){
         this.laneWidth = width;
-        for(let i=0;i<this.roadSections.length;++i){
-            this.roadSections[i].updateLanePosition(width);
-        }
     }
+
+    updateLane() {
+        for(let i=0;i<this.roadSections.length;++i){
+            this.roadSections[i].updateLanePosition(this.laneWidth);
+        }
+        var _resort = new Array<{left:number,right:number}>();
+        for(let i = 0; i < this.roadSections.length; ++i){
+            var _intersection = new vec2();
+            //check left side
+            var _lane = this.roadSections[i].getLaneAt(this.roadSections[i].lane_out.length-1, false);
+            const _line_left = ts.line(_lane.getHead(), _lane.getTail());
+            for(let j = 0; j < this.roadSections.length; ++j)
+            {
+                if(j != i)
+                {
+                    var _lane_right = this.roadSections[j].getLaneAt(j);
+                    var _line = ts.line(_lane_right.getHead(), _lane_right.getTail());
+                    var _lane_dir = ts.tsNormalize(_lane_right.getHead().minus(_lane_right.getTail()));
+                    var _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_dir, Math.PI/2);
+                    _line = ts.lineShift(_line, _perpendicular_unit_vec);
+
+                    _intersection = ts.lineIntersection(_line_left,_line);
+
+                    const _distance = ts.tsLength(_intersection.minus(_lane.getTail()));
+                    const _length = ts.tsLength(_lane_right.getHead().minus(_lane_right.getTail()));
+                    if(_distance <= _length)
+                    {
+                        let _isExisted = false;
+                        for(let k=0;k<_resort.length;++k)
+                        {
+                            if(_resort[k].left === j && _resort[k].right === i)
+                            {
+                                _isExisted = true;
+                                break;
+                            }
+                        }
+                        if(!_isExisted)
+                        {
+                            _resort.push({left:j,right:i});
+                        }
+                    }
+                }
+
+            }
+
+            //check right side
+            //todo
+            //_lane =
+        }
+
+    }
+
 
     addNewRoadSection(tailVec2: vec2) {
         var _roadSection = new RoadSection(this.roadSections.length,this.id,tailVec2);

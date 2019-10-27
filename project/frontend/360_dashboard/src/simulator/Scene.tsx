@@ -124,7 +124,8 @@ class Scene extends Component {
       this.roadIntersection.addNewLane(i,-1,"straight",2);
     }
 
-    this.roadIntersection.updateLaneWidth(this.lane_w);
+    this.roadIntersection.setLaneWidth(this.lane_w);
+    this.roadIntersection.updateLane();
 
     this.app.stage.x = this.window_w/2;
     this.app.stage.y = this.window_h/2;
@@ -328,11 +329,9 @@ class Scene extends Component {
    drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number) {
     const _triangle = new PIXI.Graphics();
     var _direction = ts.tsNormalize(direction);
-    //flip y
-    _direction.y *= -1; 
-    var _bottom = ts.vec2_minus(topVertex,_direction.multiply(height));
+    
+    var _bottom = topVertex.minus(_direction.multiply(height));
     var _direction_perpendicular = ts.tsRotateByOrigin(_direction,Math.PI/2);
-    _direction_perpendicular.y *= -1;
     var _vertices = new Array<vec2>();
     
     _vertices.push(topVertex);
