@@ -10,8 +10,10 @@ export default class TrafficLightManualControl {
     roadIntersectionId: number;
 
     constructor(roadIntersectionId: number, allTrafficLightsAtIntersection: Array<TrafficLight>) {
+        this.roadIntersectionId = roadIntersectionId;
         //The time pairs for the traffic lights will be set to zero
-        this.trafficLightManager = new TrafficLightManager(roadIntersectionId, allTrafficLightsAtIntersection, [[0,0],[0,0]], 0, 0);
+        //this.trafficLightManager = new TrafficLightManager(roadIntersectionId, allTrafficLightsAtIntersection, [[0,0],[0,0]], 0, 0);
+        this.trafficLightManager = new TrafficLightManager(roadIntersectionId,  0, 0);
         this.stopAllTrafficLights();
     }
 

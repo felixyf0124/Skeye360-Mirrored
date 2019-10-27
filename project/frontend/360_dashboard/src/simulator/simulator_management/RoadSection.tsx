@@ -48,6 +48,14 @@ export default class RoadSection {
     getLaneOut(): Array<Lane> {
         return this.lane_out;
     }
+    getLaneAt(id:number,isLaneIn?:boolean){
+        const _isLaneIn:boolean = isLaneIn||true;
+        if(_isLaneIn){
+            return this.lane_in[id];
+        }else{
+            return this.lane_out[id];
+        }
+    }
 
     //Setters
     setId(id:number){

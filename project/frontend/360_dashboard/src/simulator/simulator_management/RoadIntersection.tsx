@@ -36,6 +36,17 @@ export default class RoadIntersection {
         return this.roadSections;
     }
 
+    getTrafficLightState(id:number):string{
+        return this.TLManager.getTrafficLightState(id);
+    }
+
+    getLaneState(section_id:number,lane_id:number, isLaneIn?:boolean):string{
+        const _isLaneIn:boolean = isLaneIn||true;
+        const _trafficLight_id = this.roadSections[section_id].getLaneAt(lane_id,_isLaneIn).getTrafficLightId();
+        
+        return this.getTrafficLightState(_trafficLight_id);
+    }
+
     //Setters
     setMapCoordinate(mapCoordinate: vec2) {
         this.mapCoordinate = mapCoordinate;
@@ -43,7 +54,7 @@ export default class RoadIntersection {
 
     addNewRoadSection(tailVec2: vec2) {
         var _roadSection = new RoadSection(this.roadSections.length,this.id,tailVec2);
-        
+        console.log(_roadSection);
         this.roadSections.push(_roadSection);
     }
     

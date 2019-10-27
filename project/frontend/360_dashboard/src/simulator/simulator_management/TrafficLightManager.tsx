@@ -14,26 +14,29 @@ export default class TrafficLightManager {
     // trafficLight: TrafficLight;
 
     //TimePairs is an array of an array of numbers?
-    timePairs: Array<Array<number>>;
+    //timePairs: Array<Array<number>>;
     startTime: number;
     timeOffset: number;
-    totalTimePeriod: number;
+    //totalTimePeriod: number;
     deltaT: number;
 
-    constructor(roadIntersectionid:number, allTrafficLightsAtIntersection: Array<TrafficLight>, timePairs:Array<Array<number>>, startTime:number, timeOffset:number){
+    //constructor(roadIntersectionid:number, startTime:number, timeOffset:number);
+    constructor(roadIntersectionid:number, startTime?:number, timeOffset?:number){
+    //constructor(roadIntersectionid:number, allTrafficLightsAtIntersection?: Array<TrafficLight>, timePairs:Array<Array<number>>, startTime:number, timeOffset:number){
         //this.id = id;
         this.roadIntersection_id = roadIntersectionid;
         this.trafficLightQueue = new Array<TrafficLight>();
-        this.allTrafficLightsAtIntersection = allTrafficLightsAtIntersection;
+        //this.allTrafficLightsAtIntersection = allTrafficLightsAtIntersection||new Array<TrafficLight>();
+        this.allTrafficLightsAtIntersection = new Array<TrafficLight>();
         this.countDown = 0;
         this.countDownOffset = 0;
         // this.trafficLight = new TrafficLight(0, 1);
         
-        this.timePairs = timePairs;
-        this.startTime = startTime;
-        this.timeOffset = timeOffset;
+        //this.timePairs = timePairs;
+        this.startTime = startTime||Date.now();
+        this.timeOffset = timeOffset||0;
         this.deltaT = 0;
-        this.totalTimePeriod = this.calculateTotalPeriodTime(this.timePairs.length);
+        //this.totalTimePeriod = this.calculateTotalPeriodTime(this.timePairs.length);
     }
 
     //Getters
@@ -52,18 +55,18 @@ export default class TrafficLightManager {
     getCountDownOffset(): number {
         return this.countDownOffset;
     }
-    getTimePairs(): Array<Array<number>> {
-        return this.timePairs;
-    }
+    // getTimePairs(): Array<Array<number>> {
+    //     return this.timePairs;
+    // }
     getStartTime(): number {
         return this.startTime;
     }
     getTimeOffset(): number {
         return this.timeOffset;
     }
-    getTotalTimePeriod(): number {
-        return this.totalTimePeriod;
-    }
+    // getTotalTimePeriod(): number {
+    //     return this.totalTimePeriod;
+    // }
     getDeltaT(): number {
         return this.deltaT
     }
@@ -75,9 +78,9 @@ export default class TrafficLightManager {
     setCountDownOffset(countDownOffset: number) {
         this.countDownOffset = countDownOffset;
     }
-    setTimePairs(timePairs: Array<Array<number>>) {
-        this.timePairs = timePairs;
-    }
+    // setTimePairs(timePairs: Array<Array<number>>) {
+    //     this.timePairs = timePairs;
+    // }
     setStartTime(startTime: number) {
         this.startTime = startTime;
     }
@@ -109,50 +112,55 @@ export default class TrafficLightManager {
 
     }
 
-    calculateTotalPeriodTime(index: number): number {
-        var totalTime:number = 0;
-        for(let i = 0; i < index; i++) {
-            totalTime += this.timePairs[i][0];
-            totalTime += this.timePairs[i][1];
-        }
-        return totalTime;
+    // calculateTotalPeriodTime(index: number): number {
+    //     var totalTime:number = 0;
+    //     for(let i = 0; i < index; i++) {
+    //         totalTime += this.timePairs[i][0];
+    //         totalTime += this.timePairs[i][1];
+    //     }
+    //     return totalTime;
+    // }
+
+    // getTrafficLightStateAtDirection(index: number) {
+    //     this.deltaT = Date.now()-(this.startTime + this.timeOffset);
+    //     const greenTimeStart:number = this.getGreenTimeStartOffset(index);
+    //     const yellowTimeStart:number = this.getYellowTimeStartOffset(index);
+    //     const redTimeStart:number = this.getRedTimeStartOffset(index);
+    //     const tempT = this.deltaT%(this.totalTimePeriod*1000);
+    //     var currentLightCountDown: number = 0;
+
+    //     //To refactor later on with Handler or Polymorphism
+    //     if(tempT < yellowTimeStart*1000 && tempT >= greenTimeStart*1000) {
+    //         currentLightCountDown = this.timePairs[index][0] - (tempT/1000 - greenTimeStart)+1;
+    //         return [1,currentLightCountDown];
+    //     } else if(tempT<redTimeStart*1000 && tempT>=yellowTimeStart*1000) {
+    //         currentLightCountDown = this.timePairs[index][1] - (tempT/1000 - yellowTimeStart)+1;
+    //         return [2,currentLightCountDown];
+    //     } else {
+    //         currentLightCountDown = (this.timePairs[(index-1+this.timePairs.length)%this.timePairs.length][0] + 
+    //                                 this.timePairs[(index-1+this.timePairs.length)%this.timePairs.length][1])
+    //                                 - (tempT/1000 - redTimeStart%this.totalTimePeriod)+1;
+    //         return [3,currentLightCountDown];
+    //     }
+    // }
+
+    getTrafficLightState(id: number):string{
+        const state:string = this.trafficLightQueue[id].getTrafficLightStatus();
+        return state;
     }
 
-    getTrafficLightStateAtDirection(index: number) {
-        this.deltaT = Date.now()-(this.startTime + this.timeOffset);
-        const greenTimeStart:number = this.getGreenTimeStartOffset(index);
-        const yellowTimeStart:number = this.getYellowTimeStartOffset(index);
-        const redTimeStart:number = this.getRedTimeStartOffset(index);
-        const tempT = this.deltaT%(this.totalTimePeriod*1000);
-        var currentLightCountDown: number = 0;
+    // getGreenTimeStartOffset(index: number){
+    //     return this.calculateTotalPeriodTime(index);
+    // }
 
-        //To refactor later on with Handler or Polymorphism
-        if(tempT < yellowTimeStart*1000 && tempT >= greenTimeStart*1000) {
-            currentLightCountDown = this.timePairs[index][0] - (tempT/1000 - greenTimeStart)+1;
-            return [1,currentLightCountDown];
-        } else if(tempT<redTimeStart*1000 && tempT>=yellowTimeStart*1000) {
-            currentLightCountDown = this.timePairs[index][1] - (tempT/1000 - yellowTimeStart)+1;
-            return [2,currentLightCountDown];
-        } else {
-            currentLightCountDown = (this.timePairs[(index-1+this.timePairs.length)%this.timePairs.length][0] + 
-                                    this.timePairs[(index-1+this.timePairs.length)%this.timePairs.length][1])
-                                    - (tempT/1000 - redTimeStart%this.totalTimePeriod)+1;
-            return [3,currentLightCountDown];
-        }
-    }
+    // getYellowTimeStartOffset(index: number){
+    //     var orangeTimeStart:number = this.getGreenTimeStartOffset(index) + this.timePairs[index][0];
+    //     return orangeTimeStart;
+    // }
 
-    getGreenTimeStartOffset(index: number){
-        return this.calculateTotalPeriodTime(index);
-    }
-
-    getYellowTimeStartOffset(index: number){
-        var orangeTimeStart:number = this.getGreenTimeStartOffset(index) + this.timePairs[index][0];
-        return orangeTimeStart;
-    }
-
-    getRedTimeStartOffset(index: number){
-        var redTimeStart:number = this.getYellowTimeStartOffset(index) + this.timePairs[index][1];
-        return redTimeStart;
-    }
+    // getRedTimeStartOffset(index: number){
+    //     var redTimeStart:number = this.getYellowTimeStartOffset(index) + this.timePairs[index][1];
+    //     return redTimeStart;
+    // }
 }
 
