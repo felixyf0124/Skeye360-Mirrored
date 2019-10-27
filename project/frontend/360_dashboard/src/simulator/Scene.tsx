@@ -113,7 +113,7 @@ class Scene extends Component {
     this.vehicle = new PIXI.Sprite();
 
     //hard code to initial road intersection data for first loading
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.window_w/2, 0.0));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.window_w/2, this.window_h*0.2));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(-this.window_w/2, 0.0));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(0.0, this.window_h/2));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(0.0, -this.window_h/2));
@@ -195,14 +195,7 @@ class Scene extends Component {
     _vertices.push(new vec2(1,100));
     _vertices.push(new vec2(100,100));
 
-    //console.log("ok 281 \n"+_vertices);
-    //_triangle.beginFill(color,1);
-    //_t.beginFill(0xffffff,1);
     _t.lineStyle(1,0xffffff);
-    // _t.moveTo(_vertices[0].x,_vertices[0].y);
-    // _t.lineTo(_vertices[1].x,_vertices[1].y);
-    // _t.lineTo(_vertices[2].x,_vertices[2].y);
-    // _t.lineTo(_vertices[0].x,_vertices[0].y);
     
     _t.moveTo(-this.window_w,-this.window_h);
     _t.lineTo(this.window_w,this.window_h);
@@ -258,7 +251,6 @@ class Scene extends Component {
       for(let j:number = 0; j < _lane_out.length; ++j)
       {
         let _lane = _lane_out[j];
-        //var _light_state:string = this.roadIntersection.getLaneState(i,j);
         _color = _green;
         
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
@@ -334,23 +326,19 @@ class Scene extends Component {
 
    drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number) {
     const _triangle = new PIXI.Graphics();
-    //var _triangle = _obj_g;
-    //console.log("ok 278 \n");
     var _direction = ts.tsNormalize(direction);
     //flip y
     _direction.y *= -1; 
     var _bottom = ts.vec2_minus(topVertex,_direction.multiply(height));
     var _direction_perpendicular = ts.tsRotateByOrigin(_direction,Math.PI/2);
-    //_direction_perpendicular.y *= -1; 
+    _direction_perpendicular.y *= -1;
     var _vertices = new Array<vec2>();
     
     _vertices.push(topVertex);
     _vertices.push(_bottom.plus(_direction_perpendicular.multiply(width/2)));
     _vertices.push(_bottom.plus(_direction_perpendicular.multiply(-width/2)));
 
-    // console.log(_direction);
     _triangle.beginFill(color,1);
-    //_triangle.beginFill(0xffffff,1);
     _triangle.lineStyle(0,color,1);
     _triangle.moveTo(_vertices[0].x,_vertices[0].y);
     _triangle.lineTo(_vertices[1].x,_vertices[1].y);
