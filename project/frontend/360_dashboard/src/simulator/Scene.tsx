@@ -10,13 +10,14 @@ import vehicle from '../images/vehicle.png';
 import ppl from '../images/ppl.png';
 import TrafficLight from './TrafficLight.js';
 import TrafficLightMG from './simulator_management/TrafficLightManager';
-import { Root } from 'react-dom';
+// import { Root } from 'react-dom';
 import VehicleObj from './simulator_management/Vehicle';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry'
 //import Coordinate from './simulator_management/vec2';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import vec2 from './simulator_management/vec2';
+import stopBlueImage from '../images/stopBlue.png';
 
 /**
  * @class Scene
@@ -32,10 +33,12 @@ class Scene extends Component {
   app: PIXI.Application;
   mapContainer: PIXI.Container;
   objectContainer: PIXI.Container;
+  controlPanelContainer: PIXI.Container;
   displayPlaneContainer: PIXI.Container;
   backGround_G: PIXI.Graphics;
   road_G: PIXI.Graphics;
   trafficLight_G: PIXI.Graphics;
+  controlPanel_G: PIXI.Graphics;
   //should be removed after the roadintersection implemented
   //trafficLightManager: TrafficLightMG;
   roadIntersection: RoadIntersection;
@@ -70,16 +73,20 @@ class Scene extends Component {
     this.app = new PIXI.Application({width:this.window_w,height:this.window_h,resolution:window.devicePixelRatio});
     this.mapContainer = new PIXI.Container();
     this.objectContainer = new PIXI.Container();
+    this.controlPanelContainer = new PIXI.Container(); //CONTROLPANEL
     this.displayPlaneContainer = new PIXI.Container();
     this.app.stage.addChild(this.mapContainer);
     this.app.stage.addChild(this.objectContainer);
     this.app.stage.addChild(this.displayPlaneContainer);
+    this.app.stage.addChild(this.controlPanelContainer); //CONTROLPANEL
     this.backGround_G = new PIXI.Graphics();
     this.road_G = new PIXI.Graphics();
     this.trafficLight_G = new PIXI.Graphics();
+    this.controlPanel_G =  new PIXI.Graphics();
     this.mapContainer.addChild(this.backGround_G);
     this.mapContainer.addChild(this.road_G);
     this.mapContainer.addChild(this.trafficLight_G);
+    this.controlPanelContainer.addChild(this.controlPanel_G);
     this.coordinateOffset = {x:this.window_w/2,y:this.window_h/2};
 
     this.vehicleData = [{x:0,y:0}];
@@ -129,6 +136,36 @@ class Scene extends Component {
     this.app.stage.x = this.window_w/2;
     this.app.stage.y = this.window_h/2;
     //this.app.stage.scale.y=-1;
+
+    ///////////// FOR THE CONTROL PANEL ///////////////////////////////////
+    this.controlPanelContainer.x = -400;
+    this.controlPanelContainer.y = 50;
+    // this.controlPanel_G.beginFill(0xFFFF00);
+    this.controlPanel_G.alpha = 0.5;
+    // set the line style to have a width of 5 and set the color to red
+    this.controlPanel_G.lineStyle(5, 0x51BCD8);
+    // draw a rectangle
+    this.controlPanel_G.drawRect(0, 10, 300, 150);
+        
+    var button = PIXI.Sprite.from(stopBlueImage);
+    button.anchor.set(0.5);
+    button.x = 150;
+    button.y = 100;
+    button.buttonMode = true;
+    button.interactive = true;
+    button.buttonMode = true;
+    
+    // this.app.stage.addChild(button);
+    this.controlPanelContainer.addChild(button);
+
+    button
+      .on('click', this.onClick);
+    //////////////////////////////////////////////////////////////////////
+
+  }
+
+  onClick() {
+    
   }
 
 
@@ -223,7 +260,7 @@ class Scene extends Component {
       for(var j:number = 0; j < _lane_in.length; ++j)
       {
         let _lane = _lane_in[j];
-        //var _light_state:string = this.roadIntersection.getLaneState(i,j);
+        // var _light_state:string = this.roadIntersection.getLaneState(i,j);
         _color = 0xffffff;
         
         // switch(_light_state){
