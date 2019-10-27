@@ -141,7 +141,7 @@ class Scene extends Component {
     // this.backGround_G.drawRect(0,0,this.window_w,this.window_h);
     //this.testdraw();
     this.drawRoad();
-    this.testdraw();
+    //this.testdraw();
     
     this.app.ticker.add(this.animation);
       
@@ -288,13 +288,14 @@ class Scene extends Component {
     }
     
     const fpsText = new PIXI.Text("FPS: "+ this.fps,this.textStyle);
-    fpsText.x = this.window_w - 80;
+    fpsText.x = this.window_w/2 - 80;
+    fpsText.y = -this.window_h/2;
     this.displayPlaneContainer.addChild(fpsText);
     // const _stopline = {
     //   x:(this.road_w_v/2 + 1.2)*this.lane_w,
     //   y:0
     // }
-   // this.car.setStopLine(_stopline);
+    // this.car.setStopLine(_stopline);
     const lane_w =60;
     // this.drawTrafficLight(this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer,true,10,5,10,5);
     // const _light_state = this.trafficLightManager.getTrafficLightStateAtDirection(0);
