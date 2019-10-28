@@ -18,7 +18,7 @@ export default class TrafficLightManualControl {
     }
 
     stopAllTrafficLights(trafficLightManager: TrafficLightManager) {
-        console.log("TESTINGinTLMC:"+trafficLightManager.trafficLightQueue.length);
+        // console.log("TESTINGinTLMC:"+trafficLightManager.trafficLightQueue.length);
         trafficLightManager.setAllTrafficLightsAsStop();
     }
 

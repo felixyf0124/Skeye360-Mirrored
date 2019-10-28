@@ -5,6 +5,7 @@ import * as ts from '../TSGeometry';
 import Lane from './Lane';
 import './LanePointer';
 import LanePointer from './LanePointer';
+import TrafficLightManager from './TrafficLightManager';
 
 /**
  * @class RoadIntersection
@@ -18,12 +19,12 @@ export default class RoadIntersection {
     TLManager:TLManager;
     laneWidth:number;
 
-    constructor(id:number, TLManagerId: number, mapCoordinate:vec2)
+    constructor(id:number, TLManager: TrafficLightManager, mapCoordinate:vec2)
     {
         this.id = id;
         this.mapCoordinate = mapCoordinate;
         this.roadSections = new Array<RoadSection>();
-        this.TLManager = new TLManager(TLManagerId, id);
+        this.TLManager = TLManager;
         this.laneWidth =0;
     }
 
@@ -45,7 +46,7 @@ export default class RoadIntersection {
     getLaneState(section_id:number,lane_id:number, isLaneIn?:boolean):string{
         const _isLaneIn:boolean = isLaneIn||true;
         const _trafficLight_id = this.roadSections[section_id].getLaneAt(lane_id,_isLaneIn).getTrafficLightId();
-        console.log("TESTINGinRI:"+_trafficLight_id);
+        // console.log("TESTINGinRI:"+_trafficLight_id);
         return this.getTrafficLightState(_trafficLight_id);
     }
 

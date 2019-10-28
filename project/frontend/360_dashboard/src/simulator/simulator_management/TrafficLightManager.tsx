@@ -93,7 +93,7 @@ export default class TrafficLightManager {
         console.log("TESTINGinTLM:before the for loop"+this.trafficLightQueue.length);
         for(let index = 0; index < this.trafficLightQueue.length; index++) {
             console.log("TESTINinTLM(id:"+this.trafficLightQueue[index].getTrafficLightId()+"|status:"+this.trafficLightQueue[index].getTrafficLightStatus());
-            this.trafficLightQueue[index].setTrafficLightStatus("stop");
+            this.trafficLightQueue[index].setTrafficLightStatus("red");
         }
     }
     setGreenLight(trafficLightId: number, timeGiven:number) {
@@ -150,11 +150,11 @@ export default class TrafficLightManager {
     getTrafficLightState(id: number):string{
         // TO CHECK LATER, THERE IS AN ISSUE WITH THE QUEUE
         // return "HELLO" + id;
-        console.log("TESTINGinTLMiD"+id);
+        // console.log("TESTINGinTLMiD"+id);
         console.log("TESTINGinTLML"+this.trafficLightQueue.length);
-        return "testing";
-        // const state:string = this.trafficLightQueue[id].getTrafficLightStatus();
-        // return state;
+        // return "testing";
+        const state:string = this.trafficLightQueue[id].getTrafficLightStatus();
+        return state;
     }
 
     // getGreenTimeStartOffset(index: number){
