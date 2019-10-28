@@ -146,11 +146,6 @@ export default class TrafficLightManager {
     // }
 
     getTrafficLightState(id: number):string{
-        // TO CHECK LATER, THERE IS AN ISSUE WITH THE QUEUE
-        // return "HELLO" + id;
-        // console.log("TESTINGinTLMiD"+id);
-        console.log("TESTINGinTLML"+this.trafficLightQueue.length);
-        // return "testing";
         const state:string = this.trafficLightQueue[id].getTrafficLightStatus();
         return state;
     }
