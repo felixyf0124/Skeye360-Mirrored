@@ -102,11 +102,14 @@ export function lineIntersection(line1:{a:number,b:number,x:number},line2:{a:num
 export function line(p1:Vec2,p2:Vec2){
     var _a:number,_b:number,_x:number;
     // console.log(p1.x+"|"+p2.x+"|"+(p1.x != p2.x));
-    if(p1.x != p2.x)
-    {
+    
         const _slop_vec = p1.minus(p2);
         _a = _slop_vec.y/_slop_vec.x;
+        // _a = Math.round(_a * 10000) /10000;
+
         _b = p1.y - _a * p1.x;
+    if(isFinite(_a))
+    {
         _x = NaN;
     }else
     {

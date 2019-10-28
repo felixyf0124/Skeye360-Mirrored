@@ -68,6 +68,8 @@ export default class RoadIntersection {
         for(let i=0;i<this.roadSections.length;++i){
             this.roadSections[i].updateLanePosition(this.laneWidth);
         }
+
+        var _intersections = new Array<Array<vec2>>();
         for(let i = 0; i < this.roadSections.length; ++i){
             // var _intersection_left = new vec2();
             // var _intersection_right = new vec2();
@@ -101,74 +103,42 @@ export default class RoadIntersection {
             const _offset_left_shift = _perpendicular_unit_vec.multiply(this.laneWidth * 0.5);
             //edge right 
             _edge_right_L_sec = ts.lineShift(_edge_right_L_sec, _offset_right_shift);
+            // _edge_right_L_sec = ts.line(_lane_right_L_sec.getHead().plus(_offset_right_shift), 
+            //         _lane_right_L_sec.getHead().plus(_offset_right_shift));
             //edge left 
             _edge_left_R_sec = ts.lineShift(_edge_left_R_sec, _offset_left_shift);
+            // _edge_left_R_sec = ts.line(_lane_left_R_sec.getHead().plus(_offset_left_shift), 
+            //         _lane_left_R_sec.getHead().plus(_offset_left_shift));
             if(i ===2)
-         { console.log(_edge_left_R_sec);
-        console.log(_line_right);}
+         { console.log(_line_left);
+        console.log(_edge_right_L_sec);}
 
             const _intersection_left = ts.lineIntersection(_line_left,_edge_right_L_sec);
+            if(i ===2)
+            { console.log(_line_left);
+           console.log(_edge_right_L_sec);}
+   
             const _intersection_right = ts.lineIntersection(_line_right,_edge_left_R_sec);
 
         // console.log(_edge_right_L_sec);
         // console.log(_edge_left_R_sec);
         // console.log(_line_left);
         // console.log(_line_right);
-        // console.log(_intersection_left);
-        // console.log(_intersection_right);
+        console.log(_intersection_left);
+        console.log(_intersection_right);
+            _intersections.push([_intersection_left,_intersection_right]);
+        
 
-            if(false)
-             {       //check left intersetion
-                    // var _distance = ts.tsLength(_intersection_left.minus(_lane_out.getHead()));
-                    // var _distance2 = ts.tsLength(_intersection_left.minus(_lane_right.getHead().plus(_offset_right_shift)));
-                    // var _length = ts.tsLength(_lane_out.getHead().minus(_lane_out.getTail()));
-                    // var _length2 = ts.tsLength(_lane_right.getHead().minus(_lane_right.getTail()));
-                    // if(_distance <= _length)
-                    // {
-                    //     _offset_left = _intersection_left;
-                    //     let _isExisted = false;
-                    //     for(let k=0;k<_resort.length;++k)
-                    //     {
-                    //         if(_resort[k].left === j && _resort[k].right === i)
-                    //         {
-                    //             _isExisted = true;
-                    //             break;
-                    //         }
-                    //     }
-                    //     if(!_isExisted)
-                    //     {
-                    //         _resort.push({left:j,right:i});
-                    //     }
-                    // }
-
-                    //check right intersetion
-            //         _distance = ts.tsLength(_intersection_right.minus(_lane_in.getTail()));
-            //         _length = ts.tsLength(_lane_in.getHead().minus(_lane_in.getTail()));
-            //         if(_distance <= _length)
-            //         {
-            //             _offset_right = _intersection_right;
-            //             let _isExisted = false;
-            //             for(let k=0;k<_resort.length;++k)
-            //             {
-            //                 if(_resort[k].left === i && _resort[k].right === j)
-            //                 {
-            //                     _isExisted = true;
-            //                     break;
-            //                 }
-            //             }
-            //             if(!_isExisted)
-            //             {
-            //                 _resort.push({left:i,right:j});
-            //             }
-            //         }
-            //     }
-
-            // }
-             }
+            //temp solution
+        const _direct = ts.tsNormalize(this.roadSections[i].getTail().minus(this.roadSections[i].getHead()));
+        console.log('_direct');
+        console.log(_direct);
+        this.roadSections[i].offsetLanes(_direct.multiply(3*this.laneWidth));
             // update lanes of the roadSection with the intersection offset
-            this.roadSections[i].updateLaneWithOffset(_intersection_left,_intersection_right);
+            // if(i !==2)
+           // this.roadSections[i].updateLaneWithOffset(_intersection_left,_intersection_right);
         }
-
+        return _intersections;
     }
 
     resortRoadSections(){

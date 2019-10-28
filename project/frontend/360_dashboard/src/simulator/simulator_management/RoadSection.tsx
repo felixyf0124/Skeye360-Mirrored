@@ -124,17 +124,20 @@ export default class RoadSection {
     }
 
     updateLaneWithOffset(leftOffset:vec2, rightOffset:vec2){
-        // console.log("sadadsa");
-        // console.log(leftOffset);
-        // console.log(rightOffset);
+        console.log("sadadsa");
+        console.log(leftOffset);
+        console.log(rightOffset);
         const _offset_line = ts.line(leftOffset,rightOffset);
         for(let i = 0; i < this.lane_in.length; ++i)
         {
             const _lane_line = ts.line(this.lane_in[i].getTail(),this.lane_in[i].getHead());
+            console.log(_offset_line);
+            console.log('_lane_line');
+            console.log(_lane_line);
             const _intersection = ts.lineIntersection(_offset_line, _lane_line);
             // console.log(_intersection);
             // console.log(this.lane_in);
-            // this.lane_in[i].setHead(new vec2(0.0));
+            //this.lane_in[i].setHead(new vec2(0.0));
            //this.lane_in[i].setHead(_intersection);
         }
 
@@ -144,6 +147,20 @@ export default class RoadSection {
         //     const _intersection = ts.lineIntersection(_offset_line, _lane_line);
         //     this.lane_out[i].setTail(_intersection);
         // }
+    }
+
+    offsetLanes(offset:vec2){
+        for(let i = 0; i < this.lane_in.length; ++i)
+        {
+            this.lane_in[i].setHead(this.lane_in[i].getHead().plus(offset));
+            this.lane_in[i].setTail(this.lane_in[i].getTail().plus(offset));
+        }
+        for(let i = 0; i < this.lane_out.length; ++i)
+        {
+            this.lane_out[i].setHead(this.lane_out[i].getHead().plus(offset));
+            this.lane_out[i].setTail(this.lane_out[i].getTail().plus(offset));
+        }
+
     }
 
 }

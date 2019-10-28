@@ -127,11 +127,22 @@ class Scene extends Component {
 
     this.roadIntersection.setLaneWidth(this.lane_w);
     //this.roadIntersection.resortRoadSections();
-    this.roadIntersection.updateLane();
+    var _inter = this.roadIntersection.updateLane();
 
     this.app.stage.x = this.window_w/2;
     this.app.stage.y = this.window_h/2;
     //this.app.stage.scale.y=-1;
+
+    const _test = new PIXI.Graphics();
+    _test.lineStyle(1,0xff0000);
+    for(let i =0;i<_inter.length;++i)
+    {
+      _test.moveTo(_inter[i][0].x,_inter[i][0].y);
+      _test.lineTo(_inter[i][1].x,_inter[i][1].y);
+    }
+
+    this.mapContainer.addChild(_test);
+
   }
 
 
@@ -277,7 +288,7 @@ class Scene extends Component {
         _test.lineStyle(1,_red);
         _test.moveTo(_lane.getTail().x,_lane.getTail().y);
         _test.lineTo(_lane.getHead().x,_lane.getHead().y);
-        this.mapContainer.addChild(_test);
+        //this.mapContainer.addChild(_test);
       }
     }
   }
