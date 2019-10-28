@@ -117,6 +117,11 @@ class Scene extends Component {
     this.trafficLightsArray = [];
     for(let index = 0; index < 8; index++) {
       this.trafficLightsArray[index] = new TrafficLight(index, 0);
+      if(index%2 == 0) {
+        this.trafficLightsArray[index].setTrafficLightStatus("green");
+      } else {
+        this.trafficLightsArray[index].setTrafficLightStatus("red");
+      }
     }
     //// END of initialization of Traffic Lights
 
