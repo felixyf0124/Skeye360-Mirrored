@@ -4,8 +4,9 @@
 */
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import rootReducer from './reducers/rootReducer';
+import initReducers from './reducers/rootReducer';
 import rootSaga from './rootSaga';
+import { createBrowserHistory } from 'history';
 
 declare global {
   interface Window {
@@ -13,11 +14,13 @@ declare global {
   }
 }
 
+export const history = createBrowserHistory();
+
 export default async () => {
   const sagaMiddleware = createSagaMiddleware();
   const middleware = [sagaMiddleware];
   const store = createStore(
-    rootReducer,
+    initReducers(history),
     {},
     compose(
       applyMiddleware(...middleware),

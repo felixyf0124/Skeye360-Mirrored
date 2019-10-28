@@ -1,13 +1,82 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { RootState } from '../reducers/rootReducer';
+import styled from 'styled-components';
+import { logout } from '../contexts/authentication';
+import { Redirect, Link } from 'react-router-dom';
 
-const Header = (props: any) => {
-    return(
-     <nav className = "navbar">
-         <div className="container">
-            <a href="/" className="header-text">Skeye 360</a>
-         </div>
-     </nav>   
-    )
+export const Head = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: 1.5rem;
+  text-align: center;
+  position: relative;
+  height: 3rem;
+  align-items: center;
+`;
+
+interface StateProps {
+    authenticated: boolean;
 }
 
-export default Header;
+interface DispatchProps {
+    logout: () => any;
+    handleMapButton: () => void;
+}
+
+const handleMapButton = () => {
+    console.log("handleMapButton");
+    return <Redirect push to={'/'} />;
+};
+
+const Header = (props: StateProps & DispatchProps): JSX.Element => {
+
+    return (
+        <nav className = "navbar">
+            <Head>
+                { props.authenticated ? (
+                    <div className="nav-links">
+                        <div className="map">
+                            <Link to="/" className="nav-text">Map</Link>
+                        </div>
+                        <div className="map">
+                            <Link to="/streetview/add" className="nav-text">Add</Link>
+                        </div>
+                        <div className="map">
+                            <Link to="/chartsprototype" className="nav-text">Charts</Link>
+                        </div>
+                    </div>
+                ) : (
+                    <div />
+                ) }
+                <div className="container">
+                    <Link to="/" className="header-text">Skeye 360</Link>
+                </div>
+                {props.authenticated ? (
+                    <div className="logout">
+                        <a href="/" onClick={
+                            props.logout
+                        } className="nav-text">Logout</a>
+                    </div>
+                ) : (
+                    <div />
+                ) }
+            </Head>
+        </nav>
+    );
+}
+
+const mapStateToProps = (state: RootState): StateProps => ({
+    authenticated: state.authentication.authenticated,
+});
+
+const mapDispatchToProps: DispatchProps = {
+    logout,
+    handleMapButton: () => handleMapButton(),
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Header);
