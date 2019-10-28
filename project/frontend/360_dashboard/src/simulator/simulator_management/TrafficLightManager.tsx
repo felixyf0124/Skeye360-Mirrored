@@ -89,10 +89,8 @@ export default class TrafficLightManager {
         this.deltaT = deltaT;
     }
     setAllTrafficLightsAsStop() {
-        //This will set all traffic lights at a specific intersection as a stop sign (blinks red)
-        console.log("TESTINGinTLM:before the for loop"+this.trafficLightQueue.length);
+        //This will set all traffic lights at a specific intersection as a red
         for(let index = 0; index < this.trafficLightQueue.length; index++) {
-            console.log("TESTINinTLM(id:"+this.trafficLightQueue[index].getTrafficLightId()+"|status:"+this.trafficLightQueue[index].getTrafficLightStatus());
             this.trafficLightQueue[index].setTrafficLightStatus("red");
         }
     }

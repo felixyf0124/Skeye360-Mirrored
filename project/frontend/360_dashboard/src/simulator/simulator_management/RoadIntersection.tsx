@@ -46,7 +46,6 @@ export default class RoadIntersection {
     getLaneState(section_id:number,lane_id:number, isLaneIn?:boolean):string{
         const _isLaneIn:boolean = isLaneIn||true;
         const _trafficLight_id = this.roadSections[section_id].getLaneAt(lane_id,_isLaneIn).getTrafficLightId();
-        // console.log("TESTINGinRI:"+_trafficLight_id);
         return this.getTrafficLightState(_trafficLight_id);
     }
 

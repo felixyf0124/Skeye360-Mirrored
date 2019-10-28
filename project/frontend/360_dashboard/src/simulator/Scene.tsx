@@ -69,7 +69,6 @@ class Scene extends Component {
   trafficLightManager: TrafficLightManager;
   trafficLightsArray:Array<TrafficLight>;
   hasTLColorChanged:Boolean;
-  count:number;
 
   constructor(props: any) {
     super(props);
@@ -321,15 +320,16 @@ class Scene extends Component {
     const _green = 0x00ff00;
     const _yellow = 0xf5c842;
     const _red = 0xff0000;
+    const _white = 0xffffff;
     switch(light_state){
       case "green":
         return _green;
-        break;
       case "yellow":
         return _yellow;
-        break;
       case "red":
         return _red;
+      default:
+        return _white;
     }
   }
 
@@ -345,14 +345,9 @@ class Scene extends Component {
   }
 
   animation = () => {
-
     if(this.hasTLColorChanged) {
       this.drawRoad();
-      ///////////// FOR TESTING ///////////////
-      // console.log("TESTINGinAnimation:"+this.count);
-      this.count++;
       this.hasTLColorChanged = false;
-      /////////////////////////////////////////
     }
     this.displayPlaneContainer.removeChildren();
     let deltaTime = Date.now() -this.timeLastMoment;
