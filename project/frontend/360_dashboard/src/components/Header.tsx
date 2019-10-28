@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { logout } from '../contexts/authentication';
 import { Redirect, Link } from 'react-router-dom';
 
-const Head = styled.div`
+export const Head = styled.div`
   display: flex;
   box-sizing: border-box;
   width: 100%;
@@ -36,12 +36,15 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
         <nav className = "navbar">
             <Head>
                 { props.authenticated ? (
-                    <div>
+                    <div className="nav-links">
                         <div className="map">
-                            <Link to="/" className="header-text">Map</Link>
+                            <Link to="/" className="nav-text">Map</Link>
                         </div>
                         <div className="map">
-                            <Link to="/streetview/add" className="header-text">Add</Link>
+                            <Link to="/streetview/add" className="nav-text">Add</Link>
+                        </div>
+                        <div className="map">
+                            <Link to="/chartsprototype" className="nav-text">Charts</Link>
                         </div>
                     </div>
                 ) : (
@@ -54,7 +57,7 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
                     <div className="logout">
                         <a href="/" onClick={
                             props.logout
-                        } className="header-text">Logout</a>
+                        } className="nav-text">Logout</a>
                     </div>
                 ) : (
                     <div />
