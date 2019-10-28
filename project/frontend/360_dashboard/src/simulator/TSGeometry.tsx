@@ -66,32 +66,80 @@ export function sin(ang_in_rad:number) {
     return Math.round(Math.sin(ang_in_rad)*10000)/10000;
 }
 
-export function lineIntersection(line1:{a:number,b:number},line2:{a:number,b:number}):Vec2{
+export function lineIntersection(line1:{a:number,b:number,x:number},line2:{a:number,b:number,x:number}):Vec2{
+    var _insterectionPoint:Vec2 = new Vec2();
+    if(isNaN(line1.x) && isNaN(line2.x))
+    {
+        var _x = (line2.b - line1.b) / (line1.a - line2.a);
+        var _y = line1.a * _x + line1.b;
+        _x = Math.round(_x * 10000) /10000;
+        _y = Math.round(_y * 10000) /10000;
+        _insterectionPoint = new Vec2(_x, _y);
+    }else if (isNaN(line1.x) && !isNaN(line2.x))
+    {
+        var _y = line1.a * line2.x + line1.b;
+        _y = Math.round(_y * 10000) /10000;
+        _insterectionPoint = new Vec2(line2.x, _y);
+    }else if (!isNaN(line1.x) && isNaN(line2.x))
+    {
+        var _y = line2.a * line1.x + line2.b;
+        _y = Math.round(_y * 10000) /10000;
+        _insterectionPoint = new Vec2(line1.x, _y);
+    }else if (isNaN(line1.x)===false && isNaN(line2.x)===false)
+    {
+        _insterectionPoint = new Vec2(NaN, NaN);
+        console.log(isNaN(line1.x));
+        console.log(isNaN(line2.x));
+
+        console.error("Error Parallel Lines");
+        console.log(line1);
+        console.log(line2);
+    }
     
-    const _x = (line2.b - line1.b) / (line1.a - line2.a);
-    const _y = line1.a * _x + line1.b;
-
-    const _insterectionPoint = new Vec2(_x, _y);
-
     return _insterectionPoint;
 }
 
 export function line(p1:Vec2,p2:Vec2){
-    const _slop_vec = p1.minus(p2);
-    const _a = _slop_vec.y/_slop_vec.x;
-    const _b = p1.y - _a * p1.x;
-    const _line = {a:_a, b:_b};
+    var _a:number,_b:number,_x:number;
+    // console.log(p1.x+"|"+p2.x+"|"+(p1.x != p2.x));
+    if(p1.x != p2.x)
+    {
+        const _slop_vec = p1.minus(p2);
+        _a = _slop_vec.y/_slop_vec.x;
+        _b = p1.y - _a * p1.x;
+        _x = NaN;
+    }else
+    {
+        _a = NaN;
+        _b = NaN;
+        _x = p1.x;
+    }
+    const _line = {a:_a, b:_b, x:_x};
     return _line;
 }
 
-export function lineShift(line:{a:number, b:number}, vector:vec2){
+export function lineShift(line:{a:number, b:number, x:number}, vector:vec2){
     //shift with a point ( 0, b )
-    const _point = new vec2(vector.x, line.b + vector.y);
+    if(isNaN(line.x))
+    {
+        const _point = new vec2(vector.x, line.b + vector.y);
 
-    // y = ax + b
-    // b' = y' - ax';
-    const _b = _point.y - line.a * _point.x;
-    const _line = {a:line.a, b:_b};
-    return _line;
+        // y = ax + b
+        // b' = y' - ax';
+        const _b = _point.y - line.a * _point.x;
+        const _line = {a:line.a, b:_b, x:NaN};
+        
+        return _line;
+    }
+    else{
+        const _line = {a:NaN, b:NaN, x:line.x+vector.x};
+        
+        return _line;
+    }
+}
+
+export function getAngleOfVec(vec:Vec2){
+    const _ang = Math.atan(vec.y/vec.x);
+    return _ang;
 }
 

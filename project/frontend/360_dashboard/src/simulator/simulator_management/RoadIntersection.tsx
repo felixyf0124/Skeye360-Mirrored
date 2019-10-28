@@ -63,56 +63,155 @@ export default class RoadIntersection {
     }
 
     updateLane() {
+        this.resortRoadSections();
+
         for(let i=0;i<this.roadSections.length;++i){
             this.roadSections[i].updateLanePosition(this.laneWidth);
         }
-        var _resort = new Array<{left:number,right:number}>();
         for(let i = 0; i < this.roadSections.length; ++i){
-            var _intersection = new vec2();
+            // var _intersection_left = new vec2();
+            // var _intersection_right = new vec2();
             //check left side
-            var _lane = this.roadSections[i].getLaneAt(this.roadSections[i].lane_out.length-1, false);
-            const _line_left = ts.line(_lane.getHead(), _lane.getTail());
-            for(let j = 0; j < this.roadSections.length; ++j)
-            {
-                if(j != i)
-                {
-                    var _lane_right = this.roadSections[j].getLaneAt(j);
-                    var _line = ts.line(_lane_right.getHead(), _lane_right.getTail());
-                    var _lane_dir = ts.tsNormalize(_lane_right.getHead().minus(_lane_right.getTail()));
-                    var _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_dir, Math.PI/2);
-                    _line = ts.lineShift(_line, _perpendicular_unit_vec);
+            const _lane_out = this.roadSections[i].getLaneAt(this.roadSections[i].lane_out.length-1, false);
+            const _line_left = ts.line(_lane_out.getHead(), _lane_out.getTail());
+            
+            const _lane_in = this.roadSections[i].getLaneAt(this.roadSections[i].lane_in.length-1);
+            const _line_right = ts.line(_lane_in.getHead(), _lane_in.getTail());
 
-                    _intersection = ts.lineIntersection(_line_left,_line);
+            const _i_left = (i-1+this.roadSections.length)%this.roadSections.length;
+            const _lane_right_L_sec = this.roadSections[_i_left]
+                .getLaneAt(this.roadSections[_i_left].lane_in.length-1);
+            var _edge_right_L_sec = ts.line(_lane_right_L_sec.getHead(), _lane_right_L_sec.getTail());
 
-                    const _distance = ts.tsLength(_intersection.minus(_lane.getTail()));
-                    const _length = ts.tsLength(_lane_right.getHead().minus(_lane_right.getTail()));
-                    if(_distance <= _length)
-                    {
-                        let _isExisted = false;
-                        for(let k=0;k<_resort.length;++k)
-                        {
-                            if(_resort[k].left === j && _resort[k].right === i)
-                            {
-                                _isExisted = true;
-                                break;
-                            }
-                        }
-                        if(!_isExisted)
-                        {
-                            _resort.push({left:j,right:i});
-                        }
-                    }
-                }
+            var _lane_dir = ts.tsNormalize(_lane_right_L_sec.getHead().minus(_lane_right_L_sec.getTail()));
+            var _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_dir, Math.PI/2);
+            const _offset_right_shift = _perpendicular_unit_vec.multiply(this.laneWidth * 0.5);
 
-            }
+            const _i_right = (i+1+this.roadSections.length)%this.roadSections.length;
+            const _lane_left_R_sec = this.roadSections[_i_right]
+                .getLaneAt(this.roadSections[_i_right].lane_out.length-1,false);
+            var _edge_left_R_sec = ts.line(_lane_left_R_sec.getHead(), _lane_left_R_sec.getTail());
+            
+        console.log('id ' + i );
+        // console.log(_edge_right_L_sec);
+           // console.log(_edge_left_R_sec);
+    
+            _lane_dir = ts.tsNormalize(_lane_left_R_sec.getHead().minus(_lane_left_R_sec.getTail()));
+            _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_dir, Math.PI/2);
+            const _offset_left_shift = _perpendicular_unit_vec.multiply(this.laneWidth * 0.5);
+            //edge right 
+            _edge_right_L_sec = ts.lineShift(_edge_right_L_sec, _offset_right_shift);
+            //edge left 
+            _edge_left_R_sec = ts.lineShift(_edge_left_R_sec, _offset_left_shift);
+            if(i ===2)
+         { console.log(_edge_left_R_sec);
+        console.log(_line_right);}
 
-            //check right side
-            //todo
-            //_lane =
+            const _intersection_left = ts.lineIntersection(_line_left,_edge_right_L_sec);
+            const _intersection_right = ts.lineIntersection(_line_right,_edge_left_R_sec);
+
+        // console.log(_edge_right_L_sec);
+        // console.log(_edge_left_R_sec);
+        // console.log(_line_left);
+        // console.log(_line_right);
+        // console.log(_intersection_left);
+        // console.log(_intersection_right);
+
+            if(false)
+             {       //check left intersetion
+                    // var _distance = ts.tsLength(_intersection_left.minus(_lane_out.getHead()));
+                    // var _distance2 = ts.tsLength(_intersection_left.minus(_lane_right.getHead().plus(_offset_right_shift)));
+                    // var _length = ts.tsLength(_lane_out.getHead().minus(_lane_out.getTail()));
+                    // var _length2 = ts.tsLength(_lane_right.getHead().minus(_lane_right.getTail()));
+                    // if(_distance <= _length)
+                    // {
+                    //     _offset_left = _intersection_left;
+                    //     let _isExisted = false;
+                    //     for(let k=0;k<_resort.length;++k)
+                    //     {
+                    //         if(_resort[k].left === j && _resort[k].right === i)
+                    //         {
+                    //             _isExisted = true;
+                    //             break;
+                    //         }
+                    //     }
+                    //     if(!_isExisted)
+                    //     {
+                    //         _resort.push({left:j,right:i});
+                    //     }
+                    // }
+
+                    //check right intersetion
+            //         _distance = ts.tsLength(_intersection_right.minus(_lane_in.getTail()));
+            //         _length = ts.tsLength(_lane_in.getHead().minus(_lane_in.getTail()));
+            //         if(_distance <= _length)
+            //         {
+            //             _offset_right = _intersection_right;
+            //             let _isExisted = false;
+            //             for(let k=0;k<_resort.length;++k)
+            //             {
+            //                 if(_resort[k].left === i && _resort[k].right === j)
+            //                 {
+            //                     _isExisted = true;
+            //                     break;
+            //                 }
+            //             }
+            //             if(!_isExisted)
+            //             {
+            //                 _resort.push({left:i,right:j});
+            //             }
+            //         }
+            //     }
+
+            // }
+             }
+            // update lanes of the roadSection with the intersection offset
+            this.roadSections[i].updateLaneWithOffset(_intersection_left,_intersection_right);
         }
 
     }
 
+    resortRoadSections(){
+        var _resort = new Array<{index:number,angle:number}>();
+
+        for(let i = 0; i < this.roadSections.length; ++i)
+        {
+            const _vec = this.roadSections[i].getTail().minus(this.roadSections[i].getHead());
+            _vec.y *= -1;
+            var _ang = ts.getAngleOfVec(_vec)/Math.PI*180;
+            if(_vec.x < 0)
+            {
+                _ang += 180;
+            }
+            _ang = (_ang + 360)% 360;
+            _resort.push({index:i,angle:_ang});
+        }
+
+        for(let i=0; i< _resort.length-1; ++i)
+        {
+            var _min = _resort[i];
+            for(let j=_resort.length-1; j>i; --j)
+            {
+                if(_min.angle>_resort[j].angle)
+                {
+                    _min = _resort[j];
+                    _resort[j] = _resort[i];
+                    _resort[i] = _min;
+                }
+            }
+            
+        }
+        console.log(_resort);
+        var _roadSections = new Array<RoadSection>();
+
+        for(let i = 0; i < _resort.length; ++i)
+        {
+            _roadSections.push(this.roadSections[_resort[i].index]);
+        }
+
+        this.roadSections = _roadSections;
+        
+    }
 
     addNewRoadSection(tailVec2: vec2) {
         var _roadSection = new RoadSection(this.roadSections.length,this.id,tailVec2);

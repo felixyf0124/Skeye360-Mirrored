@@ -111,12 +111,13 @@ class Scene extends Component {
     // .add("ppl",ppl);
     
     this.vehicle = new PIXI.Sprite();
-
+    console.log(" ang");
+    console.log(ts.getAngleOfVec(new vec2(1,1))/Math.PI);
     //hard code to initial road intersection data for first loading
     this.roadIntersection.addNewRoadSection(ts.tsVec2(this.window_w/2, this.window_h*0.2));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(-this.window_w/2, 0.0));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(0.0, this.window_h/2));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(0.0, -this.window_h/2));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(-30.0, -this.window_h/2));
 
     for(let i=0;i<this.roadIntersection.getRoadSections().length;++i)
     {
@@ -125,6 +126,7 @@ class Scene extends Component {
     }
 
     this.roadIntersection.setLaneWidth(this.lane_w);
+    //this.roadIntersection.resortRoadSections();
     this.roadIntersection.updateLane();
 
     this.app.stage.x = this.window_w/2;
@@ -216,6 +218,7 @@ class Scene extends Component {
     const _green = 0x00ff00;
     const _yellow = 0xf5c842;
     const _red = 0xff0000;
+
     for(var i:number = 0; i < _sections.length; ++i)
     {
       var _lane_in = _sections[i].getLaneIn();
@@ -247,6 +250,12 @@ class Scene extends Component {
           this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color);
           this.mapContainer.addChild(_graphic_obj);
         }
+
+        const _test = new PIXI.Graphics();
+        _test.lineStyle(1,_red);
+        _test.moveTo(_lane.getTail().x,_lane.getTail().y);
+        _test.lineTo(_lane.getHead().x,_lane.getHead().y);
+        this.mapContainer.addChild(_test);
       }
 
       for(let j:number = 0; j < _lane_out.length; ++j)
@@ -263,6 +272,12 @@ class Scene extends Component {
           this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color);
           this.mapContainer.addChild(_graphic_obj);
         }
+
+        const _test = new PIXI.Graphics();
+        _test.lineStyle(1,_red);
+        _test.moveTo(_lane.getTail().x,_lane.getTail().y);
+        _test.lineTo(_lane.getHead().x,_lane.getHead().y);
+        this.mapContainer.addChild(_test);
       }
     }
   }
@@ -279,6 +294,12 @@ class Scene extends Component {
   }
 
   animation = () => {
+
+    // if(isTLColorChanged){
+    //   this.drawRoad();
+    // }
+    
+
     this.displayPlaneContainer.removeChildren();
     let deltaTime = Date.now() -this.timeLastMoment;
     this.fpsCounter++;
@@ -329,7 +350,7 @@ class Scene extends Component {
    drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number) {
     const _triangle = new PIXI.Graphics();
     var _direction = ts.tsNormalize(direction);
-    
+
     var _bottom = topVertex.minus(_direction.multiply(height));
     var _direction_perpendicular = ts.tsRotateByOrigin(_direction,Math.PI/2);
     var _vertices = new Array<vec2>();
