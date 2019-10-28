@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import * as PIXI from "pixi.js-legacy";
 import { RootState } from '../../reducers/rootReducer';
 import { Store } from 'redux';
-import vehicle from '../images/vehicle.png';
-import ppl from '../images/ppl.png';
+import vehicle from '../../images/vehicle.png';
+import ppl from '../../images/ppl.png';
 import TrafficLight from './simulator_management/TrafficLight';
 import TrafficLightMG from './simulator_management/TrafficLightManager';
 import VehicleObj from './simulator_management/Vehicle';
@@ -15,7 +15,7 @@ import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry'
 import { Container, Button } from 'react-bootstrap';
 import vec2 from './simulator_management/vec2';
-import stopBlueImage from '../images/stopBlue.png';
+import stopBlueImage from '../../images/stopBlue.png';
 import TrafficLightManager from './simulator_management/TrafficLightManager';
 import TrafficLightManualControl from './simulator_management/TrafficLightManualControl';
 
@@ -360,15 +360,23 @@ class Scene extends Component {
   }
 
   render = () => {
-    // console.log("this works");
+    
+    console.log("this works");
       return (
         <div>
-          <Feed>
-            <div style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} ref={(element) => {this.updateCar(element)}} />
-            <div>
-              <img   style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} src="http://52.170.42.166:8000/" />
-            </div>
-          </Feed>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <div style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} ref={(element) => {this.updateCar(element)}} />
+                </td>
+                <td>
+                  <img   style={{width:this.window_w, minWidth:this.window_min, minHeight:this.window_min}} src="http://52.170.42.166:8000/"></img>
+                </td>
+                
+              </tr>
+            </tbody>
+          </table>
         </div>
       );
   }
@@ -398,9 +406,6 @@ class Scene extends Component {
   };
 
 };
-
-
-
 
 export default 
 (Scene);
