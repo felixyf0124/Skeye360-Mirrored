@@ -151,12 +151,13 @@ class Scene extends Component {
     // .add("ppl",ppl);
     
     this.vehicle = new PIXI.Sprite();
-
+    console.log(" ang");
+    console.log(ts.getAngleOfVec(new vec2(1,1))/Math.PI);
     //hard code to initial road intersection data for first loading
     this.roadIntersection.addNewRoadSection(ts.tsVec2(this.window_w/2, this.window_h*0.2));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(-this.window_w/2, 0.0));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(0.0, this.window_h/2));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(0.0, -this.window_h/2));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(-30.0, -this.window_h/2));
 
     for(let i=0;i<this.roadIntersection.getRoadSections().length;++i)
     {
@@ -164,7 +165,9 @@ class Scene extends Component {
       this.roadIntersection.addNewLane(i,-1,"straight",2);
     }
 
-    this.roadIntersection.updateLaneWidth(this.lane_w);
+    this.roadIntersection.setLaneWidth(this.lane_w);
+    //this.roadIntersection.resortRoadSections();
+    this.roadIntersection.updateLane();
 
     this.app.stage.x = this.window_w/2;
     this.app.stage.y = this.window_h/2;
@@ -209,7 +212,7 @@ class Scene extends Component {
     // this.backGround_G.beginFill(0x1111ab);
     // this.backGround_G.drawRect(0,0,this.window_w,this.window_h);
     this.drawRoad();
-    this.testdraw();
+    //this.testdraw();
     
     this.app.ticker.add(this.animation);
       
@@ -279,6 +282,7 @@ class Scene extends Component {
     var _sections = this.roadIntersection.getRoadSections();
     console.log(this.roadIntersection.roadSections);
     console.log(_sections);
+    const _red = 0xff0000;
     
     for(var i:number = 0; i < _sections.length; ++i)
     {
@@ -300,6 +304,12 @@ class Scene extends Component {
           const _graphic_obj = this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color);
           this.mapContainer.addChild(_graphic_obj);
         }
+
+        const _test = new PIXI.Graphics();
+        _test.lineStyle(1,_red);
+        _test.moveTo(_lane.getTail().x,_lane.getTail().y);
+        _test.lineTo(_lane.getHead().x,_lane.getHead().y);
+        this.mapContainer.addChild(_test);
       }
 
       for(let j:number = 0; j < _lane_out.length; ++j)
@@ -317,6 +327,12 @@ class Scene extends Component {
           const _graphic_obj = this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color2);
           this.mapContainer.addChild(_graphic_obj);
         }
+
+        const _test = new PIXI.Graphics();
+        _test.lineStyle(1,_red);
+        _test.moveTo(_lane.getTail().x,_lane.getTail().y);
+        _test.lineTo(_lane.getHead().x,_lane.getHead().y);
+        this.mapContainer.addChild(_test);
       }
     }
   }
@@ -364,13 +380,14 @@ class Scene extends Component {
     }
     
     const fpsText = new PIXI.Text("FPS: "+ this.fps,this.textStyle);
-    fpsText.x = this.window_w - 80;
+    fpsText.x = this.window_w/2 - 80;
+    fpsText.y = -this.window_h/2;
     this.displayPlaneContainer.addChild(fpsText);
     // const _stopline = {
     //   x:(this.road_w_v/2 + 1.2)*this.lane_w,
     //   y:0
     // }
-   // this.car.setStopLine(_stopline);
+    // this.car.setStopLine(_stopline);
     const lane_w =60;
     // this.drawTrafficLight(this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer,true,10,5,10,5);
     // const _light_state = this.trafficLightManager.getTrafficLightStateAtDirection(0);
@@ -403,11 +420,9 @@ class Scene extends Component {
    drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number) {
     const _triangle = new PIXI.Graphics();
     var _direction = ts.tsNormalize(direction);
-    //flip y
-    _direction.y *= -1; 
-    var _bottom = ts.vec2_minus(topVertex,_direction.multiply(height));
+
+    var _bottom = topVertex.minus(_direction.multiply(height));
     var _direction_perpendicular = ts.tsRotateByOrigin(_direction,Math.PI/2);
-    _direction_perpendicular.y *= -1;
     var _vertices = new Array<vec2>();
     
     _vertices.push(topVertex);

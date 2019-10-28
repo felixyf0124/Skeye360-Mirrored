@@ -123,4 +123,27 @@ export default class RoadSection {
         }
     }
 
+    updateLaneWithOffset(leftOffset:vec2, rightOffset:vec2){
+        // console.log("sadadsa");
+        // console.log(leftOffset);
+        // console.log(rightOffset);
+        const _offset_line = ts.line(leftOffset,rightOffset);
+        for(let i = 0; i < this.lane_in.length; ++i)
+        {
+            const _lane_line = ts.line(this.lane_in[i].getTail(),this.lane_in[i].getHead());
+            const _intersection = ts.lineIntersection(_offset_line, _lane_line);
+            // console.log(_intersection);
+            // console.log(this.lane_in);
+            // this.lane_in[i].setHead(new vec2(0.0));
+           //this.lane_in[i].setHead(_intersection);
+        }
+
+        // for(let i = 0; i < this.lane_out.length; ++i)
+        // {
+        //     const _lane_line = ts.line(this.lane_out[i].getTail(),this.lane_out[i].getHead());
+        //     const _intersection = ts.lineIntersection(_offset_line, _lane_line);
+        //     this.lane_out[i].setTail(_intersection);
+        // }
+    }
+
 }
