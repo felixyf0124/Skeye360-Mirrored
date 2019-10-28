@@ -328,7 +328,7 @@ class Scene extends Component {
         let _lane = _lane_out[j];
         var _light_state:string = this.roadIntersection.getLaneState(i,j);
         //Sets the color of the traffic lights depending on the status 
-        var _color2 = this.getTrafficLightColor(_light_state);
+        var _color2 = this.getTrafficLightColor("green");
         
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
         var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4)+1;
