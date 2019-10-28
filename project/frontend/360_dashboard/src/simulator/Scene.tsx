@@ -10,11 +10,9 @@ import vehicle from '../images/vehicle.png';
 import ppl from '../images/ppl.png';
 import TrafficLight from './simulator_management/TrafficLight';
 import TrafficLightMG from './simulator_management/TrafficLightManager';
-// import { Root } from 'react-dom';
 import VehicleObj from './simulator_management/Vehicle';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry'
-//import Coordinate from './simulator_management/vec2';
 import { Container, Button } from 'react-bootstrap';
 import vec2 from './simulator_management/vec2';
 import stopBlueImage from '../images/stopBlue.png';
@@ -26,7 +24,6 @@ import TrafficLightManualControl from './simulator_management/TrafficLightManual
  * @extends {Component}
  */
 class Scene extends Component {
-  // class Scene extends Component<Props> {
   pixiContent: any;
   window_w:number;
   window_h:number;
@@ -41,8 +38,6 @@ class Scene extends Component {
   road_G: PIXI.Graphics;
   trafficLight_G: PIXI.Graphics;
   controlPanel_G: PIXI.Graphics;
-  //should be removed after the roadintersection implemented
-  //trafficLightManager: TrafficLightMG;
   roadIntersection: RoadIntersection;
 // the following should be moved outside when enable to connect with db
   roadData: Array<number>
@@ -63,7 +58,6 @@ class Scene extends Component {
   coordinateOffset:{x:number,y:number};
   vehicle:PIXI.Sprite;
   vehicleData:Array<{x:number,y:number}>;
-  //car:VehicleObj;
 
   trafficLightManualControl: TrafficLightManualControl;
   trafficLightManager: TrafficLightManager;
@@ -97,11 +91,9 @@ class Scene extends Component {
     this.coordinateOffset = {x:this.window_w/2,y:this.window_h/2};
 
     this.vehicleData = [{x:0,y:0}];
-    //this.car = new VehicleObj(1,{x:this.window_w/2,y:0.0},1,0);
     this.roadData = [2,2,1,0];
     this.trafficLightData = [[5,5],[5,5]];
 
-    //this.car.setVelocity(ts.tsVec2(-6,0));
 
     this.lane_w = 0.06*Math.min(this.window_w,this.window_h);
     this.road_w_h = 0;
@@ -139,16 +131,12 @@ class Scene extends Component {
 
     //// START of initialization of Road Intersection
     this.roadIntersection = new RoadIntersection(0, this.trafficLightManager, ts.tsVec2(0,0));
-    //this.trafficLightManager = new TrafficLightMG(this.roadIntersection.getRoadIntersectionId(),Date.now(),this.trafficLightCounterOffset);
 
     this.textStyle = {
       fontFamily: 'Courier',
       fontSize: '12px',
       fill : '#F7EDCA',
     }
-    // this.app.loader
-    // .add("vehicle",vehicle)
-    // .add("ppl",ppl);
     
     this.vehicle = new PIXI.Sprite();
     console.log(" ang");
@@ -268,28 +256,8 @@ class Scene extends Component {
       }
   };
 
-  testdraw(){
-    var _t = new PIXI.Graphics();
-    //var _triangle = _obj_g;
-    //console.log("ok 278 \n");
-    var _vertices = new Array<vec2>();
-    _vertices.push(new vec2(1,1));
-    _vertices.push(new vec2(1,100));
-    _vertices.push(new vec2(100,100));
-
-    _t.lineStyle(1,0xffffff);
-    
-    _t.moveTo(-this.window_w,-this.window_h);
-    _t.lineTo(this.window_w,this.window_h);
-    // _t.endFill();
-   
-    _t.endFill();
-    this.mapContainer.addChild(_t);
-  }
   drawRoad=()=>{
-    //this.mapContainer.removeChildren();
     this.road_G.clear();
-    //this.road_G = new PIXI.Graphics();
     var _sections = this.roadIntersection.getRoadSections();
     console.log(this.roadIntersection.roadSections);
     console.log(_sections);
@@ -343,7 +311,6 @@ class Scene extends Component {
         _test.lineStyle(1,_red);
         _test.moveTo(_lane.getTail().x,_lane.getTail().y);
         _test.lineTo(_lane.getHead().x,_lane.getHead().y);
-        //this.mapContainer.addChild(_test);
       }
     }
   }
@@ -368,12 +335,6 @@ class Scene extends Component {
   
   renderObjects = () => {
     this.objectContainer.removeChildren();
-
-    // const _vehicle_texture = this.app.loader.resources["vehicle"].texture;
-    // const _vehicle = new PIXI.Sprite(_vehicle_texture);
-    // this.vehicle = new PIXI.Sprite(_vehicle_texture);
-
-    // this.objectContainer.addChild(_vehicle);
   }
 
   animation = () => {
@@ -394,14 +355,7 @@ class Scene extends Component {
     fpsText.x = this.window_w/2 - 80;
     fpsText.y = -this.window_h/2;
     this.displayPlaneContainer.addChild(fpsText);
-    // const _stopline = {
-    //   x:(this.road_w_v/2 + 1.2)*this.lane_w,
-    //   y:0
-    // }
-    // this.car.setStopLine(_stopline);
     const lane_w =60;
-    // this.drawTrafficLight(this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer,true,10,5,10,5);
-    // const _light_state = this.trafficLightManager.getTrafficLightStateAtDirection(0);
 
   }
 

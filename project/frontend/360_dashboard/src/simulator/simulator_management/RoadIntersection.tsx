@@ -94,49 +94,26 @@ export default class RoadIntersection {
                 .getLaneAt(this.roadSections[_i_right].lane_out.length-1,false);
             var _edge_left_R_sec = ts.line(_lane_left_R_sec.getHead(), _lane_left_R_sec.getTail());
             
-        console.log('id ' + i );
-        // console.log(_edge_right_L_sec);
-           // console.log(_edge_left_R_sec);
     
             _lane_dir = ts.tsNormalize(_lane_left_R_sec.getHead().minus(_lane_left_R_sec.getTail()));
             _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_dir, Math.PI/2);
             const _offset_left_shift = _perpendicular_unit_vec.multiply(this.laneWidth * 0.5);
             //edge right 
             _edge_right_L_sec = ts.lineShift(_edge_right_L_sec, _offset_right_shift);
-            // _edge_right_L_sec = ts.line(_lane_right_L_sec.getHead().plus(_offset_right_shift), 
-            //         _lane_right_L_sec.getHead().plus(_offset_right_shift));
             //edge left 
             _edge_left_R_sec = ts.lineShift(_edge_left_R_sec, _offset_left_shift);
-            // _edge_left_R_sec = ts.line(_lane_left_R_sec.getHead().plus(_offset_left_shift), 
-            //         _lane_left_R_sec.getHead().plus(_offset_left_shift));
-            if(i ===2)
-         { console.log(_line_left);
-        console.log(_edge_right_L_sec);}
 
             const _intersection_left = ts.lineIntersection(_line_left,_edge_right_L_sec);
-            if(i ===2)
-            { console.log(_line_left);
-           console.log(_edge_right_L_sec);}
    
             const _intersection_right = ts.lineIntersection(_line_right,_edge_left_R_sec);
 
-        // console.log(_edge_right_L_sec);
-        // console.log(_edge_left_R_sec);
-        // console.log(_line_left);
-        // console.log(_line_right);
-        console.log(_intersection_left);
-        console.log(_intersection_right);
             _intersections.push([_intersection_left,_intersection_right]);
-        
+        //TO DO 
+        //solve the bug and add improved auto offset update funtion
 
             //temp solution
         const _direct = ts.tsNormalize(this.roadSections[i].getTail().minus(this.roadSections[i].getHead()));
-        console.log('_direct');
-        console.log(_direct);
         this.roadSections[i].offsetLanes(_direct.multiply(3*this.laneWidth));
-            // update lanes of the roadSection with the intersection offset
-            // if(i !==2)
-           // this.roadSections[i].updateLaneWithOffset(_intersection_left,_intersection_right);
         }
         return _intersections;
     }

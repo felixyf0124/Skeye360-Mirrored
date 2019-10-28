@@ -27,7 +27,7 @@ class App extends React.Component<StateProps> {
   render(): JSX.Element {
     return (
       <div>
-        <Scene/>
+        
         <Header />
         <Login />
         <SkeyeMap />

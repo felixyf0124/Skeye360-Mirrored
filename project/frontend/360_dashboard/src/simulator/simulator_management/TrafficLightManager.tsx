@@ -113,55 +113,11 @@ export default class TrafficLightManager {
         this.trafficLightQueue = trafficLightsArray;
     }
 
-    // calculateTotalPeriodTime(index: number): number {
-    //     var totalTime:number = 0;
-    //     for(let i = 0; i < index; i++) {
-    //         totalTime += this.timePairs[i][0];
-    //         totalTime += this.timePairs[i][1];
-    //     }
-    //     return totalTime;
-    // }
-
-    // getTrafficLightStateAtDirection(index: number) {
-    //     this.deltaT = Date.now()-(this.startTime + this.timeOffset);
-    //     const greenTimeStart:number = this.getGreenTimeStartOffset(index);
-    //     const yellowTimeStart:number = this.getYellowTimeStartOffset(index);
-    //     const redTimeStart:number = this.getRedTimeStartOffset(index);
-    //     const tempT = this.deltaT%(this.totalTimePeriod*1000);
-    //     var currentLightCountDown: number = 0;
-
-    //     //To refactor later on with Handler or Polymorphism
-    //     if(tempT < yellowTimeStart*1000 && tempT >= greenTimeStart*1000) {
-    //         currentLightCountDown = this.timePairs[index][0] - (tempT/1000 - greenTimeStart)+1;
-    //         return [1,currentLightCountDown];
-    //     } else if(tempT<redTimeStart*1000 && tempT>=yellowTimeStart*1000) {
-    //         currentLightCountDown = this.timePairs[index][1] - (tempT/1000 - yellowTimeStart)+1;
-    //         return [2,currentLightCountDown];
-    //     } else {
-    //         currentLightCountDown = (this.timePairs[(index-1+this.timePairs.length)%this.timePairs.length][0] + 
-    //                                 this.timePairs[(index-1+this.timePairs.length)%this.timePairs.length][1])
-    //                                 - (tempT/1000 - redTimeStart%this.totalTimePeriod)+1;
-    //         return [3,currentLightCountDown];
-    //     }
-    // }
 
     getTrafficLightState(id: number):string{
         const state:string = this.trafficLightQueue[id].getTrafficLightStatus();
         return state;
     }
 
-    // getGreenTimeStartOffset(index: number){
-    //     return this.calculateTotalPeriodTime(index);
-    // }
-
-    // getYellowTimeStartOffset(index: number){
-    //     var orangeTimeStart:number = this.getGreenTimeStartOffset(index) + this.timePairs[index][0];
-    //     return orangeTimeStart;
-    // }
-
-    // getRedTimeStartOffset(index: number){
-    //     var redTimeStart:number = this.getYellowTimeStartOffset(index) + this.timePairs[index][1];
-    //     return redTimeStart;
-    // }
 }
 
