@@ -1,32 +1,30 @@
-// https://levelup.gitconnected.com/reactjs-google-maps-with-custom-marker-ece0c7d184c4
+import React from 'react';
+import { connect } from 'react-redux';
+import { RootState } from '../reducers/rootReducer';
+import GoogleMap from '../components/GoogleMap';
+// import Simulator from '../containers/simulator/Scene';
+import { Redirect } from 'react-router-dom';
+import Header from '../components/Header';
 
-import React, { useState } from 'react';
-import GoogleMapReact from 'google-map-react';
-import Marker from './Marker';
-
-const API_KEY: string = "AIzaSyDF3Bsq5rm-uhEMAqqyMqzgc-dXUPl9Byw";
-
-const SkeyeMap = (props: any) => {
-    const [ center ] = useState({lat: 45.5017, lng: -73.5673 });
-    const [ zoom ] = useState(11);
-
-    return (
-      <div style={{ height: '100vh', width: '100%' }}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: API_KEY }}
-          defaultCenter={center}
-          defaultZoom={zoom}
-        >
-          <Marker
-            lat={center.lat}
-            lng={center.lng}
-            text="Camera_id"
-            color="red"
-            link="http://127.0.0.1:4000"
-          />
-        </GoogleMapReact>
-      </div>
-    );
+interface Props {
+  authenticated: boolean;
 }
 
-export default SkeyeMap;
+const SkeyeMap = ({ authenticated }: Props):JSX.Element => {
+  if (!authenticated) return <Redirect push to={'/login'} />;
+
+  return (
+    <div>
+      <Header />
+      <GoogleMap />
+    </div>
+  );
+}
+
+const mapStateToProps = (state: RootState): Props => ({
+  authenticated: state.authentication.authenticated,
+});
+
+export default connect(
+  mapStateToProps,
+)(SkeyeMap);
