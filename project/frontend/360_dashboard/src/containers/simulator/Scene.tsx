@@ -213,42 +213,28 @@ class Scene extends Component {
 
     //// START of Control Panel
     // The following sets the positioning of the container
-    this.controlPanelContainer.x = -400;
-    this.controlPanelContainer.y = 50;
-    this.controlPanel_G.alpha = 0.5;
-    this.controlPanel_G.lineStyle(5, 0x51BCD8);
-    this.controlPanel_G.drawRect(0, 10, 300, 150);
+    this.controlPanelContainer.x = -this.coordinateOffset.x;
+    this.controlPanelContainer.y = -this.coordinateOffset.y;
+    this.controlPanel_G.beginFill(0x51BCD8,0.3)
+    this.controlPanel_G.lineStyle(1, 0x51BCD8, 0.5);
+    this.controlPanel_G.drawRect(0, 0, 200, this.window_h-1);
+    this.controlPanel_G.endFill();
 
     const buttonTexture = PIXI.Texture.from('../../images/stopBlue.png');
     const buttonTextureRed = PIXI.Texture.from('../../images/stopRed.png');
-    // The following imports an image for the button    
-    var button = PIXI.Sprite.from(stopRedImage);
-    button.anchor.set(0.5);
-    button.x = 150;
-    button.y = 100;
-    button.buttonMode = true;
-    button.interactive = true;
-    button.buttonMode = true;
-    // The following adds the button to the control panel container
-    this.controlPanelContainer.addChild(button);
-
+    
     this.isStopClicked = false
     this.isEmergency = false;
-    // The following is for the button's event (onclick)
-    button.on('click', onclick = () => {
-        if(this.isStopClicked == false) {
-          this.isStopClicked = true;
-        }
-        console.log("button clicked"+this.isEmergency);
-        this.hasTLColorChanged = true;
-        this.isEmergency = true;
-        //this.trafficLightManualControl.stopAllTrafficLights(this.trafficLightManager);
-        for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-        {
-          this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
-        }
-
-      })
+    // The following imports an image for the button    
+    
+    //   .on('mouseout', onmouseout = () =>{
+    //     this.isdown = false;
+    // if (this.isOver) {
+    //     this.texture = textureButtonOver;
+    // } else {
+    //     this.texture = textureButton;
+    // }
+    //   });
     //// END of Control Panel
   }
 
@@ -260,7 +246,7 @@ class Scene extends Component {
     // this.backGround_G.drawRect(0,0,this.window_w,this.window_h);
     this.drawRoad();
     //this.testdraw();
-    
+    this.createButtons();
     this.app.ticker.add(this.animation);
       
   };
@@ -496,6 +482,37 @@ class Scene extends Component {
     _triangle.endFill();
     return _triangle;
   };
+
+  createButtons(){
+    //const _stop_btn_texture = this.app.loader.resources["stopRedImage"].texture;
+    const button = PIXI.Sprite.from(stopRedImage);
+    // const button = PIXI.Sprite.from(stopRedImage);
+    // const button = new PIXI.Sprite(buttonTextureRed);
+    button.anchor.set(0.5);
+    button.x = (this.controlPanel_G.width - button.width)/2;
+    button.y = 100;
+    button.buttonMode = true;
+    button.interactive = true;
+    button.buttonMode = true;
+    // The following adds the button to the control panel container
+    this.controlPanelContainer.addChild(button);
+
+    // The following is for the button's event (onclick)
+    button.on('mousedown', onclick = () => {
+        if(this.isStopClicked == false) {
+          this.isStopClicked = true;
+        }
+        console.log("button clicked"+this.isEmergency);
+        this.hasTLColorChanged = true;
+        this.isEmergency = true;
+        //this.trafficLightManualControl.stopAllTrafficLights(this.trafficLightManager);
+        for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+        {
+          this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
+        }
+
+      });
+  }
 
 };
 
