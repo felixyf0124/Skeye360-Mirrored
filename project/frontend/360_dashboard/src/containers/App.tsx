@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import Login from '../containers/Login';
 //import Footer from './components/Footer';
 //import LeftPanel from './components/LeftPanel';
-// import Scene from '../simulator/Scene'
+import Scene from '../containers/simulator/Scene'
 
 import '../css/App.css';
 import SkeyeMap from '../containers/SkeyeMap';
@@ -29,6 +29,7 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
     
   // </div>
   <Switch>
+    <Scene></Scene>
     <Route
       path="/login"
       render={() => <Login />}

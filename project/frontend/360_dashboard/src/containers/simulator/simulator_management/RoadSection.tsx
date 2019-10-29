@@ -77,6 +77,11 @@ export default class RoadSection {
         this.tail = tail;
     }
 
+
+    bindTrafficLightId(lane_in_id:number, trafficLight_id:number){
+        this.lane_in[lane_in_id].bindTrafficLightId(trafficLight_id);
+    }
+
     addNewLane(laneDirection: number, laneType:string, numOfLanes:number){
         var _id = 0;
         for(let i = 0; i < numOfLanes; ++i)

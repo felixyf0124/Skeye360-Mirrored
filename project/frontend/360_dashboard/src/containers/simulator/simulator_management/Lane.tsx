@@ -94,6 +94,11 @@ export default class Lane {
     setTail(tail: Coordinate) {
         this.tail = tail;
     }
+
+    bindTrafficLightId(id:number){
+        this.trafficLight_id = id;
+    }
+
     addHeadLink(headLink: LanePointer) {
         var _isExisted = false;
         for(let i = 0; i < this.headLinks.length; ++i)

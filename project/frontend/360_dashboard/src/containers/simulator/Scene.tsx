@@ -19,6 +19,7 @@ import stopBlueImage from '../../images/stopBlue.png';
 import stopRedImage from '../../images/stopRed.png';
 import TrafficLightManager from './simulator_management/TrafficLightManager';
 import TrafficLightManualControl from './simulator_management/TrafficLightManualControl';
+import { number } from 'prop-types';
 
 /**
  * @class Scene
@@ -65,8 +66,8 @@ class Scene extends Component {
   //car:VehicleObj;
 
   trafficLightManualControl: TrafficLightManualControl;
-  trafficLightManager: TrafficLightManager;
-  trafficLightsArray:Array<TrafficLight>;
+  // trafficLightManager: TrafficLightManager;
+  // trafficLightsArray:Array<TrafficLight>;
   hasTLColorChanged:Boolean;
   isEmergency:Boolean;
   isStopClicked:Boolean;
@@ -115,21 +116,21 @@ class Scene extends Component {
     this.fpsCounter = 0;
 
     //// START of initialization of Traffic Lights
-    this.trafficLightsArray = [];
-    for(let index = 0; index < 8; index++) {
-      this.trafficLightsArray[index] = new TrafficLight(index, 0);
-      if(index%2 == 0) {
-        this.trafficLightsArray[index].setTrafficLightStatus("green");
-      } else {
-        this.trafficLightsArray[index].setTrafficLightStatus("red");
-      }
-    }
+    // this.trafficLightsArray = [];
+    // for(let index = 0; index < 8; index++) {
+    //   this.trafficLightsArray[index] = new TrafficLight(index, 0);
+    //   if(index%2 == 0) {
+    //     this.trafficLightsArray[index].setStatus("green");
+    //   } else {
+    //     this.trafficLightsArray[index].setStatus("red");
+    //   }
+    // }
     //// END of initialization of Traffic Lights
 
     //// Start of initialization of Traffic Light Manager
     //TrafficLightManager(0 --> is for the trafficLightManagerId, 0 --> is for the roadIntersectionId, Date.now, 0 --> is for the offset)
-    this.trafficLightManager = new TrafficLightManager(0, 0, Date.now(), 0);
-    this.trafficLightManager.setTrafficLightQueue(this.trafficLightsArray);
+    //this.trafficLightManager = new TrafficLightManager(0, 0, 0);
+    //this.trafficLightManager.setTrafficLightQueue(this.trafficLightsArray);
     //// END of initialization of Traffic Light Manager
 
     //// Start of Traffic Light Manual Control
@@ -139,7 +140,7 @@ class Scene extends Component {
     //// END of Traffic Light Manual Control
 
     //// START of initialization of Road Intersection
-    this.roadIntersection = new RoadIntersection(0, this.trafficLightManager, ts.tsVec2(0,0));
+    this.roadIntersection = new RoadIntersection(0, ts.tsVec2(0,0));
     //this.trafficLightManager = new TrafficLightMG(this.roadIntersection.getRoadIntersectionId(),Date.now(),this.trafficLightCounterOffset);
 
     this.textStyle = {
@@ -154,6 +155,7 @@ class Scene extends Component {
     this.vehicle = new PIXI.Sprite();
     console.log(" ang");
     console.log(ts.getAngleOfVec(new vec2(1,1))/Math.PI);
+    
     //hard code to initial road intersection data for first loading
     this.roadIntersection.addNewRoadSection(ts.tsVec2(this.window_w/2, this.window_h*0.2));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(-this.window_w/2, 0.0));
@@ -162,13 +164,34 @@ class Scene extends Component {
 
     for(let i=0;i<this.roadIntersection.getRoadSections().length;++i)
     {
-      this.roadIntersection.addNewLane(i,1,"straight",2);
-      this.roadIntersection.addNewLane(i,-1,"straight",2);
+      this.roadIntersection.addNewLane(i,1,"straight",1);
+      this.roadIntersection.addNewLane(i,-1,"straight",1);
     }
 
     this.roadIntersection.setLaneWidth(this.lane_w);
+
+    var _trafficLight_binding_data = new Array<Array<{section:number,id:number}>>();
+    _trafficLight_binding_data = [
+      [
+        {section:0,id:0},
+        {section:1,id:0}
+      ],
+      [
+        {section:2,id:0},
+        {section:3,id:0}
+      ]
+    ];
+    this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[0], 15);
+    this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[1], 15);
+
+    // for(let i = 0; i < _trafficLight_binding_data.length; ++i)
+    // {
+    //   this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[i], 15);
+    // }
     //this.roadIntersection.resortRoadSections();
     var _inter = this.roadIntersection.updateLane();
+    this.roadIntersection.resortTrafficLightQueue();
+    // this.roadIntersection.
 
     this.app.stage.x = this.window_w/2;
     this.app.stage.y = this.window_h/2;
@@ -217,7 +240,12 @@ class Scene extends Component {
         console.log("button clicked"+this.isEmergency);
         this.hasTLColorChanged = true;
         this.isEmergency = true;
-        this.trafficLightManualControl.stopAllTrafficLights(this.trafficLightManager);
+        //this.trafficLightManualControl.stopAllTrafficLights(this.trafficLightManager);
+        for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+        {
+          this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
+        }
+
       })
     //// END of Control Panel
   }
@@ -336,10 +364,10 @@ class Scene extends Component {
         var _color2 = this.getTrafficLightColor("green");
 
         console.log("Emergency"+this.isEmergency);
-        if(this.isEmergency) {
-          var _light_state:string = this.roadIntersection.getLaneState(i,j);
-          _color2 = this.getTrafficLightColor(_light_state);
-        }
+        // if(this.isEmergency) {
+        //   var _light_state:string = this.roadIntersection.getLaneState(i,j);
+        //   _color2 = this.getTrafficLightColor(_light_state);
+        // }
 
         
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
@@ -453,7 +481,7 @@ class Scene extends Component {
     _vertices.push(_bottom.plus(_direction_perpendicular.multiply(-width/2)));
 
     _triangle.beginFill(color,1);
-    _triangle.lineStyle(0,color,1);
+    _triangle.lineStyle(0.5,color,1);
     _triangle.moveTo(_vertices[0].x,_vertices[0].y);
     _triangle.lineTo(_vertices[1].x,_vertices[1].y);
     _triangle.lineTo(_vertices[2].x,_vertices[2].y);
