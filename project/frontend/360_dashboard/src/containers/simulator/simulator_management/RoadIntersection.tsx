@@ -293,8 +293,9 @@ export default class RoadIntersection {
         //or make it auto adjusted when the lanes are linked to each other?
     }
 
-    tlCountingDown(){
-        
+    tlCountingDown():boolean{
+        return this.TLManager.initialUpdate();
+       // console.log(this.TLManager.getDeltaT());
     }
     
 }

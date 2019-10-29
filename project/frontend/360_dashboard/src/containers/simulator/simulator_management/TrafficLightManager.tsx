@@ -176,7 +176,7 @@ export default class TrafficLightManager {
      */
     addTrafficLight(laneGroup:Array<{section:number,id:number}>,time:number,specifiedYellowTime?:number){
         
-        var _trafficLight = new TrafficLight(Date.now());
+        var _trafficLight = new TrafficLight(this.getTrafficLightQueue().length);
         if(specifiedYellowTime === undefined)
         {
             _trafficLight.setTotalTime(time);
@@ -200,11 +200,12 @@ export default class TrafficLightManager {
         }
     }
 
-    initialUpdate(){
+    initialUpdate() :boolean{
         const _total = this.getTimePeriod();
         this.deltaT = (Date.now() - this.startTime)/1000;
         this.deltaT %= _total;
         let _addUp = 0;
+        var _isUpdating = false; 
         for(let i = 0; i < this.trafficLightQueue.length; ++i)
         {
             //skip current TL if it is forced set
@@ -216,18 +217,31 @@ export default class TrafficLightManager {
             if(this.deltaT >= _addUp_after_offset 
                 && this.deltaT < _addUp_after_offset + this.trafficLightQueue[i].getGreenTime())
             {
-                this.trafficLightQueue[i].setStatus("green");
+                if(this.trafficLightQueue[i].getStatus() !== "green")
+                {
+                    this.trafficLightQueue[i].setStatus("green");
+                    _isUpdating = true;
+                }
             }else if(this.deltaT >= _addUp_after_offset + this.trafficLightQueue[i].getGreenTime()
-                && this.deltaT < _addUp_after_offset + this.trafficLightQueue[i].getYellowTime())
+                && this.deltaT < _addUp_after_offset + this.trafficLightQueue[i].getGreenTime() + this.trafficLightQueue[i].getYellowTime())
             {
-                this.trafficLightQueue[i].setStatus("yellow");
+                if(this.trafficLightQueue[i].getStatus() !== "yellow")
+                {
+                    this.trafficLightQueue[i].setStatus("yellow");
+                    _isUpdating = true;
+                }
             }else
             {
-                this.trafficLightQueue[i].setStatus("red");
+                if(this.trafficLightQueue[i].getStatus() !== "red")
+                {
+                    this.trafficLightQueue[i].setStatus("red");
+                    _isUpdating = true;
+                }
             }
             _addUp += this.trafficLightQueue[i].getTotalTime();
         }
 
+        return _isUpdating;
     }
 
 }

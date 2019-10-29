@@ -173,12 +173,12 @@ class Scene extends Component {
     var _trafficLight_binding_data = new Array<Array<{section:number,id:number}>>();
     _trafficLight_binding_data = [
       [
-        {section:0,id:0},
+        {section:3,id:0},
         {section:1,id:0}
       ],
       [
         {section:2,id:0},
-        {section:3,id:0}
+        {section:0,id:0}
       ]
     ];
     this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[0], 15);
@@ -192,6 +192,8 @@ class Scene extends Component {
     var _inter = this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();
     // this.roadIntersection.
+        console.log(this.roadIntersection.getRoadSections());
+
 
     this.app.stage.x = this.window_w/2;
     this.app.stage.y = this.window_h/2;
@@ -325,8 +327,8 @@ class Scene extends Component {
     this.road_G.clear();
     //this.road_G = new PIXI.Graphics();
     var _sections = this.roadIntersection.getRoadSections();
-    console.log(this.roadIntersection.roadSections);
-    console.log(_sections);
+    // console.log(this.roadIntersection.roadSections);
+    // console.log(_sections);
     const _red = 0xff0000;
     
     for(var i:number = 0; i < _sections.length; ++i)
@@ -362,7 +364,6 @@ class Scene extends Component {
         let _lane = _lane_out[j];
         //Sets the color of the traffic lights depending on the status 
         var _color2 = this.getTrafficLightColor("green");
-
         console.log("Emergency"+this.isEmergency);
         // if(this.isEmergency) {
         //   var _light_state:string = this.roadIntersection.getLaneState(i,j);
@@ -421,6 +422,11 @@ class Scene extends Component {
       this.drawRoad();
       this.hasTLColorChanged = false;
     }
+    if(this.roadIntersection.tlCountingDown())
+    {
+      this.drawRoad();
+    }
+
     this.displayPlaneContainer.removeChildren();
     let deltaTime = Date.now() -this.timeLastMoment;
     this.fpsCounter++;
