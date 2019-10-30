@@ -14,22 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 
-from django.conf.urls import url, include
 from django.contrib import admin
-from django.contrib.auth.models import User
-from rest_framework import routers, serializers, viewsets
-from djangosite_api.views import UserViewSet
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from djangosite_api.views import UserViewSet
 
-# Routers provide an easy way of automatically determining the URL conf.
-from rest_framework.urlpatterns import format_suffix_patterns
+ROUTER = DefaultRouter()
+ROUTER.register(r'user', UserViewSet)
 
-router = DefaultRouter()
-router.register(r'user', UserViewSet)
-
+# This will get error report by pylint
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('djangosite_api.urls')),
-    path('', include(router.urls)),
+    path('', include(ROUTER.urls)),
 ]

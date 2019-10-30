@@ -6,7 +6,7 @@ from . import views
 # from .views import api_root
 
 urlpatterns = [
-    path('<username>/<token>/', views.user_detail),
+    path('<username>/<token>/', views.user_detail, name='user-get'),
     path('odm', views.home, name='home'),
 ]
 
