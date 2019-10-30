@@ -211,6 +211,7 @@ export default class TrafficLightManager {
             //skip current TL if it is forced set
             if(this.trafficLightQueue[i].getIsForced())
             {
+                    _isUpdating = true;
                 continue;
             }
             let _addUp_after_offset = (_addUp + this.trafficLightQueue[i].getOverlapOffset()) % _total;

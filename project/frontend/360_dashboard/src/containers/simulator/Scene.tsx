@@ -69,6 +69,7 @@ class Scene extends Component {
   trafficLightManualControl: TrafficLightManualControl;
   // trafficLightManager: TrafficLightManager;
   // trafficLightsArray:Array<TrafficLight>;
+  btnStop:Btn;
   hasTLColorChanged:Boolean;
   isEmergency:Boolean;
   isStopClicked:Boolean;
@@ -137,7 +138,7 @@ class Scene extends Component {
     //// Start of Traffic Light Manual Control
     //TrafficLightManualControl(0 --> is the intersectionId)
     this.trafficLightManualControl = new TrafficLightManualControl(0);
-    this.hasTLColorChanged = true;
+    this.hasTLColorChanged = false;
     //// END of Traffic Light Manual Control
 
     //// START of initialization of Road Intersection
@@ -226,6 +227,8 @@ class Scene extends Component {
     
     this.isStopClicked = false
     this.isEmergency = false;
+    this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
+
     // The following imports an image for the button    
     
     //   .on('mouseout', onmouseout = () =>{
@@ -405,10 +408,10 @@ class Scene extends Component {
   }
 
   animation = () => {
-    if(this.hasTLColorChanged) {
-      this.drawRoad();
-      this.hasTLColorChanged = false;
-    }
+    // if(this.hasTLColorChanged) {
+    //   this.drawRoad();
+    //   this.hasTLColorChanged = false;
+    // }
     if(this.roadIntersection.tlCountingDown())
     {
       this.drawRoad();
@@ -502,20 +505,39 @@ class Scene extends Component {
     this.controlPanelContainer.addChild(_btn_pop_hide);
 
     //stop btn
-    const _btn_stop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
-    _btn_stop.setBackground(_color,0.1,1,_color);
+    this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
+    this.btnStop.setBackground(_color,0.1,1,_color);
     const _textStyle2 = {
       // fontFamily: 'Courier',
       fontSize: '12px',
       fill : '#FFFFFF',
       fontWeight: '600'
     };
-    _btn_stop.setTextStyle(_textStyle2);
-    _btn_stop.x = (this.controlPanel_G.width - _btn_stop.width)/2;
-    _btn_stop.y = 20;
-    this.controlPanelContainer.addChild(_btn_stop);
-    console.log(_btn_stop.background.width);
-    // _stopBtn.on()
+    this.btnStop.setTextStyle(_textStyle2);
+    this.btnStop.x = (this.controlPanel_G.width - this.btnStop.width)/2;
+    this.btnStop.y = 20;
+    this.controlPanelContainer.addChild(this.btnStop);
+    console.log(this.btnStop.background.width);
+    this.btnStop
+      .on('pointerdown', onmousedown = () =>{
+        this.isStopClicked = !this.isStopClicked;
+        if(this.isStopClicked)
+        {
+          for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+          {
+            this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
+          }
+        }else{
+          for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+          {
+            this.roadIntersection.deForceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId());
+          }
+        }
+      });
+      // .on('mouseup', onButtonUp)
+      // .on('mouseupoutside', onButtonUp)
+      // .on('mouseover', onButtonOver)
+      // .on('mouseout', onButtonOut);
 
 
 
@@ -531,25 +553,25 @@ class Scene extends Component {
     button.y = 80;
     button.buttonMode = true;
     button.interactive = true;
-    button.buttonMode = true;
+    // button.buttonMode = true;
     // The following adds the button to the control panel container
-    this.controlPanelContainer.addChild(button);
+    // this.controlPanelContainer.addChild(button);
 
     // The following is for the button's event (onclick)
-    button.on('mousedown', onclick = () => {
-        if(this.isStopClicked == false) {
-          this.isStopClicked = true;
-        }
-        console.log("button clicked"+this.isEmergency);
-        this.hasTLColorChanged = true;
-        this.isEmergency = true;
-        //this.trafficLightManualControl.stopAllTrafficLights(this.trafficLightManager);
-        for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-        {
-          this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
-        }
+    // button.on('mousedown', onclick = () => {
+    //     if(this.isStopClicked == false) {
+    //       this.isStopClicked = true;
+    //     }
+    //     console.log("button clicked"+this.isEmergency);
+    //     this.hasTLColorChanged = true;
+    //     this.isEmergency = true;
+    //     //this.trafficLightManualControl.stopAllTrafficLights(this.trafficLightManager);
+    //     for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+    //     {
+    //       this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
+    //     }
 
-      });
+    //   });
 
     
     

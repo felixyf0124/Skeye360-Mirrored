@@ -29,8 +29,8 @@ export default class Button extends PIXI.Graphics {
         this.btnHeight = height;
         this.setDemansion(width,height);
         this.setName(this.name);
-        this.buttonMode = true;
         this.interactive = true;
+        this.buttonMode = true;
     }
 
     setDemansion(width:number, height:number){
