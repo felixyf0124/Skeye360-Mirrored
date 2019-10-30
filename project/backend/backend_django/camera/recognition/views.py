@@ -9,7 +9,7 @@ from .detection import Detector
 yolo_config = '/SOEN490/project/backend/360_opencv/yolov3.cfg'
 yolo_weights = '/SOEN490/project/backend/360_opencv/yolov3.weights'
 yolo_classes = '/SOEN490/project/backend/360_opencv/coco.names'
-video_stream = '/SOEN490/project/backend/backend_django/camera/rt.avi'
+video_stream = '/SOEN490/project/backend/backend_django/camera/hwt.mp4'
 
 # initialize a detector object
 detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)

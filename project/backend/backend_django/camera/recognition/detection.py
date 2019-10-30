@@ -107,17 +107,17 @@ class Detector:
         # pts_north = np.array([[681,250],[840,255],[1028,0],[725,0]], np.int32)
         # pts_mid = np.array([[415,435],[825,491],[892,284],[610,260]], np.int32)
 
-        pts_west = np.array([[533,191],[679,601],[1,639],[1,125]], np.int32)
-        # pts_south = np.array([[409,456],[737,512],[582,718],[0,718]], np.int32)
-        pts_east = np.array([[1119,321],[1223,487],[1279,475],[1279,298]], np.int32)
-        pts_north = np.array([[701,153],[1003,217],[1000,1],[629,1]], np.int32)
-        pts_mid = np.array([[677,215],[797,581],[1149,515],[1057,301]], np.int32)
+        # pts_west = np.array([[533,191],[679,601],[1,639],[1,125]], np.int32)
+        pts_north = np.array([[0,260],[640,260],[640,0],[0,0]], np.int32)
+        # pts_east = np.array([[1119,321],[1223,487],[1279,475],[1279,298]], np.int32)
+        pts_south = np.array([[0,260],[640,260],[640,450],[0,450]], np.int32)
+        # pts_mid = np.array([[677,215],[797,581],[1149,515],[1057,301]], np.int32)
 
-        west_ROI = pts_west.reshape((-1,1,2))
-        # south_ROI = pts_south.reshape((-1,1,2))
-        east_ROI = pts_east.reshape((-1,1,2))
+        # west_ROI = pts_west.reshape((-1,1,2))
+        south_ROI = pts_south.reshape((-1,1,2))
+        # east_ROI = pts_east.reshape((-1,1,2))
         north_ROI = pts_north.reshape((-1,1,2))
-        mid_ROI = pts_mid.reshape((-1,1,2))
+        # mid_ROI = pts_mid.reshape((-1,1,2))
 
         #directions
         east_to_east = 0
@@ -148,7 +148,7 @@ class Detector:
         encoder = gdet.create_box_encoder(model_filename,batch_size=1)
         metric = nn_matching.NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
         tracker = Tracker(metric)
-
+        tracking_dict = {}
         while True:
             hasframe, image = cap.read()
             # image=cv2.resize(image, (620, 480))
@@ -161,11 +161,11 @@ class Detector:
             rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
             #draw ROIs
-            cv2.polylines(image,[west_ROI],True,(255), 2)
-            cv2.polylines(image,[east_ROI],True,(255), 2)
+            # cv2.polylines(image,[west_ROI],True,(255), 2)
+            # cv2.polylines(image,[east_ROI],True,(255), 2)
             # cv2.polylines(image,[south_ROI],True,(255), 2)
-            cv2.polylines(image,[north_ROI],True,(255), 2)
-            cv2.polylines(image,[mid_ROI],True,(255), 2)
+            # cv2.polylines(image,[north_ROI],True,(255), 2)
+            # cv2.polylines(image,[mid_ROI],True,(255), 2)
             
             # convert the frame to a blob and detect through the network
             blob = cv2.dnn.blobFromImage(image, 1.0/255.0, (416,416), [0,0,0], True, crop=False)
@@ -176,15 +176,15 @@ class Detector:
             confidences = []
             boxes = []
             yolo_boxes = []
-            conf_threshold = 0.7
-            nms_threshold = 0.6
+            conf_threshold = 0.6
+            nms_threshold = 0.5
             for out in outs: 
                 for detection in out:            
                 #each detection  has the form like this [center_x center_y width height obj_score class_1_score class_2_score ..]
                     scores = detection[5:]#classes scores starts from index 5
                     class_id = np.argmax(scores)
                     confidence = scores[class_id]
-                    if confidence > 0.7:
+                    if confidence > 0.6:
                         center_x = int(detection[0] * Width)
                         center_y = int(detection[1] * Height)
                         w = int(detection[2] * Width)
@@ -199,7 +199,7 @@ class Detector:
                 class_id = class_ids[i[0]]               
                 label = classes[class_id]
                 print(label)
-                if label not in ["car","bus","truck","train"]:
+                if label not in ["car","bus","truck"]:
                     continue
                     
                 i = i[0]
@@ -233,111 +233,123 @@ class Detector:
             # Call the tracker
             tracker.predict()
             tracker.update(detections)
-
             for track in tracker.tracks:
                 if not track.is_confirmed() or track.time_since_update > 1:
                     continue 
                 bbox = track.to_tlbr()
                 cv2.rectangle(image, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,255,255), 2)
                 cv2.putText(image, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 200, (0,255,0),2)
-                centroid = [int((bbox[0]+ bbox[1]) / 2.0), int((bbox[2] + bbox[3]) / 2.0)]
-                to = TrackableObject(track.track_id, centroid)
-                to.centroids.append(centroid)
-                if not to.counted:
-                    if to.start_from == "":
-                        start_point = (to.centroids[0][0], to.centroids[0][1])
-                        start_from = ""
-                        go_to = ""
+                centroid = [int((bbox[0]+ bbox[2]) / 2.0), int((bbox[1] + bbox[3]) / 2.0)]
+                if track.track_id not in tracking_dict:
+                    print("creating...")
+                    to = TrackableObject(track.track_id)
+                    to.add_centroid(centroid)
+                    tracking_dict[track.track_id] = to
+                    to.start_point = (centroid[0], centroid[1])
+                    # if (cv2.pointPolygonTest(east_ROI, start_point, False)) >= 0:
+                    #     to.start_from = "east"
+                    # elif (cv2.pointPolygonTest(west_ROI, start_point, False)) >= 0:
+                    #     to.start_from = "west"
+                    if (cv2.pointPolygonTest(north_ROI, to.start_point, False)) >= 0:
+                        to.start_from = "north"
+                    if (cv2.pointPolygonTest(south_ROI, to.start_point, False)) >= 0:
+                        to.start_from = "south"              
+                else:
+                    tracking_dict[track.track_id].add_centroid(centroid)
+                # for x,y in tracking_dict.items():
+                #     print(tracking_dict[x])
+                #     y.print_to()
+                # to.print_to()
+                for x in tracking_dict.values():
+                    if not x.counted:
+                        current = (x.centroids[-1][0], x.centroids[-1][1])
                         
-                        if (cv2.pointPolygonTest(east_ROI, start_point, False)) >= 0:
-                            to.start_from = "east"
-                        elif (cv2.pointPolygonTest(west_ROI, start_point, False)) >= 0:
-                            to.start_from = "west"
-                        elif (cv2.pointPolygonTest(north_ROI, start_point, False)) >= 0:
-                            to.start_from = "north"
-                        # elif (cv2.pointPolygonTest(south_ROI, start_point, False)) >= 0:
-                        #     to.start_from = "south"
-                    
-                    current = (centroid[0], centroid[1])
-                    to.centroids.append(centroid)
+                        # if (cv2.pointPolygonTest(mid_ROI, current, False)) >= 0:
+                        #     print("in the middle")
+                        # to.crossing = True
 
-                    if (cv2.pointPolygonTest(mid_ROI, current, False)) >= 0:
-                        print("in the middle")
-                        to.crossing = True
+                        # if to.crossing and (cv2.pointPolygonTest(east_ROI, current, False)) >= 0:
+                        #     to.go_to = "east"
+                        #     to.counted = True
+                        # if to.crossing and (cv2.pointPolygonTest(west_ROI, current, False)) >= 0:
+                        #     to.go_to = "west"
+                        #     to.counted = True
+                        # if to.crossing and (cv2.pointPolygonTest(north_ROI, current, False)) >= 0:
+                        #     to.go_to = "north"
+                        #     to.counted = True
+                        # if to.crossing and (cv2.pointPolygonTest(south_ROI, current, False)) >= 0:
+                        #     to.go_to = "south"
+                        #     to.counted = True
+                        if x.start_from == "south" and (cv2.pointPolygonTest(north_ROI, current, False)) >= 0:
+                            x.go_to = "north"
+                            x.counted = True
+                        if x.start_from == "north" and (cv2.pointPolygonTest(south_ROI, current, False)) >= 0:
+                            x.go_to = "south"
+                            x.counted = True
 
-                    if to.crossing and (cv2.pointPolygonTest(east_ROI, current, False)) >= 0:
-                        to.go_to = "east"
-                        to.counted = True
-                    if to.crossing and (cv2.pointPolygonTest(west_ROI, current, False)) >= 0:
-                        to.go_to = "west"
-                        to.counted = True
-                    if to.crossing and (cv2.pointPolygonTest(north_ROI, current, False)) >= 0:
-                        to.go_to = "north"
-                        to.counted = True
-                    # if to.crossing and (cv2.pointPolygonTest(south_ROI, current, False)) >= 0:
-                    #     to.go_to = "south"
-                    #     to.counted = True
+                        if x.start_from == "east" and x.go_to == "east":
+                            east_to_east+=1
+                            x.counted = True
+                        if x.start_from =="east" and x.go_to == "west":
+                            east_to_west+=1
+                            x.counted = True
+                        if x.start_from == "east" and x.go_to == "north":
+                            east_to_north+=1
+                            x.counted = True
+                        if x.start_from == "east" and x.go_to == "south":
+                            east_to_south+=1
+                            x.counted = True
 
-                    if to.start_from == "east" and to.go_to == "east":
-                        east_to_east+=1
-                        to.counted = True
-                    if to.start_from =="east" and to.go_to == "west":
-                        east_to_west+=1
-                        to.counted = True
-                    if to.start_from == "east" and to.go_to == "north":
-                        east_to_north+=1
-                        to.counted = True
-                    if to.start_from == "east" and to.go_to == "south":
-                        east_to_south+=1
-                        to.counted = True
+                        if x.start_from == "west" and x.go_to == "east":
+                            west_to_east+=1
+                            to.counted = True
+                        if x.start_from == "west" and x.go_to == "west":
+                            west_to_west+=1
+                            x.counted = True
+                        if x.start_from == "west" and x.go_to == "north":
+                            west_to_north+=1
+                            x.counted = True
+                        if x.start_from == "west" and x.go_to == "south":
+                            west_to_south+=1
+                            x.counted = True
 
-                    if to.start_from == "west" and to.go_to == "east":
-                        west_to_east+=1
-                        to.counted = True
-                    if to.start_from == "west" and to.go_to == "west":
-                        west_to_west+=1
-                        to.counted = True
-                    if to.start_from == "west" and to.go_to == "north":
-                        west_to_north+=1
-                        to.counted = True
-                    if to.start_from == "west" and to.go_to == "south":
-                        west_to_south+=1
-                        to.counted = True
+                        if x.start_from == "north" and x.go_to == "east":
+                            north_to_east+=1
+                            x.counted = True
+                        if x.start_from == "north" and x.go_to == "west":
+                            north_to_west+=1
+                            x.counted = True
+                        if x.start_from == "north" and x.go_to == "north":
+                            north_to_north+=1
+                            x.counted = True
+                        if x.start_from == "north" and x.go_to == "south":
+                            north_to_south+=1
+                            x.counted = True
 
-                    if to.start_from == "north" and to.go_to == "east":
-                        north_to_east+=1
-                        to.counted = True
-                    if to.start_from == "north" and to.go_to == "west":
-                        north_to_west+=1
-                        to.counted = True
-                    if to.start_from == "north" and to.go_to == "north":
-                        north_to_north+=1
-                        to.counted = True
-                    if to.start_from == "north" and to.go_to == "south":
-                        north_to_south+=1
-                        to.counted = True
-
-                    if to.start_from == "south" and to.go_to == "east":
-                        south_to_east+=1
-                        to.counted = True
-                    if to.start_from == "south" and to.go_to == "west":
-                        south_to_west+=1
-                        to.counted = True
-                    if to.start_from == "south" and to.go_to == "north":
-                        south_to_north+=1
-                        to.counted = True
-                    if to.start_from == "south" and to.go_to == "south":
-                        south_to_south+=1
-                        to.counted = True
+                        if x.start_from == "south" and x.go_to == "east":
+                            south_to_east+=1
+                            x.counted = True
+                        if x.start_from == "south" and x.go_to == "west":
+                            south_to_west+=1
+                            x.counted = True
+                        if x.start_from == "south" and x.go_to == "north":
+                            south_to_north+=1
+                            x.counted = True
+                        if x.start_from == "south" and x.go_to == "south":
+                            south_to_south+=1
+                            x.counted = True
 
                 # # store the trackable object in our dictionary
                 # trackableObjects[track.track_id] = to
 
                 # draw both the ID of the object and the centroid of the
                 # object on the output frame
-                print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
-                print(to.start_from)
-                print(to.go_to)
+            for x in tracking_dict.values():
+                print("ID {}".format(x.objectID)+ ' start: ')
+                print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
+                # print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
+                print(x.start_from)
+                print(x.go_to)
             
             print("east_to_east: " + str(east_to_east))
             print("east_to_west: "+ str(east_to_west))
