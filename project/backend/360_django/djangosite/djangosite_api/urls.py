@@ -1,17 +1,19 @@
 from django.urls import path, include
 from rest_framework.urlpatterns import format_suffix_patterns
-
+from rest_framework import routers
+from .views import *
 from . import views
 
-# from .views import api_root
+router = routers.DefaultRouter()
+router.register('api/user', UserViewSet, 'user')
+router.register('api/city', CityViewSet, 'city')
+router.register('api/district', DistrictViewSet, 'district')
+router.register('api/intersection', IntersectionViewSet, 'intersection')
+router.register('api/trafficLight', TrafficLightViewSet, 'trafficlight')
+router.register('api/count', CountViewSet, 'count')
+router.register('api/time', TimeViewSet, 'time')
+router.register('api/prediction', PredictionViewSet, 'prediction')
+router.register('api/vehicle', VehicleViewSet, 'vehicle')
+router.register('api/pedestrian', PedestrianViewSet, 'pedestrian')
 
-urlpatterns = [
-    path('<username>/<token>/', views.user_detail, name='user-get'),
-    path('odm', views.home, name='home'),
-]
-
-# urlpatterns = format_suffix_patterns([
-# ])
-
-# For auto format by . (EX: 0.0.0.0:8000/students/students-view.json)
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = router.urls

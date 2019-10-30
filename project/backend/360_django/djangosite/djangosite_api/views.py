@@ -1,11 +1,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, permissions, filters
 from django.http import HttpResponse
-from .models import User
-from .serializers import UserSerilizer
-from rest_framework import filters
+from .models import *
+from .serializers import *
 
 
 # The APIView class for working with class-based views.Not success(need improve)
@@ -88,4 +87,44 @@ class UserViewSet(viewsets.ModelViewSet):
     API endpoint that allows groups to be viewed or edited.
     """
     queryset = User.objects.all()
+    # This will serve for the authentication
+    # permission_classes = [
+    # ]
     serializer_class = UserSerilizer
+
+class CityViewSet(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
+class DistrictViewSet(viewsets.ModelViewSet):
+    queryset = District.objects.all()
+    serializer_class = DistrictSerializer
+
+class IntersectionViewSet(viewsets.ModelViewSet):
+    queryset = Intersection.objects.all()
+    serializer_class = IntersectionSerializer
+
+class TrafficLightViewSet(viewsets.ModelViewSet):
+    queryset = Trafficlight.objects.all()
+    serializer_class = TrafficLightSerializer
+
+class CountViewSet(viewsets.ModelViewSet):
+    queryset = Count.objects.all()
+    serializer_class = CountSerializer
+
+class TimeViewSet(viewsets.ModelViewSet):
+    queryset = Time.objects.all()
+    serializer_class = TimeSerializer
+
+class PredictionViewSet(viewsets.ModelViewSet):
+    queryset = Prediction.objects.all()
+    serializer_class = PredictionSerializer
+
+class VehicleViewSet(viewsets.ModelViewSet):
+    queryset = Vehicle.objects.all()
+    serializer_class = VehicleSerializer
+
+class PedestrianViewSet(viewsets.ModelViewSet):
+    queryset = Pedestrian.objects.all()
+    serializer_class = PedestrianSerializer
+    

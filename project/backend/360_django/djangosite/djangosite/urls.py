@@ -16,15 +16,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from djangosite_api.views import UserViewSet
 
-ROUTER = DefaultRouter()
-ROUTER.register(r'user', UserViewSet)
-
-# This will get error report by pylint
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('user/', include('djangosite_api.urls')),
-    path('', include(ROUTER.urls)),
+    path('', include('djangosite_api.urls')),
 ]
