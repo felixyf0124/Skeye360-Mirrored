@@ -20,6 +20,7 @@ import stopRedImage from '../../images/stopRed.png';
 import TrafficLightManager from './simulator_management/TrafficLightManager';
 import TrafficLightManualControl from './simulator_management/TrafficLightManualControl';
 import { number } from 'prop-types';
+import Btn from './Button';
 
 /**
  * @class Scene
@@ -484,13 +485,50 @@ class Scene extends Component {
   };
 
   createButtons(){
+    const _color = 0x51BCD8;
+
+    //pop - hide btn
+    const _btn_pop_hide = new Btn(26,26,"<", _color);
+    _btn_pop_hide.setBackground(_color,0.1,1,_color);
+    const _textStyle = {
+      fontFamily: 'Courier',
+      fontSize: '12px',
+      fill : '0x51BCD8',
+      fontWeight: '600'
+    };
+    _btn_pop_hide.setTextStyle(_textStyle);
+    _btn_pop_hide.x = this.controlPanel_G.width;
+    // _btn_pop_hide.y = 120;
+    this.controlPanelContainer.addChild(_btn_pop_hide);
+
+    //stop btn
+    const _btn_stop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
+    _btn_stop.setBackground(_color,0.1,1,_color);
+    const _textStyle2 = {
+      // fontFamily: 'Courier',
+      fontSize: '12px',
+      fill : '#FFFFFF',
+      fontWeight: '600'
+    };
+    _btn_stop.setTextStyle(_textStyle2);
+    _btn_stop.x = (this.controlPanel_G.width - _btn_stop.width)/2;
+    _btn_stop.y = 20;
+    this.controlPanelContainer.addChild(_btn_stop);
+    console.log(_btn_stop.background.width);
+    // _stopBtn.on()
+
+
+
     //const _stop_btn_texture = this.app.loader.resources["stopRedImage"].texture;
     const button = PIXI.Sprite.from(stopRedImage);
     // const button = PIXI.Sprite.from(stopRedImage);
     // const button = new PIXI.Sprite(buttonTextureRed);
-    button.anchor.set(0.5);
-    button.x = (this.controlPanel_G.width - button.width)/2;
-    button.y = 100;
+    //button.anchor.set(0.5);
+    const _x = (this.controlPanel_G.width - button.width)/2;
+    button.scale.x = 0.8;
+    button.scale.y = 0.8;
+    button.x = _x;
+    button.y = 80;
     button.buttonMode = true;
     button.interactive = true;
     button.buttonMode = true;
@@ -512,6 +550,11 @@ class Scene extends Component {
         }
 
       });
+
+    
+    
+
+
   }
 
 };
