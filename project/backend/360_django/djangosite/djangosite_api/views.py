@@ -64,11 +64,11 @@ def user_detail(request, username, token, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = UserSerilizer(user)
+        serializer = UserSerializer(user)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = UserSerilizer(user, data=request.data)
+        serializer = UserSerializer(user, data=request.data)
         data = {}
         if serializer.is_valid():
             serializer.save()
@@ -90,41 +90,49 @@ class UserViewSet(viewsets.ModelViewSet):
     # This will serve for the authentication
     # permission_classes = [
     # ]
-    serializer_class = UserSerilizer
+    serializer_class = UserSerializer
+
 
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
 
+
 class DistrictViewSet(viewsets.ModelViewSet):
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
+
 
 class IntersectionViewSet(viewsets.ModelViewSet):
     queryset = Intersection.objects.all()
     serializer_class = IntersectionSerializer
 
+
 class TrafficLightViewSet(viewsets.ModelViewSet):
     queryset = Trafficlight.objects.all()
     serializer_class = TrafficLightSerializer
+
 
 class CountViewSet(viewsets.ModelViewSet):
     queryset = Count.objects.all()
     serializer_class = CountSerializer
 
+
 class TimeViewSet(viewsets.ModelViewSet):
     queryset = Time.objects.all()
     serializer_class = TimeSerializer
+
 
 class PredictionViewSet(viewsets.ModelViewSet):
     queryset = Prediction.objects.all()
     serializer_class = PredictionSerializer
 
+
 class VehicleViewSet(viewsets.ModelViewSet):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
 
+
 class PedestrianViewSet(viewsets.ModelViewSet):
     queryset = Pedestrian.objects.all()
     serializer_class = PedestrianSerializer
-    
