@@ -1,3 +1,6 @@
+
+from .direction import Direction
+
 class TrackableObject:
 	def __init__(self, objectID):
 		# store the object ID, then initialize a list of centroids
@@ -16,6 +19,13 @@ class TrackableObject:
 
 	def add_centroid(self, centroid):
 		self.centroids.append(centroid)
+		
 	def print_to(self):
 		for centroid in self.centroids:
 			print ("["+str(centroid[0])+","+str(centroid[1])+"]")
+			
+	def get_start_from(self):
+		return self.start_from
+		
+	def get_go_to(self):
+		return self.go_to
