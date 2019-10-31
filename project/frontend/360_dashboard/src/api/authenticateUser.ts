@@ -10,7 +10,7 @@ const authenticateUser = async (
   username: string,
   password: string
 ): Promise<Response> => {
-  const url = `//${APIDomain}/user/` + username + `/` + password + `/`;
+  const url = `//${APIDomain}/api/user/` + username + `/` + password + `/`;
   // const params = {
   //   username,
   //   password,

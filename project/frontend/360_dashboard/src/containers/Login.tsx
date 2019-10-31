@@ -34,6 +34,9 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     const handleLoginClick = () => {
         const { historyPush } = props;
         historyPush('/login');
+        if (!props.authenticated) {
+            return <Redirect push to={'/'} />;
+        }
     };
 
     if (props.authenticated) alert("Welcome " + props.name + "! ");
@@ -42,7 +45,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     return (
         <div>
             <Header />
-            <div className="login-container">
+            <div className="form-container">
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     props.authenticate(username, password);
