@@ -96,6 +96,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
+    # How to use filter:https://www.youtube.com/watch?v=s9V9F9Jtj7Q
+    filter_fields = ('city_name',)
 
 
 class DistrictViewSet(viewsets.ModelViewSet):
