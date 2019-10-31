@@ -5,3 +5,4 @@ sqlparse==0.2.4
 markdown
 django-filter # ref: https://django-filter.readthedocs.io/en/master/
 pylint
+django-cors-headers
