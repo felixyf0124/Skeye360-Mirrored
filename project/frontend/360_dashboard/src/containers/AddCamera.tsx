@@ -8,7 +8,7 @@ import { push } from 'connected-react-router';
 interface StateProps {
     path: string;
     authenticated: boolean,
-    email: string;
+    username: string;
 
     city: string;
     lat: number;
@@ -123,7 +123,7 @@ const AddCamera = (props: StateProps & DispatchProps): JSX.Element => {
 const mapStateToProps = (state: RootState): StateProps => ({
     path: '/streetview/add',
     authenticated: state.authentication.authenticated,
-    email: state.authentication.email,
+    username: state.authentication.username,
     
     city: 'Montreal',
     lat: 0,

@@ -7,22 +7,25 @@ import Header from '../components/Header';
 import { push } from 'connected-react-router';
 
 interface StateProps {
-    authenticated: boolean,
-    email: string;
+    username: string;
     password: string;
+
+    authenticated: boolean,
+    name: string;
+    session_token: string;
     error: string;
 }
 
 interface DispatchProps {
-    authenticate: (email: string, password: string) => void;
+    authenticate: (username: string, password: string) => void;
     historyPush: (url: string) => void;
 }
 
 const Login = (props: StateProps & DispatchProps): JSX.Element => {
     const [ state, setState ] = React.useState(props);
-    const { email, password } = state;
+    const { username, password } = state;
 
-    console.log("ASD:" + email + "," + password);
+    console.log("ASD:" + username + "," + password);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setState({ ...state, [e.target.name]: e.target.value });
@@ -33,6 +36,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
         historyPush('/login');
     };
 
+    if (props.authenticated) alert("Welcome " + props.name + "! ");
     if (props.authenticated) return <Redirect push to={'/'} />;
 
     return (
@@ -41,15 +45,22 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
             <div className="login-container">
                 <form onSubmit={(e) => {
                     e.preventDefault();
-                    props.authenticate(email, password);
+                    props.authenticate(username, password);
                     handleLoginClick();
                 }}>
+                    {props.error !== '' ? (
+                        <div className="form-group">
+                            <label>{props.error}</label>
+                        </div>
+                    ): (
+                        <div />
+                    )}
                     <div className="form-group">
                         <label>Username</label>
                         <input
                             type="text"
-                            name="email"
-                            value={email}
+                            name="username"
+                            value={username}
                             onChange={handleChange}
                         />
                     </div>
@@ -72,10 +83,13 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-    authenticated: state.authentication.authenticated,
-    email: '',
+    username: '',
     password: '',
-    error: '',
+
+    authenticated: state.authentication.authenticated,
+    name: state.authentication.username,
+    session_token: state.authentication.session_token,
+    error: state.authentication.error,
 });
 
 const mapDispatchToProps: DispatchProps = {

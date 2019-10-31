@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import BarChart from '../components/BarChart';
 import PieChart from '../components/PieChart';
 import LineChart from '../components/LineChart';
