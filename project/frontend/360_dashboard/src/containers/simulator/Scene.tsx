@@ -67,11 +67,10 @@ class Scene extends Component {
   //car:VehicleObj;
 
   trafficLightManualControl: TrafficLightManualControl;
-  // trafficLightManager: TrafficLightManager;
-  // trafficLightsArray:Array<TrafficLight>;
+  
+  btnShowCP:Btn;
   btnStop:Btn;
-  hasTLColorChanged:Boolean;
-  isEmergency:Boolean;
+  isControlPanelShown:Boolean;
   isStopClicked:Boolean;
 
   constructor(props: any) {
@@ -117,28 +116,10 @@ class Scene extends Component {
     this.fps = 0;
     this.fpsCounter = 0;
 
-    //// START of initialization of Traffic Lights
-    // this.trafficLightsArray = [];
-    // for(let index = 0; index < 8; index++) {
-    //   this.trafficLightsArray[index] = new TrafficLight(index, 0);
-    //   if(index%2 == 0) {
-    //     this.trafficLightsArray[index].setStatus("green");
-    //   } else {
-    //     this.trafficLightsArray[index].setStatus("red");
-    //   }
-    // }
-    //// END of initialization of Traffic Lights
-
-    //// Start of initialization of Traffic Light Manager
-    //TrafficLightManager(0 --> is for the trafficLightManagerId, 0 --> is for the roadIntersectionId, Date.now, 0 --> is for the offset)
-    //this.trafficLightManager = new TrafficLightManager(0, 0, 0);
-    //this.trafficLightManager.setTrafficLightQueue(this.trafficLightsArray);
-    //// END of initialization of Traffic Light Manager
 
     //// Start of Traffic Light Manual Control
     //TrafficLightManualControl(0 --> is the intersectionId)
     this.trafficLightManualControl = new TrafficLightManualControl(0);
-    this.hasTLColorChanged = false;
     //// END of Traffic Light Manual Control
 
     //// START of initialization of Road Intersection
@@ -221,79 +202,13 @@ class Scene extends Component {
     this.controlPanel_G.drawRect(0, 0, 200, this.window_h-1);
     this.controlPanel_G.endFill();
 
-    const buttonTexture = PIXI.Texture.from('../../images/stopBlue.png');
-    const buttonTextureRed = PIXI.Texture.from('../../images/stopRed.png');
-    
-    this.isStopClicked = false
-    this.isEmergency = false;
+    this.isControlPanelShown = true;
+    this.isStopClicked = false;
     this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
-    // const _isStopDown = this.isStopClicked;
-    this.createButtons();
-    // window.addEventListener("pointerdown",this.)
-    // window.addEventListener()
-    // this.btnStop.
-    // this.btnStop.on("pointerdown", onpointerdown=()=>{
-    //   console.log(this.btnStop.isOver);
-    //   // if(this.btnStop.isOver)
-      
-    //     this.isStopClicked = !this.isStopClicked;
-    //     if(this.isStopClicked)
-    //     {
-    //       for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-    //       {
-    //         this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
-    //       }
-    //     }else{
-    //       for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-    //       {
-    //         this.roadIntersection.deForceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId());
-    //       }
-    //     }
-      
-    // });
-    // this.btnStop.on('pointerdown', onclick());
-      // .on('pointerdown', this.click());
-    //   .on('mousedown', function() {
-    //     // this.btnStop.isDown = true;
-    //     // if(this.btnStop.isDown && this.btnStop.isOver)
-    //     this.isStopClicked = !this.isStopClicked;
-    //     if(this.isStopClicked)
-    //     {
-    //       for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-    //       {
-    //         this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
-    //       }
-    //     }else{
-    //       for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-    //       {
-    //         this.roadIntersection.deForceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId());
-    //       }
-    //     }
-    //   });
-      // .on('pointerup', onmouseup=() =>{
-      //   this.btnStop.isDown = false;
-      // })
-      // .on('pointerupoutside', onmouseup=() =>{
-      //   this.btnStop.isDown = false;
-      // })
-      // .on('pointerover', onmouseover=()=>{
-      //   this.btnStop.isOver = true;
-      // })
-      // .on('pointerout', onmouseout=()=>{
-      //   this.btnStop.isOver = true;
-      // });
+    this.btnShowCP = new Btn(26,26,"<", 0x51BCD8);
 
-    // The following imports an image for the button    
+    this.initialButtons();
     
-    //   .on('mouseout', onmouseout = () =>{
-    //     this.isdown = false;
-    // if (this.isOver) {
-    //     this.texture = textureButtonOver;
-    // } else {
-    //     this.texture = textureButton;
-    // }
-    //   });
-    //// END of Control Panel
   }
 
   initialize = () => {
@@ -407,12 +322,6 @@ class Scene extends Component {
         let _lane = _lane_out[j];
         //Sets the color of the traffic lights depending on the status 
         var _color2 = this.getTrafficLightColor("green");
-        console.log("Emergency"+this.isEmergency);
-        // if(this.isEmergency) {
-        //   var _light_state:string = this.roadIntersection.getLaneState(i,j);
-        //   _color2 = this.getTrafficLightColor(_light_state);
-        // }
-
         
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
         var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4)+1;
@@ -461,6 +370,10 @@ class Scene extends Component {
   }
 
   animation = () => {
+    if(this.btnShowCP.isPressed()) {
+      this.isControlPanelShown = !this.isControlPanelShown;
+    }
+    this.updateControlPanelDisplayState(8);
     if(this.btnStop.isPressed()) {
         this.isStopClicked = !this.isStopClicked;
         if(this.isStopClicked)
@@ -552,23 +465,26 @@ class Scene extends Component {
     return _triangle;
   };
 
-  createButtons(){
+  initialButtons(){
     const _color = 0x51BCD8;
 
     //pop - hide btn
-    const _btn_pop_hide = new Btn(26,26,"<", _color);
-    _btn_pop_hide.setBackground(_color,0.1,1,_color);
+    this.btnShowCP.setBackground(_color,0.1,1,_color);
     const _textStyle = {
       fontFamily: 'Courier',
       fontSize: '12px',
       fill : '0x51BCD8',
       fontWeight: '600'
     };
-    _btn_pop_hide.setTextStyle(_textStyle);
-    _btn_pop_hide.x = this.controlPanel_G.width;
-    // _btn_pop_hide.y = 120;
-    this.controlPanelContainer.addChild(_btn_pop_hide);
 
+    this.btnShowCP.setTextStyle(_textStyle);
+    
+
+    this.btnShowCP.x = this.controlPanel_G.width;
+    // _btn_pop_hide.y = 120;
+    this.controlPanelContainer.addChild(this.btnShowCP);
+    this.updateControlPanelDisplayState(0);
+    console.log(this.controlPanelContainer.x);
     //stop btn
     // this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
     this.btnStop.setBackground(_color,0.1,1,_color);
@@ -585,70 +501,56 @@ class Scene extends Component {
     this.controlPanelContainer.addChild(this.btnStop);
     console.log(this.btnStop.hitArea);
     
-      // .on('mouseup', onButtonUp)
-      // .on('mouseupoutside', onButtonUp)
-      // .on('mouseover', onButtonOver)
-      // .on('mouseout', onButtonOut);
-
-
-
-    //const _stop_btn_texture = this.app.loader.resources["stopRedImage"].texture;
-    const button = PIXI.Sprite.from(stopRedImage);
-    // const button = PIXI.Sprite.from(stopRedImage);
-    // const button = new PIXI.Sprite(buttonTextureRed);
-    //button.anchor.set(0.5);
-    const _x = (this.controlPanel_G.width - button.width)/2;
-    button.scale.x = 0.8;
-    button.scale.y = 0.8;
-    button.x = _x;
-    button.y = 80;
-    button.buttonMode = true;
-    button.interactive = true;
-    // button.buttonMode = true;
-    // The following adds the button to the control panel container
-    // this.controlPanelContainer.addChild(button);
-
-    // The following is for the button's event (onclick)
-    // button.on('mousedown', onclick = () => {
-    //     if(this.isStopClicked == false) {
-    //       this.isStopClicked = true;
-    //     }
-    //     console.log("button clicked"+this.isEmergency);
-    //     this.hasTLColorChanged = true;
-    //     this.isEmergency = true;
-    //     //this.trafficLightManualControl.stopAllTrafficLights(this.trafficLightManager);
-    //     for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-    //     {
-    //       this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
-    //     }
-
-    //   });
-
-    
-    
-
-
   }
 
-  // onStopBtn = () =>{
-  //       this.isStopClicked = !this.isStopClicked;
-  //       if(this.isStopClicked)
-  //       {
-  //         for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-  //         {
-  //           this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
-  //         }
-  //       }else{
-  //         for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-  //         {
-  //           this.roadIntersection.deForceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId());
-  //         }
-  //       }
-  //       return;
-  //     }
+  updateControlPanelDisplayState(animationSpeed:number){
+    if(this.isControlPanelShown)
+    {
+      if(this.btnShowCP.name === ">")
+      {
+        this.showControlPanel(animationSpeed);
+      }
+    }else
+    { 
+      if(this.btnShowCP.name === "<")
+      {
+        this.hideControlPanel(animationSpeed);
+      }
+    }
+  }
 
-  click(){
+  hideControlPanel(animationSpeed:number){
+    if(animationSpeed !== 0)
+    {
+      if(this.controlPanelContainer.x >= - this.controlPanel_G.width - this.coordinateOffset.x)
+      {
+        this.controlPanelContainer.x -= animationSpeed;
+      }else if(this.controlPanelContainer.x < - this.controlPanel_G.width - this.coordinateOffset.x)
+      {
+        this.controlPanelContainer.x = - this.controlPanel_G.width - this.coordinateOffset.x;
+        this.btnShowCP.setName(">");
+      }
+    }else{
+      this.controlPanelContainer.x = - this.controlPanel_G.width - this.coordinateOffset.x;
+      this.btnShowCP.setName(">");
+    }
+  }
 
+  showControlPanel(animationSpeed:number){
+    if(animationSpeed !== 0)
+    {
+      if(this.controlPanelContainer.x <= - this.coordinateOffset.x)
+      {
+        this.controlPanelContainer.x += animationSpeed;
+      }else if(this.controlPanelContainer.x > - this.coordinateOffset.x)
+      {
+        this.controlPanelContainer.x = - this.coordinateOffset.x;
+        this.btnShowCP.setName("<");
+      }
+    }else{
+      this.controlPanelContainer.x = - this.coordinateOffset.x;
+      this.btnShowCP.setName("<");
+    }
   }
 
 };
