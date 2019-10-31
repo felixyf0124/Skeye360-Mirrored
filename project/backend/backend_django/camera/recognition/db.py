@@ -5,17 +5,18 @@ import datetime
 from .counter import Counter
 
 def connection():
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    myclient = pymongo.MongoClient("mongodb://myUserAdmin:abc123@40.121.23.48.8300:27017/")
     mydb = myclient["dB"]
     mycol = mydb["counts"]
     return mycol
 
-def insert_count(collection,count):
-    new_count = { "direction": "N->S", 
-        "count": count.get_counter(), 
-        "time": datetime.datetime.utcnow(),
-        "category": "vehicle"}
-    collection.insert_one(new_count)
+def insert_count(collection,counters):
+    for c in counters:
+        new_count = { "direction": c.direction, 
+            "count": c.count, 
+            "time": datetime.datetime.utcnow(),
+            "category": "vehicle"}
+        collection.insert_one(new_count)
 
 def find_all_count(collection):
     print("++++++++++++")

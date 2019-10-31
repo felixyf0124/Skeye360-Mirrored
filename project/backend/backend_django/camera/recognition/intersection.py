@@ -17,3 +17,7 @@ class Intersection:
     def print_counters(self):
         for c in self.counters:
             c.print_counter()
+
+    def reset_counter(self):
+        for c in self.counters:
+            c.count = 0

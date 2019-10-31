@@ -7,6 +7,7 @@ from .intersection import Intersection
 from .db import *
 from .centroidtracker import CentroidTracker
 from .trackableobject import TrackableObject
+from .coordinate import Coordinate
 import dlib
 from collections import deque
 from .deep_sort import preprocessing
@@ -29,6 +30,7 @@ class Detector:
         self.weights = weights
         self.class_names = class_names
         self.stream = video_stream
+        self.coord = Coordinate()
 
     # Load names classes
     def load(self):
@@ -60,14 +62,14 @@ class Detector:
         print(label, round(x+w/2), round(y+h/2))
 
     # count detection output at the same time detecting objects in the frame
-    def counting(self,col,count):
+    def counting(self,col,intersection):
         WAIT_SECONDS = 5
         print(time.ctime())
-        insert_count(col,count)
+        insert_count(col,intersection.counters)
+        # cleanup db
+        intersection.reset_counter()
         find_all_count(col)
-        count.print_counter()
-        count.reset_counter()
-        threading.Timer(WAIT_SECONDS, self.counting,[col,count]).start()
+        threading.Timer(WAIT_SECONDS, self.counting,[col,intersection]).start()
 
     # Open a video
     def open_video(self):
@@ -141,17 +143,16 @@ class Detector:
         model_filename = '/SOEN490/project/backend/backend_django/camera/recognition/model_data/market1501.pb'
         return gdet.create_box_encoder(model_filename,batch_size=1)
         
-        
     # Generate StreamingHttpResponse
     def gen(self, classes, net):
-        # # initialize a counter 
-        # count = Counter()
+
+        intersection = self.create_intersection("main@broadway")
         # # connect db
         # col = connection()
-        # # cleanup db
-        # drop_count(col)
+
         # # start counting the objects to be detected
-        # self.counting(col,count)
+        # self.counting(col,intersection.counters)
+
         cap = self.open_video()        
 
         # initialize the total number of frames by far
@@ -159,15 +160,14 @@ class Detector:
 
         # create ROIs
         ROI_list = self.create_ROIs()
-
-        intersection = self.create_intersection("main@broadway")
-        
+             
         # deep_sort Definition of the parameters
         nms_max_overlap = 0.3 
 
         encoder = self.create_encoder()
         tracker = self.create_tracker()
         tracking_dict = {}
+        coord_dict = Coordinate()
         while True:
             hasframe, image = cap.read()
             # image=cv2.resize(image, (620, 480))
@@ -256,10 +256,11 @@ class Detector:
                     to.add_centroid(centroid)
                     tracking_dict[track.track_id] = to
                     start_point = (centroid[0], centroid[1])
+                    coord_dict.dict[track.track_id] = centroid
                     self.get_origin(start_point, to, ROI_list)
                 else:
                     tracking_dict[track.track_id].add_centroid(centroid)
-
+                    coord_dict.dict[track.track_id] = centroid
                 for x in tracking_dict.values():
                     if not x.counted:
                         current = (x.centroids[-1][0], x.centroids[-1][1])
@@ -267,7 +268,7 @@ class Detector:
                         self.get_destination(current,x,ROI_list)
 
                         intersection.inc(x.start_from, x.go_to)
-
+                
                 # draw both the ID of the object and the centroid of the
                 # object on the output frame
             for x in tracking_dict.values():
@@ -277,13 +278,15 @@ class Detector:
                 print(x.start_from)
                 print(x.go_to)
             
-            intersection.print_counters()
-
+            #intersection.print_counters()
+            self.coord= coord_dict
+            
             totalFrames += 1
             self.draw_ROIs(image, ROI_list)
             label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
             cv2.putText(image, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
             frame = self.frame_to_bytes(image)
+
             yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         
