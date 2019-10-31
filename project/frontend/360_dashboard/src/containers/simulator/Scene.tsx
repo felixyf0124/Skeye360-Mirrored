@@ -210,7 +210,6 @@ class Scene extends Component {
     }
 
     this.mapContainer.addChild(_test);
-
     //// END of initialization of Road Intersection
 
     //// START of Control Panel
@@ -228,6 +227,61 @@ class Scene extends Component {
     this.isStopClicked = false
     this.isEmergency = false;
     this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
+    // const _isStopDown = this.isStopClicked;
+    this.createButtons();
+    // window.addEventListener("pointerdown",this.)
+    // window.addEventListener()
+    // this.btnStop.
+    // this.btnStop.on("pointerdown", onpointerdown=()=>{
+    //   console.log(this.btnStop.isOver);
+    //   // if(this.btnStop.isOver)
+      
+    //     this.isStopClicked = !this.isStopClicked;
+    //     if(this.isStopClicked)
+    //     {
+    //       for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+    //       {
+    //         this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
+    //       }
+    //     }else{
+    //       for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+    //       {
+    //         this.roadIntersection.deForceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId());
+    //       }
+    //     }
+      
+    // });
+    // this.btnStop.on('pointerdown', onclick());
+      // .on('pointerdown', this.click());
+    //   .on('mousedown', function() {
+    //     // this.btnStop.isDown = true;
+    //     // if(this.btnStop.isDown && this.btnStop.isOver)
+    //     this.isStopClicked = !this.isStopClicked;
+    //     if(this.isStopClicked)
+    //     {
+    //       for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+    //       {
+    //         this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
+    //       }
+    //     }else{
+    //       for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+    //       {
+    //         this.roadIntersection.deForceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId());
+    //       }
+    //     }
+    //   });
+      // .on('pointerup', onmouseup=() =>{
+      //   this.btnStop.isDown = false;
+      // })
+      // .on('pointerupoutside', onmouseup=() =>{
+      //   this.btnStop.isDown = false;
+      // })
+      // .on('pointerover', onmouseover=()=>{
+      //   this.btnStop.isOver = true;
+      // })
+      // .on('pointerout', onmouseout=()=>{
+      //   this.btnStop.isOver = true;
+      // });
 
     // The following imports an image for the button    
     
@@ -250,7 +304,6 @@ class Scene extends Component {
     // this.backGround_G.drawRect(0,0,this.window_w,this.window_h);
     this.drawRoad();
     //this.testdraw();
-    this.createButtons();
     this.app.ticker.add(this.animation);
       
   };
@@ -408,10 +461,22 @@ class Scene extends Component {
   }
 
   animation = () => {
-    // if(this.hasTLColorChanged) {
-    //   this.drawRoad();
-    //   this.hasTLColorChanged = false;
-    // }
+    if(this.btnStop.isPressed()) {
+        this.isStopClicked = !this.isStopClicked;
+        if(this.isStopClicked)
+        {
+          for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+          {
+            this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
+          }
+        }else{
+          for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+          {
+            this.roadIntersection.deForceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId());
+          }
+        }
+
+    }
     if(this.roadIntersection.tlCountingDown())
     {
       this.drawRoad();
@@ -505,7 +570,7 @@ class Scene extends Component {
     this.controlPanelContainer.addChild(_btn_pop_hide);
 
     //stop btn
-    this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
+    // this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
     this.btnStop.setBackground(_color,0.1,1,_color);
     const _textStyle2 = {
       // fontFamily: 'Courier',
@@ -516,24 +581,10 @@ class Scene extends Component {
     this.btnStop.setTextStyle(_textStyle2);
     this.btnStop.x = (this.controlPanel_G.width - this.btnStop.width)/2;
     this.btnStop.y = 20;
+    // this.btnStop.hitArea = new PIXI.Rectangle(0,0, this.btnStop.btnWidth,this.btnStop.btnHeight);
     this.controlPanelContainer.addChild(this.btnStop);
-    console.log(this.btnStop.background.width);
-    this.btnStop
-      .on('pointerdown', onmousedown = () =>{
-        this.isStopClicked = !this.isStopClicked;
-        if(this.isStopClicked)
-        {
-          for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-          {
-            this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
-          }
-        }else{
-          for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
-          {
-            this.roadIntersection.deForceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId());
-          }
-        }
-      });
+    console.log(this.btnStop.hitArea);
+    
       // .on('mouseup', onButtonUp)
       // .on('mouseupoutside', onButtonUp)
       // .on('mouseover', onButtonOver)
@@ -576,6 +627,27 @@ class Scene extends Component {
     
     
 
+
+  }
+
+  // onStopBtn = () =>{
+  //       this.isStopClicked = !this.isStopClicked;
+  //       if(this.isStopClicked)
+  //       {
+  //         for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+  //         {
+  //           this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(),"red");
+  //         }
+  //       }else{
+  //         for(let i = 0; i< this.roadIntersection.getTrafficLightQueue().length; ++i)
+  //         {
+  //           this.roadIntersection.deForceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId());
+  //         }
+  //       }
+  //       return;
+  //     }
+
+  click(){
 
   }
 

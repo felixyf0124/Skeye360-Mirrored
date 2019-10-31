@@ -10,7 +10,10 @@ export default class Button extends PIXI.Graphics {
     backgroundColor:number;
     boarderSize:number;
     boarderColor:number;
-    
+    isDown:boolean;
+    isOver:number;
+    isHit:boolean;
+
     constructor(width:number, height:number, name?:string, color?:number, alpha?:number){
         super()
         this.background = new PIXI.Graphics();
@@ -31,8 +34,56 @@ export default class Button extends PIXI.Graphics {
         this.setName(this.name);
         this.interactive = true;
         this.buttonMode = true;
+        this.isDown = false;
+        this.isOver = 0;
+        this.isHit = false;
+
+        this.on("mousedown",onmousedown=(event)=>{
+        if(this.isOver>0)
+            {
+                this.onDown();
+            }
+        });
+        this.on("mouseup",onmouseup=(event)=>{
+            if(this.isOver>0)
+            {
+                this.onUp();
+            }
+        });
+        this.on("mouseover",onmouseover=(event)=>{
+            event.stopPropagation();
+            this.onOver();
+        });
+        this.on("mouseout",onmouseout=(event)=>{
+            this.onOut();
+            this.onUp();
+        });
     }
 
+    onDown(){
+        if(!this.isDown)
+        {
+            this.isHit = true;
+        }
+        this.isDown = true;
+    }
+
+    onUp(){
+        this.isDown = false;
+    }
+
+    onOver(){
+        this.isOver += 1;
+        // console.log("+1 over | " + this.isOver);
+        // return ()=>{};
+    }
+
+    onOut(){
+        this.isOver -= 1;
+        // console.log("+1 out | " + this.isOver);
+        // return ()=>{};
+    }
+    
     setDemansion(width:number, height:number){
         this.btnWidth = width;
         this.btnHeight = height;
@@ -71,5 +122,16 @@ export default class Button extends PIXI.Graphics {
         this.text.style = textStyle||this.text.style;
         this.text.x = (this.btnWidth-this.text.width)/2;
         this.text.y = (this.btnHeight-this.text.height)/2;
+    }
+
+    isPressed():boolean{
+        if(this.isHit)
+        {
+            this.isHit = false;
+            return true;
+        }else
+        {
+            return false;
+        }
     }
 }
