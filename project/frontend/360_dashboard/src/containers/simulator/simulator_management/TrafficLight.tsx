@@ -14,7 +14,7 @@ export default class TrafficLight {
     status:string;
     isForced:boolean;
     overlapOffset:number;
-    countDown:string;
+    countDown:number;
 
     constructor(id:number){
         this.id = id;
@@ -25,7 +25,7 @@ export default class TrafficLight {
         this.status = "red";
         this.isForced = false;
         this.overlapOffset = 0;
-        this.countDown = 'N/A';
+        this.countDown = NaN;
     }
 
     //Getters
@@ -72,7 +72,7 @@ export default class TrafficLight {
         return this.overlapOffset;
     }
 
-    getCountDown():string{
+    getCountDown():number{
         return this.countDown;
     }
 
@@ -112,7 +112,7 @@ export default class TrafficLight {
         this.status = status;
     }
 
-    setCountDown(countDown:string){
+    setCountDown(countDown:number){
         this.countDown = countDown;
     }
 

@@ -302,7 +302,7 @@ class Scene extends Component {
         let _lane = _lane_in[j];
         var _light_state:string = this.roadIntersection.getLaneState(i,j);
         //Sets the color of the traffic lights depending on the status 
-        _color = this.getTrafficLightColor(_light_state);
+        _color = parseInt(this.getTrafficLightColor(_light_state), 16);
 
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
         var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4);
@@ -324,7 +324,7 @@ class Scene extends Component {
       {
         let _lane = _lane_out[j];
         //Sets the color of the traffic lights depending on the status 
-        var _color2 = this.getTrafficLightColor("green");
+        var _color2 = parseInt(this.getTrafficLightColor('green'), 16);
         
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
         var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4)+1;
@@ -344,11 +344,11 @@ class Scene extends Component {
     }
   }
 
-  getTrafficLightColor(light_state:string):number {
-    const _green = 0x00ff00;
-    const _yellow = 0xf5c842;
-    const _red = 0xff0000;
-    const _white = 0xffffff;
+  getTrafficLightColor(light_state:string):string {
+    const _green = '0x00ff00';
+    const _yellow = '0xf5c842';
+    const _red = '0xff0000';
+    const _white = '0xffffff';
     switch(light_state){
       case "green":
         return _green;
@@ -456,7 +456,7 @@ class Scene extends Component {
         fontWeight: '600'
       };
 
-      const _tHeader = new PIXI.Text("TL #    State   Countdown ", _textStyle);
+      const _tHeader = new PIXI.Text("TL #   State   CD ", _textStyle);
 
       this.tlDisplayPanelContainer.addChild(_tHeader);
 
@@ -467,21 +467,29 @@ class Scene extends Component {
         const _index = (i+1);
         //index
         const _tData_id = new PIXI.Text(_index.toString(), _textStyle);
+        _tData_id.x = 8;
         _tData_id.y = _rowOffset * (i+1);
         this.tlDisplayPanelContainer.addChild(_tData_id);
 
-        _textStyle.fill = this.getTrafficLightColor(_tlQueue[i].getStatus()).toString();
+        const _color = this.getTrafficLightColor(_tlQueue[i].getStatus());
+
+        _textStyle.fill = _color;
         const _tData_state = new PIXI.Text(_tlQueue[i].getStatus(), _textStyle);
-        _tData_state.x = 36;
+        _tData_state.x = _tData_id.x + 42;
         _tData_state.y = _rowOffset * (i+1);
         this.tlDisplayPanelContainer.addChild(_tData_state);
         
         _textStyle.fill = '0x51BCD8';
-        const _cd = _tlQueue[i].getCountDown();
+        var _cd = 'N/A';
+        if(!isNaN(_tlQueue[i].getCountDown()))
+        {
+          _cd = Math.round(_tlQueue[i].getCountDown()).toString();
+        }
+        console.log(_cd);
         const _tData_cd = new PIXI.Text(_cd, _textStyle);
-        _tData_cd.x = _tData_state.x + 50;
+        _tData_cd.x = _tData_state.x + 56;
         _tData_cd.y = _rowOffset * (i+1);
-        
+        this.tlDisplayPanelContainer.addChild(_tData_cd);
       }
     }
 

@@ -211,7 +211,8 @@ export default class TrafficLightManager {
             //skip current TL if it is forced set
             if(this.trafficLightQueue[i].getIsForced())
             {
-                    _isUpdating = true;
+                this.trafficLightQueue[i].setCountDown(NaN);
+                _isUpdating = true;
                 continue;
             }
             let _addUp_after_offset = (_addUp + this.trafficLightQueue[i].getOverlapOffset()) % _total;
@@ -219,7 +220,7 @@ export default class TrafficLightManager {
                 && this.deltaT < _addUp_after_offset + this.trafficLightQueue[i].getGreenTime())
             {
                 let _countDown = (_addUp_after_offset + this.trafficLightQueue[i].getGreenTime() - this.deltaT);
-                this.trafficLightQueue[i].setCountDown(_countDown.toString());
+                this.trafficLightQueue[i].setCountDown(_countDown);
                 if(this.trafficLightQueue[i].getStatus() !== "green")
                 {
                     this.trafficLightQueue[i].setStatus("green");
@@ -229,7 +230,7 @@ export default class TrafficLightManager {
                 && this.deltaT < _addUp_after_offset + this.trafficLightQueue[i].getGreenTime() + this.trafficLightQueue[i].getYellowTime())
             {
                 let _countDown = (_addUp_after_offset + this.trafficLightQueue[i].getGreenTime() + this.trafficLightQueue[i].getYellowTime() - this.deltaT);
-                this.trafficLightQueue[i].setCountDown(_countDown.toString());
+                this.trafficLightQueue[i].setCountDown(_countDown);
                 if(this.trafficLightQueue[i].getStatus() !== "yellow")
                 {
                     this.trafficLightQueue[i].setStatus("yellow");
@@ -238,7 +239,7 @@ export default class TrafficLightManager {
             }else
             {
                 let _countDown = (_addUp_after_offset + _total - this.deltaT) % _total;
-                this.trafficLightQueue[i].setCountDown(_countDown.toString());
+                this.trafficLightQueue[i].setCountDown(_countDown);
                 if(this.trafficLightQueue[i].getStatus() !== "red")
                 {
                     this.trafficLightQueue[i].setStatus("red");
