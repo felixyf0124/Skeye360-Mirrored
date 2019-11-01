@@ -38,6 +38,7 @@ class Scene extends Component {
   objectContainer: PIXI.Container;
   controlPanelContainer: PIXI.Container;
   displayPlaneContainer: PIXI.Container;
+  tlDisplayPanelContainer: PIXI.Container;
   backGround_G: PIXI.Graphics;
   road_G: PIXI.Graphics;
   trafficLight_G: PIXI.Graphics;
@@ -85,6 +86,7 @@ class Scene extends Component {
     this.objectContainer = new PIXI.Container();
     this.controlPanelContainer = new PIXI.Container(); //CONTROLPANEL
     this.displayPlaneContainer = new PIXI.Container();
+    this.tlDisplayPanelContainer = new PIXI.Container();
     this.app.stage.addChild(this.mapContainer);
     this.app.stage.addChild(this.objectContainer);
     this.app.stage.addChild(this.displayPlaneContainer);
@@ -97,6 +99,7 @@ class Scene extends Component {
     this.mapContainer.addChild(this.road_G);
     this.mapContainer.addChild(this.trafficLight_G);
     this.controlPanelContainer.addChild(this.controlPanel_G);
+    this.controlPanelContainer.addChild(this.tlDisplayPanelContainer); 
     this.coordinateOffset = {x:this.window_w/2,y:this.window_h/2};
 
     this.vehicleData = [{x:0,y:0}];
@@ -374,6 +377,7 @@ class Scene extends Component {
       this.isControlPanelShown = !this.isControlPanelShown;
     }
     this.updateControlPanelDisplayState(8);
+    this.updateTLCountDownDisplayPanel();
     if(this.btnStop.isPressed()) {
         this.isStopClicked = !this.isStopClicked;
         if(this.isStopClicked)
@@ -441,6 +445,45 @@ class Scene extends Component {
       );
   }
 
+    updateTLCountDownDisplayPanel(){
+      this.tlDisplayPanelContainer.removeChildren();
+      const _rowOffset = 26;
+      // const _colOffset = 26;
+      const _textStyle = {
+        fontFamily: 'Courier',
+        fontSize: '12px',
+        fill : '0x51BCD8',
+        fontWeight: '600'
+      };
+
+      const _tHeader = new PIXI.Text("TL #    State   Countdown ", _textStyle);
+
+      this.tlDisplayPanelContainer.addChild(_tHeader);
+
+
+      const _tlQueue = this.roadIntersection.getTrafficLightQueue();
+      for(let i=0; i<_tlQueue.length;++i)
+      {
+        const _index = (i+1);
+        //index
+        const _tData_id = new PIXI.Text(_index.toString(), _textStyle);
+        _tData_id.y = _rowOffset * (i+1);
+        this.tlDisplayPanelContainer.addChild(_tData_id);
+
+        _textStyle.fill = this.getTrafficLightColor(_tlQueue[i].getStatus()).toString();
+        const _tData_state = new PIXI.Text(_tlQueue[i].getStatus(), _textStyle);
+        _tData_state.x = 36;
+        _tData_state.y = _rowOffset * (i+1);
+        this.tlDisplayPanelContainer.addChild(_tData_state);
+        
+        _textStyle.fill = '0x51BCD8';
+        const _cd = _tlQueue[i].getCountDown();
+        const _tData_cd = new PIXI.Text(_cd, _textStyle);
+        _tData_cd.x = _tData_state.x + 50;
+        _tData_cd.y = _rowOffset * (i+1);
+        
+      }
+    }
 
    drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number) {
     const _triangle = new PIXI.Graphics();
@@ -496,7 +539,7 @@ class Scene extends Component {
     };
     this.btnStop.setTextStyle(_textStyle2);
     this.btnStop.x = (this.controlPanel_G.width - this.btnStop.width)/2;
-    this.btnStop.y = 20;
+    this.btnStop.y = this.controlPanel_G.height - 40;
     // this.btnStop.hitArea = new PIXI.Rectangle(0,0, this.btnStop.btnWidth,this.btnStop.btnHeight);
     this.controlPanelContainer.addChild(this.btnStop);
     console.log(this.btnStop.hitArea);
