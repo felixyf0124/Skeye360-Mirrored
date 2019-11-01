@@ -252,5 +252,21 @@ export default class TrafficLightManager {
         return _isUpdating;
     }
 
+    isBlink(ratio?:number){
+        var _ratio:number;
+
+        if(isFinite(ratio||NaN)){
+            _ratio = ratio||0.5;
+        }
+
+        if((Date.now() - this.startTime)%1000>0.5*1000)
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
+
 }
 

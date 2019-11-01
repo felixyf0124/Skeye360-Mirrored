@@ -73,6 +73,10 @@ export default class RoadIntersection {
         return this.TLManager.getTrafficLightState(id);
     }
 
+    getTrafficLightCD(id:number):number{
+        return Math.round(this.TLManager.getTrafficLight(id).getCountDown());
+    }
+
     getLaneState(section_id:number,lane_id:number, isLaneIn?:boolean):string{
         const _isLaneIn:boolean = isLaneIn||true;
         if(_isLaneIn)

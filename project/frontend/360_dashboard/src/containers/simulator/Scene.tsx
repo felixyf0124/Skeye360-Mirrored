@@ -106,6 +106,8 @@ class Scene extends Component {
     this.controlPanelContainer.addChild(this.tlDisplayPanelContainer); 
     this.coordinateOffset = {x:this.window_w/2,y:this.window_h/2};
 
+    // this.app.stage.render
+
     this.vehicleData = [{x:0,y:0}];
     //this.car = new VehicleObj(1,{x:this.window_w/2,y:0.0},1,0);
     this.roadData = [2,2,1,0];
@@ -182,7 +184,7 @@ class Scene extends Component {
     var _inter = this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();
     // this.roadIntersection.
-        console.log(this.roadIntersection.getRoadSections());
+    // console.log(this.roadIntersection.getRoadSections());
 
 
     this.app.stage.x = this.window_w/2;
@@ -227,16 +229,21 @@ class Scene extends Component {
   }
 
   initialize = () => {
-
-    window.addEventListener('resize',this.resize);
-    // this.backGround_G.clear();
-    // this.backGround_G.beginFill(0x1111ab);
-    // this.backGround_G.drawRect(0,0,this.window_w,this.window_h);
-    this.drawRoad();
     //this.testdraw();
+    this.app.stage.removeAllListeners();
+    //the following two sequence matters, will affect the listeners;
+    window.addEventListener('resize',this.resize);
+    this.initialButtons();
+    this.isControlPanelShown = false;
+    this.isCPAnimating = true;
+    this.updateControlPanelDisplayState(0);
+    this.drawBackground(parseInt(this.getColor('skeye_blue'),16), 0.16);
+    this.drawRoad();
+
     this.app.ticker.add(this.animation);
-      
   };
+
+ 
   setup = () => {
   this.app.loader
        .add("vehicle2",vehicle)
@@ -248,23 +255,30 @@ class Scene extends Component {
     if(window.innerWidth<this.window_min)
     {
       this.window_w = this.window_min;
-      this.coordinateOffset.x = this.window_w*this.window_scale_ratio/2;
+      this.coordinateOffset.x = this.window_w/2;
     }else
     {
       this.window_w = window.innerWidth*this.window_scale_ratio;
-      this.coordinateOffset.x = this.window_w*this.window_scale_ratio/2;
+      this.coordinateOffset.x = this.window_w/2;
     }
     if(window.innerHeight<this.window_min)
     {
       this.window_h = this.window_min;
-      this.coordinateOffset.y = this.window_h*this.window_scale_ratio/2;
+      this.coordinateOffset.y = this.window_h/2;
     }else
     {
       this.window_h = window.innerHeight*this.window_scale_ratio;
-      this.coordinateOffset.y = this.window_h*this.window_scale_ratio/2;
+      this.coordinateOffset.y = this.window_h/2;
     }
     this.app.renderer.resize(this.window_w,this.window_h);
+    this.app.stage.x = this.window_w/2;
+    this.app.stage.y = this.window_h/2;
     
+    this.controlPanelContainer.x = -this.coordinateOffset.x;
+    this.controlPanelContainer.y = -this.coordinateOffset.y;
+
+    this.drawBackground(parseInt(this.getColor('skeye_blue'),16), 0.16);
+    this.drawRoad();
     //this.car.setPositionOffset(this.coordinateOffset.x, this.coordinateOffset.y + this.window_h*this.window_scale_ratio*0.3);
   }
 
@@ -312,9 +326,10 @@ class Scene extends Component {
       for(var j:number = 0; j < _lane_in.length; ++j)
       {
         let _lane = _lane_in[j];
+        const _cd = this.roadIntersection.getTrafficLightCD(_lane.getTrafficLightId());
         var _light_state:string = this.roadIntersection.getLaneState(i,j);
         //Sets the color of the traffic lights depending on the status 
-        _color = parseInt(this.getTrafficLightColor(_light_state), 16);
+        _color = parseInt(this.getColor(_light_state), 16);
 
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
         var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4);
@@ -336,7 +351,7 @@ class Scene extends Component {
       {
         let _lane = _lane_out[j];
         //Sets the color of the traffic lights depending on the status 
-        var _color2 = parseInt(this.getTrafficLightColor('green'), 16);
+        var _color2 = parseInt(this.getColor('skeye_blue'), 16);
         
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
         var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4)+1;
@@ -356,10 +371,11 @@ class Scene extends Component {
     }
   }
 
-  getTrafficLightColor(light_state:string):string {
+  getColor(light_state:string):string {
     const _green = '0x00ff00';
     const _yellow = '0xf5c842';
     const _red = '0xff0000';
+    const _skeye_blue = '0x51bcd8';
     const _white = '0xffffff';
     switch(light_state){
       case "green":
@@ -368,6 +384,8 @@ class Scene extends Component {
         return _yellow;
       case "red":
         return _red;
+      case "skeye_blue":
+        return _skeye_blue;
       default:
         return _white;
     }
@@ -509,7 +527,7 @@ class Scene extends Component {
         _tData_id.y = _rowOffset * (i+1);
         this.tlDisplayPanelContainer.addChild(_tData_id);
 
-        const _color = this.getTrafficLightColor(_tlQueue[i].getStatus());
+        const _color = this.getColor(_tlQueue[i].getStatus());
 
         _textStyle.fill = _color;
         const _tData_state = new PIXI.Text(_tlQueue[i].getStatus(), _textStyle);
@@ -532,9 +550,20 @@ class Scene extends Component {
       this.tlDisplayPanelContainer.y = 20;
     }
 
-   drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number) {
+    drawBackground(color:number,alpha:number){
+      this.backGround_G.clear();
+      this.backGround_G.beginFill(color,alpha)
+      this.backGround_G.drawRect(-this.coordinateOffset.x, -this.coordinateOffset.y, this.window_w, this.window_h);
+      this.backGround_G.endFill();
+    }
+   drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number, isHollow?:boolean) {
     const _triangle = new PIXI.Graphics();
     var _direction = ts.tsNormalize(direction);
+    let _isHollow = false;
+    if(isHollow !== undefined)
+    {
+      _isHollow = isHollow;
+    }
 
     var _bottom = topVertex.minus(_direction.multiply(height));
     var _direction_perpendicular = ts.tsRotateByOrigin(_direction,Math.PI/2);
@@ -544,14 +573,20 @@ class Scene extends Component {
     _vertices.push(_bottom.plus(_direction_perpendicular.multiply(width/2)));
     _vertices.push(_bottom.plus(_direction_perpendicular.multiply(-width/2)));
 
-    _triangle.beginFill(color,1);
+    if(!isHollow)
+    {
+      _triangle.beginFill(color,1);
+    }
     _triangle.lineStyle(0.5,color,1);
     _triangle.moveTo(_vertices[0].x,_vertices[0].y);
     _triangle.lineTo(_vertices[1].x,_vertices[1].y);
     _triangle.lineTo(_vertices[2].x,_vertices[2].y);
     _triangle.lineTo(_vertices[0].x,_vertices[0].y);
     
+    if(!isHollow)
+    {
     _triangle.endFill();
+    }
     return _triangle;
   };
 
