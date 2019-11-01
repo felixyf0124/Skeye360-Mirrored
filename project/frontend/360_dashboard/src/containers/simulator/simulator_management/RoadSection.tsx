@@ -165,4 +165,7 @@ export default class RoadSection {
 
     }
 
+    objGone(lane_in_id:number,obj_id:number){
+        this.lane_in[lane_in_id].objGone(obj_id);
+    }
 }

@@ -8,6 +8,7 @@ import LanePointer from './LanePointer';
 import TrafficLightManager from './TrafficLightManager';
 import { number } from 'prop-types';
 import TrafficLight from './TrafficLight';
+import Vehicle from './Vehicle';
 
 /**
  * @class RoadIntersection
@@ -20,6 +21,7 @@ export default class RoadIntersection {
     roadSections:Array<RoadSection>;
     TLManager:TLManager;
     laneWidth:number;
+    vehicles:Array<Vehicle>;
 
     constructor(id:number, mapCoordinate:vec2, TLManager?: TrafficLightManager)
     {
@@ -28,6 +30,7 @@ export default class RoadIntersection {
         this.roadSections = new Array<RoadSection>();
         this.TLManager = TLManager||new TrafficLightManager(id);
         this.laneWidth =0;
+        this.vehicles = new Array<Vehicle>();
     }
 
     //Getters
@@ -65,6 +68,12 @@ export default class RoadIntersection {
         return _index;
     }
 
+    getLane(lane_id:number,section_id:number,isLaneIn?:boolean)
+    {
+        const _lane = this.getRoadSection(section_id).getLaneAt(lane_id,isLaneIn);
+        return _lane;
+    }
+
     getTrafficLightQueue(){
         return this.TLManager.getTrafficLightQueue();
     }
@@ -89,6 +98,21 @@ export default class RoadIntersection {
         
     }
 
+    getVehicle(id:number){
+        for(let i = 0; i < this.vehicles.length; ++i)
+        {
+            if(this.vehicles[i].getId() === id)
+            {
+                return this.vehicles[i];
+            }
+        }
+        return  new Vehicle(-1,-1,-1,-1);
+    }
+
+    getVehicles(){
+        return this.vehicles;
+    }
+
 
     //Setters
     setMapCoordinate(mapCoordinate: vec2) {
@@ -108,6 +132,46 @@ export default class RoadIntersection {
         //add TL id to lanes
         
         this.bindTrafficLight(this.TLManager.getTrafficLightQueue()[this.TLManager.getTrafficLightQueue().length-1]);
+    }
+
+    addNewVehicle(lane_id:number,section_id:number,speed:number,vehicle_id?:number,position?:vec2)
+    {
+        const _obj_v = new Vehicle(vehicle_id||Date.now(),lane_id,section_id,speed,position);
+        
+        this.roadSections[this.getRoadSectionIndex(_obj_v.getRoadSectionId())].lane_in[_obj_v.getLaneId()].addObjId(_obj_v.getId());
+        const _lane_from = this.getLane(lane_id,section_id);
+        console.log(_lane_from);
+        const _lane_pointer = _lane_from.getHeadLink();
+        const _lane_to = this.getLane(_lane_pointer[0].getLaneId(),_lane_pointer[0].getSectionId(),false);
+        //safety dis
+        const _safety_dis = 25;
+
+        _obj_v.path.push(_lane_from.getTail());
+        _obj_v.path.push(_lane_from.getHead());
+        _obj_v.path.push(_lane_to.getTail());
+        _obj_v.path.push(_lane_to.getHead());
+
+        const _dir = ts.tsNormalize(_lane_from.getHead().minus(_lane_from.getTail()));
+        
+        if(_lane_from.getObjIndex(_obj_v.getId()) > 0)
+        {
+            const _front_v = this.getVehicle(_lane_from.getObjects()[_lane_from.getObjIndex(_obj_v.getId())-1])
+            const _front_pos = _front_v.getPosition().minus(_dir.multiply(_safety_dis));
+            let _dis1 = ts.tsLength(_front_pos.minus(_lane_from.getHead()));
+            let _dis2 = ts.tsLength(_lane_from.getTail().minus(_lane_from.getHead()));
+            if(_dis1<_dis2)
+            {
+                _obj_v.setPosition(_lane_from.getTail());
+            }else{
+                _obj_v.setPosition(_front_pos);
+            }
+            // _obj_v.setPosition(_front_pos);
+
+        }else{
+            _obj_v.setPosition(_lane_from.getTail());
+        }
+        this.vehicles.push(_obj_v);
+        
     }
 
     bindTrafficLight(trafficLight:TrafficLight){
@@ -289,8 +353,8 @@ export default class RoadIntersection {
     }
 
     linkLanes(tail:LanePointer, head:LanePointer){
-        this.roadSections[tail.getLaneId()].lane_in[tail.getLaneId()].addHeadLink(head);
-        this.roadSections[head.getLaneId()].lane_out[head.getLaneId()].addTailLink(tail);
+        this.roadSections[tail.getSectionId()].lane_in[tail.getLaneId()].addHeadLink(head);
+        this.roadSections[head.getSectionId()].lane_out[head.getLaneId()].addTailLink(tail);
         
         //TODO
         //should we menually set road direction like straight turn left or right,
@@ -312,5 +376,63 @@ export default class RoadIntersection {
     isBlink(ratio?:number){
         return this.TLManager.isBlink(ratio);
     }
+
+    updateVehiclePos(){
+        for(let i=0;i<this.vehicles.length;++i)
+        {
+            const _id = this.vehicles[i].getId();
+            const _front_v = this.getFrontVehicle(_id);
+            if(_front_v !== null)
+            {
+                this.vehicles[i].checkFront(_front_v.getTraveled(),25,_front_v.getSpeed());
+            }
+            this.vehicles[i].updatePosition(this.vehicles[i].getSpeed()*this.vehicles[i].getDeltaT());
+        }
+
+       while(this.checkLeavingVehicle());
+    }
+
+    getFrontVehicle(id:number){
+        const _vehicle = this.getVehicle(id)
+
+        const _lane = this.getLane(_vehicle.getLaneId(),_vehicle.getRoadSectionId())
+        const _index = _lane.getObjIndex(id);
+        if(_index === 0)
+        {
+            return null;
+        }else{
+            const _front_v = this.getVehicle(_lane.getObjIndex(_index-1));
+            return _front_v;
+        }
+    }
     
+    vehicleGone(id:number){
+        const _vehicle = this.getVehicle(id);
+        this.roadSections[this.getRoadSectionIndex(_vehicle.getRoadSectionId())]
+            .objGone(_vehicle.getLaneId(),_vehicle.getId());
+        this.vehicles.splice(this.getVehicleIndex(id),1);
+    }
+
+    getVehicleIndex(id:number){
+        for(let i=0;i<this.vehicles.length;++i)
+        {
+            if(this.vehicles[i].getId() === id)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    checkLeavingVehicle(){
+        for(let i=0;i<this.vehicles.length;++i)
+        {
+            if(this.vehicles[i].getIsGone())
+            {
+                this.vehicleGone(this.vehicles[i].getId());
+                return true;
+            }
+        }
+        return false;
+    }
 }

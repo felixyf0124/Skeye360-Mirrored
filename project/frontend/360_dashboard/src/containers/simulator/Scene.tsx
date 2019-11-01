@@ -22,6 +22,9 @@ import TrafficLightManualControl from './simulator_management/TrafficLightManual
 import { number } from 'prop-types';
 import Btn from './Button';
 import DataFromCamera from './simulator_management/DataFromCamera';
+import Vehicle from './simulator_management/Vehicle';
+import LanePointer from './simulator_management/LanePointer';
+import { TouchableHighlightBase } from 'react-native';
 
 /**
  * @class Scene
@@ -64,9 +67,8 @@ class Scene extends Component {
   textStyle: any;
   
   coordinateOffset:{x:number,y:number};
-  vehicle:PIXI.Sprite;
-  vehicleData:Array<{x:number,y:number}>;
-  //car:VehicleObj;
+
+  vehicles:Array<Vehicle>;
 
   trafficLightManualControl: TrafficLightManualControl;
   
@@ -107,14 +109,11 @@ class Scene extends Component {
     this.controlPanelContainer.addChild(this.tlDisplayPanelContainer); 
     this.coordinateOffset = {x:this.window_w/2,y:this.window_h/2};
 
-    // this.app.stage.render
+    this.vehicles = new Array<Vehicle>();
 
-    this.vehicleData = [{x:0,y:0}];
-    //this.car = new VehicleObj(1,{x:this.window_w/2,y:0.0},1,0);
     this.roadData = [2,2,1,0];
     this.trafficLightData = [[5,5],[5,5]];
 
-    //this.car.setVelocity(ts.tsVec2(-6,0));
 
     this.lane_w = 0.06*Math.min(this.window_w,this.window_h);
     this.road_w_h = 0;
@@ -145,11 +144,10 @@ class Scene extends Component {
     // .add("vehicle",vehicle)
     // .add("ppl",ppl);
     
-    this.vehicle = new PIXI.Sprite();
     console.log(" ang");
     console.log(ts.getAngleOfVec(new vec2(1,1))/Math.PI);
     
-    //hard code to initial road intersection data for first loading
+    // #### hard code to initial road intersection data for first loading
     this.roadIntersection.addNewRoadSection(ts.tsVec2(this.window_w/2, this.window_h*0.2));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(-this.window_w/2, 0.0));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(0.0, this.window_h/2));
@@ -162,6 +160,17 @@ class Scene extends Component {
     }
 
     this.roadIntersection.setLaneWidth(this.lane_w);
+
+    const _lPointer1 = new LanePointer(0,0);
+    const _lPointer2 = new LanePointer(1,0);
+    const _lPointer3 = new LanePointer(2,0);
+    const _lPointer4 = new LanePointer(3,0);
+
+
+    this.roadIntersection.linkLanes(_lPointer1, _lPointer2);
+    this.roadIntersection.linkLanes(_lPointer2, _lPointer1);
+    this.roadIntersection.linkLanes(_lPointer3, _lPointer4);
+    this.roadIntersection.linkLanes(_lPointer4, _lPointer3);
 
     var _trafficLight_binding_data = new Array<Array<{section:number,id:number}>>();
     _trafficLight_binding_data = [
@@ -225,6 +234,15 @@ class Scene extends Component {
     this.getRealTimeData();
     //To get the number of cars currently in the camera feed
     this.getNumberOfCars();
+
+
+    // h c car obj
+
+    this. numberOfCars = 3;
+    for(let i =0;i<3;++i)
+    {
+      this.roadIntersection.addNewVehicle(0,0,4);
+    }
     
   }
 
@@ -245,6 +263,7 @@ class Scene extends Component {
     this.updateControlPanelDisplayState(0);
     this.drawBackground(parseInt(this.getColor('skeye_blue'),16), 0.16);
     this.drawRoad();
+    this.renderObjects();
 
     this.app.ticker.add(this.animation);
   };
@@ -440,12 +459,13 @@ class Scene extends Component {
   
   renderObjects = () => {
     this.objectContainer.removeChildren();
+    const _vehicles = this.roadIntersection.getVehicles();
 
-    // const _vehicle_texture = this.app.loader.resources["vehicle"].texture;
-    // const _vehicle = new PIXI.Sprite(_vehicle_texture);
-    // this.vehicle = new PIXI.Sprite(_vehicle_texture);
-
-    // this.objectContainer.addChild(_vehicle);
+    for(let i =0;i<_vehicles.length;++i)
+    {
+      const _position = _vehicles[i].getPosition();
+      this.objectContainer.addChild(this.drawVehicleSpot(_position));
+    }
   }
 
   animation = () => {
@@ -479,7 +499,8 @@ class Scene extends Component {
       this.roadIntersection.tlCountingDown();
       this.drawRoad();
     }
-
+    this.roadIntersection.updateVehiclePos();
+    this.renderObjects();
     this.displayPlaneContainer.removeChildren();
     let deltaTime = Date.now() -this.timeLastMoment;
     this.fpsCounter++;
@@ -535,62 +556,62 @@ class Scene extends Component {
       );
   }
 
-    updateTLCountDownDisplayPanel(){
-      this.tlDisplayPanelContainer.removeChildren();
-      const _rowOffset = 26;
-      // const _colOffset = 26;
-      const _textStyle = {
-        fontFamily: 'Courier',
-        fontSize: '12px',
-        fill : '0x51BCD8',
-        fontWeight: '600'
-      };
+  updateTLCountDownDisplayPanel(){
+    this.tlDisplayPanelContainer.removeChildren();
+    const _rowOffset = 26;
+    // const _colOffset = 26;
+    const _textStyle = {
+      fontFamily: 'Courier',
+      fontSize: '12px',
+      fill : '0x51BCD8',
+      fontWeight: '600'
+    };
 
-      const _tHeader = new PIXI.Text("TL #   State   CD ", _textStyle);
+    const _tHeader = new PIXI.Text("TL #   State   CD ", _textStyle);
 
-      this.tlDisplayPanelContainer.addChild(_tHeader);
+    this.tlDisplayPanelContainer.addChild(_tHeader);
 
 
-      const _tlQueue = this.roadIntersection.getTrafficLightQueue();
-      for(let i=0; i<_tlQueue.length;++i)
+    const _tlQueue = this.roadIntersection.getTrafficLightQueue();
+    for(let i=0; i<_tlQueue.length;++i)
+    {
+      const _index = (i+1);
+      //index
+      const _tData_id = new PIXI.Text(_index.toString(), _textStyle);
+      _tData_id.x = 8;
+      _tData_id.y = _rowOffset * (i+1);
+      this.tlDisplayPanelContainer.addChild(_tData_id);
+
+      const _color = this.getColor(_tlQueue[i].getStatus());
+
+      _textStyle.fill = _color;
+      const _tData_state = new PIXI.Text(_tlQueue[i].getStatus(), _textStyle);
+      _tData_state.x = _tData_id.x + 42;
+      _tData_state.y = _rowOffset * (i+1);
+      this.tlDisplayPanelContainer.addChild(_tData_state);
+      
+      _textStyle.fill = '0x51BCD8';
+      var _cd = 'N/A';
+      if(!isNaN(_tlQueue[i].getCountDown()))
       {
-        const _index = (i+1);
-        //index
-        const _tData_id = new PIXI.Text(_index.toString(), _textStyle);
-        _tData_id.x = 8;
-        _tData_id.y = _rowOffset * (i+1);
-        this.tlDisplayPanelContainer.addChild(_tData_id);
-
-        const _color = this.getColor(_tlQueue[i].getStatus());
-
-        _textStyle.fill = _color;
-        const _tData_state = new PIXI.Text(_tlQueue[i].getStatus(), _textStyle);
-        _tData_state.x = _tData_id.x + 42;
-        _tData_state.y = _rowOffset * (i+1);
-        this.tlDisplayPanelContainer.addChild(_tData_state);
-        
-        _textStyle.fill = '0x51BCD8';
-        var _cd = 'N/A';
-        if(!isNaN(_tlQueue[i].getCountDown()))
-        {
-          _cd = Math.round(_tlQueue[i].getCountDown()).toString();
-        }
-        const _tData_cd = new PIXI.Text(_cd, _textStyle);
-        _tData_cd.x = _tData_state.x + 56;
-        _tData_cd.y = _rowOffset * (i+1);
-        this.tlDisplayPanelContainer.addChild(_tData_cd);
+        _cd = Math.round(_tlQueue[i].getCountDown()).toString();
       }
-      this.tlDisplayPanelContainer.x = Math.abs(this.tlDisplayPanelContainer.width - this.controlPanel_G.width)/2
-      this.tlDisplayPanelContainer.y = 20;
+      const _tData_cd = new PIXI.Text(_cd, _textStyle);
+      _tData_cd.x = _tData_state.x + 56;
+      _tData_cd.y = _rowOffset * (i+1);
+      this.tlDisplayPanelContainer.addChild(_tData_cd);
     }
+    this.tlDisplayPanelContainer.x = Math.abs(this.tlDisplayPanelContainer.width - this.controlPanel_G.width)/2
+    this.tlDisplayPanelContainer.y = 20;
+  }
 
-    drawBackground(color:number,alpha:number){
-      this.backGround_G.clear();
-      this.backGround_G.beginFill(color,alpha)
-      this.backGround_G.drawRect(-this.coordinateOffset.x, -this.coordinateOffset.y, this.window_w, this.window_h);
-      this.backGround_G.endFill();
-    }
-   drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number, isHollow?:boolean) {
+  drawBackground(color:number,alpha:number){
+    this.backGround_G.clear();
+    this.backGround_G.beginFill(color,alpha)
+    this.backGround_G.drawRect(-this.coordinateOffset.x, -this.coordinateOffset.y, this.window_w, this.window_h);
+    this.backGround_G.endFill();
+  }
+  drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number, isHollow?:boolean) {
     const _triangle = new PIXI.Graphics();
     var _direction = ts.tsNormalize(direction);
     let _isHollow = false;
@@ -622,7 +643,21 @@ class Scene extends Component {
     _triangle.endFill();
     }
     return _triangle;
-  };
+  }
+
+  /**
+   * TO DO add new param of sycr time T, 
+   * So car will become more transparent based on delta T from last sycr
+   * @param vertex 
+   */
+  drawVehicleSpot(vertex:vec2){
+    const _spot = new PIXI.Graphics();
+    const _color = 0xc658fc;
+    _spot.beginFill(_color,1);
+    _spot.drawCircle(vertex.x,vertex.y,this.lane_w*0.3);
+    _spot.endFill();
+    return _spot;
+  }
 
   initialButtons(){
     const _color = 0x51BCD8;
