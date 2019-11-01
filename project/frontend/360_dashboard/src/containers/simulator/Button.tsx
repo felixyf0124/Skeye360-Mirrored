@@ -5,13 +5,14 @@ export default class Button extends PIXI.Graphics {
     boarder:PIXI.Graphics;
     text:PIXI.Text;
     name:string;
+    id:number;
     btnWidth:number;
     btnHeight:number;
     backgroundColor:number;
     boarderSize:number;
     boarderColor:number;
     isDown:boolean;
-    isOver:number;
+    isOver:boolean;
     isHit:boolean;
 
     constructor(width:number, height:number, name?:string, color?:number, alpha?:number){
@@ -21,6 +22,7 @@ export default class Button extends PIXI.Graphics {
         this.addChild(this.background);
         this.addChild(this.boarder);
         this.name = name||"Button";
+        this.id = Date.now();
         this.text = new PIXI.Text(this.name);
         this.addChild(this.text);
         this.backgroundColor = color||0xffffff;
@@ -35,53 +37,39 @@ export default class Button extends PIXI.Graphics {
         this.interactive = true;
         this.buttonMode = true;
         this.isDown = false;
-        this.isOver = 0;
+        this.isOver = false;
         this.isHit = false;
 
-        this.on("mousedown",onmousedown=(event)=>{
-        if(this.isOver>0)
-            {
-                this.onDown();
-            }
-        });
-        this.on("mouseup",onmouseup=(event)=>{
-            if(this.isOver>0)
-            {
-                this.onUp();
-            }
-        });
-        this.on("mouseover",onmouseover=(event)=>{
-            event.stopPropagation();
-            this.onOver();
-        });
-        this.on("mouseout",onmouseout=(event)=>{
-            this.onOut();
-            this.onUp();
-        });
+        this.on("click",onclick=()=>this.onClick());
+        this.on("mousedown",onmousedown=()=>this.onDown());
+        this.on("mouseup",onmouseup=()=>this.onUp());
+        this.on("mouseover",onmouseover = () =>this.onOver());
+        this.on("mouseout",onmouseout = () =>this.onOut());
+    }
+
+    onClick(){
+        this.isHit = true;
     }
 
     onDown(){
-        if(!this.isDown)
-        {
-            this.isHit = true;
-        }
+
         this.isDown = true;
+        // console.log("+1 down | " + this.isDown + " | " + this.name);
     }
 
     onUp(){
         this.isDown = false;
+        // console.log("+1 up | " + this.isDown + " | " + this.name);
     }
 
     onOver(){
-        this.isOver += 1;
-        // console.log("+1 over | " + this.isOver);
-        // return ()=>{};
+        this.isOver = true;
+        // console.log("+1 over | " + this.isOver + " | " + this.name);
     }
 
     onOut(){
-        this.isOver -= 1;
-        // console.log("+1 out | " + this.isOver);
-        // return ()=>{};
+        this.isOver = false;
+        // console.log("+1 out | " + this.isOver + " | " + this.name);
     }
     
     setDemansion(width:number, height:number){

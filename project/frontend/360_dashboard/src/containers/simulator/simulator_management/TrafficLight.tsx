@@ -118,7 +118,7 @@ export default class TrafficLight {
 
     setIsForced(isForced:boolean, status?:string){
         this.isForced = isForced;
-        if(status != undefined){
+        if(status !== undefined){
             this.status = status;
         }
     }

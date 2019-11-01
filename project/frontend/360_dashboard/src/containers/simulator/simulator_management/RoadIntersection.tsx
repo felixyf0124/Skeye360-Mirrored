@@ -74,7 +74,7 @@ export default class RoadIntersection {
     }
 
     getTrafficLightCD(id:number):number{
-        return Math.round(this.TLManager.getTrafficLight(id).getCountDown());
+        return Math.round(this.TLManager.getTrafficLightCD(id));
     }
 
     getLaneState(section_id:number,lane_id:number, isLaneIn?:boolean):string{
@@ -297,9 +297,20 @@ export default class RoadIntersection {
         //or make it auto adjusted when the lanes are linked to each other?
     }
 
+    /**
+     * tl couting down
+     */
     tlCountingDown():boolean{
         return this.TLManager.initialUpdate();
        // console.log(this.TLManager.getDeltaT());
+    }
+
+    isForced(tl_id:number){
+        return this.TLManager.getTrafficLight(tl_id).getIsForced();
+    }
+
+    isBlink(ratio?:number){
+        return this.TLManager.isBlink(ratio);
     }
     
 }

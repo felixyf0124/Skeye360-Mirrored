@@ -50,6 +50,14 @@ export default class TrafficLightManager {
     getTrafficLight(id:number):TrafficLight{
         return this.trafficLightQueue[this.getTrafficLightIndex(id)];
     }
+    getTrafficLightState(id: number):string{
+        const state:string = this.getTrafficLight(id).getStatus();
+        return state;
+    }
+    getTrafficLightCD(id:number):number{
+        const _cd = this.getTrafficLight(id).getCountDown();
+        return _cd;
+    }
 
     getTrafficLightIndex(id:number){
         try{
@@ -163,10 +171,7 @@ export default class TrafficLightManager {
         this.trafficLightQueue[this.getTrafficLightIndex(id)].setIsForced(false);
     }
 
-    getTrafficLightState(id: number):string{
-        const state:string = this.getTrafficLight(id).getStatus();
-        return state;
-    }
+    
 
     /**
      * add traffic light object to the traffic light queue

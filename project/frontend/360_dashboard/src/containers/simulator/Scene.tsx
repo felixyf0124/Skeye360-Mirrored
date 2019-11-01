@@ -74,6 +74,7 @@ class Scene extends Component {
   isControlPanelShown:Boolean;
   isCPAnimating:boolean;
   isStopClicked:Boolean;
+  lastBlinkState:boolean;
 
   constructor(props: any) {
     super(props);
@@ -162,16 +163,16 @@ class Scene extends Component {
     var _trafficLight_binding_data = new Array<Array<{section:number,id:number}>>();
     _trafficLight_binding_data = [
       [
-        {section:3,id:0},
+        {section:0,id:0},
         {section:1,id:0}
       ],
       [
         {section:2,id:0},
-        {section:0,id:0}
+        {section:3,id:0}
       ]
     ];
-    this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[0], 15);
-    this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[1], 15);
+    this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[0], 20);
+    this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[1], 20);
 
     // for(let i = 0; i < _trafficLight_binding_data.length; ++i)
     // {
@@ -211,17 +212,25 @@ class Scene extends Component {
     this.isControlPanelShown = true;
     this.isCPAnimating = false;
     this.isStopClicked = false;
-    this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
     this.btnShowCP = new Btn(26,26,"<", 0x51BCD8);
+    this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
+
+    this.lastBlinkState =false;
     
   }
 
   initialize = () => {
     //this.testdraw();
-    this.app.stage.removeAllListeners();
-    //the following two sequence matters, will affect the listeners;
     window.addEventListener('resize',this.resize);
+    this.app.stage.on("click",onclick =()=>{});
+    this.app.stage.on("mouseup",onmouseup = () => {});
+    this.app.stage.on("mousedown",onmousedown = () => {});
+    this.app.stage.on("mouseover",onmouseover = () => {});        
+    this.app.stage.on("mouseout",onmouseout = () => {});
+
     this.initialButtons();
+
+    //the following two sequence matters, will affect the listeners;
     this.isControlPanelShown = false;
     this.isCPAnimating = true;
     this.updateControlPanelDisplayState(0);
@@ -297,15 +306,17 @@ class Scene extends Component {
     _t.endFill();
     this.mapContainer.addChild(_t);
   }
+
   drawRoad=()=>{
     //this.mapContainer.removeChildren();
     this.road_G.clear();
+    this.road_G.removeChildren();
     //this.road_G = new PIXI.Graphics();
     var _sections = this.roadIntersection.getRoadSections();
     // console.log(this.roadIntersection.roadSections);
     // console.log(_sections);
     const _red = 0xff0000;
-    
+    const _startBlinkTime = 10;
     for(var i:number = 0; i < _sections.length; ++i)
     {
       var _lane_in = _sections[i].getLaneIn();
@@ -314,25 +325,50 @@ class Scene extends Component {
       for(var j:number = 0; j < _lane_in.length; ++j)
       {
         let _lane = _lane_in[j];
-        const _cd = this.roadIntersection.getTrafficLightCD(_lane.getTrafficLightId());
-        var _light_state:string = this.roadIntersection.getLaneState(i,j);
+        var _cd = this.roadIntersection.getTrafficLightCD(_lane.getTrafficLightId());
+        
+        var _light_state:string = this.roadIntersection.getLaneState(_lane.getRoadSectionId(),j);
         //Sets the color of the traffic lights depending on the status 
         _color = parseInt(this.getColor(_light_state), 16);
 
         var _direction:vec2 = ts.tsNormalize(_lane.getHead().minus(_lane.getTail()));
         var _division:number = ts.tsLength(_lane.getHead().minus(_lane.getTail()))/(this.lane_w*0.4);
+        
+        // this will draw from head to tail
         for(var k:number = 0; k < _division; ++k)
         {
           var _topVertex = _lane.getHead().minus(_direction.multiply(this.lane_w*0.4*k));
-          const _graphic_obj = this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color);
-          this.mapContainer.addChild(_graphic_obj);
+          var _graphic_obj;
+          const _isForced = this.roadIntersection.isForced(_lane.getTrafficLightId());
+          if(_isForced)
+          {
+            _graphic_obj = this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color);
+          }else
+          {  
+            if(k < _cd)
+            {
+              
+              if(this.roadIntersection.isBlink() && _cd <= _startBlinkTime && _light_state !== "red")
+              {
+                _graphic_obj = this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color,true);
+                _graphic_obj.alpha = 0.4;
+              }else
+              {
+                _graphic_obj = this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color);
+              }
+            }else{
+              _graphic_obj = this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color,true);
+              _graphic_obj.alpha = 0.4;
+            }
+          }
+          this.road_G.addChild(_graphic_obj);
         }
 
         const _test = new PIXI.Graphics();
         _test.lineStyle(1,_red);
         _test.moveTo(_lane.getTail().x,_lane.getTail().y);
         _test.lineTo(_lane.getHead().x,_lane.getHead().y);
-        this.mapContainer.addChild(_test);
+        this.road_G.addChild(_test);
       }
 
       for(let j:number = 0; j < _lane_out.length; ++j)
@@ -347,7 +383,7 @@ class Scene extends Component {
         {
           var _topVertex = _lane.getTail().plus(_direction.multiply(this.lane_w*0.4*k));
           const _graphic_obj = this.drawTriangle(_topVertex,this.lane_w*0.3,this.lane_w*0.3,_direction,_color2);
-          this.mapContainer.addChild(_graphic_obj);
+          this.road_G.addChild(_graphic_obj);
         }
 
         const _test = new PIXI.Graphics();
@@ -416,8 +452,9 @@ class Scene extends Component {
         }
 
     }
-    if(this.roadIntersection.tlCountingDown())
+    if(this.isUpdate())
     {
+      this.roadIntersection.tlCountingDown();
       this.drawRoad();
     }
 
@@ -543,7 +580,7 @@ class Scene extends Component {
     {
       _triangle.beginFill(color,1);
     }
-    _triangle.lineStyle(0.5,color,1);
+    _triangle.lineStyle(1,color,1);
     _triangle.moveTo(_vertices[0].x,_vertices[0].y);
     _triangle.lineTo(_vertices[1].x,_vertices[1].y);
     _triangle.lineTo(_vertices[2].x,_vertices[2].y);
@@ -590,7 +627,7 @@ class Scene extends Component {
     this.btnStop.y = this.controlPanel_G.height - 40;
     // this.btnStop.hitArea = new PIXI.Rectangle(0,0, this.btnStop.btnWidth,this.btnStop.btnHeight);
     this.controlPanelContainer.addChild(this.btnStop);
-    console.log(this.btnStop.hitArea);
+    // console.log(this.btnStop.hitArea);
     
   }
 
@@ -645,6 +682,16 @@ class Scene extends Component {
       this.controlPanelContainer.x = - this.coordinateOffset.x;
       this.btnShowCP.setName("<");
       this.isCPAnimating = false;
+    }
+  }
+
+  isUpdate(){
+    if(this.lastBlinkState !== this.roadIntersection.isBlink())
+    {
+      this.lastBlinkState = this.roadIntersection.isBlink();
+      return true;
+    }else{
+      return false;
     }
   }
 
