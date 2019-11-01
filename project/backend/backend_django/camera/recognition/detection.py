@@ -2,10 +2,12 @@ import cv2
 import numpy as np
 import time
 import threading
-from .counter import Counter
+from .intersection import Intersection
+
 from .db import *
 from .centroidtracker import CentroidTracker
 from .trackableobject import TrackableObject
+from .coordinate import Coordinate
 import dlib
 from collections import deque
 from .deep_sort import preprocessing
@@ -28,6 +30,7 @@ class Detector:
         self.weights = weights
         self.class_names = class_names
         self.stream = video_stream
+        self.coord = Coordinate()
 
     # Load names classes
     def load(self):
@@ -59,14 +62,14 @@ class Detector:
         print(label, round(x+w/2), round(y+h/2))
 
     # count detection output at the same time detecting objects in the frame
-    def counting(self,col,count):
+    def counting(self,col,intersection):
         WAIT_SECONDS = 5
         print(time.ctime())
-        insert_count(col,count)
+        insert_count(col,intersection.counters)
+        # cleanup db
+        intersection.reset_counter()
         find_all_count(col)
-        count.print_counter()
-        count.reset_counter()
-        threading.Timer(WAIT_SECONDS, self.counting,[col,count]).start()
+        threading.Timer(WAIT_SECONDS, self.counting,[col,intersection]).start()
 
     # Open a video
     def open_video(self):
@@ -77,78 +80,94 @@ class Detector:
     def frame_to_bytes(self,image):
         ret,jpeg = cv2.imencode('.jpg',image)
         return jpeg.tobytes()
+    
+    # Create an intersection
+    def create_intersection(self, name):
+        intersection = Intersection(name)
+        directions = ["east","west","north","south"]
+        for d1 in directions:
+            for d2 in directions:
+                intersection.add_counter(d1,d2)
+        return intersection
+
+    # create regions of interst
+    def create_ROIs(self):
+        # pts_west = np.array([[533,191],[679,601],[1,639],[1,125]], np.int32)
+        pts_north = np.array([[0,230],[640,230],[640,0],[0,0]], np.int32)
+        # pts_east = np.array([[1119,321],[1223,487],[1279,475],[1279,298]], np.int32)
+        pts_south = np.array([[0,260],[640,260],[640,450],[0,450]], np.int32)
+        pts_mid = np.array([[0,230],[640,230],[640,260],[0,260]], np.int32)
+
+        # west_ROI = pts_west.reshape((-1,1,2))
+        south_ROI = pts_south.reshape((-1,1,2))
+        # east_ROI = pts_east.reshape((-1,1,2))
+        north_ROI = pts_north.reshape((-1,1,2))
+        mid_ROI = pts_mid.reshape((-1,1,2))
+        
+        return [mid_ROI, {"south":south_ROI, "north":north_ROI}]
+
+    # Find where the car is coming from and add the origin to the trackable object
+    def get_origin(self,start_point, trackableObject, ROI_list):        
+        for r in ROI_list[1].items():
+            if (cv2.pointPolygonTest(r[1], start_point, False)) >= 0:
+                trackableObject.start_from = r[0]
+                break
+            
+
+    # Find where the car is going to and add the destination to the trackable object
+    def get_destination(self,current, trackableObject, ROI_list):
+        for r in ROI_list[1].items():
+            if (cv2.pointPolygonTest(ROI_list[0], current, False)) >= 0:
+                trackableObject.crossing = True
+
+            if trackableObject.crossing and (cv2.pointPolygonTest(r[1], current, False)) >= 0:
+                trackableObject.go_to = r[0]
+                trackableObject.counted = True
+                break
+
+    # Draw ROIs
+    def draw_ROIs(self,image, ROI_list):
+        for r in ROI_list[1].values():
+            cv2.polylines(image,[r],True,(255), 2)
+        cv2.polylines(image,[ROI_list[0]],True,(255), 2)
+    # create a deepsort tracker with deep_sort Definition of the parameters
+
+    def create_tracker(self):
+        max_cosine_distance = 0.5#0.9 
+        nn_budget = None     
+        metric = nn_matching.NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
+        tracker = Tracker(metric)
+        return tracker
+
+    def create_encoder(self):
+        model_filename = '/SOEN490/project/backend/backend_django/camera/recognition/model_data/market1501.pb'
+        return gdet.create_box_encoder(model_filename,batch_size=1)
         
     # Generate StreamingHttpResponse
     def gen(self, classes, net):
-        # # initialize a counter 
-        # count = Counter()
+
+        intersection = self.create_intersection("main@broadway")
         # # connect db
         # col = connection()
-        # # cleanup db
-        # drop_count(col)
+
         # # start counting the objects to be detected
-        # self.counting(col,count)
+        # self.counting(col,intersection.counters)
+
         cap = self.open_video()        
 
-        # set the centroid tracker and initialize a list to store the trackers
-        # map each unique object ID to a TrackableObject
-        ct = CentroidTracker(maxDisappeared=40, maxDistance=50)
-        trackers = []
-        trackableObjects = {}
-
-        # initialize the total number of frames by far & the # of frames to skip
+        # initialize the total number of frames by far
         totalFrames = 0
-        skip_frames = 2
-                
+
         # create ROIs
-        # pts_west = np.array([[572,244],[413,388],[108,316],[94,204]], np.int32)
-        # pts_south = np.array([[409,456],[737,512],[582,718],[0,718]], np.int32)
-        # pts_east = np.array([[921,275],[859,477],[1278,500],[1278,323]], np.int32)
-        # pts_north = np.array([[681,250],[840,255],[1028,0],[725,0]], np.int32)
-        # pts_mid = np.array([[415,435],[825,491],[892,284],[610,260]], np.int32)
-
-        pts_west = np.array([[533,191],[679,601],[1,639],[1,125]], np.int32)
-        # pts_south = np.array([[409,456],[737,512],[582,718],[0,718]], np.int32)
-        pts_east = np.array([[1119,321],[1223,487],[1279,475],[1279,298]], np.int32)
-        pts_north = np.array([[701,153],[1003,217],[1000,1],[629,1]], np.int32)
-        pts_mid = np.array([[677,215],[797,581],[1149,515],[1057,301]], np.int32)
-
-        west_ROI = pts_west.reshape((-1,1,2))
-        # south_ROI = pts_south.reshape((-1,1,2))
-        east_ROI = pts_east.reshape((-1,1,2))
-        north_ROI = pts_north.reshape((-1,1,2))
-        mid_ROI = pts_mid.reshape((-1,1,2))
-
-        #directions
-        east_to_east = 0
-        east_to_west = 0
-        east_to_north = 0
-        east_to_south = 0
-
-        west_to_east = 0
-        west_to_west = 0
-        west_to_north = 0
-        west_to_south = 0
-
-        north_to_east = 0
-        north_to_west = 0
-        north_to_north = 0
-        north_to_south = 0
-
-        south_to_east = 0
-        south_to_west = 0
-        south_to_north = 0
-        south_to_south = 0
-
+        ROI_list = self.create_ROIs()
+             
         # deep_sort Definition of the parameters
-        max_cosine_distance = 0.5#0.9 
-        nn_budget = None
         nms_max_overlap = 0.3 
-        model_filename = '/SOEN490/project/backend/backend_django/camera/recognition/model_data/market1501.pb'
-        encoder = gdet.create_box_encoder(model_filename,batch_size=1)
-        metric = nn_matching.NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
-        tracker = Tracker(metric)
 
+        encoder = self.create_encoder()
+        tracker = self.create_tracker()
+        tracking_dict = {}
+        coord_dict = Coordinate()
         while True:
             hasframe, image = cap.read()
             # image=cv2.resize(image, (620, 480))
@@ -158,14 +177,7 @@ class Detector:
             Height = image.shape[0]
             
 	        # convert the frame from BGR to RGB for dlib
-            rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-            #draw ROIs
-            cv2.polylines(image,[west_ROI],True,(255), 2)
-            cv2.polylines(image,[east_ROI],True,(255), 2)
-            # cv2.polylines(image,[south_ROI],True,(255), 2)
-            cv2.polylines(image,[north_ROI],True,(255), 2)
-            cv2.polylines(image,[mid_ROI],True,(255), 2)
+            rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)            
             
             # convert the frame to a blob and detect through the network
             blob = cv2.dnn.blobFromImage(image, 1.0/255.0, (416,416), [0,0,0], True, crop=False)
@@ -176,15 +188,15 @@ class Detector:
             confidences = []
             boxes = []
             yolo_boxes = []
-            conf_threshold = 0.7
-            nms_threshold = 0.6
+            conf_threshold = 0.6
+            nms_threshold = 0.5
             for out in outs: 
                 for detection in out:            
                 #each detection  has the form like this [center_x center_y width height obj_score class_1_score class_2_score ..]
                     scores = detection[5:]#classes scores starts from index 5
                     class_id = np.argmax(scores)
                     confidence = scores[class_id]
-                    if confidence > 0.7:
+                    if confidence > 0.6:
                         center_x = int(detection[0] * Width)
                         center_y = int(detection[1] * Height)
                         w = int(detection[2] * Width)
@@ -198,10 +210,8 @@ class Detector:
             for i in yolo_indices:
                 class_id = class_ids[i[0]]               
                 label = classes[class_id]
-                print(label)
-                if label not in ["car","bus","truck","train"]:
+                if label not in ["car","bus","truck"]:
                     continue
-                    
                 i = i[0]
                 box = boxes[i]
                 yolo_boxes.append(box)
@@ -210,7 +220,7 @@ class Detector:
                 w = box[2]
                 h = box[3]
 
-                self.draw_pred(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h),classes)
+                self.draw_pred(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h), classes)
                 self.print_pred(class_ids[i], x, y, w, h, classes)
 
             # # increment the counter
@@ -233,133 +243,50 @@ class Detector:
             # Call the tracker
             tracker.predict()
             tracker.update(detections)
-
             for track in tracker.tracks:
                 if not track.is_confirmed() or track.time_since_update > 1:
                     continue 
                 bbox = track.to_tlbr()
                 cv2.rectangle(image, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,255,255), 2)
                 cv2.putText(image, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 200, (0,255,0),2)
-                centroid = [int((bbox[0]+ bbox[1]) / 2.0), int((bbox[2] + bbox[3]) / 2.0)]
-                to = TrackableObject(track.track_id, centroid)
-                to.centroids.append(centroid)
-                if not to.counted:
-                    if to.start_from == "":
-                        start_point = (to.centroids[0][0], to.centroids[0][1])
-                        start_from = ""
-                        go_to = ""
-                        
-                        if (cv2.pointPolygonTest(east_ROI, start_point, False)) >= 0:
-                            to.start_from = "east"
-                        elif (cv2.pointPolygonTest(west_ROI, start_point, False)) >= 0:
-                            to.start_from = "west"
-                        elif (cv2.pointPolygonTest(north_ROI, start_point, False)) >= 0:
-                            to.start_from = "north"
-                        # elif (cv2.pointPolygonTest(south_ROI, start_point, False)) >= 0:
-                        #     to.start_from = "south"
-                    
-                    current = (centroid[0], centroid[1])
-                    to.centroids.append(centroid)
+                centroid = [int((bbox[0]+ bbox[2]) / 2.0), int((bbox[1] + bbox[3]) / 2.0)]
+                if track.track_id not in tracking_dict:
+                    print("creating...")
+                    to = TrackableObject(track.track_id)
+                    to.add_centroid(centroid)
+                    tracking_dict[track.track_id] = to
+                    start_point = (centroid[0], centroid[1])
+                    coord_dict.dict[track.track_id] = centroid
+                    self.get_origin(start_point, to, ROI_list)
+                else:
+                    tracking_dict[track.track_id].add_centroid(centroid)
+                    coord_dict.dict[track.track_id] = centroid
+                for x in tracking_dict.values():
+                    if not x.counted:
+                        current = (x.centroids[-1][0], x.centroids[-1][1])
 
-                    if (cv2.pointPolygonTest(mid_ROI, current, False)) >= 0:
-                        print("in the middle")
-                        to.crossing = True
+                        self.get_destination(current,x,ROI_list)
 
-                    if to.crossing and (cv2.pointPolygonTest(east_ROI, current, False)) >= 0:
-                        to.go_to = "east"
-                        to.counted = True
-                    if to.crossing and (cv2.pointPolygonTest(west_ROI, current, False)) >= 0:
-                        to.go_to = "west"
-                        to.counted = True
-                    if to.crossing and (cv2.pointPolygonTest(north_ROI, current, False)) >= 0:
-                        to.go_to = "north"
-                        to.counted = True
-                    # if to.crossing and (cv2.pointPolygonTest(south_ROI, current, False)) >= 0:
-                    #     to.go_to = "south"
-                    #     to.counted = True
-
-                    if to.start_from == "east" and to.go_to == "east":
-                        east_to_east+=1
-                        to.counted = True
-                    if to.start_from =="east" and to.go_to == "west":
-                        east_to_west+=1
-                        to.counted = True
-                    if to.start_from == "east" and to.go_to == "north":
-                        east_to_north+=1
-                        to.counted = True
-                    if to.start_from == "east" and to.go_to == "south":
-                        east_to_south+=1
-                        to.counted = True
-
-                    if to.start_from == "west" and to.go_to == "east":
-                        west_to_east+=1
-                        to.counted = True
-                    if to.start_from == "west" and to.go_to == "west":
-                        west_to_west+=1
-                        to.counted = True
-                    if to.start_from == "west" and to.go_to == "north":
-                        west_to_north+=1
-                        to.counted = True
-                    if to.start_from == "west" and to.go_to == "south":
-                        west_to_south+=1
-                        to.counted = True
-
-                    if to.start_from == "north" and to.go_to == "east":
-                        north_to_east+=1
-                        to.counted = True
-                    if to.start_from == "north" and to.go_to == "west":
-                        north_to_west+=1
-                        to.counted = True
-                    if to.start_from == "north" and to.go_to == "north":
-                        north_to_north+=1
-                        to.counted = True
-                    if to.start_from == "north" and to.go_to == "south":
-                        north_to_south+=1
-                        to.counted = True
-
-                    if to.start_from == "south" and to.go_to == "east":
-                        south_to_east+=1
-                        to.counted = True
-                    if to.start_from == "south" and to.go_to == "west":
-                        south_to_west+=1
-                        to.counted = True
-                    if to.start_from == "south" and to.go_to == "north":
-                        south_to_north+=1
-                        to.counted = True
-                    if to.start_from == "south" and to.go_to == "south":
-                        south_to_south+=1
-                        to.counted = True
-
-                # # store the trackable object in our dictionary
-                # trackableObjects[track.track_id] = to
-
+                        intersection.inc(x.start_from, x.go_to)
+                
                 # draw both the ID of the object and the centroid of the
                 # object on the output frame
-                print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
-                print(to.start_from)
-                print(to.go_to)
+            for x in tracking_dict.values():
+                print("ID {}".format(x.objectID)+ ' start: ', end="")
+                print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
+                # print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
+                print(x.start_from)
+                print(x.go_to)
             
-            print("east_to_east: " + str(east_to_east))
-            print("east_to_west: "+ str(east_to_west))
-            print("east_to_north: "+ str(east_to_north))
-            print("east_to_south: "+ str(east_to_south))
-            print("west_to_east: "+ str(west_to_east))
-            print("west_to_west: "+ str(west_to_west))
-            print("west_to_north: "+ str(west_to_north))
-            print("west_to_south: "+ str(west_to_south))
-            print("north_to_east: "+ str(north_to_east))
-            print("north_to_west: "+ str(north_to_west))
-            print("north_to_north: "+ str(north_to_north))
-            print("north_to_south: "+ str(north_to_south))
-            print("south_to_east: "+ str(south_to_east))
-            print("south_to_west: "+ str(south_to_west))
-            print("south_to_north: "+ str(south_to_north))
-            print("south_to_south: "+ str(south_to_south))
-
+            #intersection.print_counters()
+            self.coord= coord_dict
+            
             totalFrames += 1
+            self.draw_ROIs(image, ROI_list)
             label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
             cv2.putText(image, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
             frame = self.frame_to_bytes(image)
+
             yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         
