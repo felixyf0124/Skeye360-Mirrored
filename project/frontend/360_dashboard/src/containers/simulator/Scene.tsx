@@ -21,6 +21,7 @@ import TrafficLightManager from './simulator_management/TrafficLightManager';
 import TrafficLightManualControl from './simulator_management/TrafficLightManualControl';
 import { number } from 'prop-types';
 import Btn from './Button';
+import DataFromCamera from './simulator_management/DataFromCamera';
 
 /**
  * @class Scene
@@ -74,6 +75,8 @@ class Scene extends Component {
   isControlPanelShown:Boolean;
   isCPAnimating:boolean;
   isStopClicked:Boolean;
+
+  numberOfCars: Number;
 
   constructor(props: any) {
     super(props);
@@ -213,6 +216,13 @@ class Scene extends Component {
     this.btnShowCP = new Btn(26,26,"<", 0x51BCD8);
 
     this.initialButtons();
+
+    
+    this.numberOfCars = 0;
+    //To call method to get real time data from the camera feed
+    this.getRealTimeData();
+    //To get the number of cars currently in the camera feed
+    this.getNumberOfCars();
     
   }
 
@@ -363,6 +373,19 @@ class Scene extends Component {
     }
   }
 
+  async getRealTimeData() {
+    var data = new DataFromCamera();
+    console.log("Raw data:" + await data.getDataFromCamera());
+  }
+
+  async getNumberOfCars() {
+    var data = new DataFromCamera();
+    var rawData = await data.getDataFromCamera() || '';
+    var numberCars = await data.getNumberOfCars(rawData);
+    console.log("Number of cars : " + numberCars);
+    this.numberOfCars = numberCars;
+  }
+
   
   renderObjects = () => {
     this.objectContainer.removeChildren();
@@ -412,12 +435,21 @@ class Scene extends Component {
       this.fps = this.fpsCounter;
       this.timeLastMoment =Date.now();
       this.fpsCounter=0;
+      this.getNumberOfCars();
+    }
+    
+    if(deltaTime>2000){
     }
     
     const fpsText = new PIXI.Text("FPS: "+ this.fps,this.textStyle);
     fpsText.x = this.window_w/2 - 80;
     fpsText.y = -this.window_h/2;
     this.displayPlaneContainer.addChild(fpsText);
+
+    const numberCarsText = new PIXI.Text("Cars: " + this.numberOfCars, this.textStyle);
+    numberCarsText.x = this.window_w/2 - 80;
+    numberCarsText.y = -this.window_h/2 + 20;
+    this.displayPlaneContainer.addChild(numberCarsText);
     // const _stopline = {
     //   x:(this.road_w_v/2 + 1.2)*this.lane_w,
     //   y:0
