@@ -72,6 +72,7 @@ class Scene extends Component {
   btnShowCP:Btn;
   btnStop:Btn;
   isControlPanelShown:Boolean;
+  isCPAnimating:boolean;
   isStopClicked:Boolean;
 
   constructor(props: any) {
@@ -206,6 +207,7 @@ class Scene extends Component {
     this.controlPanel_G.endFill();
 
     this.isControlPanelShown = true;
+    this.isCPAnimating = false;
     this.isStopClicked = false;
     this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
     this.btnShowCP = new Btn(26,26,"<", 0x51BCD8);
@@ -374,7 +376,11 @@ class Scene extends Component {
 
   animation = () => {
     if(this.btnShowCP.isPressed()) {
-      this.isControlPanelShown = !this.isControlPanelShown;
+      if(!this.isCPAnimating)
+      {
+        this.isControlPanelShown = !this.isControlPanelShown;
+        this.isCPAnimating = true;
+      }
     }
     this.updateControlPanelDisplayState(8);
     this.updateTLCountDownDisplayPanel();
@@ -485,12 +491,13 @@ class Scene extends Component {
         {
           _cd = Math.round(_tlQueue[i].getCountDown()).toString();
         }
-        console.log(_cd);
         const _tData_cd = new PIXI.Text(_cd, _textStyle);
         _tData_cd.x = _tData_state.x + 56;
         _tData_cd.y = _rowOffset * (i+1);
         this.tlDisplayPanelContainer.addChild(_tData_cd);
       }
+      this.tlDisplayPanelContainer.x = Math.abs(this.tlDisplayPanelContainer.width - this.controlPanel_G.width)/2
+      this.tlDisplayPanelContainer.y = 20;
     }
 
    drawTriangle(topVertex:vec2,height:number, width:number, direction:vec2, color:number) {
@@ -580,10 +587,12 @@ class Scene extends Component {
       {
         this.controlPanelContainer.x = - this.controlPanel_G.width - this.coordinateOffset.x;
         this.btnShowCP.setName(">");
+        this.isCPAnimating = false;
       }
     }else{
       this.controlPanelContainer.x = - this.controlPanel_G.width - this.coordinateOffset.x;
       this.btnShowCP.setName(">");
+      this.isCPAnimating = false;
     }
   }
 
@@ -597,10 +606,12 @@ class Scene extends Component {
       {
         this.controlPanelContainer.x = - this.coordinateOffset.x;
         this.btnShowCP.setName("<");
+        this.isCPAnimating = false;
       }
     }else{
       this.controlPanelContainer.x = - this.coordinateOffset.x;
       this.btnShowCP.setName("<");
+      this.isCPAnimating = false;
     }
   }
 
