@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'djangosite_api',
     'djangosite',
     'django_filters',
+    'django_extensions',
     'corsheaders',
 ]
 
