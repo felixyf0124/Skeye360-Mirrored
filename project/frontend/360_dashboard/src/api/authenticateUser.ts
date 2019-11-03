@@ -1,26 +1,24 @@
-export interface authResponse {
-  session_token: string;
-  name: string;
-  email: string;
+export interface Response {
+  username: string;
+  token: string;
+  timestamp: string;
 }
 
+const APIDomain = '0.0.0.0:8000';
+
 const authenticateUser = async (
-  APIDomain = '0.0.0.0:8000',
-  email: string,
+  username: string,
   password: string
-): Promise<authResponse> => {
-  const url = `//${APIDomain}/api/v1/account/authenticate`;
-  const params = {
-    username: email,
-    password,
-  };
-  const response = await fetch(url, {
-    method: 'POST',
-    mode: 'no-cors',
-    body: new URLSearchParams(params),
-  });
-  const resp = (await response.json()) as authResponse;
-  return resp;
+): Promise<Response> => {
+  const url = `//${APIDomain}/user/` + username + `/` + password + `/`;
+  // const params = {
+  //   username,
+  //   password,
+  // };
+  
+  const response = await fetch(url);
+  const data = (await response.json()) as Response;
+  return data;
 };
 
 export default authenticateUser;

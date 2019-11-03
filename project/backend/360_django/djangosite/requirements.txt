@@ -3,5 +3,6 @@ djangorestframework==3.9.2
 djongo
 sqlparse==0.2.4
 markdown
-django-filter
-pygments # for highlighting
+django-filter # ref: https://django-filter.readthedocs.io/en/master/
+pylint
+django-cors-headers
