@@ -27,7 +27,7 @@ pipeline {
                     steps {
                         dir("project/frontend/360_dashboard") {
                             sh "ls"
-                            sh "yarn run test ."
+                            sh "yarn run test ." //fails because it ask the user another input before running tests, to be fixed
                         }
                     }
                 }
@@ -45,7 +45,7 @@ pipeline {
                         }
                     }
                 }
-                // //Testing django server
+                //Testing django server
                 stage('test_djangoserver') {
                     steps {
                         script {
