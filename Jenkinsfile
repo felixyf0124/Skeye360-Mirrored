@@ -39,7 +39,6 @@ pipeline {
                     steps {
                         script {
                             dir("project/backend/360_django/djangosite") {
-                                sh "ls"
                                 sh "python3 manage.py test ."
                             }
                         }

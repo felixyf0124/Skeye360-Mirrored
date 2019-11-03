@@ -82,7 +82,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': '360backend',
-        'HOST': 'mongodb://myUserAdmin:abc123@172.17.0.2:27017',
+        'HOST': 'mongodb://myUserAdmin:abc123@172.17.0.4:27017',
         'USER': 'myUserAdmin',
         'PASSWARD': 'abc123',
     }
