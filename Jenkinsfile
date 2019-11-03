@@ -8,8 +8,8 @@ pipeline {
                         echo "Building!"
                     }
                 }
-                //Working with all the properties in the command
-                stage('test1') {
+                // //Working with all the properties in the command
+                stage('test_sonarqube') {
                     steps {
                         script {
                             scannerHome = tool 'SonarQubeScanner'
@@ -19,14 +19,40 @@ pipeline {
                         }
                     }
                 }
-                //To test this simpler version when we are going to have more code
-                stage('test2') {
+                //Testing frontend
+                stage('test_frontend') {
+                    agent {
+                        docker "project_360_dashboard"
+                    }
+                    steps {
+                        dir("project/frontend/360_dashboard") {
+                            sh "ls"
+                            sh "yarn run test ."
+                        }
+                    }
+                }
+                //Testing django api
+                stage('test_djangoapi') {
+                    agent {
+                        docker "project_360_django"
+                    }
                     steps {
                         script {
-                            scannerHome = tool 'SonarQubeScanner'
+                            dir("project/backend/360_django/djangosite") {
+                                sh "ls"
+                                sh "python3 manage.py test ."
+                            }
                         }
-                        withSonarQubeEnv('SonarQube') {
-                            sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+                // //Testing django server
+                stage('test_djangoserver') {
+                    steps {
+                        script {
+                            dir("project/backend/backend_django/camera") {
+                                sh "ls"
+                                sh "python3 manage.py test ."
+                            }
                         }
                     }
                 }
