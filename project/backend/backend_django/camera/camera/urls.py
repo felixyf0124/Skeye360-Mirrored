@@ -19,5 +19,6 @@ from django.conf.urls import url
 from recognition import views as recognition_views
 urlpatterns = [
     url('admin/', admin.site.urls),
-    url('', recognition_views.cam),
+    url('cam/', recognition_views.cam),
+    url('coord/',recognition_views.send_json)
 ]

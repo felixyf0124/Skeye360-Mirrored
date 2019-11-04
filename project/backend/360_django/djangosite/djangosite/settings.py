@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'djangosite_api',
     'djangosite',
     'django_filters',
+    'django_extensions',
     'corsheaders',
 ]
 
@@ -82,7 +83,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': '360backend',
-        'HOST': 'mongodb://myUserAdmin:abc123@172.17.0.2:27017',
+        'HOST': 'mongodb://myUserAdmin:abc123@172.16.0.4:27017',
         'USER': 'myUserAdmin',
         'PASSWARD': 'abc123',
     }
