@@ -6,11 +6,8 @@ import { number } from "prop-types";
 export default class TrafficLight {
 
     id:number;
-    //TLManagerId:number;
     countDownSetting:{green:number,yellow:number};
     boundLanes:Array<{section:number,id:number}>;
-    //trafficLightStatusCountDown:number;
-    //TrafficLightStatus: stop (blinks red), red, yellow, green
     status:string;
     isForced:boolean;
     overlapOffset:number;
@@ -18,10 +15,8 @@ export default class TrafficLight {
 
     constructor(id:number){
         this.id = id;
-        //this.TLManagerId = TLManagerId;
         this.countDownSetting = {green:0,yellow:0};
         this.boundLanes = new Array<{section:number,id:number}>();
-        //this.trafficLightStatusCountDown = 0;
         this.status = "red";
         this.isForced = false;
         this.overlapOffset = 0;
@@ -32,18 +27,12 @@ export default class TrafficLight {
     getId(): number {
         return this.id;
     }
-    // getTrafficLightManagerId(): number {
-    //     return this.TLManagerId;
-    // }
     getCountDownSetting(): {green:number,yellow:number} {
         return this.countDownSetting;
     }
     getBoundLanes(): Array<{section:number,id:number}> {
         return this.boundLanes;
     }
-    // getStateCountDown(): number {
-    //     return this.trafficLightStatusCountDown;
-    // }
     getStatus(): string {
         return this.status;
     }

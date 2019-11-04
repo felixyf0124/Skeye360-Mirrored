@@ -17,13 +17,10 @@ export default class RoadSection {
     lane_in: Array<Lane>;
     lane_out: Array<Lane>;
 
-    //tailCoordinate was tailCoordinate:{x:number,y:number} in the paramenter of the constructor
     constructor(id:number, roadIntersection_id:number, tailCoordinate:vec2)
     {
         this.id = id;
         this.roadIntersection_id = roadIntersection_id;
-        // this.head = {x:0,y:0};
-        // this.tail = tailCoordinate;
         this.head = new vec2();
         this.tail = tailCoordinate;
         this.lane_in = new Array<Lane>();
@@ -50,7 +47,6 @@ export default class RoadSection {
         return this.lane_out;
     }
     getLaneAt(id:number,isLaneIn?:boolean){
-        //var _isLaneIn:boolean = isLaneIn||true;
         if(isLaneIn === true || isLaneIn === undefined){
             return this.lane_in[id];
         }else{
@@ -136,9 +132,6 @@ export default class RoadSection {
         for(let i = 0; i < this.lane_in.length; ++i)
         {
             const _lane_line = ts.line(this.lane_in[i].getTail(),this.lane_in[i].getHead());
-            // console.log(_offset_line);
-            // console.log('_lane_line');
-            // console.log(_lane_line);
             const _intersection = ts.lineIntersection(_offset_line, _lane_line);
             this.lane_in[i].setHead(_intersection);
         }

@@ -10,17 +10,9 @@ export default class Object {
     lane_id:number;
     roadSection_id:number;
     position: vec2;
-    //State: move, stop
     state: number;
     speed: number;
 
-    //roadIntersection_id:number;
-    //state:string;
-    // REPLACED BY COORDINATE CLASS
-    // position:{
-    //     x:number,y:number
-    // };
-    
     constructor(id:number, lane_id:number, roadSection_id:number, speed:number, position?:vec2){
        this.id = id;
        this.position = position||new vec2();
