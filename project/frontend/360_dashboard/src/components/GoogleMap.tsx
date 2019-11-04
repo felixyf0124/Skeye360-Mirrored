@@ -21,7 +21,7 @@ const GoogleMap = () => {
           lng={center.lng}
           text="Camera_id"
           color="red"
-          link="streetview"
+          link="/streetview"
         />
       </GoogleMapReact>
     </div>

@@ -39,7 +39,7 @@ module.exports = {
       }
     ],
     "@typescript-eslint/no-explicit-any": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }]
   },
   settings: {
     'import/resolver': {

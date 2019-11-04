@@ -18,18 +18,18 @@ const CameraForm = (props: {
 
   return (
     <div className="form-container">
+      {props.error !== '' ? (
+        <div className="form-group">
+          <label>{error}</label>
+        </div>
+      ) : (
+        <div />
+      )}
       <form onSubmit={(e) => {
         e.preventDefault();
         handleSubmit();
       }}
       >
-        {props.error !== '' ? (
-          <div className="form-group">
-            <label>{error}</label>
-          </div>
-        ) : (
-          <div />
-        )}
         <div className="form-group">
           <label>City</label>
           <input

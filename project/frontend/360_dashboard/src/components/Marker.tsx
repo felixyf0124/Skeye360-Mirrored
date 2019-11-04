@@ -5,15 +5,15 @@ import { Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 
 interface Props {
+  color: string;
+  name: string;
+  link: string;
 }
 
-interface DispatchProps {
-}
-
-const Marker = (props: any & Props & DispatchProps) => {
+const Marker = (props: Props | any) => {
   const { color, name, link } = props;
   return (
-    <Link to="/streetview">
+    <Link to={link}>
       <div
         className="marker"
         style={{ backgroundColor: color, cursor: 'pointer' }}
@@ -23,13 +23,4 @@ const Marker = (props: any & Props & DispatchProps) => {
   );
 };
 
-const mapStateToProps = (state: RootState): Props => ({
-});
-
-const mapDispatchToProps: DispatchProps = {
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Marker);
+export default Marker;
