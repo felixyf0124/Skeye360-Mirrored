@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   parser: '@typescript-eslint/parser',
   env: {
@@ -23,10 +25,24 @@ module.exports = {
   },
   plugins: [
     'react',
+    'prettier',
   ],
   rules: {
   },
-  settings:  {
+  settings: {
+    'import/resolver': {
+      webpack: {
+        config: {
+          resolve: {
+            extensions: ['.jsx', '.js', '.tsx', '.ts'],
+            modules: ['./', 'node_modules'],
+            alias: {
+              src: path.resolve(__dirname, './src')
+            }
+          }
+        }
+      }
+    },
     react:  {
       version:  'detect',
     },

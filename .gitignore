@@ -7,3 +7,8 @@ venv/*
 project/frontend/360_dashboard/package-lock.json
 project/frontend/360_dashboard/yarn.lock
 project/backend/360_django/djangosite/djangosite_api/migrations/*
+*.avi
+*.icloud
+*.pb
+*.mp4
+*.weights

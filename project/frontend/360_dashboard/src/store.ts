@@ -2,11 +2,13 @@
  * src/store.js
  * No initialState
 */
-import { createStore, applyMiddleware, compose } from 'redux';
+import {
+  createStore, applyMiddleware, compose, Store,
+} from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { createBrowserHistory } from 'history';
 import initReducers from './reducers/rootReducer';
 import rootSaga from './rootSaga';
-import { createBrowserHistory } from 'history';
 
 declare global {
   interface Window {
@@ -16,7 +18,7 @@ declare global {
 
 export const history = createBrowserHistory();
 
-export default async () => {
+export default async (): Promise<Store> => {
   const sagaMiddleware = createSagaMiddleware();
   const middleware = [sagaMiddleware];
   const store = createStore(
@@ -24,11 +26,11 @@ export default async () => {
     {},
     compose(
       applyMiddleware(...middleware),
-      (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()) ||
-        compose,
+      (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+        && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__())
+        || compose,
     ),
   );
   sagaMiddleware.run(rootSaga);
   return store;
-}
+};
