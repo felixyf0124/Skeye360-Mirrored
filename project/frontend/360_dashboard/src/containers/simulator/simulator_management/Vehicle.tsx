@@ -86,8 +86,8 @@ export default class vehicle extends Object{
     updatePosition(disToTravel:number){
         const _unit_vec = ts.tsNormalize(this.path[this.atPathSection][this.atPath+1].minus(this.position));
         const _length_of_current_path = this.getPathLength(this.atPathSection,this.atPath+1);
-        console.log('_length_of_current_path '+ _length_of_current_path);
-        console.log('traveled '+ (this.traveled + disToTravel));
+        // console.log('_length_of_current_path '+ _length_of_current_path);
+        // console.log('traveled '+ (this.traveled + disToTravel));
         if(this.traveled + disToTravel<_length_of_current_path)
         {
             this.position = this.position.plus(_unit_vec.multiply(disToTravel));
@@ -99,7 +99,7 @@ export default class vehicle extends Object{
             this.traveled = _length_of_current_path;
             if(this.atPath === this.path[this.atPathSection].length-1)
             {
-                console.log('atPSec' + this.atPathSection + "|" + this.path.length);
+                // console.log('atPSec' + this.atPathSection + "|" + this.path.length);
                 if(this.atPathSection + 1 === this.path.length ){
                     this.isGone = true;
                 }else{

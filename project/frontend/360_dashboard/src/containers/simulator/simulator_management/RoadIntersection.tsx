@@ -240,10 +240,11 @@ export default class RoadIntersection {
             _intersections.push([_intersection_left,_intersection_right]);
         //TO DO 
         //solve the bug and add improved auto offset update funtion
+        this.roadSections[i].updateLaneWithOffset(_intersection_left,_intersection_right);
 
             //temp solution
-        const _direct = ts.tsNormalize(this.roadSections[i].getTail().minus(this.roadSections[i].getHead()));
-        this.roadSections[i].offsetLanes(_direct.multiply(3*this.laneWidth));
+            // const _direct = ts.tsNormalize(this.roadSections[i].getTail().minus(this.roadSections[i].getHead()));
+            // this.roadSections[i].offsetLanes(_direct.multiply(3*this.laneWidth));
         }
         return _intersections;
     }
@@ -382,7 +383,12 @@ export default class RoadIntersection {
         for(let i=0;i<this.vehicles.length;++i)
         {
             const _id = this.vehicles[i].getId();
-            const _front_v = this.getFrontVehicle(_id);
+            var _front_v; 
+            if(this.vehicles[i].getAtPathSection() > 0){
+                _front_v = null;
+            }else{
+                _front_v = this.getFrontVehicle(_id);
+            }
             if(_front_v !== null)
             {
                 this.vehicles[i].checkFront(_front_v.getTraveled(),25,_front_v.getSpeed());
@@ -392,7 +398,7 @@ export default class RoadIntersection {
             this.vehicles[i].updatePosition(this.vehicles[i].getSpeed()*this.vehicles[i].getDeltaT());
         }
 
-       while(this.checkTransitionVehicle());
+        this.checkTransitionVehicle();
        while(this.checkLeavingVehicle());
     }
 
@@ -414,7 +420,9 @@ export default class RoadIntersection {
         const _vehicle = this.getVehicle(id);
         this.roadSections[this.getRoadSectionIndex(_vehicle.getRoadSectionId())]
             .objGone(_vehicle.getLaneId(),_vehicle.getId(),isLaneIn);
-        this.vehicles.splice(this.getVehicleIndex(id),1);
+        if(isLaneIn === false){
+            this.vehicles.splice(this.getVehicleIndex(id),1);
+        }
     }
 
     getVehicleIndex(id:number){
@@ -452,9 +460,9 @@ export default class RoadIntersection {
                         .lane_out[this.vehicles[i].getLaneId()].addObjId(this.vehicles[i].getId());
                 }
                 this.vehicles[i].resetIsInTransition();
-                return true;
+                // return true;
             }
         }
-        return false;
+        // return false;
     }
 }

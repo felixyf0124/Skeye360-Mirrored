@@ -136,9 +136,9 @@ export default class RoadSection {
         for(let i = 0; i < this.lane_in.length; ++i)
         {
             const _lane_line = ts.line(this.lane_in[i].getTail(),this.lane_in[i].getHead());
-            console.log(_offset_line);
-            console.log('_lane_line');
-            console.log(_lane_line);
+            // console.log(_offset_line);
+            // console.log('_lane_line');
+            // console.log(_lane_line);
             const _intersection = ts.lineIntersection(_offset_line, _lane_line);
             this.lane_in[i].setHead(_intersection);
         }
