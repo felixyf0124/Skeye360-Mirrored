@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import GoogleMap from '../components/GoogleMap';
-// import Simulator from '../containers/simulator/Scene';
 import Header from '../components/Header';
 
 interface Props {

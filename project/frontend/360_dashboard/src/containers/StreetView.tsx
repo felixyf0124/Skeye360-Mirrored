@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import GoogleMap from '../components/GoogleMap';
-// import Simulator from '../containers/simulator/Scene';
-import { Head } from Header from '../components/Header';
+import Header, { Head } from '../components/Header';
 import Simulator from './simulator/Scene';
 
 
@@ -19,8 +18,8 @@ const StreetView = ({ authenticated }: Props): JSX.Element => {
     <div>
       <Header />
       <Head>
-          <Link to="/streetview/edit" className="header-text">Edit</Link>
-        </Head>
+        <Link to="/streetview/edit" className="header-text">Edit</Link>
+      </Head>
       <Simulator />
     </div>
   );

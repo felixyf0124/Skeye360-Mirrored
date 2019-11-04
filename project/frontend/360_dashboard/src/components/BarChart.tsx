@@ -3,7 +3,6 @@ import Chart from 'react-apexcharts';
 // For more information
 
 interface ChartProps {
-
 }
 interface ChartState {
     options: {};

@@ -48,7 +48,7 @@ const EditCamera = (props: StateProps & DispatchProps): JSX.Element => {
         city={city}
         lat={lat}
         lng={lng}
-        camera_url={camera_url}
+        cameraURL={camera_url}
         street={street}
         error={error}
         handleChange={handleChange}

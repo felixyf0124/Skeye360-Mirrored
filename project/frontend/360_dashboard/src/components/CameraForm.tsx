@@ -4,7 +4,7 @@ const CameraForm = (props: {
     city: string;
     lat: number;
     lng: number;
-    camera_url: string;
+    cameraURL: string;
     street: string;
     error: string;
 
@@ -13,7 +13,7 @@ const CameraForm = (props: {
 }): JSX.Element => {
   const [state] = React.useState(props);
   const {
-    city, lat, lng, camera_url, street, error, handleChange, handleSubmit,
+    city, lat, lng, cameraURL, street, error, handleChange, handleSubmit,
   } = state;
 
   return (
@@ -61,8 +61,8 @@ const CameraForm = (props: {
           <label>Camera URL</label>
           <input
             type="text"
-            name="camera_url"
-            value={camera_url}
+            name="cameraURL"
+            value={cameraURL}
             onChange={handleChange}
           />
         </div>

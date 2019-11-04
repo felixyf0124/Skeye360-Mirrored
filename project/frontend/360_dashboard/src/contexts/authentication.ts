@@ -58,18 +58,18 @@ export const authSuccess = (
   data,
 });
 
-interface authFailAction {
+interface AuthFailAction {
     type: string;
 }
 
-export const authFail = (): authFailAction => ({
+export const authFail = (): AuthFailAction => ({
   type: AUTHENTICATE_FAIL,
 });
 
 // SAGA
 export function* handleAuthentication({ username, password }: AuthAction): Iterator<any> {
   try {
-    console.log(`handleAuthentication${username}${password}`);
+    // console.log(`handleAuthentication${username}${password}`);
     const data = yield call(authenticateUser, username, password);
     if (data !== undefined) {
       yield put(authSuccess(data));
@@ -98,7 +98,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     }
     case AUTHENTICATE_SUCCESS: {
       const { data } = action as AuthSuccessAction;
-      console.log(action.type);
+      // console.log(action.type);
       return {
         ...state,
         sessionToken: data.token,

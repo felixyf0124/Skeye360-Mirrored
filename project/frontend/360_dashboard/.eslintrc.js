@@ -16,18 +16,30 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
-  parserOptions: {
-    ecmaVersion: 2019,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
+  "parserOptions": {
+    "jsx": true,
+    "useJSXTextNode": true
   },
-  plugins: [
-    'react',
-    'prettier',
+  "plugins": [
+    "react"
   ],
   rules: {
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+          "packageDir": [
+              "./"
+          ]
+      }
+    ],
+    "react/jsx-one-expression-per-line": [
+      2,
+      {
+        "allow": "single-child"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
   },
   settings: {
     'import/resolver': {
@@ -36,9 +48,6 @@ module.exports = {
           resolve: {
             extensions: ['.jsx', '.js', '.tsx', '.ts'],
             modules: ['./', 'node_modules'],
-            alias: {
-              src: path.resolve(__dirname, './src')
-            }
           }
         }
       }

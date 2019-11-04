@@ -8,7 +8,7 @@ export interface RootState {
   router: RouterState;
 }
 
-export default (history: History) => combineReducers({
+export default (history: History): any => combineReducers({
   authentication,
   router: connectRouter(history),
 });

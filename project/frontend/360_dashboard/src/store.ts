@@ -1,7 +1,3 @@
-/*
- * src/store.js
- * No initialState
-*/
 import {
   createStore, applyMiddleware, compose, Store,
 } from 'redux';

@@ -60,13 +60,15 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
             <div />
           )}
           <div className="form-group">
-            <label>Username</label>
-            <input
-              type="text"
-              name="username"
-              value={username}
-              onChange={handleChange}
-            />
+            <label htmlFor="username">
+              Username
+              <input
+                type="text"
+                name="username"
+                value={username}
+                onChange={handleChange}
+              />
+            </label>
           </div>
           <div className="form-group">
             <label>Password</label>

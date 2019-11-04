@@ -7,8 +7,8 @@ import * as PIXI from 'pixi.js-legacy';
 import { Store } from 'redux';
 import { Container, Button } from 'react-bootstrap';
 import { RootState } from '../../reducers/rootReducer';
-import vehicle from '../../images/vehicle.png';
-import ppl from '../../images/ppl.png';
+// import vehicle from '../../images/vehicle.png';
+// import ppl from '../../images/ppl.png';
 import TrafficLight from './simulator_management/TrafficLight';
 import TrafficLightMG from './simulator_management/TrafficLightManager';
 import VehicleObj from './simulator_management/Vehicle';
@@ -242,8 +242,8 @@ class Scene extends Component {
 
   setup = () => {
     this.app.loader
-      .add('vehicle2', vehicle)
-      .add('ppl2', ppl)
+      .add('vehicle2', this.vehicle)
+      // .add('ppl2', ppl)
       .load(this.initialize);
   };
 
