@@ -50,7 +50,7 @@ pipeline {
                         docker "project_360_django"
                     }
                     steps {
-                        dir("project/backend/backend_django/camera/recognition/") {
+                        dir("project/backend/backend_django/camera/recognition/test") {
                             sh "python -m unittest test_functions.py"
                         }
                     }
