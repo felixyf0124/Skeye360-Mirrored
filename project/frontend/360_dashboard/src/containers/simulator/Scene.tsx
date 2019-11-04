@@ -241,9 +241,9 @@ class Scene extends Component {
     this. numberOfCars = 3;
     for(let i =0;i<3;++i)
     {
-      this.roadIntersection.addNewVehicle(0,0,0.06,i );
+      this.roadIntersection.addNewVehicle(0,0,0.06);
     }
-    
+    console.log(this.roadIntersection.getLane(0,0).getObjects());
   }
 
   initialize = () => {

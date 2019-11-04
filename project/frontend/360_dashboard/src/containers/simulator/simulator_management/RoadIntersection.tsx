@@ -22,6 +22,7 @@ export default class RoadIntersection {
     TLManager:TLManager;
     laneWidth:number;
     vehicles:Array<Vehicle>;
+    vehicleCount:number;
 
     constructor(id:number, mapCoordinate:vec2, TLManager?: TrafficLightManager)
     {
@@ -31,6 +32,7 @@ export default class RoadIntersection {
         this.TLManager = TLManager||new TrafficLightManager(id);
         this.laneWidth =0;
         this.vehicles = new Array<Vehicle>();
+        this.vehicleCount = 0;
     }
 
     //Getters
@@ -128,7 +130,6 @@ export default class RoadIntersection {
 
     addNewTrafficLight(laneGroup:Array<{section:number,id:number}>,time:number,specifiedYellowTime?:number){
         this.TLManager.addTrafficLight(laneGroup,time,specifiedYellowTime);
-        // console.log(this.TLManager.getTrafficLightQueue());
         //add TL id to lanes
         
         this.bindTrafficLight(this.TLManager.getTrafficLightQueue()[this.TLManager.getTrafficLightQueue().length-1]);
@@ -136,21 +137,22 @@ export default class RoadIntersection {
 
     addNewVehicle(lane_id:number,section_id:number,speed:number,vehicle_id?:number,position?:vec2)
     {
-        const _obj_v = new Vehicle(vehicle_id||Date.now(),lane_id,section_id,speed,position);
+        var _vehicle_id = vehicle_id;
+        if(_vehicle_id === undefined){
+            _vehicle_id =  parseInt(Date.now().toString() + "" + Math.round(Math.random()*1000));
+        }
+        const _obj_v = new Vehicle(_vehicle_id,lane_id,section_id,speed,position);
         
         this.roadSections[this.getRoadSectionIndex(_obj_v.getRoadSectionId())].lane_in[_obj_v.getLaneId()].addObjId(_obj_v.getId());
         const _lane_from = this.getLane(lane_id,section_id);
         const _lane_pointer = _lane_from.getHeadLink();
         const _lane_to = this.getLane(_lane_pointer[0].getLaneId(),_lane_pointer[0].getSectionId(),false);
         //safety dis
-        const _safety_dis = 25;
+        const _safety_dis = 35;
 
         _obj_v.path.push([_lane_from.getTail(),_lane_from.getHead()]);
         _obj_v.path.push([_lane_from.getHead(),_lane_to.getTail()]);
         _obj_v.path.push([_lane_to.getTail(),_lane_to.getHead()]);
-        // console.log('_obj_v.path');
-        // console.log(_lane_to);
-        // console.log(_obj_v.path);
 
         const _dir = ts.tsNormalize(_lane_from.getHead().minus(_lane_from.getTail()));
         
@@ -166,13 +168,12 @@ export default class RoadIntersection {
             }else{
                 _obj_v.setPosition(_front_pos);
             }
-            // _obj_v.setPosition(_front_pos);
 
         }else{
             _obj_v.setPosition(_lane_from.getTail());
         }
         this.vehicles.push(_obj_v);
-        
+        ++this.vehicleCount;
     }
 
     bindTrafficLight(trafficLight:TrafficLight){
@@ -248,19 +249,6 @@ export default class RoadIntersection {
         }
         return _intersections;
     }
-
-    // updateLaneState() {
-    //     let _trafficLightQueue = this.TLManager.getTrafficLightQueue();
-    //     for (let i = 0; i < _trafficLightQueue.length; ++i)
-    //     {
-    //         let _boundLanes = _trafficLightQueue[i].getBoundLanes();
-    //         for(let j = 0; j < _boundLanes.length; ++j)
-    //         {
-    //             let _section_index = this.getRoadSectionIndex(_boundLanes[j].section);
-    //             this.resortRoadSections[_section_index].
-    //         }
-    //     }
-    // }
 
     resortRoadSections(){
         var _resort = new Array<{index:number,angle:number}>();
@@ -368,7 +356,6 @@ export default class RoadIntersection {
      */
     tlCountingDown():boolean{
         return this.TLManager.initialUpdate();
-       // console.log(this.TLManager.getDeltaT());
     }
 
     isForced(tl_id:number){
@@ -384,20 +371,32 @@ export default class RoadIntersection {
         {
             const _id = this.vehicles[i].getId();
             var _front_v; 
-            if(this.vehicles[i].getAtPathSection() > 0){
-                _front_v = null;
+            if(this.vehicles[i].getAtPathSection() > 0 || this.getVehicleIndex(_id) <=0){
+                _front_v = undefined;
             }else{
                 _front_v = this.getFrontVehicle(_id);
             }
-            if(_front_v !== null)
+            if(_front_v !== undefined)
             {
-                //this.vehicles[i].checkFront(_front_v.getTraveled(),25,_front_v.getSpeed());
+                this.vehicles[i].checkFront(_front_v.getPosition(),30,_front_v.getSpeed());
             }else{
-
+                if(this.vehicles[i].getAtPathSection() === 0){
+                    const _section_id = this.vehicles[i].getRoadSectionId();
+                    const _lane_id = this.vehicles[i].getLaneId();
+                    const _tl_id = this.roadSections[this.getRoadSectionIndex(_section_id)].getLaneAt(_lane_id).getTrafficLightId();
+                    const _tl_state = this.getTrafficLightState(_tl_id);
+                    const _tl_cd = this.getTrafficLightCD(_tl_id);
+                    //
+                    if(_tl_state === "red" || (_tl_state === "yellow" && _tl_cd < 3 )){
+                        this.vehicles[i].checkFront(this.getLane(_lane_id,_section_id).getHead(),
+                        16,0);
+                    }else{
+                        this.vehicles[i].updateSpeed();
+                    }
+                }
             }
             this.vehicles[i].updatePosition(this.vehicles[i].getSpeed()*this.vehicles[i].getDeltaT());
         }
-
         this.checkTransitionVehicle();
        while(this.checkLeavingVehicle());
     }
@@ -407,11 +406,11 @@ export default class RoadIntersection {
 
         const _lane = this.getLane(_vehicle.getLaneId(),_vehicle.getRoadSectionId())
         const _index = _lane.getObjIndex(id);
-        if(_index === 0)
+        if(_index <= 0)
         {
-            return null;
+            return undefined;
         }else{
-            const _front_v = this.getVehicle(_lane.getObjIndex(_index-1));
+            const _front_v = this.getVehicle(_lane.getObjectIdByIndex(_index-1));
             return _front_v;
         }
     }
@@ -453,6 +452,16 @@ export default class RoadIntersection {
         {
             if(this.vehicles[i].getIsInTransition()){
                 if(this.vehicles[i].getAtPathSection() === 1){
+                    var _section_id = this.vehicles[i].getRoadSectionId();
+                    var _lane_id = this.vehicles[i].getLaneId();
+                    const _head_link = this.getLane(_lane_id,_section_id).getHeadLink();
+
+                    _section_id = _head_link[0].getSectionId();
+                    _lane_id = _head_link[0].getLaneId();
+
+                    this.vehicles[i].setRoadSectionId(_section_id);
+                    this.vehicles[i].setLaneId(_lane_id);
+
                     this.vehicleGone(this.vehicles[i].getId());
                 }
                 if(this.vehicles[i].getAtPathSection() === 2){

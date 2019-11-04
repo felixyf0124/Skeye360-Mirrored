@@ -15,6 +15,7 @@ export default class vehicle extends Object{
     isGone:boolean;
     isInTransition:boolean;
     lastTime:number;
+    maxSpeed:number;
     constructor(id:number, lane_id:number, roadSection_id:number, speed:number, position?:vec2) {
         super(id, lane_id, roadSection_id, speed, position);
         this.path = new Array<Array<vec2>>();
@@ -24,37 +25,62 @@ export default class vehicle extends Object{
         this.isGone = false;
         this.isInTransition = false;
         this.lastTime = Date.now();
+        this.maxSpeed = speed;
     }
 
     //Getters
-    checkFront(traveled:number, safetyDistance:number, speed?:number, acce?:number){
-        let _distance = traveled - this.traveled;
-        var _speed = speed||0;
-        var _speed_dif = this.speed - _speed;
-        var _acce = acce||0.3;
+    checkFront(frontPostion:vec2, safetyDistance:number, targetSpeed?:number){
+        let _distance = ts.tsLength(frontPostion.minus(this.position));
+        var _speed = targetSpeed;
+        if(_speed === undefined){
+            _speed= 0;
+        }
         // var _stop_t = _speed/_acce;
         // var _stop_dis = safetyDistance + (_speed/_acce)
-
         if(_distance<safetyDistance)
         {
-            // let _space = safetyDistance -_distance;
-            if(this.speed > _speed)
-            {
-                this.speed -= 1*_acce * _speed_dif;
-                if(this.speed < 0)
-                {
-                    this.speed = 0;
-                }
-            }
+        this.updateSpeed(_speed);
+        }else {
+            this.updateSpeed();
+        }
+    }
+
+
+    updateSpeed(targetSpeed?:number,acce?:number){
+        var _acce = acce;
+        var _targetSpeed = targetSpeed;
+        if(_acce === undefined){
+            _acce = 0.3 * this.maxSpeed;
+        }
+        if(_targetSpeed === undefined){
+            _targetSpeed = this.maxSpeed;
+        }
+        // console.log('acce |' + acce + " | " + _acce);
+        // console.log('targetSpeed |' + targetSpeed + " | " + _targetSpeed);
+
+        if(this.speed<_targetSpeed){
+            this.state = 1;
+        }else if(this.speed>_targetSpeed){
+            this.state = -1;
+            // console.log(">>>>");
         }else{
-            if(this.speed < _speed)
-            {
-                this.speed += _acce;
-            }else{
-                this.speed = _speed;
+            this.state = 0;
+        }
+        if(this.state === 1){
+            this.speed += _acce;
+            if(this.speed>_targetSpeed){
+                this.speed = _targetSpeed;
+                this.state = 0;
             }
         }
-    
+        if(this.state === -1){
+            this.speed -= _acce;
+            if(this.speed<_targetSpeed){
+                this.speed = _targetSpeed;
+                this.state = 0;
+            }
+        }
+
     }
 
     getPath(){

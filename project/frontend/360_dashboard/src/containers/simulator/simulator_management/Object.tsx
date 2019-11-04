@@ -11,7 +11,7 @@ export default class Object {
     roadSection_id:number;
     position: vec2;
     //State: move, stop
-    state: string;
+    state: number;
     speed: number;
 
     //roadIntersection_id:number;
@@ -26,7 +26,7 @@ export default class Object {
        this.position = position||new vec2();
        this.lane_id = lane_id;
        this.roadSection_id = roadSection_id;
-       this.state = "stop"
+       this.state = 0;
        this.speed = speed;
     }
 
@@ -57,7 +57,7 @@ export default class Object {
     setRoadSectionId(roadSection_id: number) {
         this.roadSection_id = roadSection_id;
     }
-    setState(state: string) {
+    setState(state: number) {
         this.state = state;
     }
     setObjectSpeed(speed: number) {

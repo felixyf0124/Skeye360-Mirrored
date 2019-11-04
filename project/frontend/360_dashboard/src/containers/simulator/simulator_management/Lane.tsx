@@ -58,6 +58,9 @@ export default class Lane {
     getObjects(): Array<number> {
         return this.objects;
     }
+    getObjectIdByIndex(index:number){
+        return this.objects[index];
+    }
 
     
     getHead(): Coordinate {
@@ -81,7 +84,8 @@ export default class Lane {
         {
             if(this.objects[i] === id)
             {
-                return i;
+                const _index = i;
+                return _index;
             }
         }
         return -1;
