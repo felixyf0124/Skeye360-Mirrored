@@ -26,8 +26,7 @@ pipeline {
                     }
                     steps {
                         dir("project/frontend/360_dashboard") {
-                            sh "ls"
-                            sh "yarn run test ." //fails because it ask the user another input before running tests, to be fixed
+                            //sh "yarn run test ." fails because it ask the user another input before running tests, to be fixed
                         }
                     }
                 }
@@ -45,13 +44,14 @@ pipeline {
                     }
                 }
                 //Testing django server
+                //Running unit tests only
                 stage('test_djangoserver') {
                     agent {
                         docker "project_360_django"
                     }
                     steps {
-                        dir("project/backend/backend_django/camera/recognition") {
-                            sh "python -m unittest tests.py"
+                        dir("project/backend/backend_django/camera/recognition/") {
+                            sh "python -m unittest test_functions.py"
                         }
                     }
                 }
