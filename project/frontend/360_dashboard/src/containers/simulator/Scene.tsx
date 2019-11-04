@@ -445,14 +445,14 @@ class Scene extends Component {
 
   async getRealTimeData() {
     var data = new DataFromCamera();
-    console.log("Raw data:" + await data.getDataFromCamera());
+    // console.log("Raw data:" + await data.getDataFromCamera());
   }
 
   async getNumberOfCars() {
     var data = new DataFromCamera();
     var rawData = await data.getDataFromCamera() || '';
     var numberCars = await data.getNumberOfCars(rawData);
-    console.log("Number of cars : " + numberCars);
+    // console.log("Number of cars : " + numberCars);
     this.numberOfCars = numberCars;
   }
 
@@ -509,9 +509,6 @@ class Scene extends Component {
       this.timeLastMoment =Date.now();
       this.fpsCounter=0;
       this.getNumberOfCars();
-    }
-    
-    if(deltaTime>2000){
     }
     
     const fpsText = new PIXI.Text("FPS: "+ this.fps,this.textStyle);
