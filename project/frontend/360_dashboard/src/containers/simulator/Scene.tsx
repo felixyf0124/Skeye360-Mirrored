@@ -231,17 +231,17 @@ class Scene extends Component {
     this.numberOfCars = 0;
 
     //To call method to get real time data from the camera feed
-    this.getRealTimeData();
+    //this.getRealTimeData();
     //To get the number of cars currently in the camera feed
-    this.getNumberOfCars();
+    //this.getNumberOfCars();
 
 
     // h c car obj
 
     this. numberOfCars = 3;
-    for(let i =0;i<3;++i)
+    for(let i =0;i<1;++i)
     {
-      this.roadIntersection.addNewVehicle(0,0,4);
+      this.roadIntersection.addNewVehicle(0,0,0.06 );
     }
     
   }
@@ -508,7 +508,7 @@ class Scene extends Component {
       this.fps = this.fpsCounter;
       this.timeLastMoment =Date.now();
       this.fpsCounter=0;
-      this.getNumberOfCars();
+      // this.getNumberOfCars();
     }
     
     if(deltaTime>2000){
@@ -628,7 +628,7 @@ class Scene extends Component {
     _vertices.push(_bottom.plus(_direction_perpendicular.multiply(width/2)));
     _vertices.push(_bottom.plus(_direction_perpendicular.multiply(-width/2)));
 
-    if(!isHollow)
+    if(!_isHollow)
     {
       _triangle.beginFill(color,1);
     }
@@ -638,7 +638,7 @@ class Scene extends Component {
     _triangle.lineTo(_vertices[2].x,_vertices[2].y);
     _triangle.lineTo(_vertices[0].x,_vertices[0].y);
     
-    if(!isHollow)
+    if(!_isHollow)
     {
     _triangle.endFill();
     }

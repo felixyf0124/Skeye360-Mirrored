@@ -140,16 +140,17 @@ export default class RoadIntersection {
         
         this.roadSections[this.getRoadSectionIndex(_obj_v.getRoadSectionId())].lane_in[_obj_v.getLaneId()].addObjId(_obj_v.getId());
         const _lane_from = this.getLane(lane_id,section_id);
-        console.log(_lane_from);
         const _lane_pointer = _lane_from.getHeadLink();
         const _lane_to = this.getLane(_lane_pointer[0].getLaneId(),_lane_pointer[0].getSectionId(),false);
         //safety dis
         const _safety_dis = 25;
 
-        _obj_v.path.push(_lane_from.getTail());
-        _obj_v.path.push(_lane_from.getHead());
-        _obj_v.path.push(_lane_to.getTail());
-        _obj_v.path.push(_lane_to.getHead());
+        _obj_v.path.push([_lane_from.getTail(),_lane_from.getHead()]);
+        _obj_v.path.push([_lane_from.getHead(),_lane_to.getTail()]);
+        _obj_v.path.push([_lane_to.getTail(),_lane_to.getHead()]);
+        // console.log('_obj_v.path');
+        // console.log(_lane_to);
+        // console.log(_obj_v.path);
 
         const _dir = ts.tsNormalize(_lane_from.getHead().minus(_lane_from.getTail()));
         
@@ -385,10 +386,13 @@ export default class RoadIntersection {
             if(_front_v !== null)
             {
                 this.vehicles[i].checkFront(_front_v.getTraveled(),25,_front_v.getSpeed());
+            }else{
+
             }
             this.vehicles[i].updatePosition(this.vehicles[i].getSpeed()*this.vehicles[i].getDeltaT());
         }
 
+       while(this.checkTransitionVehicle());
        while(this.checkLeavingVehicle());
     }
 
@@ -406,10 +410,10 @@ export default class RoadIntersection {
         }
     }
     
-    vehicleGone(id:number){
+    vehicleGone(id:number,isLaneIn?:boolean){
         const _vehicle = this.getVehicle(id);
         this.roadSections[this.getRoadSectionIndex(_vehicle.getRoadSectionId())]
-            .objGone(_vehicle.getLaneId(),_vehicle.getId());
+            .objGone(_vehicle.getLaneId(),_vehicle.getId(),isLaneIn);
         this.vehicles.splice(this.getVehicleIndex(id),1);
     }
 
@@ -429,7 +433,25 @@ export default class RoadIntersection {
         {
             if(this.vehicles[i].getIsGone())
             {
-                this.vehicleGone(this.vehicles[i].getId());
+                this.vehicleGone(this.vehicles[i].getId(),false);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    checkTransitionVehicle(){
+        for(let i=0;i<this.vehicles.length;++i)
+        {
+            if(this.vehicles[i].getIsInTransition()){
+                if(this.vehicles[i].getAtPathSection() === 1){
+                    this.vehicleGone(this.vehicles[i].getId());
+                }
+                if(this.vehicles[i].getAtPathSection() === 2){
+                    this.roadSections[this.getRoadSectionIndex(this.vehicles[i].getRoadSectionId())]
+                        .lane_out[this.vehicles[i].getLaneId()].addObjId(this.vehicles[i].getId());
+                }
+                this.vehicles[i].resetIsInTransition();
                 return true;
             }
         }

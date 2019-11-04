@@ -50,8 +50,8 @@ export default class RoadSection {
         return this.lane_out;
     }
     getLaneAt(id:number,isLaneIn?:boolean){
-        const _isLaneIn:boolean = isLaneIn||true;
-        if(_isLaneIn){
+        //var _isLaneIn:boolean = isLaneIn||true;
+        if(isLaneIn === true || isLaneIn === undefined){
             return this.lane_in[id];
         }else{
             return this.lane_out[id];
@@ -165,7 +165,11 @@ export default class RoadSection {
 
     }
 
-    objGone(lane_in_id:number,obj_id:number){
-        this.lane_in[lane_in_id].objGone(obj_id);
+    objGone(lane_id:number,obj_id:number,isLaneIn?:boolean){
+        if(isLaneIn === true || isLaneIn === undefined){
+            this.lane_in[lane_id].objGone(obj_id);
+        }else{
+            this.lane_out[lane_id].objGone(obj_id);
+        }
     }
 }
