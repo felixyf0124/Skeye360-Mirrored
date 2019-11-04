@@ -391,7 +391,7 @@ export default class RoadIntersection {
             }
             if(_front_v !== null)
             {
-                this.vehicles[i].checkFront(_front_v.getTraveled(),25,_front_v.getSpeed());
+                //this.vehicles[i].checkFront(_front_v.getTraveled(),25,_front_v.getSpeed());
             }else{
 
             }

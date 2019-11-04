@@ -239,9 +239,9 @@ class Scene extends Component {
     // h c car obj
 
     this. numberOfCars = 3;
-    for(let i =0;i<1;++i)
+    for(let i =0;i<3;++i)
     {
-      this.roadIntersection.addNewVehicle(0,0,0.06 );
+      this.roadIntersection.addNewVehicle(0,0,0.06,i );
     }
     
   }

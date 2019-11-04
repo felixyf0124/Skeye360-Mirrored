@@ -86,6 +86,15 @@ export default class vehicle extends Object{
     updatePosition(disToTravel:number){
         const _unit_vec = ts.tsNormalize(this.path[this.atPathSection][this.atPath+1].minus(this.position));
         const _length_of_current_path = this.getPathLength(this.atPathSection,this.atPath+1);
+        if(this.atPathSection === 0){
+            const _dis_to_travel_of_current_path = ts.tsLength(this.position.minus(
+                this.path[this.atPathSection][this.atPath+1]
+            ));
+            if(_dis_to_travel_of_current_path>_length_of_current_path){
+                this.traveled = _length_of_current_path - _dis_to_travel_of_current_path;
+            }
+            
+        }
         // console.log('_length_of_current_path '+ _length_of_current_path);
         // console.log('traveled '+ (this.traveled + disToTravel));
         if(this.traveled + disToTravel<_length_of_current_path)
@@ -114,6 +123,8 @@ export default class vehicle extends Object{
                 this.updatePosition(_dis_to_travel);
             }
         }
+        // console.log('id: '+ this.id + " | " + this.position.x + " | " + this.position.y);
+
     }
 
     getDeltaT(){
