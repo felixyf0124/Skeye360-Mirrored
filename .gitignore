@@ -6,6 +6,7 @@ venv/*
 .vscode/*
 project/frontend/360_dashboard/package-lock.json
 project/frontend/360_dashboard/yarn.lock
+project/backend/360_django/djangosite/djangosite_api/migrations/*
 project/backend/backend_django/camera/yolov3.weights
 *.mp4
 *.weights

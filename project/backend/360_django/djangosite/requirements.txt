@@ -1,7 +1,9 @@
-django==2.0.0
+django==2.2
 djangorestframework==3.9.2
+django-cors-headers
+django-extensions # ref: https://django-extensions.readthedocs.io/en/latest/installation_instructions.html
+django-filter # ref: https://django-filter.readthedocs.io/en/master/
 djongo
 sqlparse==0.2.4
 markdown
-django-filter
-pygments # for highlighting
+pylint
