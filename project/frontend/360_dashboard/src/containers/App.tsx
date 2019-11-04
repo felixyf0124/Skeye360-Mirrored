@@ -29,7 +29,6 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
     
   // </div>
   <Switch>
-    <Scene></Scene>
     <Route
       path="/login"
       render={() => <Login />}

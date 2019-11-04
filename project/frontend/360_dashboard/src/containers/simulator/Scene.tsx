@@ -299,8 +299,13 @@ class Scene extends Component {
     this.app.stage.x = this.window_w/2;
     this.app.stage.y = this.window_h/2;
     
-    this.controlPanelContainer.x = -this.coordinateOffset.x;
-    this.controlPanelContainer.y = -this.coordinateOffset.y;
+    if(this.isControlPanelShown){
+      this.controlPanelContainer.x = -this.coordinateOffset.x;
+      this.controlPanelContainer.y = -this.coordinateOffset.y;
+    }else{
+      this.controlPanelContainer.x = - this.controlPanel_G.width - this.coordinateOffset.x;
+      this.controlPanelContainer.y = -this.coordinateOffset.y;
+    }
 
     this.drawBackground(parseInt(this.getColor('skeye_blue'),16), 0.16);
     this.drawRoad();

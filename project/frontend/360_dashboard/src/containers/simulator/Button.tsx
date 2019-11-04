@@ -48,12 +48,18 @@ export default class Button extends PIXI.Graphics {
     }
 
     onClick(){
-        this.isHit = true;
+        if(this.isOver)
+        {
+            this.isHit = true;
+        }
     }
 
     onDown(){
-
-        this.isDown = true;
+        if(this.isOver)
+        {
+            this.isHit = true;
+            this.isDown = true;
+        }
         // console.log("+1 down | " + this.isDown + " | " + this.name);
     }
 
