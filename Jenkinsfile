@@ -46,12 +46,12 @@ pipeline {
                 }
                 //Testing django server
                 stage('test_djangoserver') {
+                    agent {
+                        docker "project_360_django"
+                    }
                     steps {
-                        script {
-                            dir("project/backend/backend_django/camera") {
-                                sh "ls"
-                                sh "python3 manage.py test ."
-                            }
+                        dir("project/backend/backend_django/camera/recognition") {
+                            sh "python -m unittest tests.py"
                         }
                     }
                 }
