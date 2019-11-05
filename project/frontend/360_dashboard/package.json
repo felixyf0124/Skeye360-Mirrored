@@ -3,16 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/register": "^7.6.2",
     "@types/google-map-react": "^1.1.0",
     "@types/jquery": "^3.3.31",
     "@types/react-router-dom": "^5.1.0",
     "@types/redux-saga": "^0.10.5",
     "@types/styled-components": "^4.1.19",
     "apexcharts": "^3.10.0",
+    "assert": "^2.0.0",
     "babel-preset-react": "^6.24.1",
     "bootstrap": "^4.3.1",
+    "chai": "^4.2.0",
     "connected-react-router": "^6.5.2",
     "cors": "^2.8.5",
+    "eslint-plugin-mocha": "^6.2.1",
     "eslint-plugin-prettier": "^3.1.1",
     "google-map-react": "^1.1.5",
     "history": "^4.10.1",
@@ -32,6 +36,7 @@
     "redux-logger": "^3.0.6",
     "redux-react-session": "^2.6.0",
     "redux-saga": "^1.1.1",
+    "redux-saga-test-plan": "^4.0.0-rc.3",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.4.0",
     "typescript": "^3.6.3"
@@ -39,12 +44,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "mocha 'src/**/*.spec.js' --exclude '**/node_modules/**'",
     "eject": "react-scripts eject",
-    "lint": "yarn lint:js && yarn lint:css",
+    "lint": "yarn lint:js",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx .",
-    "lint:js:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
-    "lint:css": "lerna run lint:css"
+    "lint:js:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -77,6 +81,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "mocha": "^6.2.2",
     "stylelint-config-recommended": "^2.2.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.8.0"
