@@ -5,37 +5,24 @@ import TrafficLight from './TrafficLight';
  */
 export default class TrafficLightManager {
 
-    //id:number;
     roadIntersection_id:number;
     trafficLightQueue: Array<TrafficLight>;
     countDown: number;
-    // countDownOffset: number;
 
-    //TimePairs is an array of an array of numbers?
-    //timePairs: Array<Array<number>>;
     startTime: number;
     timeOffset: number;
-    //totalTimePeriod: number;
     deltaT: number;
 
-    //constructor(roadIntersectionid:number, startTime:number, timeOffset:number);
     constructor(roadIntersectionid:number, timeOffset?:number){
         this.roadIntersection_id = roadIntersectionid;
         this.trafficLightQueue = new Array<TrafficLight>();
         this.countDown = 0;
-        // this.countDownOffset = 0;
-        
-        //this.timePairs = timePairs;
         this.startTime = Date.now();
         this.timeOffset = timeOffset||0;
         this.deltaT = 0;
-        //this.totalTimePeriod = this.calculateTotalPeriodTime(this.timePairs.length);
     }
 
     //Getters
-    // private getTrafficLightManagerId(): number {
-    //     return this.id;
-    // }
     getRoadIntersectionId(): number {
         return this.roadIntersection_id;
     }
@@ -80,18 +67,12 @@ export default class TrafficLightManager {
     getCountDown(): number {
         return this.countDown;
     }
-    // getTimePairs(): Array<Array<number>> {
-    //     return this.timePairs;
-    // }
     getStartTime(): number {
         return this.startTime;
     }
     getTimeOffset(): number {
         return this.timeOffset;
     }
-    // getTotalTimePeriod(): number {
-    //     return this.totalTimePeriod;
-    // }
     getDeltaT(): number {
         return this.deltaT
     }
@@ -124,9 +105,6 @@ export default class TrafficLightManager {
     setCountDown(countDown: number) {
         this.countDown = countDown;
     }
-    // setTimePairs(timePairs: Array<Array<number>>) {
-    //     this.timePairs = timePairs;
-    // }
     setStartTime(startTime: number) {
         this.startTime = startTime;
     }
@@ -135,27 +113,6 @@ export default class TrafficLightManager {
     }
     setDeltaT(deltaT: number) {
         this.deltaT = deltaT;
-    }
-    setAllTrafficLightsAsStop() {
-        //This will set all traffic lights at a specific intersection as a red
-        for(let index = 0; index < this.trafficLightQueue.length; index++) {
-            this.trafficLightQueue[index].setStatus("red");
-        }
-    }
-    setGreenLight(trafficLightId: number, timeGiven:number) {
-        var lookup = this.trafficLightQueue.filter(function(trafficLight) {
-            return trafficLight.id === trafficLightId;
-        });
-
-        //TODO:
-        //Check for other traffic lights if its green
-
-        //Check that lookup is not empty or undefined
-        // if(!lookup.length || !(lookup === undefined)) {
-        //     lookup[0].setTrafficLightStatusCountDown(timeGiven);
-        //     lookup[0].setTrafficLightStatus("green");
-        // }
-
     }
 
     setTrafficLightQueue(trafficLightsQueue: Array<TrafficLight>) {
@@ -170,8 +127,6 @@ export default class TrafficLightManager {
     deForceState(id:number){
         this.trafficLightQueue[this.getTrafficLightIndex(id)].setIsForced(false);
     }
-
-    
 
     /**
      * add traffic light object to the traffic light queue
@@ -262,9 +217,11 @@ export default class TrafficLightManager {
 
         if(isFinite(ratio||NaN)){
             _ratio = ratio||0.5;
+        }else{
+            _ratio = 0.5;
         }
 
-        if((Date.now() - this.startTime)%1000>0.5*1000)
+        if((Date.now() - this.startTime)%1000>_ratio*1000)
         {
             return true;
         }else

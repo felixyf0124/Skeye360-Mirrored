@@ -12,12 +12,9 @@ export default class Lane {
     //1 or -1 same or opposite with road section
     laneDirection: number;
     roadSection_id: number;
-    //roadIntersection_id:number
     objects:Array<number>;
     head:Coordinate;
     tail:Coordinate;
-    // start:{x:number,y:number};
-    // end:{x:number,y:number};
     headLinks: Array<LanePointer>;
     tailLinks: Array<LanePointer>;
     trafficLight_id:number;
@@ -27,11 +24,7 @@ export default class Lane {
         this.laneType = laneType;
         this.laneDirection = laneDirection;
         this.roadSection_id = roadSection_id;
-        //this.roadIntersection_id = roadIntersection_id;
         this.objects = new Array<number>();
-        // is there anyway to make this null?
-        // this.start = {x:0,y:0};
-        // this.end = {x:0,y:0};
         this.head = new Coordinate();
         this.tail = new Coordinate();
         this.headLinks = new Array<LanePointer>();
@@ -52,9 +45,6 @@ export default class Lane {
     getRoadSectionId(): number {
         return this.roadSection_id;
     }
-    // getRoadIntersectionId(): number {
-    //     return this.roadIntersection_id
-    // }
     getObjects(): Array<number> {
         return this.objects;
     }
@@ -101,9 +91,6 @@ export default class Lane {
     setRoadSectionId(roadSection_id: number) {
         this.roadSection_id = roadSection_id;
     }
-    // setroadIntersectionId(roadIntersection_id: number) {
-    //     this.roadIntersection_id = roadIntersection_id;
-    // }
     setHead(head: Coordinate) {
         this.head = head;
     }

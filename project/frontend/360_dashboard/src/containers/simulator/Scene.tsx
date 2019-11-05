@@ -6,19 +6,10 @@ import { connect } from 'react-redux';
 import * as PIXI from "pixi.js-legacy";
 import { RootState } from '../../reducers/rootReducer';
 import { Store } from 'redux';
-import vehicle from '../../images/vehicle.png';
-import ppl from '../../images/ppl.png';
-import TrafficLight from './simulator_management/TrafficLight';
-import TrafficLightMG from './simulator_management/TrafficLightManager';
-import VehicleObj from './simulator_management/Vehicle';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry'
 import { Container, Button } from 'react-bootstrap';
 import vec2 from './simulator_management/vec2';
-import stopBlueImage from '../../images/stopBlue.png';
-import stopRedImage from '../../images/stopRed.png';
-import TrafficLightManager from './simulator_management/TrafficLightManager';
-import TrafficLightManualControl from './simulator_management/TrafficLightManualControl';
 import { number } from 'prop-types';
 import Btn from './Button';
 import DataFromCamera from './simulator_management/DataFromCamera';
@@ -70,8 +61,6 @@ class Scene extends Component {
 
   vehicles:Array<Vehicle>;
 
-  trafficLightManualControl: TrafficLightManualControl;
-  
   btnShowCP:Btn;
   btnStop:Btn;
   isControlPanelShown:Boolean;
@@ -125,24 +114,14 @@ class Scene extends Component {
     this.fps = 0;
     this.fpsCounter = 0;
 
-
-    //// Start of Traffic Light Manual Control
-    //TrafficLightManualControl(0 --> is the intersectionId)
-    this.trafficLightManualControl = new TrafficLightManualControl(0);
-    //// END of Traffic Light Manual Control
-
     //// START of initialization of Road Intersection
     this.roadIntersection = new RoadIntersection(0, ts.tsVec2(0,0));
-    //this.trafficLightManager = new TrafficLightMG(this.roadIntersection.getRoadIntersectionId(),Date.now(),this.trafficLightCounterOffset);
 
     this.textStyle = {
       fontFamily: 'Courier',
       fontSize: '12px',
       fill : '#F7EDCA',
     }
-    // this.app.loader
-    // .add("vehicle",vehicle)
-    // .add("ppl",ppl);
     
     console.log(" ang");
     console.log(ts.getAngleOfVec(new vec2(1,1))/Math.PI);
@@ -186,30 +165,13 @@ class Scene extends Component {
     this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[0], 20);
     this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[1], 20);
 
-    // for(let i = 0; i < _trafficLight_binding_data.length; ++i)
-    // {
-    //   this.roadIntersection.addNewTrafficLight(_trafficLight_binding_data[i], 15);
-    // }
-    //this.roadIntersection.resortRoadSections();
     var _inter = this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();
-    // this.roadIntersection.
-    // console.log(this.roadIntersection.getRoadSections());
 
 
     this.app.stage.x = this.window_w/2;
     this.app.stage.y = this.window_h/2;
-    //this.app.stage.scale.y=-1;
 
-    const _test = new PIXI.Graphics();
-    _test.lineStyle(1,0xff0000);
-    for(let i =0;i<_inter.length;++i)
-    {
-      _test.moveTo(_inter[i][0].x,_inter[i][0].y);
-      _test.lineTo(_inter[i][1].x,_inter[i][1].y);
-    }
-
-    this.mapContainer.addChild(_test);
     //// END of initialization of Road Intersection
 
     //// START of Control Panel
@@ -247,7 +209,6 @@ class Scene extends Component {
   }
 
   initialize = () => {
-    //this.testdraw();
     window.addEventListener('resize',this.resize);
     this.app.stage.on("click",onclick =()=>{});
     this.app.stage.on("mouseup",onmouseup = () => {});
@@ -271,8 +232,6 @@ class Scene extends Component {
  
   setup = () => {
   this.app.loader
-       .add("vehicle2",vehicle)
-       .add("ppl2",ppl)
        .load(this.initialize);
   };
 
@@ -309,7 +268,6 @@ class Scene extends Component {
 
     this.drawBackground(parseInt(this.getColor('skeye_blue'),16), 0.16);
     this.drawRoad();
-    //this.car.setPositionOffset(this.coordinateOffset.x, this.coordinateOffset.y + this.window_h*this.window_scale_ratio*0.3);
   }
 
   updateCar = (element:any) => {
@@ -321,34 +279,10 @@ class Scene extends Component {
       }
   };
 
-  testdraw(){
-    var _t = new PIXI.Graphics();
-    //var _triangle = _obj_g;
-    //console.log("ok 278 \n");
-    var _vertices = new Array<vec2>();
-    _vertices.push(new vec2(1,1));
-    _vertices.push(new vec2(1,100));
-    _vertices.push(new vec2(100,100));
-
-    _t.lineStyle(1,0xffffff);
-    
-    _t.moveTo(-this.window_w,-this.window_h);
-    _t.lineTo(this.window_w,this.window_h);
-    // _t.endFill();
-   
-    _t.endFill();
-    this.mapContainer.addChild(_t);
-  }
-
   drawRoad=()=>{
-    //this.mapContainer.removeChildren();
     this.road_G.clear();
     this.road_G.removeChildren();
-    //this.road_G = new PIXI.Graphics();
     var _sections = this.roadIntersection.getRoadSections();
-    // console.log(this.roadIntersection.roadSections);
-    // console.log(_sections);
-    const _red = 0xff0000;
     const _startBlinkTime = 10;
     for(var i:number = 0; i < _sections.length; ++i)
     {
@@ -397,11 +331,6 @@ class Scene extends Component {
           this.road_G.addChild(_graphic_obj);
         }
 
-        const _test = new PIXI.Graphics();
-        _test.lineStyle(1,_red);
-        _test.moveTo(_lane.getTail().x,_lane.getTail().y);
-        _test.lineTo(_lane.getHead().x,_lane.getHead().y);
-        this.road_G.addChild(_test);
       }
 
       for(let j:number = 0; j < _lane_out.length; ++j)
@@ -419,11 +348,6 @@ class Scene extends Component {
           this.road_G.addChild(_graphic_obj);
         }
 
-        const _test = new PIXI.Graphics();
-        _test.lineStyle(1,_red);
-        _test.moveTo(_lane.getTail().x,_lane.getTail().y);
-        _test.lineTo(_lane.getHead().x,_lane.getHead().y);
-        //this.mapContainer.addChild(_test);
       }
     }
   }

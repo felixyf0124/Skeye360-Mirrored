@@ -202,8 +202,6 @@ export default class RoadIntersection {
 
         var _intersections = new Array<Array<vec2>>();
         for(let i = 0; i < this.roadSections.length; ++i){
-            // var _intersection_left = new vec2();
-            // var _intersection_right = new vec2();
             //check left side
             const _lane_out = this.roadSections[i].getLaneAt(this.roadSections[i].lane_out.length-1, false);
             const _line_left = ts.line(_lane_out.getHead(), _lane_out.getTail());
@@ -239,13 +237,9 @@ export default class RoadIntersection {
             const _intersection_right = ts.lineIntersection(_line_right,_edge_left_R_sec);
 
             _intersections.push([_intersection_left,_intersection_right]);
-        //TO DO 
-        //solve the bug and add improved auto offset update funtion
-        this.roadSections[i].updateLaneWithOffset(_intersection_left,_intersection_right);
+            
+            this.roadSections[i].updateLaneWithOffset(_intersection_left,_intersection_right);
 
-            //temp solution
-            // const _direct = ts.tsNormalize(this.roadSections[i].getTail().minus(this.roadSections[i].getHead()));
-            // this.roadSections[i].offsetLanes(_direct.multiply(3*this.laneWidth));
         }
         return _intersections;
     }
@@ -298,8 +292,6 @@ export default class RoadIntersection {
         {
             for(let j = 0; j < this.roadSections[i].lane_in.length; ++j)
             {
-        // console.log(_resort[0]);
-
                 var _isExisted = false;
                 for(let k = 0; k < _resort.length; ++k)
                 {
@@ -386,7 +378,6 @@ export default class RoadIntersection {
                     const _tl_id = this.roadSections[this.getRoadSectionIndex(_section_id)].getLaneAt(_lane_id).getTrafficLightId();
                     const _tl_state = this.getTrafficLightState(_tl_id);
                     const _tl_cd = this.getTrafficLightCD(_tl_id);
-                    //
                     if(_tl_state === "red" || (_tl_state === "yellow" && _tl_cd < 3 )){
                         this.vehicles[i].checkFront(this.getLane(_lane_id,_section_id).getHead(),
                         16,0);
@@ -469,9 +460,7 @@ export default class RoadIntersection {
                         .lane_out[this.vehicles[i].getLaneId()].addObjId(this.vehicles[i].getId());
                 }
                 this.vehicles[i].resetIsInTransition();
-                // return true;
             }
         }
-        // return false;
     }
 }
