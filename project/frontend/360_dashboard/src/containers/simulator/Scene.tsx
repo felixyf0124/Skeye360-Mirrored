@@ -176,6 +176,7 @@ class Scene extends Component {
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 20);
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 20);
 
+    this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();
 
     this.app.stage.x = this.windowW / 2;
