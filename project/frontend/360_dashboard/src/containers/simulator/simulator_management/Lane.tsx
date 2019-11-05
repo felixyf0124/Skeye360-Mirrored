@@ -104,31 +104,27 @@ export default class Lane {
 
     addHeadLink(headLink: LanePointer) {
         var _isExisted = false;
-        for(let i = 0; i < this.headLinks.length; ++i)
-        {
+        for(let i = 0; i < this.headLinks.length; ++i) {
             if(this.headLinks[i].section_id === headLink.section_id && this.headLinks[i].lane_id === headLink.lane_id)
             {
                 _isExisted = true;
             }
         }
-        if(!_isExisted)
-        {
+        if(!_isExisted) {
             this.headLinks.push(headLink);
         }
     }
 
     addTailLink(tailLink: LanePointer) {
         var _isExisted = false;
-        for(let i = 0; i < this.tailLinks.length; ++i)
-        {
+        for(let i = 0; i < this.tailLinks.length; ++i) {
             if(this.tailLinks[i].section_id === tailLink.section_id 
                 && this.tailLinks[i].lane_id === tailLink.lane_id)
             {
                 _isExisted = true;
             }
         }
-        if(!_isExisted)
-        {
+        if(!_isExisted) {
             this.tailLinks.push(tailLink);
         }
     }

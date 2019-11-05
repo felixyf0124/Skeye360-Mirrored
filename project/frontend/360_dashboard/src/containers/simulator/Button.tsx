@@ -111,13 +111,12 @@ export default class Button extends PIXI.Graphics {
         this.text.y = (this.btnHeight-this.text.height)/2;
     }
 
-    isPressed():boolean{
+    isPressed():boolean {
         if(this.isHit)
         {
             this.isHit = false;
             return true;
-        }else
-        {
+        } else {
             return false;
         }
     }
