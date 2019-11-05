@@ -52,9 +52,6 @@ class Scene extends Component {
   trafficLight_G: PIXI.Graphics;
 
   controlPanel_G: PIXI.Graphics;
-
-  // should be removed after the roadintersection implemented
-  // trafficLightManager: TrafficLightMG;
   roadIntersection: RoadIntersection;
 
   // the following should be moved outside when enable to connect with db
@@ -255,7 +252,6 @@ class Scene extends Component {
     this.app.ticker.add(this.animation);
   };
 
-
   setup = () => {
     this.app.loader
       .load(this.initialize);
@@ -380,18 +376,17 @@ class Scene extends Component {
   }
 
   async getRealTimeData() {
-    const data = new DataFromCamera();
-    console.log(`Raw data:${await data.getDataFromCamera()}`);
+    var data = new DataFromCamera();
+    // console.log("Raw data:" + await data.getDataFromCamera());
   }
 
   async getNumberOfCars() {
-    const data = new DataFromCamera();
-    const rawData = await data.getDataFromCamera() || '';
-    const numberCars = await data.getNumberOfCars(rawData);
-    console.log(`Number of cars : ${numberCars}`);
+    var data = new DataFromCamera();
+    var rawData = await data.getDataFromCamera() || '';
+    var numberCars = await data.getNumberOfCars(rawData);
+    // console.log("Number of cars : " + numberCars);
     this.numberOfCars = numberCars;
   }
-
 
   renderObjects = () => {
     this.objectContainer.removeChildren();
@@ -452,14 +447,7 @@ class Scene extends Component {
     numberCarsText.x = this.window_w / 2 - 80;
     numberCarsText.y = -this.window_h / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
-    // const _stopline = {
-    //   x:(this.road_w_v/2 + 1.2)*this.lane_w,
-    //   y:0
-    // }
-    // this.car.setStopLine(_stopline);
-    const lane_w = 60;
-    // this.drawTrafficLight(this.roadData[0],this.roadData[1],this.roadData[2],this.roadData[3],this.mapContainer,true,10,5,10,5);
-    // const _light_state = this.trafficLightManager.getTrafficLightStateAtDirection(0);
+    
   }
 
   render = () => {
@@ -598,13 +586,10 @@ class Scene extends Component {
 
 
     this.btnShowCP.x = this.controlPanel_G.width;
-    // _btn_pop_hide.y = 120;
     this.controlPanelContainer.addChild(this.btnShowCP);
     this.updateControlPanelDisplayState(0);
     console.log(this.controlPanelContainer.x);
-    // stop btn
-    // this.btnStop = new Btn(160,26,"FORCE STOP", 0x51BCD8,0.5);
-    this.btnStop.setBackground(_color, 0.1, 1, _color);
+    this.btnStop.setBackground(_color,0.1,1,_color);
     const _textStyle2 = {
       // fontFamily: 'Courier',
       fontSize: '12px',
@@ -614,9 +599,8 @@ class Scene extends Component {
     this.btnStop.setTextStyle(_textStyle2);
     this.btnStop.x = (this.controlPanel_G.width - this.btnStop.width) / 2;
     this.btnStop.y = this.controlPanel_G.height - 40;
-    // this.btnStop.hitArea = new PIXI.Rectangle(0,0, this.btnStop.btnWidth,this.btnStop.btnHeight);
     this.controlPanelContainer.addChild(this.btnStop);
-    // console.log(this.btnStop.hitArea);
+    
   }
 
   updateControlPanelDisplayState(animationSpeed: number) {
@@ -672,5 +656,5 @@ class Scene extends Component {
 }
 
 
-export default
+export default 
 (Scene);

@@ -6,7 +6,6 @@ import { RootState } from '../reducers/rootReducer';
 import Login from './Login';
 // import Footer from './components/Footer';
 // import LeftPanel from './components/LeftPanel';
-// import Scene from '../simulator/Scene'
 
 import '../css/App.css';
 import SkeyeMap from './SkeyeMap';
