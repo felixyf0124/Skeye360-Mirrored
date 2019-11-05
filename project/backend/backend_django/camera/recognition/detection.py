@@ -1,14 +1,14 @@
 import cv2 
+import os
 import numpy as np
 import time
 import threading
-from .intersection import Intersection
-
+import sys
+import dlib
 from .db import *
-from .centroidtracker import CentroidTracker
+from .intersection import Intersection
 from .trackableobject import TrackableObject
 from .coordinate import Coordinate
-import dlib
 from collections import deque
 from .deep_sort import preprocessing
 from .deep_sort import nn_matching
@@ -37,13 +37,12 @@ class Detector:
         classes = None
         with open(self.class_names, 'r') as f:
             classes = [line.strip() for line in f.readlines()]
-        print(classes)
         # Define network from configuration file and load the weights from the given weights file
         net = cv2.dnn.readNet(self.weights,self.config)
         return classes, net
 
     # Get names of output layers, output for YOLOv3 is ['yolo_16', 'yolo_23']
-    def getOutputsNames(self, net):
+    def get_outputs_names(self, net):
         layersNames = net.getLayerNames()
         return [layersNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
@@ -140,18 +139,18 @@ class Detector:
         return tracker
 
     def create_encoder(self):
-        model_filename = '/home/capstone/Soen490/project/backend/backend_django/camera/recognition/model_data/market1501.pb'
+        model_filename = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/recognition/model_data/market1501.pb'
         return gdet.create_box_encoder(model_filename,batch_size=1)
         
     # Generate StreamingHttpResponse
     def gen(self, classes, net):
 
         intersection = self.create_intersection("main@broadway")
-        # # connect db
+        # connect db
         col = connection()
 
-        # # start counting the objects to be detected
-        # self.counting(col,intersection.counters)
+        # start counting the objects to be detected
+        self.counting(col,intersection)
 
         cap = self.open_video()        
 
@@ -182,7 +181,7 @@ class Detector:
             # convert the frame to a blob and detect through the network
             blob = cv2.dnn.blobFromImage(image, 1.0/255.0, (416,416), [0,0,0], True, crop=False)
             net.setInput(blob)
-            outs = net.forward(self.getOutputsNames(net))
+            outs = net.forward(self.get_outputs_names(net))
             
             class_ids = []
             confidences = []

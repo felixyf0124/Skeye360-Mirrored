@@ -3,13 +3,14 @@ from django.http import HttpResponse
 from django.http import StreamingHttpResponse
 from .detection import Detector
 from .coordinate import Coordinate
+import os
 #reference: http://javabin.cn/2018/django_steam.html
 
 #setting path for yolo configuration
-yolo_config = '/home/capstone/Soen490/project/backend/360_opencv/yolov3.cfg'
-yolo_weights = '/home/capstone/Soen490/project/backend/360_opencv/yolov3.weights'
-yolo_classes = '/home/capstone/Soen490/project/backend/360_opencv/coco.names'
-video_stream = '/home/capstone/Soen490/project/backend/backend_django/camera/hwt.mp4'
+yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
+yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.weights'
+yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/coco.names'
+video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp'
 
 # initialize a detector object
 detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)

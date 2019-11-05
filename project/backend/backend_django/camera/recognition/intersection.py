@@ -1,6 +1,5 @@
-import sys
-sys.path.append(".") 
-from counter import Counter
+
+from .counter import Counter
 
 class Intersection:
     def __init__(self, name):
