@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
-import GoogleMap from '../components/GoogleMap';
 import Header, { Head } from '../components/Header';
 import Simulator from './simulator/Scene';
 

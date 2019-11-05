@@ -5,7 +5,7 @@ import Marker from './Marker';
 
 const API_KEY = 'AIzaSyDF3Bsq5rm-uhEMAqqyMqzgc-dXUPl9Byw';
 
-const GoogleMap = () => {
+const GoogleMap = (): JSX.Element => {
   const [center] = useState({ lat: 45.5017, lng: -73.5673 });
   const [zoom] = useState(11);
 

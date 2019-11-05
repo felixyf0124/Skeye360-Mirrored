@@ -92,7 +92,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       return {
         ...state,
         sessionToken: 'TEST',
-        username: action.name,
+        username: 'TEST',
         authenticated: true,
       };
     }

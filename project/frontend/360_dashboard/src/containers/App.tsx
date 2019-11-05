@@ -18,20 +18,11 @@ interface StateProps {
   authenticated: boolean;
 }
 
-const App = ({ authenticated }: StateProps): JSX.Element => (
-  // <div>
-  //   <Header />
-  //   {authenticated ? (
-  //     <SkeyeMap />
-  //   ) : (
-  //     <Login />
-  //   )}
-
-  // </div>
+const App = (): JSX.Element => (
   <Switch>
     <Route
       path="/login"
-      render={() => <Login />}
+      render={(): JSX.Element => <Login />}
     />
     <Route>
       <Switch>

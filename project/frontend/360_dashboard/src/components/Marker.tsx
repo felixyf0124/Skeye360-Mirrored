@@ -1,8 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import '../css/Marker.css';
 import { Link } from 'react-router-dom';
-import { RootState } from '../reducers/rootReducer';
 
 interface Props {
   color: string;
@@ -10,7 +8,7 @@ interface Props {
   link: string;
 }
 
-const Marker = (props: Props | any) => {
+const Marker = (props: Props | any): JSX.Element => {
   const { color, name, link } = props;
   return (
     <Link to={link}>

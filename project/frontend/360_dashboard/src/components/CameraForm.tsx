@@ -18,20 +18,20 @@ const CameraForm = (props: {
 
   return (
     <div className="form-container">
-      {props.error !== '' ? (
+      {error !== '' ? (
         <div className="form-group">
-          <label>{error}</label>
+          <div>{error}</div>
         </div>
       ) : (
         <div />
       )}
-      <form onSubmit={(e) => {
+      <form onSubmit={(e): void => {
         e.preventDefault();
         handleSubmit();
       }}
       >
         <div className="form-group">
-          <label>City</label>
+          <div>City</div>
           <input
             type="text"
             name="city"
@@ -40,7 +40,7 @@ const CameraForm = (props: {
           />
         </div>
         <div className="form-group">
-          <label>Latitude</label>
+          <div>Latitude</div>
           <input
             type="text"
             name="lat"
@@ -49,7 +49,7 @@ const CameraForm = (props: {
           />
         </div>
         <div className="form-group">
-          <label>Longitude</label>
+          <div>Longitude</div>
           <input
             type="text"
             name="lng"
@@ -58,7 +58,7 @@ const CameraForm = (props: {
           />
         </div>
         <div className="form-group">
-          <label>Camera URL</label>
+          <div>Camera URL</div>
           <input
             type="text"
             name="cameraURL"
@@ -67,7 +67,7 @@ const CameraForm = (props: {
           />
         </div>
         <div className="form-group">
-          <label>Street Intersection</label>
+          <div>Street Intersection</div>
           <input
             type="text"
             name="street"

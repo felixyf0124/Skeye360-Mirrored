@@ -23,38 +23,45 @@ interface DispatchProps {
 
 const Login = (props: StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
-  const { username, password } = state;
+  const {
+    username,
+    password,
 
-  console.log(`ASD:${username},${password}`);
+    authenticated,
+    name,
+    error,
+  } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  const handleLoginClick = () => {
+  // eslint-disable-next-line consistent-return
+  const handleLoginClick = (): any => {
     const { historyPush } = props;
     historyPush('/login');
-    if (!props.authenticated) {
+    if (!authenticated) {
       return <Redirect push to="/" />;
     }
   };
 
-  if (props.authenticated) alert(`Welcome ${props.name}! `);
-  if (props.authenticated) return <Redirect push to="/" />;
+  // eslint-disable-next-line no-alert
+  if (authenticated) alert(`Welcome ${name}! `);
+  if (authenticated) return <Redirect push to="/" />;
 
   return (
     <div>
       <Header />
       <div className="form-container">
-        <form onSubmit={(e) => {
+        <form onSubmit={(e): void => {
           e.preventDefault();
           props.authenticate(username, password);
           handleLoginClick();
         }}
         >
-          {props.error !== '' ? (
+          {error !== '' ? (
             <div className="form-group">
-              <label>{props.error}</label>
+              <div>{error}</div>
             </div>
           ) : (
             <div />
@@ -71,7 +78,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
             </label>
           </div>
           <div className="form-group">
-            <label>Password</label>
+            <div>Password</div>
             <input
               type="password"
               name="password"
@@ -80,7 +87,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
             />
           </div>
           <button type="submit">
-                        Login
+            Login
           </button>
         </form>
       </div>

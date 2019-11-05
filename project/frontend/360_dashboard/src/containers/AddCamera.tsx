@@ -14,7 +14,7 @@ interface StateProps {
     city: string;
     lat: number;
     lng: number;
-    camera_url: string;
+    cameraURL: string;
     street: string;
 
     error: string;
@@ -27,19 +27,19 @@ interface DispatchProps {
 const AddCamera = (props: StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
   const {
-    city, lat, lng, camera_url, street, error,
+    city, lat, lng, cameraURL, street, error,
   } = state;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     const { historyPush } = props;
     historyPush('/camera/add');
   };
 
-  if (!props.authenticated) return <Redirect push to="/login" />;
+  if (!state.authenticated) return <Redirect push to="/login" />;
 
   return (
     <div>
@@ -48,7 +48,7 @@ const AddCamera = (props: StateProps & DispatchProps): JSX.Element => {
         city={city}
         lat={lat}
         lng={lng}
-        cameraURL={camera_url}
+        cameraURL={cameraURL}
         street={street}
         error={error}
         handleChange={handleChange}
@@ -66,7 +66,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   city: 'Montreal',
   lat: 0,
   lng: 0,
-  camera_url: '127.0.0.0.1:1234',
+  cameraURL: '127.0.0.0.1:1234',
   street: 'Guy St/St-Cath',
 
   error: '',

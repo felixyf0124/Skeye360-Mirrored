@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 
-const LeftPanel = (props: any) => (
+const LeftPanel = (): JSX.Element => (
   <div className="left-panel-container">
     <Button className="panel-btn">Button 1</Button>
     <Button className="panel-btn">Button 2</Button>
