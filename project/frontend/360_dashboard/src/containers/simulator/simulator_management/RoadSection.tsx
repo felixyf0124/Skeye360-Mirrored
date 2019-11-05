@@ -8,10 +8,7 @@ import * as ts from '../TSGeometry';
 export default class RoadSection {
 
     id:number;
-    // roadSection_id:number;
     roadIntersection_id:number;
-    // head:{x:number,y:number};
-    // tail:{x:number,y:number};
     head: vec2;
     tail: vec2;
     lane_in: Array<Lane>;
@@ -22,8 +19,6 @@ export default class RoadSection {
     {
         this.id = id;
         this.roadIntersection_id = roadIntersection_id;
-        // this.head = {x:0,y:0};
-        // this.tail = tailCoordinate;
         this.head = new vec2();
         this.tail = tailCoordinate;
         this.lane_in = new Array<Lane>();
@@ -50,7 +45,6 @@ export default class RoadSection {
         return this.lane_out;
     }
     getLaneAt(id:number,isLaneIn?:boolean){
-        //var _isLaneIn:boolean = isLaneIn||true;
         if(isLaneIn === true || isLaneIn === undefined){
             return this.lane_in[id];
         }else{
@@ -129,16 +123,10 @@ export default class RoadSection {
     }
 
     updateLaneWithOffset(leftOffset:vec2, rightOffset:vec2){
-        console.log("sadadsa");
-        console.log(leftOffset);
-        console.log(rightOffset);
         const _offset_line = ts.line(leftOffset,rightOffset);
         for(let i = 0; i < this.lane_in.length; ++i)
         {
             const _lane_line = ts.line(this.lane_in[i].getTail(),this.lane_in[i].getHead());
-            // console.log(_offset_line);
-            // console.log('_lane_line');
-            // console.log(_lane_line);
             const _intersection = ts.lineIntersection(_offset_line, _lane_line);
             this.lane_in[i].setHead(_intersection);
         }

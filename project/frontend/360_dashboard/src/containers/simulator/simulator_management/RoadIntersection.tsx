@@ -46,7 +46,7 @@ export default class RoadIntersection {
         return this.roadSections;
     }
 
-    getRoadSection(id:number){
+    getRoadSection(id:number) {
         for(let i = 0; i < this.roadSections.length; ++i)
         {
             if(this.roadSections[i].getId() === id)
@@ -57,7 +57,7 @@ export default class RoadIntersection {
         return new RoadSection(-1,-1,new vec2());
     }
     
-    getRoadSectionIndex(id:number):number{
+    getRoadSectionIndex(id:number):number {
         var _index = -1;
         for(let i = 0; i < this.roadSections.length; ++i)
         {
@@ -70,48 +70,44 @@ export default class RoadIntersection {
         return _index;
     }
 
-    getLane(lane_id:number,section_id:number,isLaneIn?:boolean)
-    {
+    getLane(lane_id:number,section_id:number,isLaneIn?:boolean) {
         const _lane = this.getRoadSection(section_id).getLaneAt(lane_id,isLaneIn);
         return _lane;
     }
 
-    getTrafficLightQueue(){
+    getTrafficLightQueue() {
         return this.TLManager.getTrafficLightQueue();
     }
 
-    getTrafficLightState(id:number):string{
+    getTrafficLightState(id:number):string {
         return this.TLManager.getTrafficLightState(id);
     }
 
-    getTrafficLightCD(id:number):number{
+    getTrafficLightCD(id:number):number {
         return Math.round(this.TLManager.getTrafficLightCD(id));
     }
 
-    getLaneState(section_id:number,lane_id:number, isLaneIn?:boolean):string{
+    getLaneState(section_id:number,lane_id:number, isLaneIn?:boolean):string {
         const _isLaneIn:boolean = isLaneIn||true;
-        if(_isLaneIn)
-        {
+        if(_isLaneIn) {
             const _trafficLight_id = this.roadSections[this.getRoadSectionIndex(section_id)].getLaneAt(lane_id).getTrafficLightId();
             return this.getTrafficLightState(_trafficLight_id);
-        }else{
+        } else {
             return "green";
         }
         
     }
 
-    getVehicle(id:number){
-        for(let i = 0; i < this.vehicles.length; ++i)
-        {
-            if(this.vehicles[i].getId() === id)
-            {
+    getVehicle(id:number) {
+        for(let i = 0; i < this.vehicles.length; ++i) {
+            if(this.vehicles[i].getId() === id) {
                 return this.vehicles[i];
             }
         }
         return  new Vehicle(-1,-1,-1,-1);
     }
 
-    getVehicles(){
+    getVehicles() {
         return this.vehicles;
     }
 
@@ -156,40 +152,37 @@ export default class RoadIntersection {
 
         const _dir = ts.tsNormalize(_lane_from.getHead().minus(_lane_from.getTail()));
         
-        if(_lane_from.getObjIndex(_obj_v.getId()) > 0)
-        {
+        if(_lane_from.getObjIndex(_obj_v.getId()) > 0) {
             const _front_v = this.getVehicle(_lane_from.getObjects()[_lane_from.getObjIndex(_obj_v.getId())-1])
             const _front_pos = _front_v.getPosition().minus(_dir.multiply(_safety_dis));
             let _dis1 = ts.tsLength(_front_pos.minus(_lane_from.getHead()));
             let _dis2 = ts.tsLength(_lane_from.getTail().minus(_lane_from.getHead()));
-            if(_dis1<_dis2)
-            {
+            if(_dis1<_dis2) {
                 _obj_v.setPosition(_lane_from.getTail());
-            }else{
+            } else {
                 _obj_v.setPosition(_front_pos);
             }
 
-        }else{
+        } else {
             _obj_v.setPosition(_lane_from.getTail());
         }
         this.vehicles.push(_obj_v);
         ++this.vehicleCount;
     }
 
-    bindTrafficLight(trafficLight:TrafficLight){
+    bindTrafficLight(trafficLight:TrafficLight) {
         const _toBeBound = trafficLight.getBoundLanes();
-        for(let i = 0; i < _toBeBound.length; ++i)
-        {
+        for(let i = 0; i < _toBeBound.length; ++i) {
             let _index = this.getRoadSectionIndex(_toBeBound[i].section);
             this.roadSections[_index].bindTrafficLightId(_toBeBound[i].id, trafficLight.getId());
         }
     }
 
-    forceTLState(id:number, state:string){
+    forceTLState(id:number, state:string) {
         this.TLManager.forceState(id, state);
     }
 
-    deForceTLState(id:number){
+    deForceTLState(id:number) {
         this.TLManager.deForceState(id);
     }
 
@@ -201,9 +194,7 @@ export default class RoadIntersection {
         }
 
         var _intersections = new Array<Array<vec2>>();
-        for(let i = 0; i < this.roadSections.length; ++i){
-            // var _intersection_left = new vec2();
-            // var _intersection_right = new vec2();
+        for(let i = 0; i < this.roadSections.length; ++i) {
             //check left side
             const _lane_out = this.roadSections[i].getLaneAt(this.roadSections[i].lane_out.length-1, false);
             const _line_left = ts.line(_lane_out.getHead(), _lane_out.getTail());
@@ -239,27 +230,21 @@ export default class RoadIntersection {
             const _intersection_right = ts.lineIntersection(_line_right,_edge_left_R_sec);
 
             _intersections.push([_intersection_left,_intersection_right]);
-        //TO DO 
-        //solve the bug and add improved auto offset update funtion
-        this.roadSections[i].updateLaneWithOffset(_intersection_left,_intersection_right);
+            
+            this.roadSections[i].updateLaneWithOffset(_intersection_left,_intersection_right);
 
-            //temp solution
-            // const _direct = ts.tsNormalize(this.roadSections[i].getTail().minus(this.roadSections[i].getHead()));
-            // this.roadSections[i].offsetLanes(_direct.multiply(3*this.laneWidth));
         }
         return _intersections;
     }
 
-    resortRoadSections(){
+    resortRoadSections() {
         var _resort = new Array<{index:number,angle:number}>();
 
-        for(let i = 0; i < this.roadSections.length; ++i)
-        {
+        for(let i = 0; i < this.roadSections.length; ++i) {
             const _vec = this.roadSections[i].getTail().minus(this.roadSections[i].getHead());
             _vec.y *= -1;
             var _ang = ts.getAngleOfVec(_vec)/Math.PI*180;
-            if(_vec.x < 0)
-            {
+            if(_vec.x < 0) {
                 _ang += 180;
             }
             _ang = (_ang + 360)% 360;
@@ -292,33 +277,27 @@ export default class RoadIntersection {
         
     }
 
-    resortTrafficLightQueue(){
+    resortTrafficLightQueue() {
         let _resort = new Array<number>();
         for(let i = 0; i < this.roadSections.length; ++i)
         {
             for(let j = 0; j < this.roadSections[i].lane_in.length; ++j)
             {
-        // console.log(_resort[0]);
-
                 var _isExisted = false;
-                for(let k = 0; k < _resort.length; ++k)
-                {
+                for(let k = 0; k < _resort.length; ++k) {
                     
-                   if(_resort[k] === this.roadSections[i].getLaneAt(j).getTrafficLightId())
-                   {
+                   if(_resort[k] === this.roadSections[i].getLaneAt(j).getTrafficLightId()) {
                        _isExisted = true;
                    }
                 }
-                if(!_isExisted)
-                {
+                if(!_isExisted) {
                     _resort.push(this.roadSections[i].getLaneAt(j).getTrafficLightId());
                 }
             }
         }
         console.log(_resort.length);
         var _sortedQueue = new Array<TrafficLight>();
-        for(let i = 0; i < _resort.length; ++i)
-        {
+        for(let i = 0; i < _resort.length; ++i) {
             _sortedQueue.push(this.TLManager.getTrafficLight(_resort[i]));
         }
         this.TLManager.setTrafficLightQueue(_sortedQueue);
@@ -342,7 +321,7 @@ export default class RoadIntersection {
        
     }
 
-    linkLanes(tail:LanePointer, head:LanePointer){
+    linkLanes(tail:LanePointer, head:LanePointer) {
         this.roadSections[tail.getSectionId()].lane_in[tail.getLaneId()].addHeadLink(head);
         this.roadSections[head.getSectionId()].lane_out[head.getLaneId()].addTailLink(tail);
         
@@ -354,21 +333,20 @@ export default class RoadIntersection {
     /**
      * tl couting down
      */
-    tlCountingDown():boolean{
+    tlCountingDown():boolean {
         return this.TLManager.initialUpdate();
     }
 
-    isForced(tl_id:number){
+    isForced(tl_id:number) {
         return this.TLManager.getTrafficLight(tl_id).getIsForced();
     }
 
-    isBlink(ratio?:number){
+    isBlink(ratio?:number) {
         return this.TLManager.isBlink(ratio);
     }
 
-    updateVehiclePos(){
-        for(let i=0;i<this.vehicles.length;++i)
-        {
+    updateVehiclePos() {
+        for(let i=0;i<this.vehicles.length;++i) {
             const _id = this.vehicles[i].getId();
             var _front_v; 
             if(this.vehicles[i].getAtPathSection() > 0 || this.getVehicleIndex(_id) <=0){
@@ -386,7 +364,6 @@ export default class RoadIntersection {
                     const _tl_id = this.roadSections[this.getRoadSectionIndex(_section_id)].getLaneAt(_lane_id).getTrafficLightId();
                     const _tl_state = this.getTrafficLightState(_tl_id);
                     const _tl_cd = this.getTrafficLightCD(_tl_id);
-                    //
                     if(_tl_state === "red" || (_tl_state === "yellow" && _tl_cd < 3 )){
                         this.vehicles[i].checkFront(this.getLane(_lane_id,_section_id).getHead(),
                         16,0);
@@ -401,7 +378,7 @@ export default class RoadIntersection {
        while(this.checkLeavingVehicle());
     }
 
-    getFrontVehicle(id:number){
+    getFrontVehicle(id:number) {
         const _vehicle = this.getVehicle(id)
 
         const _lane = this.getLane(_vehicle.getLaneId(),_vehicle.getRoadSectionId())
@@ -424,11 +401,9 @@ export default class RoadIntersection {
         }
     }
 
-    getVehicleIndex(id:number){
-        for(let i=0;i<this.vehicles.length;++i)
-        {
-            if(this.vehicles[i].getId() === id)
-            {
+    getVehicleIndex(id:number) {
+        for(let i=0;i<this.vehicles.length;++i) {
+            if(this.vehicles[i].getId() === id) {
                 return i;
             }
         }
@@ -469,9 +444,7 @@ export default class RoadIntersection {
                         .lane_out[this.vehicles[i].getLaneId()].addObjId(this.vehicles[i].getId());
                 }
                 this.vehicles[i].resetIsInTransition();
-                // return true;
             }
         }
-        // return false;
     }
 }
