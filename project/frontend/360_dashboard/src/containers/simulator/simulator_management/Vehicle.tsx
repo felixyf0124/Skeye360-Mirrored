@@ -1,13 +1,12 @@
 // import React, {Component} from 'react'
-// pixi.js-legacy for VM
+//pixi.js-legacy for VM
 // import * as PIXI from "pixi.js-legacy";
-import Object from './Object';
+import Object from "./Object";
 import * as ts from '../TSGeometry';
 import Lane from "./Lane";
 import vec2 from "./vec2";
 
-export default class vehicle extends Object {
-    id: number;
+export default class vehicle extends Object{
 
     path:Array<Array<vec2>>;
     traveled:number;
@@ -36,6 +35,8 @@ export default class vehicle extends Object {
         if(_speed === undefined){
             _speed= 0;
         }
+        // var _stop_t = _speed/_acce;
+        // var _stop_dis = safetyDistance + (_speed/_acce)
         if(_distance<safetyDistance)
         {
         this.updateSpeed(_speed);
@@ -54,11 +55,14 @@ export default class vehicle extends Object {
         if(_targetSpeed === undefined){
             _targetSpeed = this.maxSpeed;
         }
+        // console.log('acce |' + acce + " | " + _acce);
+        // console.log('targetSpeed |' + targetSpeed + " | " + _targetSpeed);
 
         if(this.speed<_targetSpeed){
             this.state = 1;
         }else if(this.speed>_targetSpeed){
             this.state = -1;
+            // console.log(">>>>");
         }else{
             this.state = 0;
         }
@@ -117,6 +121,8 @@ export default class vehicle extends Object {
             }
             
         }
+        // console.log('_length_of_current_path '+ _length_of_current_path);
+        // console.log('traveled '+ (this.traveled + disToTravel));
         if(this.traveled + disToTravel<_length_of_current_path)
         {
             this.position = this.position.plus(_unit_vec.multiply(disToTravel));
@@ -128,6 +134,7 @@ export default class vehicle extends Object {
             this.traveled = _length_of_current_path;
             if(this.atPath === this.path[this.atPathSection].length-1)
             {
+                // console.log('atPSec' + this.atPathSection + "|" + this.path.length);
                 if(this.atPathSection + 1 === this.path.length ){
                     this.isGone = true;
                 }else{
@@ -142,6 +149,7 @@ export default class vehicle extends Object {
                 this.updatePosition(_dis_to_travel);
             }
         }
+        // console.log('id: '+ this.id + " | " + this.position.x + " | " + this.position.y);
 
     }
 
