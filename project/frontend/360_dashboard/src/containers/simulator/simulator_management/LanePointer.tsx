@@ -6,9 +6,9 @@ export default class LanePointer {
 
     lane_id: number;
 
-    constructor() {
-      this.section_id = 0;
-      this.lane_id = 0;
+    constructor(section_id?:number,lane_id?:number) {
+        this.section_id = section_id||0;
+        this.lane_id = lane_id||0;
     }
 
     // Getters
