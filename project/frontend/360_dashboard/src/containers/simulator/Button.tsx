@@ -60,18 +60,22 @@ export default class Button extends PIXI.Graphics {
             this.isHit = true;
             this.isDown = true;
         }
+        // console.log("+1 down | " + this.isDown + " | " + this.name);
     }
 
     onUp(){
         this.isDown = false;
+        // console.log("+1 up | " + this.isDown + " | " + this.name);
     }
 
     onOver(){
         this.isOver = true;
+        // console.log("+1 over | " + this.isOver + " | " + this.name);
     }
 
     onOut(){
         this.isOver = false;
+        // console.log("+1 out | " + this.isOver + " | " + this.name);
     }
     
     setDemansion(width:number, height:number){
