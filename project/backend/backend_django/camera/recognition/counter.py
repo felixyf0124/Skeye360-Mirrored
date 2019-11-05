@@ -1,7 +1,8 @@
 # A counter that counts how many cars are detected
-# TODO: adding different derections, type of objects
 
-from .direction import Direction
+import sys
+sys.path.append(".")
+from direction import Direction
 
 class Counter:
     def __init__(self,start_from, go_to):

@@ -63,12 +63,11 @@ class Detector:
 
     # count detection output at the same time detecting objects in the frame
     def counting(self,col,intersection):
-        WAIT_SECONDS = 10
-        print(time.ctime())        
-        drop_count(col)
+        WAIT_SECONDS = 5
+        print(time.ctime())
         insert_count(col,intersection.counters)
         # cleanup db
-        #intersection.reset_counter()
+        intersection.reset_counter()
         find_all_count(col)
         threading.Timer(WAIT_SECONDS, self.counting,[col,intersection]).start()
 
@@ -141,19 +140,19 @@ class Detector:
         return tracker
 
     def create_encoder(self):
-        model_filename = '/home/Soen490/Soen490/project/backend/backend_django/camera/recognition/model_data/market1501.pb'
+        model_filename = '/home/capstone/Soen490/project/backend/backend_django/camera/recognition/model_data/market1501.pb'
         return gdet.create_box_encoder(model_filename,batch_size=1)
         
     # Generate StreamingHttpResponse
     def gen(self, classes, net):
 
         intersection = self.create_intersection("main@broadway")
-        # connect db
+        # # connect db
         col = connection()
 
         # # start counting the objects to be detected
-        self.counting(col,intersection)
-        
+        # self.counting(col,intersection.counters)
+
         cap = self.open_video()        
 
         # initialize the total number of frames by far

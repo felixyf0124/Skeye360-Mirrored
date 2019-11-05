@@ -6,10 +6,10 @@ from .coordinate import Coordinate
 #reference: http://javabin.cn/2018/django_steam.html
 
 #setting path for yolo configuration
-yolo_config = '/home/Soen490/Soen490/project/backend/360_opencv/yolov3.cfg'
-yolo_weights = '/home/Soen490/Soen490/project/backend/360_opencv/yolov3.weights'
-yolo_classes = '/home/Soen490/Soen490/project/backend/360_opencv/coco.names'
-video_stream = '/home/Soen490/Soen490/project/backend/backend_django/camera/hwt.mp4'
+yolo_config = '/home/capstone/Soen490/project/backend/360_opencv/yolov3.cfg'
+yolo_weights = '/home/capstone/Soen490/project/backend/360_opencv/yolov3.weights'
+yolo_classes = '/home/capstone/Soen490/project/backend/360_opencv/coco.names'
+video_stream = '/home/capstone/Soen490/project/backend/backend_django/camera/hwt.mp4'
 
 # initialize a detector object
 detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
