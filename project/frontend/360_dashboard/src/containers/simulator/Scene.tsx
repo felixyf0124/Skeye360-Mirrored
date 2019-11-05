@@ -1,19 +1,19 @@
-//learning reference https://medium.com/@peeyush.pathak18/pixijs-with-react-3cd40738180
+// learning reference https://medium.com/@peeyush.pathak18/pixijs-with-react-3cd40738180
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-//pixi.js-legacy for VM
-import * as PIXI from "pixi.js-legacy";
-import { RootState } from '../../reducers/rootReducer';
+// pixi.js-legacy for VM
+import * as PIXI from 'pixi.js-legacy';
 import { Store } from 'redux';
-import vehicle from '../../images/vehicle.png';
-import ppl from '../../images/ppl.png';
+import { Container, Button } from 'react-bootstrap';
+import { RootState } from '../../reducers/rootReducer';
+// import vehicle from '../../images/vehicle.png';
+// import ppl from '../../images/ppl.png';
 import TrafficLight from './simulator_management/TrafficLight';
 import TrafficLightMG from './simulator_management/TrafficLightManager';
 import VehicleObj from './simulator_management/Vehicle';
 import RoadIntersection from './simulator_management/RoadIntersection';
-import * as ts from './TSGeometry'
-import { Container, Button } from 'react-bootstrap';
+import * as ts from './TSGeometry';
 import vec2 from './simulator_management/vec2';
 import stopBlueImage from '../../images/stopBlue.png';
 import stopRedImage from '../../images/stopRed.png';
@@ -32,35 +32,58 @@ import { TouchableHighlightBase } from 'react-native';
 class Scene extends Component {
   // class Scene extends Component<Props> {
   pixiContent: any;
-  window_w:number;
-  window_h:number;
-  window_min:number;
-  window_scale_ratio:number;
+
+  window_w: number;
+
+  window_h: number;
+
+  window_min: number;
+
+  window_scale_ratio: number;
+
   app: PIXI.Application;
+
   mapContainer: PIXI.Container;
+
   objectContainer: PIXI.Container;
+
   controlPanelContainer: PIXI.Container;
+
   displayPlaneContainer: PIXI.Container;
+
   tlDisplayPanelContainer: PIXI.Container;
+
   backGround_G: PIXI.Graphics;
+
   road_G: PIXI.Graphics;
+
   trafficLight_G: PIXI.Graphics;
+
   controlPanel_G: PIXI.Graphics;
+
   roadIntersection: RoadIntersection;
-// the following should be moved outside when enable to connect with db
+
+  // the following should be moved outside when enable to connect with db
   roadData: Array<number>
+
   trafficLightData: Array<Array<number>>
-  lane_w:number;
-  road_w_h:number;
-  road_w_v:number;
 
-  trafficLightCounterOffset:number;
-  trafficLightCounter:number;
-  
-  timeLastMoment:number;
+  lane_w: number;
 
-  fps:number;
-  fpsCounter:number;
+  road_w_h: number;
+
+  road_w_v: number;
+
+  trafficLightCounterOffset: number;
+
+  trafficLightCounter: number;
+
+  timeLastMoment: number;
+
+  fps: number;
+
+  fpsCounter: number;
+
   textStyle: any;
   
   coordinateOffset:{x:number,y:number};
@@ -68,10 +91,15 @@ class Scene extends Component {
   vehicles:Array<Vehicle>;
   
   btnShowCP:Btn;
+
   btnStop:Btn;
+
   isControlPanelShown:Boolean;
+
   isCPAnimating:boolean;
+
   isStopClicked:Boolean;
+  
   lastBlinkState:boolean;
 
   numberOfCars: Number;
@@ -80,23 +108,23 @@ class Scene extends Component {
     super(props);
     this.window_scale_ratio = 0.5;
     this.pixiContent = null;
-    this.window_w = window.innerWidth*this.window_scale_ratio;
-    this.window_h = window.innerHeight*this.window_scale_ratio;
-    this.window_min=100;
-    this.app = new PIXI.Application({width:this.window_w,height:this.window_h,resolution:window.devicePixelRatio});
+    this.window_w = window.innerWidth * this.window_scale_ratio;
+    this.window_h = window.innerHeight * this.window_scale_ratio;
+    this.window_min = 100;
+    this.app = new PIXI.Application({ width: this.window_w, height: this.window_h, resolution: window.devicePixelRatio });
     this.mapContainer = new PIXI.Container();
     this.objectContainer = new PIXI.Container();
-    this.controlPanelContainer = new PIXI.Container(); //CONTROLPANEL
+    this.controlPanelContainer = new PIXI.Container(); // CONTROLPANEL
     this.displayPlaneContainer = new PIXI.Container();
     this.tlDisplayPanelContainer = new PIXI.Container();
     this.app.stage.addChild(this.mapContainer);
     this.app.stage.addChild(this.objectContainer);
     this.app.stage.addChild(this.displayPlaneContainer);
-    this.app.stage.addChild(this.controlPanelContainer); //CONTROLPANEL
+    this.app.stage.addChild(this.controlPanelContainer); // CONTROLPANEL
     this.backGround_G = new PIXI.Graphics();
     this.road_G = new PIXI.Graphics();
     this.trafficLight_G = new PIXI.Graphics();
-    this.controlPanel_G =  new PIXI.Graphics();
+    this.controlPanel_G = new PIXI.Graphics();
     this.mapContainer.addChild(this.backGround_G);
     this.mapContainer.addChild(this.road_G);
     this.mapContainer.addChild(this.trafficLight_G);
@@ -110,11 +138,11 @@ class Scene extends Component {
     this.trafficLightData = [[5,5],[5,5]];
 
 
-    this.lane_w = 0.06*Math.min(this.window_w,this.window_h);
+    this.lane_w = 0.06 * Math.min(this.window_w, this.window_h);
     this.road_w_h = 0;
     this.road_w_v = 0;
 
-    this.timeLastMoment=Date.now();
+    this.timeLastMoment = Date.now();
     this.trafficLightCounterOffset = 0;
     this.trafficLightCounter = Date.now();
     this.fps = 0;
@@ -172,22 +200,21 @@ class Scene extends Component {
     this.roadIntersection.resortTrafficLightQueue();
 
 
-    this.app.stage.x = this.window_w/2;
-    this.app.stage.y = this.window_h/2;
-    //this.app.stage.scale.y=-1;
+    this.app.stage.x = this.window_w / 2;
+    this.app.stage.y = this.window_h / 2;
+    // this.app.stage.scale.y=-1;
 
     const _test = new PIXI.Graphics();
-    _test.lineStyle(1,0xff0000);
-    for(let i =0;i<_inter.length;++i)
-    {
-      _test.moveTo(_inter[i][0].x,_inter[i][0].y);
-      _test.lineTo(_inter[i][1].x,_inter[i][1].y);
+    _test.lineStyle(1, 0xff0000);
+    for (let i = 0; i < _inter.length; ++i) {
+      _test.moveTo(_inter[i][0].x, _inter[i][0].y);
+      _test.lineTo(_inter[i][1].x, _inter[i][1].y);
     }
 
     this.mapContainer.addChild(_test);
     //// END of initialization of Road Intersection
 
-    //// START of Control Panel
+    // // START of Control Panel
     // The following sets the positioning of the container
     this.controlPanelContainer.x = -this.coordinateOffset.x;
     this.controlPanelContainer.y = -this.coordinateOffset.y;
@@ -249,8 +276,7 @@ class Scene extends Component {
   };
 
   resize = () => {
-    if(window.innerWidth<this.window_min)
-    {
+    if (window.innerWidth < this.window_min) {
       this.window_w = this.window_min;
       this.coordinateOffset.x = this.window_w/2;
     }else
@@ -258,8 +284,7 @@ class Scene extends Component {
       this.window_w = window.innerWidth*this.window_scale_ratio;
       this.coordinateOffset.x = this.window_w/2;
     }
-    if(window.innerHeight<this.window_min)
-    {
+    if (window.innerHeight < this.window_min) {
       this.window_h = this.window_min;
       this.coordinateOffset.y = this.window_h/2;
     }else
@@ -367,9 +392,9 @@ class Scene extends Component {
         }
 
         const _test = new PIXI.Graphics();
-        _test.lineStyle(1,_red);
-        _test.moveTo(_lane.getTail().x,_lane.getTail().y);
-        _test.lineTo(_lane.getHead().x,_lane.getHead().y);
+        _test.lineStyle(1, _red);
+        _test.moveTo(_lane.getTail().x, _lane.getTail().y);
+        _test.lineTo(_lane.getHead().x, _lane.getHead().y);
       }
     }
   }
@@ -383,9 +408,9 @@ class Scene extends Component {
     switch(light_state){
       case "green":
         return _green;
-      case "yellow":
+      case 'yellow':
         return _yellow;
-      case "red":
+      case 'red':
         return _red;
       case "skeye_blue":
         return _skeye_blue;
@@ -453,9 +478,9 @@ class Scene extends Component {
     this.roadIntersection.updateVehiclePos();
     this.renderObjects();
     this.displayPlaneContainer.removeChildren();
-    let deltaTime = Date.now() -this.timeLastMoment;
+    const deltaTime = Date.now() - this.timeLastMoment;
     this.fpsCounter++;
-    if(deltaTime>1000){
+    if (deltaTime > 1000) {
       this.fps = this.fpsCounter;
       this.timeLastMoment =Date.now();
       this.fpsCounter=0;
@@ -475,6 +500,11 @@ class Scene extends Component {
     numberCarsText.y = -this.window_h/2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
 
+    const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
+    fpsText.x = this.window_w / 2 - 80;
+    fpsText.y = -this.window_h / 2;
+    this.displayPlaneContainer.addChild(fpsText);
+    const lane_w = 60;
   }
 
   render = () => {
@@ -562,10 +592,6 @@ class Scene extends Component {
       _isHollow = isHollow;
     }
 
-    var _bottom = topVertex.minus(_direction.multiply(height));
-    var _direction_perpendicular = ts.tsRotateByOrigin(_direction,Math.PI/2);
-    var _vertices = new Array<vec2>();
-    
     _vertices.push(topVertex);
     _vertices.push(_bottom.plus(_direction_perpendicular.multiply(width/2)));
     _vertices.push(_bottom.plus(_direction_perpendicular.multiply(-width/2)));

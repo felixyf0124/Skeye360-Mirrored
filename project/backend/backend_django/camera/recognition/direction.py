@@ -6,4 +6,7 @@ class Direction:
 		
 	def print_direction(self):
 		print(self.start_from + "->" + self.go_to, end="")
+   
+	def get_direction(self):
+		return (self.start_from + "->" + self.go_to)
 		

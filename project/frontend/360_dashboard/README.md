@@ -76,3 +76,14 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+### Linter for VSCode: Add to settings.json
+
+```json
+"eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {"language": "typescript", "autoFix": true },
+    {"language": "typescriptreact", "autoFix": true }
+]
+```

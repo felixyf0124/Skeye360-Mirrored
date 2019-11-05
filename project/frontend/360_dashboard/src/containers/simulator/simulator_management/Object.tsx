@@ -26,11 +26,13 @@ export default class Object {
     getId(): number {
         return this.id;
     }
+
     getLaneId(): number {
-        return this.lane_id;
+      return this.lane_id;
     }
+
     getRoadSectionId(): number {
-        return this.roadSection_id;
+      return this.roadSection_id;
     }
     getPosition(): vec2{
         return this.position;
@@ -43,17 +45,19 @@ export default class Object {
     setPosition(position: vec2) {
         this.position = position;
     }
+
     setLaneId(lane_id: number) {
-        this.lane_id = lane_id;
+      this.lane_id = lane_id;
     }
+
     setRoadSectionId(roadSection_id: number) {
-        this.roadSection_id = roadSection_id;
+      this.roadSection_id = roadSection_id;
     }
     setState(state: number) {
         this.state = state;
     }
-    setObjectSpeed(speed: number) {
-        this.speed = speed;
-    }
 
+    setObjectSpeed(speed: number) {
+      this.speed = speed;
+    }
 }

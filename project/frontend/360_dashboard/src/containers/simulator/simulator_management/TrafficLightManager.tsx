@@ -4,11 +4,16 @@ import TrafficLight from './TrafficLight';
  * @class TrafficLightManager
  */
 export default class TrafficLightManager {
+    id: number;
+
+    roadIntersection_id: number;
 
     roadIntersection_id:number;
     trafficLightQueue: Array<TrafficLight>;
+
     countDown: number;
     startTime: number;
+
     timeOffset: number;
     deltaT: number;
 
@@ -23,10 +28,11 @@ export default class TrafficLightManager {
 
     //Getters
     getRoadIntersectionId(): number {
-        return this.roadIntersection_id;
+      return this.roadIntersection_id;
     }
+
     getTrafficLightQueue(): Array<TrafficLight> {
-        return this.trafficLightQueue;
+      return this.trafficLightQueue;
     }
 
     /**
@@ -64,16 +70,17 @@ export default class TrafficLightManager {
     }
 
     getCountDown(): number {
-        return this.countDown;
+      return this.countDown;
     }
     getStartTime(): number {
-        return this.startTime;
+      return this.startTime;
     }
+
     getTimeOffset(): number {
-        return this.timeOffset;
+      return this.timeOffset;
     }
     getDeltaT(): number {
-        return this.deltaT
+      return this.deltaT;
     }
 
     getTimePeriod():number{
@@ -102,17 +109,20 @@ export default class TrafficLightManager {
 
     //Setters
     setCountDown(countDown: number) {
-        this.countDown = countDown;
+      this.countDown = countDown;
     }
     setStartTime(startTime: number) {
-        this.startTime = startTime;
+      this.startTime = startTime;
     }
+
     setTimeOffset(timeOffset: number) {
-        this.timeOffset = timeOffset;
+      this.timeOffset = timeOffset;
     }
+
     setDeltaT(deltaT: number) {
-        this.deltaT = deltaT;
+      this.deltaT = deltaT;
     }
+
     setAllTrafficLightsAsStop() {
         //This will set all traffic lights at a specific intersection as a red
         for(let index = 0; index < this.trafficLightQueue.length; index++) {
@@ -239,6 +249,4 @@ export default class TrafficLightManager {
             return false;
         }
     }
-
 }
-

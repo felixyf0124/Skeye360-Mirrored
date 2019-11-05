@@ -4,6 +4,7 @@ import { number } from "prop-types";
  * @class TrafficLight
  */
 export default class TrafficLight {
+    id: number;
 
     id:number;
     countDownSetting:{green:number,yellow:number};
@@ -145,4 +146,3 @@ export default class TrafficLight {
         return false;
     }
 }
-

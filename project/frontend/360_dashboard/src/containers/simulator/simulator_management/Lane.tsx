@@ -6,16 +6,19 @@ import LanePointer from './LanePointer';
  * @class Lane
  */
 export default class Lane {
+    id: number;
 
-    id:number;
     laneType: string;
-    //1 or -1 same or opposite with road section
+
+    // 1 or -1 same or opposite with road section
     laneDirection: number;
+
     roadSection_id: number;
     objects:Array<number>;
     head:Coordinate;
     tail:Coordinate;
     headLinks: Array<LanePointer>;
+
     tailLinks: Array<LanePointer>;
     trafficLight_id:number;
 
@@ -34,16 +37,19 @@ export default class Lane {
 
     //Getters
     getId(): number {
-        return this.id;
+      return this.id;
     }
+
     getLaneType(): string {
-        return this.laneType;
+      return this.laneType;
     }
+
     getLaneDirection(): number {
-        return this.laneDirection;
+      return this.laneDirection;
     }
+
     getRoadSectionId(): number {
-        return this.roadSection_id;
+      return this.roadSection_id;
     }
     getObjects(): Array<number> {
         return this.objects;
@@ -54,19 +60,23 @@ export default class Lane {
 
     
     getHead(): Coordinate {
-        return this.head;
+      return this.head;
     }
+
     getTail(): Coordinate {
-        return this.tail;
+      return this.tail;
     }
+
     getHeadLink(): Array<LanePointer> {
-        return this.headLinks;
+      return this.headLinks;
     }
+
     getTailLink(): Array<LanePointer> {
-        return this.tailLinks;
+      return this.tailLinks;
     }
+
     getTrafficLightId(): number {
-        return this.trafficLight_id;
+      return this.trafficLight_id;
     }
 
     getObjIndex(id:number){
@@ -85,20 +95,24 @@ export default class Lane {
     setId(id:number){
         this.id = id;
     }
+
     setLaneType(laneType: string) {
-        this.laneType = laneType;
+      this.laneType = laneType;
     }
+
     setRoadSectionId(roadSection_id: number) {
-        this.roadSection_id = roadSection_id;
+      this.roadSection_id = roadSection_id;
     }
+
     // setroadIntersectionId(roadIntersection_id: number) {
     //     this.roadIntersection_id = roadIntersection_id;
     // }
     setHead(head: Coordinate) {
-        this.head = head;
+      this.head = head;
     }
+
     setTail(tail: Coordinate) {
-        this.tail = tail;
+      this.tail = tail;
     }
 
     bindTrafficLightId(id:number){
@@ -118,6 +132,10 @@ export default class Lane {
         {
             this.headLinks.push(headLink);
         }
+      }
+      if (!_isExisted) {
+        this.headLinks.push(headLink);
+      }
     }
 
     addTailLink(tailLink: LanePointer) {
@@ -134,6 +152,10 @@ export default class Lane {
         {
             this.tailLinks.push(tailLink);
         }
+      }
+      if (!_isExisted) {
+        this.tailLinks.push(tailLink);
+      }
     }
 
     addObjId(obj_id:number)
@@ -141,12 +163,12 @@ export default class Lane {
         this.objects.push(obj_id);
     }
 
-    clearHeadLinks(){
-        this.headLinks = new Array<LanePointer>();
+    clearHeadLinks() {
+      this.headLinks = new Array<LanePointer>();
     }
 
-    clearTailLinks(){
-        this.tailLinks = new Array<LanePointer>();
+    clearTailLinks() {
+      this.tailLinks = new Array<LanePointer>();
     }
 
     objGone(id:number){
@@ -154,4 +176,3 @@ export default class Lane {
     }
 
 }
-

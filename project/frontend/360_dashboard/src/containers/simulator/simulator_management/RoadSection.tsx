@@ -6,15 +6,19 @@ import * as ts from '../TSGeometry';
  * @class RoadSection
  */
 export default class RoadSection {
+    id: number;
 
-    id:number;
     // roadSection_id:number;
-    roadIntersection_id:number;
+    roadIntersection_id: number;
+
     // head:{x:number,y:number};
     // tail:{x:number,y:number};
     head: vec2;
+
     tail: vec2;
+
     lane_in: Array<Lane>;
+
     lane_out: Array<Lane>;
 
     constructor(id:number, roadIntersection_id:number, tailCoordinate:vec2)
@@ -27,24 +31,29 @@ export default class RoadSection {
         this.lane_out = new Array<Lane>();
     }
 
-    //Getters
+    // Getters
     getId(): number {
-        return this.id;
+      return this.id;
     }
+
     getRoadIntersectionId(): number {
-        return this.roadIntersection_id;
+      return this.roadIntersection_id;
     }
+
     getHead(): vec2 {
-        return this.head;
+      return this.head;
     }
+
     getTail(): vec2 {
-        return this.tail;
+      return this.tail;
     }
+
     getLaneIn(): Array<Lane> {
-        return this.lane_in;
+      return this.lane_in;
     }
+
     getLaneOut(): Array<Lane> {
-        return this.lane_out;
+      return this.lane_out;
     }
     getLaneAt(id:number,isLaneIn?:boolean){
         if(isLaneIn === true || isLaneIn === undefined){
@@ -54,23 +63,23 @@ export default class RoadSection {
         }
     }
 
-    //Setters
-    setId(id:number){
-        this.id = id;
-        for(let i = 0; i < this.lane_in.length; ++i)
-        {
-            this.lane_in[i].setRoadSectionId(this.id);
-        }
-        for(let i = 0; i < this.lane_out.length; ++i)
-        {
-            this.lane_out[i].setRoadSectionId(this.id);
-        }
+    // Setters
+    setId(id: number) {
+      this.id = id;
+      for (let i = 0; i < this.lane_in.length; ++i) {
+        this.lane_in[i].setRoadSectionId(this.id);
+      }
+      for (let i = 0; i < this.lane_out.length; ++i) {
+        this.lane_out[i].setRoadSectionId(this.id);
+      }
     }
+
     setHead(head: vec2) {
-        this.head = head;
+      this.head = head;
     }
+
     setTail(tail: vec2) {
-        this.tail = tail;
+      this.tail = tail;
     }
 
 
@@ -99,29 +108,28 @@ export default class RoadSection {
                 console.error("invalide laneDiection input \n");
             }
         }
+      }
     }
 
-    updateLanePosition(laneWidth:number){
-        for(let i = 0; i<this.lane_in.length;++i)
-        {
-            var _lane_direction = ts.tsNormalize(this.head.minus(this.tail));
-            const _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_direction, Math.PI/2);
-            var _perpendicular_offset = _perpendicular_unit_vec.multiply((i+0.5)*laneWidth);
+    updateLanePosition(laneWidth: number) {
+      for (let i = 0; i < this.lane_in.length; ++i) {
+        var _lane_direction = ts.tsNormalize(this.head.minus(this.tail));
+        const _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_direction, Math.PI / 2);
+        var _perpendicular_offset = _perpendicular_unit_vec.multiply((i + 0.5) * laneWidth);
 
-            this.lane_in[i].setHead(this.head.plus(_perpendicular_offset));
-            this.lane_in[i].setTail(this.tail.plus(_perpendicular_offset));
-        }
+        this.lane_in[i].setHead(this.head.plus(_perpendicular_offset));
+        this.lane_in[i].setTail(this.tail.plus(_perpendicular_offset));
+      }
 
-        for(let i = 0; i<this.lane_out.length;++i)
-        {
-            var _lane_direction = ts.tsNormalize(this.tail.minus(this.head));
-            var _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_direction, Math.PI/2);
+      for (let i = 0; i < this.lane_out.length; ++i) {
+        var _lane_direction = ts.tsNormalize(this.tail.minus(this.head));
+        const _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_direction, Math.PI / 2);
 
-            var _perpendicular_offset = _perpendicular_unit_vec.multiply((i+0.5)*laneWidth);
+        var _perpendicular_offset = _perpendicular_unit_vec.multiply((i + 0.5) * laneWidth);
 
-            this.lane_out[i].setHead(this.tail.plus(_perpendicular_offset));
-            this.lane_out[i].setTail(this.head.plus(_perpendicular_offset));
-        }
+        this.lane_out[i].setHead(this.tail.plus(_perpendicular_offset));
+        this.lane_out[i].setTail(this.head.plus(_perpendicular_offset));
+      }
     }
 
     updateLaneWithOffset(leftOffset:vec2, rightOffset:vec2){
@@ -144,18 +152,15 @@ export default class RoadSection {
         }
     }
 
-    offsetLanes(offset:vec2){
-        for(let i = 0; i < this.lane_in.length; ++i)
-        {
-            this.lane_in[i].setHead(this.lane_in[i].getHead().plus(offset));
-            this.lane_in[i].setTail(this.lane_in[i].getTail().plus(offset));
-        }
-        for(let i = 0; i < this.lane_out.length; ++i)
-        {
-            this.lane_out[i].setHead(this.lane_out[i].getHead().plus(offset));
-            this.lane_out[i].setTail(this.lane_out[i].getTail().plus(offset));
-        }
-
+    offsetLanes(offset: vec2) {
+      for (let i = 0; i < this.lane_in.length; ++i) {
+        this.lane_in[i].setHead(this.lane_in[i].getHead().plus(offset));
+        this.lane_in[i].setTail(this.lane_in[i].getTail().plus(offset));
+      }
+      for (let i = 0; i < this.lane_out.length; ++i) {
+        this.lane_out[i].setHead(this.lane_out[i].getHead().plus(offset));
+        this.lane_out[i].setTail(this.lane_out[i].getTail().plus(offset));
+      }
     }
 
     objGone(lane_id:number,obj_id:number,isLaneIn?:boolean){
