@@ -4,6 +4,7 @@ import { number } from "prop-types";
  * @class TrafficLight
  */
 export default class TrafficLight {
+    id: number;
 
     id:number;
     //TLManagerId:number;
@@ -154,6 +155,6 @@ export default class TrafficLight {
             }
         }
         return false;
+
     }
 }
-

@@ -11,11 +11,13 @@ export default class Object {
     roadSection_id:number;
     position: vec2;
     //State: move, stop
+
     state: string;
+
     speed: number;
 
-    //roadIntersection_id:number;
-    //state:string;
+    // roadIntersection_id:number;
+    // state:string;
     // REPLACED BY COORDINATE CLASS
     // position:{
     //     x:number,y:number
@@ -33,12 +35,15 @@ export default class Object {
     //Getters
     getId(): number {
         return this.id;
+
     }
+
     getLaneId(): number {
-        return this.lane_id;
+      return this.lane_id;
     }
+
     getRoadSectionId(): number {
-        return this.roadSection_id;
+      return this.roadSection_id;
     }
     getPosition(): vec2{
         return this.position;
@@ -50,18 +55,22 @@ export default class Object {
     //Setters
     setPosition(position: vec2) {
         this.position = position;
-    }
-    setLaneId(lane_id: number) {
-        this.lane_id = lane_id;
-    }
-    setRoadSectionId(roadSection_id: number) {
-        this.roadSection_id = roadSection_id;
-    }
-    setState(state: string) {
-        this.state = state;
-    }
-    setObjectSpeed(speed: number) {
-        this.speed = speed;
+
     }
 
+    setLaneId(lane_id: number) {
+      this.lane_id = lane_id;
+    }
+
+    setRoadSectionId(roadSection_id: number) {
+      this.roadSection_id = roadSection_id;
+    }
+
+    setState(state: string) {
+      this.state = state;
+    }
+
+    setObjectSpeed(speed: number) {
+      this.speed = speed;
+    }
 }

@@ -4,18 +4,26 @@ import TrafficLight from './TrafficLight';
  * @class TrafficLightManager
  */
 export default class TrafficLightManager {
+    id: number;
+
+    roadIntersection_id: number;
 
     //id:number;
     roadIntersection_id:number;
+
     trafficLightQueue: Array<TrafficLight>;
+
     countDown: number;
     // countDownOffset: number;
 
-    //TimePairs is an array of an array of numbers?
-    //timePairs: Array<Array<number>>;
+
+    // TimePairs is an array of an array of numbers?
+    // timePairs: Array<Array<number>>;
     startTime: number;
+
     timeOffset: number;
-    //totalTimePeriod: number;
+
+    // totalTimePeriod: number;
     deltaT: number;
 
     //constructor(roadIntersectionid:number, startTime:number, timeOffset:number);
@@ -33,14 +41,16 @@ export default class TrafficLightManager {
     }
 
     //Getters
+
     // private getTrafficLightManagerId(): number {
     //     return this.id;
     // }
     getRoadIntersectionId(): number {
-        return this.roadIntersection_id;
+      return this.roadIntersection_id;
     }
+
     getTrafficLightQueue(): Array<TrafficLight> {
-        return this.trafficLightQueue;
+      return this.trafficLightQueue;
     }
 
     /**
@@ -78,22 +88,25 @@ export default class TrafficLightManager {
     }
 
     getCountDown(): number {
-        return this.countDown;
+      return this.countDown;
     }
+
     // getTimePairs(): Array<Array<number>> {
     //     return this.timePairs;
     // }
     getStartTime(): number {
-        return this.startTime;
+      return this.startTime;
     }
+
     getTimeOffset(): number {
-        return this.timeOffset;
+      return this.timeOffset;
     }
+
     // getTotalTimePeriod(): number {
     //     return this.totalTimePeriod;
     // }
     getDeltaT(): number {
-        return this.deltaT
+      return this.deltaT;
     }
 
     getTimePeriod():number{
@@ -121,34 +134,36 @@ export default class TrafficLightManager {
     }
 
     //Setters
+
     setCountDown(countDown: number) {
-        this.countDown = countDown;
+      this.countDown = countDown;
     }
+
     // setTimePairs(timePairs: Array<Array<number>>) {
     //     this.timePairs = timePairs;
     // }
     setStartTime(startTime: number) {
-        this.startTime = startTime;
+      this.startTime = startTime;
     }
+
     setTimeOffset(timeOffset: number) {
-        this.timeOffset = timeOffset;
+      this.timeOffset = timeOffset;
     }
+
     setDeltaT(deltaT: number) {
-        this.deltaT = deltaT;
+      this.deltaT = deltaT;
     }
+
     setAllTrafficLightsAsStop() {
         //This will set all traffic lights at a specific intersection as a red
         for(let index = 0; index < this.trafficLightQueue.length; index++) {
             this.trafficLightQueue[index].setStatus("red");
         }
-    }
-    setGreenLight(trafficLightId: number, timeGiven:number) {
-        var lookup = this.trafficLightQueue.filter(function(trafficLight) {
-            return trafficLight.id === trafficLightId;
-        });
 
-        //TODO:
-        //Check for other traffic lights if its green
+    }
+
+    setGreenLight(trafficLightId: number, timeGiven: number) {
+      const lookup = this.trafficLightQueue.filter((trafficLight) => trafficLight.id === trafficLightId);
 
         //Check that lookup is not empty or undefined
         // if(!lookup.length || !(lookup === undefined)) {
@@ -255,6 +270,7 @@ export default class TrafficLightManager {
         }
 
         return _isUpdating;
+
     }
 
     isBlink(ratio?:number){
@@ -271,7 +287,6 @@ export default class TrafficLightManager {
         {
             return false;
         }
+
     }
-
 }
-

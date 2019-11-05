@@ -1,12 +1,14 @@
 // import React, {Component} from 'react'
-//pixi.js-legacy for VM
+// pixi.js-legacy for VM
 // import * as PIXI from "pixi.js-legacy";
-import Object from "./Object";
+import Object from './Object';
 import * as ts from '../TSGeometry';
 import Lane from "./Lane";
 import vec2 from "./vec2";
 
-export default class vehicle extends Object{
+
+export default class vehicle extends Object {
+    id: number;
 
     path:Array<vec2>;
     traveled:number;
@@ -102,5 +104,6 @@ export default class vehicle extends Object{
              _length += ts.tsLength(this.path[i+1].minus(this.path[i]));
         }
         return _length;
+
     }
 }

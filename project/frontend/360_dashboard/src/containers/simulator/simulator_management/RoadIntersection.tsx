@@ -1,21 +1,23 @@
+import { number } from 'prop-types';
 import RoadSection from './RoadSection';
 import vec2 from './vec2';
 import TLManager from './TrafficLightManager';
 import * as ts from '../TSGeometry';
 import Lane from './Lane';
-import './LanePointer';
 import LanePointer from './LanePointer';
+
 import TrafficLightManager from './TrafficLightManager';
 import { number } from 'prop-types';
 import TrafficLight from './TrafficLight';
 import Vehicle from './Vehicle';
 
+
 /**
  * @class RoadIntersection
  */
 export default class RoadIntersection {
+    id: number;
 
-    id:number;
     // mapCoordinate:{x:number,y:number};
     mapCoordinate: vec2;
     roadSections:Array<RoadSection>;
@@ -31,17 +33,20 @@ export default class RoadIntersection {
         this.TLManager = TLManager||new TrafficLightManager(id);
         this.laneWidth =0;
         this.vehicles = new Array<Vehicle>();
+
     }
 
-    //Getters
+    // Getters
     getRoadIntersectionId(): number {
-        return this.id;
+      return this.id;
     }
+
     getMapCoordinate(): vec2 {
-        return this.mapCoordinate;
+      return this.mapCoordinate;
     }
+
     getRoadSections(): Array<RoadSection> {
-        return this.roadSections;
+      return this.roadSections;
     }
 
     getRoadSection(id:number) {
@@ -111,15 +116,18 @@ export default class RoadIntersection {
 
 
     //Setters
+
     setMapCoordinate(mapCoordinate: vec2) {
-        this.mapCoordinate = mapCoordinate;
+      this.mapCoordinate = mapCoordinate;
     }
+
     /**
      * This also updates all lane positions
-     * @param width 
+     * @param width
      */
     setLaneWidth(width:number) {
         this.laneWidth = width;
+
     }
 
     addNewTrafficLight(laneGroup:Array<{section:number,id:number}>,time:number,specifiedYellowTime?:number){
@@ -184,7 +192,7 @@ export default class RoadIntersection {
     }
 
     updateLane() {
-        this.resortRoadSections();
+      this.resortRoadSections();
 
         for(let i=0;i<this.roadSections.length;++i) {
             this.roadSections[i].updateLanePosition(this.laneWidth);
@@ -233,10 +241,11 @@ export default class RoadIntersection {
         //solve the bug and add improved auto offset update funtion
 
             //temp solution
+
         const _direct = ts.tsNormalize(this.roadSections[i].getTail().minus(this.roadSections[i].getHead()));
-        this.roadSections[i].offsetLanes(_direct.multiply(3*this.laneWidth));
-        }
-        return _intersections;
+        this.roadSections[i].offsetLanes(_direct.multiply(3 * this.laneWidth));
+      }
+      return _intersections;
     }
 
     // updateLaneState() {
@@ -282,10 +291,17 @@ export default class RoadIntersection {
 
         for(let i = 0; i < _resort.length; ++i) {
             _roadSections.push(this.roadSections[_resort[i].index]);
-        }
 
-        this.roadSections = _roadSections;
-        
+        }
+      }
+      console.log(_resort);
+      const _roadSections = new Array<RoadSection>();
+
+      for (let i = 0; i < _resort.length; ++i) {
+        _roadSections.push(this.roadSections[_resort[i].index]);
+      }
+
+      this.roadSections = _roadSections;
     }
 
     resortTrafficLightQueue() {
@@ -317,13 +333,13 @@ export default class RoadIntersection {
     }
 
     addNewRoadSection(tailVec2: vec2) {
-        var _roadSection = new RoadSection(this.roadSections.length,this.id,tailVec2);
-        console.log(_roadSection);
-        this.roadSections.push(_roadSection);
+      const _roadSection = new RoadSection(this.roadSections.length, this.id, tailVec2);
+      console.log(_roadSection);
+      this.roadSections.push(_roadSection);
     }
-    
+
     addRoadSection(roadSection: RoadSection) {
-        this.roadSections.push(roadSection);
+      this.roadSections.push(roadSection);
     }
 
     addNewLane(roadSection_id: number, laneDirection: number, laneType:string, numOfLanes: number) {  
@@ -407,3 +423,4 @@ export default class RoadIntersection {
         return false;
     }
 }
+
