@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   parser: '@typescript-eslint/parser',
   env: {
@@ -14,19 +16,42 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
-  parserOptions: {
-    ecmaVersion: 2019,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
+  "parserOptions": {
+    "jsx": true,
+    "useJSXTextNode": true
   },
-  plugins: [
-    'react',
+  "plugins": [
+    "react"
   ],
   rules: {
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+          "packageDir": [
+              "./"
+          ]
+      }
+    ],
+    "react/jsx-one-expression-per-line": [
+      2,
+      {
+        "allow": "single-child"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }]
   },
-  settings:  {
+  settings: {
+    'import/resolver': {
+      webpack: {
+        config: {
+          resolve: {
+            extensions: ['.jsx', '.js', '.tsx', '.ts'],
+            modules: ['./', 'node_modules'],
+          }
+        }
+      }
+    },
     react:  {
       version:  'detect',
     },
