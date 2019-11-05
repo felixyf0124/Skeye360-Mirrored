@@ -7,6 +7,9 @@ import { Redirect, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Simulator from './simulator/Scene';
 import { Head } from '../components/Header';
+import NorthChart from '../components/NorthChart';
+import SouthChart from '../components/SouthChart';
+
 
 interface Props {
   authenticated: boolean;
@@ -22,6 +25,10 @@ const StreetView = ({ authenticated }: Props):JSX.Element => {
           <Link to="/streetview/edit" className="header-text">Edit</Link>
         </Head>
       <Simulator />
+      <div className="charts-row">
+        <NorthChart />
+        <SouthChart /> 
+      </div>
     </div>
   );
 }
