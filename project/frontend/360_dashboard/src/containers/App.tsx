@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+
 import { RootState } from '../reducers/rootReducer';
 import Login from './Login';
 // import Footer from './components/Footer';
