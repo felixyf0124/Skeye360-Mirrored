@@ -1,18 +1,15 @@
-#Uses node:12.2.0-alpine
+#Uses node:12.13.0-alpine
 FROM node:12.13.0-alpine
 
 #Create app directory
 RUN mkdir -p /app
 WORKDIR /app
 
-#Copy package.json into app directory 
-COPY package.json /app
+#Copy all the files into app
+COPY . /app
 
 #Run yarn install to install all the dependencies 
 RUN yarn install
-
-#Copy all the files into app
-COPY . /app
 
 #install mocha for global use
 RUN npm install mocha -g
