@@ -14,7 +14,7 @@ services:
       - '8300:27017'
     restart: always
     volumes:
-      - /data/db:/data/db
+      - /Users/klin/Documents/data/db:/data/db
       # This is for  FileOpenFailed: Unable to open() file /home/mongodb/.dbshell bug from mongodb docker image
       # Reference: https://github.com/docker-library/mongo/issues/323
       - ./database/360_mongo/history:/home/mongodb/
