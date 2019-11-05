@@ -14,6 +14,9 @@ RUN yarn install
 #Copy all the files into app
 COPY . /app
 
+#install mocha for global use
+RUN npm install mocha -g
+
 #Build the app with yarn
 RUN yarn build
 
