@@ -52,43 +52,45 @@ export default class Button extends PIXI.Graphics {
       this.isOver = false;
       this.isHit = false;
 
-      this.on('click', onclick = () => this.onClick());
-      this.on('mousedown', onmousedown = () => this.onDown());
-      this.on('mouseup', onmouseup = () => this.onUp());
-      this.on('mouseover', onmouseover = () => this.onOver());
-      this.on('mouseout', onmouseout = () => this.onOut());
+      // this.on('click', onclick = () => this.onClick());
+      this.on('mousedown', onmousedown = (): void => this.onDown());
+      this.on('mouseup', onmouseup = (): void => this.onUp());
+      this.on('mouseover', onmouseover = (): void => this.onOver());
+      this.on('mouseout', onmouseout = (): void => this.onOut());
     }
 
-    onClick() {
+    // onClick() {
 
-    }
+    // }
 
-    onDown() {
+    onDown(): void {
       if (this.isOver) {
         this.isHit = true;
         this.isDown = true;
       }
     }
 
-    onUp() {
+    onUp(): void {
       this.isDown = false;
     }
 
-    onOver() {
+    onOver(): void {
       this.isOver = true;
     }
 
-    onOut() {
+    onOut(): void {
       this.isOver = false;
     }
 
-    setDemansion(width: number, height: number) {
+    setDemansion(width: number, height: number): void {
       this.btnWidth = width;
       this.btnHeight = height;
-      this.setBackground(this.backgroundColor, this.background.alpha, this.boarderSize, this.boarderColor);
+      this.setBackground(this.backgroundColor, this.background.alpha,
+        this.boarderSize, this.boarderColor);
     }
 
-    setBackground(color: number, alpha: number, boarderSize?: number, boarderColor?: number) {
+    setBackground(color: number, alpha: number,
+      boarderSize?: number, boarderColor?: number): void {
       this.background.clear();
       this.backgroundColor = color;
       this.background.alpha = alpha || 1;
@@ -98,7 +100,7 @@ export default class Button extends PIXI.Graphics {
       this.setBoarder(boarderSize, boarderColor);
     }
 
-    setBoarder(boarderSize?: number, boarderColor?: number) {
+    setBoarder(boarderSize?: number, boarderColor?: number): void {
       this.boarder.clear();
 
       this.boarderSize = boarderSize || this.boarderSize;
@@ -107,13 +109,13 @@ export default class Button extends PIXI.Graphics {
       this.boarder.drawRect(0, 0, this.btnWidth, this.btnHeight);
     }
 
-    setName(name: string, textStyle?: any) {
+    setName(name: string, textStyle?: any): void {
       this.name = name;
       this.text.text = this.name;
       this.setTextStyle(textStyle || undefined);
     }
 
-    setTextStyle(textStyle?: any) {
+    setTextStyle(textStyle?: any): void {
       this.text.style = textStyle || this.text.style;
       this.text.x = (this.btnWidth - this.text.width) / 2;
       this.text.y = (this.btnHeight - this.text.height) / 2;

@@ -2,35 +2,35 @@
  * @class LanePointer
  */
 export default class LanePointer {
-    section_id: number;
+    sectionId: number;
 
-    lane_id: number;
+    laneId: number;
 
-    constructor(section_id?: number, lane_id?: number) {
-      this.section_id = section_id || 0;
-      this.lane_id = lane_id || 0;
+    constructor(sectionId?: number, laneId?: number) {
+      this.sectionId = sectionId || 0;
+      this.laneId = laneId || 0;
     }
 
     // Getters
     getSectionId(): number {
-      return this.section_id;
+      return this.sectionId;
     }
 
     getLaneId(): number {
-      return this.lane_id;
+      return this.laneId;
     }
 
     // Setters
-    setSectionId(section_id: number) {
-      this.section_id = section_id;
+    setSectionId(sectionId: number): void {
+      this.sectionId = sectionId;
     }
 
-    setLaneId(lane_id: number) {
-      this.lane_id = lane_id;
+    setLaneId(laneId: number): void {
+      this.laneId = laneId;
     }
 
-    setIds(section_id: number, lane_id: number) {
-      this.setSectionId(section_id);
-      this.setLaneId(lane_id);
+    setIds(sectionId: number, laneId: number): void {
+      this.setSectionId(sectionId);
+      this.setLaneId(laneId);
     }
 }

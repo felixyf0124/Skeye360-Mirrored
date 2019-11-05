@@ -2,27 +2,27 @@
  * @class Object
  */
 
-import vec2 from './vec2';
+import Vec2 from './vec2';
 
 export default class Object {
     id: number;
 
-    lane_id: number;
+    laneId: number;
 
-    roadSection_id: number;
+    roadSectionId: number;
 
-    position: vec2;
+    position: Vec2;
 
     // State: move, stop
     state: number;
 
     speed: number;
 
-    constructor(id: number, lane_id: number, roadSection_id: number, speed: number, position?: vec2) {
+    constructor(id: number, laneId: number, roadSectionId: number, speed: number, position?: Vec2) {
       this.id = id;
-      this.position = position || new vec2();
-      this.lane_id = lane_id;
-      this.roadSection_id = roadSection_id;
+      this.position = position || new Vec2();
+      this.laneId = laneId;
+      this.roadSectionId = roadSectionId;
       this.state = 0;
       this.speed = speed;
     }
@@ -33,39 +33,39 @@ export default class Object {
     }
 
     getLaneId(): number {
-      return this.lane_id;
+      return this.laneId;
     }
 
     getRoadSectionId(): number {
-      return this.roadSection_id;
+      return this.roadSectionId;
     }
 
-    getPosition(): vec2 {
+    getPosition(): Vec2 {
       return this.position;
     }
 
-    getSpeed() {
+    getSpeed(): number {
       return this.speed;
     }
 
     // Setters
-    setPosition(position: vec2) {
+    setPosition(position: Vec2): void {
       this.position = position;
     }
 
-    setLaneId(lane_id: number) {
-      this.lane_id = lane_id;
+    setLaneId(laneId: number): void {
+      this.laneId = laneId;
     }
 
-    setRoadSectionId(roadSection_id: number) {
-      this.roadSection_id = roadSection_id;
+    setRoadSectionId(roadSectionId: number): void {
+      this.roadSectionId = roadSectionId;
     }
 
-    setState(state: number) {
+    setState(state: number): void {
       this.state = state;
     }
 
-    setObjectSpeed(speed: number) {
+    setObjectSpeed(speed: number): void {
       this.speed = speed;
     }
 }

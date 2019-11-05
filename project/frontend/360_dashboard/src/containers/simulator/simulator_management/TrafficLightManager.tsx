@@ -4,7 +4,7 @@ import TrafficLight from './TrafficLight';
  * @class TrafficLightManager
  */
 export default class TrafficLightManager {
-    roadIntersection_id: number;
+    roadIntersectionId: number;
 
     trafficLightQueue: Array<TrafficLight>;
 
@@ -16,8 +16,8 @@ export default class TrafficLightManager {
 
     deltaT: number;
 
-    constructor(roadIntersectionid: number, timeOffset?: number) {
-      this.roadIntersection_id = roadIntersectionid;
+    constructor(roadIntersectionId: number, timeOffset?: number) {
+      this.roadIntersectionId = roadIntersectionId;
       this.trafficLightQueue = new Array<TrafficLight>();
       this.countDown = 0;
       this.startTime = Date.now();
@@ -27,7 +27,7 @@ export default class TrafficLightManager {
 
     // Getters
     getRoadIntersectionId(): number {
-      return this.roadIntersection_id;
+      return this.roadIntersectionId;
     }
 
     getTrafficLightQueue(): Array<TrafficLight> {
@@ -48,22 +48,21 @@ export default class TrafficLightManager {
     }
 
     getTrafficLightCD(id: number): number {
-      const _cd = this.getTrafficLight(id).getCountDown();
-      return _cd;
+      const cd = this.getTrafficLight(id).getCountDown();
+      return cd;
     }
 
-    getTrafficLightIndex(id: number) {
+    getTrafficLightIndex(id: number): number {
       try {
-        for (let i = 0; i < this.trafficLightQueue.length; ++i) {
+        for (let i = 0; i < this.trafficLightQueue.length; i += 1) {
           if (id === this.trafficLightQueue[i].getId()) {
             return i;
           }
         }
-        throw `traffic light at id ${id} does not exist`;
+        throw new Error(`traffic light at id ${id} does not exist`);
       } catch (e) {
-        console.error(e);
+        return -1;
       }
-      return -1;
     }
 
     getCountDown(): number {
@@ -83,8 +82,8 @@ export default class TrafficLightManager {
     }
 
     getTimePeriod(): number {
-      let _period = 0;
-      for (let i = 0; i < this.trafficLightQueue.length; ++i) {
+      let period = 0;
+      for (let i = 0; i < this.trafficLightQueue.length; i += 1) {
         // if the TL is not force to be a certain state then counted
         if (!this.trafficLightQueue[i].getIsForced()) {
           /**
@@ -94,42 +93,42 @@ export default class TrafficLightManager {
                  * so should not be counted
                  */
           if (this.trafficLightQueue[i].getOverlapOffset()
-                  < this.trafficLightQueue[i].getTotalTime()) {
-            _period += (this.trafficLightQueue[i].getTotalTime()
-                            - Math.abs(this.trafficLightQueue[i].getOverlapOffset()));
+                < this.trafficLightQueue[i].getTotalTime()) {
+            period += (this.trafficLightQueue[i].getTotalTime()
+                    - Math.abs(this.trafficLightQueue[i].getOverlapOffset()));
           }
         }
       }
-      return _period;
+      return period;
     }
 
     // Setters
-    setCountDown(countDown: number) {
+    setCountDown(countDown: number): void {
       this.countDown = countDown;
     }
 
-    setStartTime(startTime: number) {
+    setStartTime(startTime: number): void {
       this.startTime = startTime;
     }
 
-    setTimeOffset(timeOffset: number) {
+    setTimeOffset(timeOffset: number): void {
       this.timeOffset = timeOffset;
     }
 
-    setDeltaT(deltaT: number) {
+    setDeltaT(deltaT: number): void {
       this.deltaT = deltaT;
     }
 
-    setTrafficLightQueue(trafficLightsQueue: Array<TrafficLight>) {
+    setTrafficLightQueue(trafficLightsQueue: Array<TrafficLight>): void {
       this.trafficLightQueue = trafficLightsQueue;
     }
 
-    forceState(id: number, state: string) {
+    forceState(id: number, state: string): void {
       this.trafficLightQueue[this.getTrafficLightIndex(id)].setIsForced(true);
       this.trafficLightQueue[this.getTrafficLightIndex(id)].setStatus(state);
     }
 
-    deForceState(id: number) {
+    deForceState(id: number): void {
       this.trafficLightQueue[this.getTrafficLightIndex(id)].setIsForced(false);
     }
 
@@ -139,20 +138,21 @@ export default class TrafficLightManager {
      * @param time in sec, can be green countdown time or total countdown of green and yellow
      * @param specifiedYellowTime can be undefined, default is 5 sec
      */
-    addTrafficLight(laneGroup: Array<{section: number;id: number}>, time: number, specifiedYellowTime?: number) {
-      const _trafficLight = new TrafficLight(this.getTrafficLightQueue().length);
+    addTrafficLight(laneGroup: Array<{section: number;id: number}>,
+      time: number, specifiedYellowTime?: number): void {
+      const trafficLight = new TrafficLight(this.getTrafficLightQueue().length);
       if (specifiedYellowTime === undefined) {
-        _trafficLight.setTotalTime(time);
+        trafficLight.setTotalTime(time);
       } else {
-        _trafficLight.setGreenTime(time);
-        _trafficLight.setYellowTime(specifiedYellowTime);
+        trafficLight.setGreenTime(time);
+        trafficLight.setYellowTime(specifiedYellowTime);
       }
-      _trafficLight.bindNewLaneGroup(laneGroup);
-      this.trafficLightQueue.push(_trafficLight);
+      trafficLight.bindNewLaneGroup(laneGroup);
+      this.trafficLightQueue.push(trafficLight);
     }
 
-    setTrafficLightOverlapOffset(id: number, overlapOffset: number) {
-      for (let i = 0; i < this.trafficLightQueue.length; ++i) {
+    setTrafficLightOverlapOffset(id: number, overlapOffset: number): void {
+      for (let i = 0; i < this.trafficLightQueue.length; i += 1) {
         if (this.trafficLightQueue[i].getId() === id) {
           this.trafficLightQueue[i].setOverlapOffset(overlapOffset);
           break;
@@ -161,59 +161,63 @@ export default class TrafficLightManager {
     }
 
     initialUpdate(): boolean {
-      const _total = this.getTimePeriod();
+      const total = this.getTimePeriod();
       this.deltaT = (Date.now() - this.startTime) / 1000;
-      this.deltaT %= _total;
-      let _addUp = 0;
-      let _isUpdating = false;
-      for (let i = 0; i < this.trafficLightQueue.length; ++i) {
+      this.deltaT %= total;
+      let addUp = 0;
+      let isUpdating = false;
+      let isSkip = false;
+      for (let i = 0; i < this.trafficLightQueue.length; i += 1) {
         // skip current TL if it is forced set
         if (this.trafficLightQueue[i].getIsForced()) {
           this.trafficLightQueue[i].setCountDown(NaN);
-          _isUpdating = true;
-          continue;
+          isUpdating = true;
+          isSkip = true;
         }
-        const _addUp_after_offset = (_addUp + this.trafficLightQueue[i].getOverlapOffset()) % _total;
-        if (this.deltaT >= _addUp_after_offset
-                && this.deltaT < _addUp_after_offset + this.trafficLightQueue[i].getGreenTime()) {
-          const _countDown = (_addUp_after_offset + this.trafficLightQueue[i].getGreenTime() - this.deltaT);
-          this.trafficLightQueue[i].setCountDown(_countDown);
-          if (this.trafficLightQueue[i].getStatus() !== 'green') {
-            this.trafficLightQueue[i].setStatus('green');
-            _isUpdating = true;
+        if (isSkip === false) {
+          const addUpAfterOffset = (addUp + this.trafficLightQueue[i].getOverlapOffset()) % total;
+          if (this.deltaT >= addUpAfterOffset
+                  && this.deltaT < addUpAfterOffset + this.trafficLightQueue[i].getGreenTime()) {
+            const countDown = (addUpAfterOffset
+                        + this.trafficLightQueue[i].getGreenTime() - this.deltaT);
+            this.trafficLightQueue[i].setCountDown(countDown);
+            if (this.trafficLightQueue[i].getStatus() !== 'green') {
+              this.trafficLightQueue[i].setStatus('green');
+              isUpdating = true;
+            }
+          } else if (this.deltaT >= addUpAfterOffset + this.trafficLightQueue[i].getGreenTime()
+                  && this.deltaT < addUpAfterOffset + this.trafficLightQueue[i].getGreenTime()
+                  + this.trafficLightQueue[i].getYellowTime()) {
+            const countDown = (addUpAfterOffset + this.trafficLightQueue[i].getGreenTime()
+            + this.trafficLightQueue[i].getYellowTime() - this.deltaT);
+            this.trafficLightQueue[i].setCountDown(countDown);
+            if (this.trafficLightQueue[i].getStatus() !== 'yellow') {
+              this.trafficLightQueue[i].setStatus('yellow');
+              isUpdating = true;
+            }
+          } else {
+            const countDown = (addUpAfterOffset + total - this.deltaT) % total;
+            this.trafficLightQueue[i].setCountDown(countDown);
+            if (this.trafficLightQueue[i].getStatus() !== 'red') {
+              this.trafficLightQueue[i].setStatus('red');
+              isUpdating = true;
+            }
           }
-        } else if (this.deltaT >= _addUp_after_offset + this.trafficLightQueue[i].getGreenTime()
-                && this.deltaT < _addUp_after_offset + this.trafficLightQueue[i].getGreenTime() + this.trafficLightQueue[i].getYellowTime()) {
-          const _countDown = (_addUp_after_offset + this.trafficLightQueue[i].getGreenTime() + this.trafficLightQueue[i].getYellowTime() - this.deltaT);
-          this.trafficLightQueue[i].setCountDown(_countDown);
-          if (this.trafficLightQueue[i].getStatus() !== 'yellow') {
-            this.trafficLightQueue[i].setStatus('yellow');
-            _isUpdating = true;
-          }
-        } else {
-          const _countDown = (_addUp_after_offset + _total - this.deltaT) % _total;
-          this.trafficLightQueue[i].setCountDown(_countDown);
-          if (this.trafficLightQueue[i].getStatus() !== 'red') {
-            this.trafficLightQueue[i].setStatus('red');
-            _isUpdating = true;
-          }
+          addUp += this.trafficLightQueue[i].getTotalTime();
         }
-        _addUp += this.trafficLightQueue[i].getTotalTime();
       }
 
-      return _isUpdating;
+      return isUpdating;
     }
 
-    isBlink(ratio?: number) {
-      let _ratio: number;
+    isBlink(ratio?: number): boolean {
+      let rat = 0.5;
 
-      if (isFinite(ratio || NaN)) {
-        _ratio = ratio || 0.5;
-      } else {
-        _ratio = 0.5;
+      if (ratio !== undefined) {
+        rat = ratio;
       }
 
-      if ((Date.now() - this.startTime) % 1000 > _ratio * 1000) {
+      if ((Date.now() - this.startTime) % 1000 > rat * 1000) {
         return true;
       }
       return false;

@@ -1,4 +1,3 @@
-import Vehicle from './Vehicle';
 import Coordinate from './vec2';
 import LanePointer from './LanePointer';
 
@@ -13,7 +12,7 @@ export default class Lane {
     // 1 or -1 same or opposite with road section
     laneDirection: number;
 
-    roadSection_id: number;
+    roadSectionId: number;
 
     objects: Array<number>;
 
@@ -25,19 +24,19 @@ export default class Lane {
 
     tailLinks: Array<LanePointer>;
 
-    trafficLight_id: number;
+    trafficLightId: number;
 
-    constructor(id: number, laneType: string, laneDirection: number, roadSection_id: number) {
+    constructor(id: number, laneType: string, laneDirection: number, roadSectionId: number) {
       this.id = id;
       this.laneType = laneType;
       this.laneDirection = laneDirection;
-      this.roadSection_id = roadSection_id;
+      this.roadSectionId = roadSectionId;
       this.objects = new Array<number>();
       this.head = new Coordinate();
       this.tail = new Coordinate();
       this.headLinks = new Array<LanePointer>();
       this.tailLinks = new Array<LanePointer>();
-      this.trafficLight_id = 0;
+      this.trafficLightId = 0;
     }
 
     // Getters
@@ -54,14 +53,14 @@ export default class Lane {
     }
 
     getRoadSectionId(): number {
-      return this.roadSection_id;
+      return this.roadSectionId;
     }
 
     getObjects(): Array<number> {
       return this.objects;
     }
 
-    getObjectIdByIndex(index: number) {
+    getObjectIdByIndex(index: number): number {
       return this.objects[index];
     }
 
@@ -83,82 +82,83 @@ export default class Lane {
     }
 
     getTrafficLightId(): number {
-      return this.trafficLight_id;
+      return this.trafficLightId;
     }
 
-    getObjIndex(id: number) {
-      for (let i = 0; i < this.objects.length; ++i) {
+    getObjIndex(id: number): number {
+      for (let i = 0; i < this.objects.length; i += 1) {
         if (this.objects[i] === id) {
-          const _index = i;
-          return _index;
+          const index = i;
+          return index;
         }
       }
       return -1;
     }
 
     // Setters
-    setId(id: number) {
+    setId(id: number): void {
       this.id = id;
     }
 
-    setLaneType(laneType: string) {
+    setLaneType(laneType: string): void {
       this.laneType = laneType;
     }
 
-    setRoadSectionId(roadSection_id: number) {
-      this.roadSection_id = roadSection_id;
+    setRoadSectionId(roadSectionId: number): void {
+      this.roadSectionId = roadSectionId;
     }
 
-    setHead(head: Coordinate) {
+    setHead(head: Coordinate): void {
       this.head = head;
     }
 
-    setTail(tail: Coordinate) {
+    setTail(tail: Coordinate): void {
       this.tail = tail;
     }
 
-    bindTrafficLightId(id: number) {
-      this.trafficLight_id = id;
+    bindTrafficLightId(id: number): void {
+      this.trafficLightId = id;
     }
 
-    addHeadLink(headLink: LanePointer) {
-      let _isExisted = false;
-      for (let i = 0; i < this.headLinks.length; ++i) {
-        if (this.headLinks[i].section_id === headLink.section_id && this.headLinks[i].lane_id === headLink.lane_id) {
-          _isExisted = true;
+    addHeadLink(headLink: LanePointer): void {
+      let isExisted = false;
+      for (let i = 0; i < this.headLinks.length; i += 1) {
+        if (this.headLinks[i].sectionId === headLink.sectionId
+          && this.headLinks[i].laneId === headLink.laneId) {
+          isExisted = true;
         }
       }
-      if (!_isExisted) {
+      if (!isExisted) {
         this.headLinks.push(headLink);
       }
     }
 
-    addTailLink(tailLink: LanePointer) {
-      let _isExisted = false;
-      for (let i = 0; i < this.tailLinks.length; ++i) {
-        if (this.tailLinks[i].section_id === tailLink.section_id
-                && this.tailLinks[i].lane_id === tailLink.lane_id) {
-          _isExisted = true;
+    addTailLink(tailLink: LanePointer): void {
+      let isExisted = false;
+      for (let i = 0; i < this.tailLinks.length; i += 1) {
+        if (this.tailLinks[i].sectionId === tailLink.sectionId
+                && this.tailLinks[i].laneId === tailLink.laneId) {
+          isExisted = true;
         }
       }
-      if (!_isExisted) {
+      if (!isExisted) {
         this.tailLinks.push(tailLink);
       }
     }
 
-    addObjId(obj_id: number) {
-      this.objects.push(obj_id);
+    addObjId(objId: number): void {
+      this.objects.push(objId);
     }
 
-    clearHeadLinks() {
+    clearHeadLinks(): void {
       this.headLinks = new Array<LanePointer>();
     }
 
-    clearTailLinks() {
+    clearTailLinks(): void {
       this.tailLinks = new Array<LanePointer>();
     }
 
-    objGone(id: number) {
+    objGone(id: number): void {
       this.objects.splice(this.getObjIndex(id), 1);
     }
 }

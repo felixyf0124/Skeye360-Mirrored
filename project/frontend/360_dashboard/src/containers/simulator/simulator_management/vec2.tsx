@@ -1,9 +1,9 @@
-import Vec2 from './vec2';
+import * as ts from '../TSGeometry';
 /**
  * @class vec2
  */
 
-export default class vec2 {
+export default class Vec2 {
     x: number;
 
     y: number;
@@ -13,18 +13,18 @@ export default class vec2 {
       this.y = y || 0;
     }
 
-    plus(vec2: vec2): Vec2 {
-      const _vec2 = new Vec2(this.x + vec2.x, this.y + vec2.y);
-      return _vec2;
+    plus(vec2: Vec2): Vec2 {
+      const vector = ts.tsVec2(this.x + vec2.x, this.y + vec2.y);
+      return vector;
     }
 
-    minus(vec2: vec2): Vec2 {
-      const _vec2 = new Vec2(this.x - vec2.x, this.y - vec2.y);
-      return _vec2;
+    minus(vec2: Vec2): Vec2 {
+      const vector = ts.tsVec2(this.x - vec2.x, this.y - vec2.y);
+      return vector;
     }
 
     multiply(n: number): Vec2 {
-      const _vec2 = new Vec2(this.x * n, this.y * n);
-      return _vec2;
+      const vector = ts.tsVec2(this.x * n, this.y * n);
+      return vector;
     }
 }

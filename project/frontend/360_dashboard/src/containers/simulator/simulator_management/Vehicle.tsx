@@ -5,7 +5,7 @@ import Object from './Object';
 import * as ts from '../TSGeometry';
 import vec2 from './vec2';
 
-export default class vehicle extends Object {
+export default class Vehicle extends Object {
     path: Array<Array<vec2>>;
 
     traveled: number;
@@ -22,8 +22,9 @@ export default class vehicle extends Object {
 
     maxSpeed: number;
 
-    constructor(id: number, lane_id: number, roadSection_id: number, speed: number, position?: vec2) {
-      super(id, lane_id, roadSection_id, speed, position);
+    constructor(id: number, laneId: number, roadSectionId: number,
+      speed: number, position?: vec2) {
+      super(id, laneId, roadSectionId, speed, position);
       this.path = new Array<Array<vec2>>();
       this.traveled = 0;
       this.atPathSection = 0;
@@ -35,133 +36,135 @@ export default class vehicle extends Object {
     }
 
     // Getters
-    checkFront(frontPostion: vec2, safetyDistance: number, targetSpeed?: number) {
-      const _distance = ts.tsLength(frontPostion.minus(this.position));
-      let _speed = targetSpeed;
-      if (_speed === undefined) {
-        _speed = 0;
+    checkFront(frontPostion: vec2, safetyDistance: number, targetSpeed?: number): void {
+      const distance = ts.tsLength(frontPostion.minus(this.position));
+      let speed = targetSpeed;
+      if (speed === undefined) {
+        speed = 0;
       }
-      if (_distance < safetyDistance) {
-        this.updateSpeed(_speed);
+      if (distance < safetyDistance) {
+        this.updateSpeed(speed);
       } else {
         this.updateSpeed();
       }
     }
 
 
-    updateSpeed(targetSpeed?: number, acce?: number) {
-      let _acce = acce;
-      let _targetSpeed = targetSpeed;
-      if (_acce === undefined) {
-        _acce = 0.3 * this.maxSpeed;
+    updateSpeed(targetSpeed?: number, acceleration?: number): void {
+      let acce = acceleration;
+      let speed = targetSpeed;
+      if (acce === undefined) {
+        acce = 0.3 * this.maxSpeed;
       }
-      if (_targetSpeed === undefined) {
-        _targetSpeed = this.maxSpeed;
+      if (speed === undefined) {
+        speed = this.maxSpeed;
       }
 
-      if (this.speed < _targetSpeed) {
+      if (this.speed < speed) {
         this.state = 1;
-      } else if (this.speed > _targetSpeed) {
+      } else if (this.speed > speed) {
         this.state = -1;
       } else {
         this.state = 0;
       }
       if (this.state === 1) {
-        this.speed += _acce;
-        if (this.speed > _targetSpeed) {
-          this.speed = _targetSpeed;
+        this.speed += acce;
+        if (this.speed > speed) {
+          this.speed = speed;
           this.state = 0;
         }
       }
       if (this.state === -1) {
-        this.speed -= _acce;
-        if (this.speed < _targetSpeed) {
-          this.speed = _targetSpeed;
+        this.speed -= acce;
+        if (this.speed < speed) {
+          this.speed = speed;
           this.state = 0;
         }
       }
     }
 
-    getPath() {
+    getPath(): Array<Array<vec2>> {
       return this.path;
     }
 
-    getAtPath() {
+    getAtPath(): number {
       return this.atPath;
     }
 
-    getAtPathSection() {
+    getAtPathSection(): number {
       return this.atPathSection;
     }
 
-    getTraveled() {
+    getTraveled(): number {
       return this.traveled;
     }
 
-    getIsGone() {
+    getIsGone(): boolean {
       return this.isGone;
     }
 
-    getIsInTransition() {
+    getIsInTransition(): boolean {
       return this.isInTransition;
     }
 
-    resetIsInTransition() {
+    resetIsInTransition(): void {
       this.isInTransition = false;
     }
 
-    updatePosition(disToTravel: number) {
-      const _unit_vec = ts.tsNormalize(this.path[this.atPathSection][this.atPath + 1].minus(this.position));
-      const _length_of_current_path = this.getPathLength(this.atPathSection, this.atPath + 1);
+    updatePosition(disToTravel: number): void {
+      const unitVec = ts.tsNormalize(
+        this.path[this.atPathSection][this.atPath + 1].minus(this.position),
+      );
+      const lengthOfCurrentPath = this.getPathLength(this.atPathSection, this.atPath + 1);
       if (this.atPathSection === 0) {
-        const _dis_to_travel_of_current_path = ts.tsLength(this.position.minus(
+        const disToTravelOfCurrentPath = ts.tsLength(this.position.minus(
           this.path[this.atPathSection][this.atPath + 1],
         ));
-        if (_dis_to_travel_of_current_path > _length_of_current_path) {
-          this.traveled = _length_of_current_path - _dis_to_travel_of_current_path;
+        if (disToTravelOfCurrentPath > lengthOfCurrentPath) {
+          this.traveled = lengthOfCurrentPath - disToTravelOfCurrentPath;
         }
       }
-      if (this.traveled + disToTravel < _length_of_current_path) {
-        this.position = this.position.plus(_unit_vec.multiply(disToTravel));
+      if (this.traveled + disToTravel < lengthOfCurrentPath) {
+        this.position = this.position.plus(unitVec.multiply(disToTravel));
         this.traveled += disToTravel;
       } else {
         this.position = this.path[this.atPathSection][this.atPath + 1];
         this.atPath += 1;
-        const _dis_to_travel = this.traveled + disToTravel - _length_of_current_path;
-        this.traveled = _length_of_current_path;
+        const leftOverDisToTravel = this.traveled + disToTravel - lengthOfCurrentPath;
+        this.traveled = lengthOfCurrentPath;
         if (this.atPath === this.path[this.atPathSection].length - 1) {
           if (this.atPathSection + 1 === this.path.length) {
             this.isGone = true;
           } else {
-            ++this.atPathSection;
+            this.atPathSection += 1;
             this.atPath = 0;
             this.traveled = 0;
             this.isInTransition = true;
-            this.updatePosition(_dis_to_travel);
+            this.updatePosition(leftOverDisToTravel);
           }
         } else {
-          this.updatePosition(_dis_to_travel);
+          this.updatePosition(leftOverDisToTravel);
         }
       }
     }
 
-    getDeltaT() {
-      const _currentTime = Date.now();
-      const _deltaT = _currentTime - this.lastTime;
-      this.lastTime = _currentTime;
-      return _deltaT;
+    getDeltaT(): number {
+      const currentTime = Date.now();
+      const deltaT = currentTime - this.lastTime;
+      this.lastTime = currentTime;
+      return deltaT;
     }
 
     /**
      * till which index
      * @param index
      */
-    getPathLength(pathSection: number, pathIndex?: number) {
-      let _length = 0;
-      const _index = pathIndex || this.path[pathSection].length - 1;
-      for (let i = 0; i < _index; ++i) {
-        _length += ts.tsLength(this.path[pathSection][i + 1].minus(this.path[pathSection][i]));
+    getPathLength(pathSection: number, pathIndex?: number): number {
+      let length = 0;
+      const index = pathIndex || this.path[pathSection].length - 1;
+      for (let i = 0; i < index; i += 1) {
+        length += ts.tsLength(this.path[pathSection][i + 1].minus(this.path[pathSection][i]));
       }
-      return _length;
+      return length;
     }
 }

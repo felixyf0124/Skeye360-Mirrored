@@ -1,5 +1,5 @@
 import Lane from './Lane';
-import vec2 from './vec2';
+import Vec2 from './vec2';
 import * as ts from '../TSGeometry';
 
 /**
@@ -8,24 +8,24 @@ import * as ts from '../TSGeometry';
 export default class RoadSection {
     id: number;
 
-    roadIntersection_id: number;
+    roadIntersectionId: number;
 
-    head: vec2;
+    head: Vec2;
 
-    tail: vec2;
+    tail: Vec2;
 
-    lane_in: Array<Lane>;
+    laneIn: Array<Lane>;
 
-    lane_out: Array<Lane>;
+    laneOut: Array<Lane>;
 
     // tailCoordinate was tailCoordinate:{x:number,y:number} in the paramenter of the constructor
-    constructor(id: number, roadIntersection_id: number, tailCoordinate: vec2) {
+    constructor(id: number, roadIntersectionId: number, tailCoordinate: Vec2) {
       this.id = id;
-      this.roadIntersection_id = roadIntersection_id;
-      this.head = new vec2();
+      this.roadIntersectionId = roadIntersectionId;
+      this.head = new Vec2();
       this.tail = tailCoordinate;
-      this.lane_in = new Array<Lane>();
-      this.lane_out = new Array<Lane>();
+      this.laneIn = new Array<Lane>();
+      this.laneOut = new Array<Lane>();
     }
 
     // Getters
@@ -34,129 +34,130 @@ export default class RoadSection {
     }
 
     getRoadIntersectionId(): number {
-      return this.roadIntersection_id;
+      return this.roadIntersectionId;
     }
 
-    getHead(): vec2 {
+    getHead(): Vec2 {
       return this.head;
     }
 
-    getTail(): vec2 {
+    getTail(): Vec2 {
       return this.tail;
     }
 
     getLaneIn(): Array<Lane> {
-      return this.lane_in;
+      return this.laneIn;
     }
 
     getLaneOut(): Array<Lane> {
-      return this.lane_out;
+      return this.laneOut;
     }
 
-    getLaneAt(id: number, isLaneIn?: boolean) {
+    getLaneAt(id: number, isLaneIn?: boolean): Lane {
       if (isLaneIn === true || isLaneIn === undefined) {
-        return this.lane_in[id];
+        return this.laneIn[id];
       }
-      return this.lane_out[id];
+      return this.laneOut[id];
     }
 
     // Setters
-    setId(id: number) {
+    setId(id: number): void {
       this.id = id;
-      for (let i = 0; i < this.lane_in.length; ++i) {
-        this.lane_in[i].setRoadSectionId(this.id);
+      for (let i = 0; i < this.laneIn.length; i += 1) {
+        this.laneIn[i].setRoadSectionId(this.id);
       }
-      for (let i = 0; i < this.lane_out.length; ++i) {
-        this.lane_out[i].setRoadSectionId(this.id);
+      for (let i = 0; i < this.laneOut.length; i += 1) {
+        this.laneOut[i].setRoadSectionId(this.id);
       }
     }
 
-    setHead(head: vec2) {
+    setHead(head: Vec2): void {
       this.head = head;
     }
 
-    setTail(tail: vec2) {
+    setTail(tail: Vec2): void {
       this.tail = tail;
     }
 
 
-    bindTrafficLightId(lane_in_id: number, trafficLight_id: number) {
-      this.lane_in[lane_in_id].bindTrafficLightId(trafficLight_id);
+    bindTrafficLightId(laneInId: number, trafficLightId: number): void {
+      this.laneIn[laneInId].bindTrafficLightId(trafficLightId);
     }
 
-    addNewLane(laneDirection: number, laneType: string, numOfLanes: number) {
-      let _id = 0;
-      for (let i = 0; i < numOfLanes; ++i) {
+    addNewLane(laneDirection: number, laneType: string, numOfLanes: number): void {
+      let id = 0;
+      for (let i = 0; i < numOfLanes; i += 1) {
         if (laneDirection > 0) {
-          _id = this.lane_in.length;
-          var _lane = new Lane(_id, laneType, laneDirection, this.id);
-          _lane.setHead(this.head);
-          _lane.setTail(this.tail);
-          this.lane_in.push(_lane);
+          id = this.laneIn.length;
+          const lane = new Lane(id, laneType, laneDirection, this.id);
+          lane.setHead(this.head);
+          lane.setTail(this.tail);
+          this.laneIn.push(lane);
         } else if (laneDirection < 0) {
-          _id = this.lane_out.length;
-          var _lane = new Lane(_id, laneType, laneDirection, this.id);
-          _lane.setHead(this.tail);
-          _lane.setTail(this.head);
-          this.lane_out.push(_lane);
+          id = this.laneOut.length;
+          const lane = new Lane(id, laneType, laneDirection, this.id);
+          lane.setHead(this.tail);
+          lane.setTail(this.head);
+          this.laneOut.push(lane);
         } else {
-          console.error('invalide laneDiection input \n');
+          console.warn('invalide laneDiection input \n');
         }
       }
     }
 
-    updateLanePosition(laneWidth: number) {
-      for (let i = 0; i < this.lane_in.length; ++i) {
-        var _lane_direction = ts.tsNormalize(this.head.minus(this.tail));
-        const _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_direction, Math.PI / 2);
-        var _perpendicular_offset = _perpendicular_unit_vec.multiply((i + 0.5) * laneWidth);
+    updateLanePosition(laneWidth: number): void {
+      for (let i = 0; i < this.laneIn.length; i += 1) {
+        const laneDirection = ts.tsNormalize(this.head.minus(this.tail));
+        const perpendicularUnitVec = ts.tsRotateByOrigin(laneDirection, Math.PI / 2);
 
-        this.lane_in[i].setHead(this.head.plus(_perpendicular_offset));
-        this.lane_in[i].setTail(this.tail.plus(_perpendicular_offset));
+        const perpendicularOffset = perpendicularUnitVec.multiply((i + 0.5) * laneWidth);
+
+        this.laneIn[i].setHead(this.head.plus(perpendicularOffset));
+        this.laneIn[i].setTail(this.tail.plus(perpendicularOffset));
       }
 
-      for (let i = 0; i < this.lane_out.length; ++i) {
-        var _lane_direction = ts.tsNormalize(this.tail.minus(this.head));
-        const _perpendicular_unit_vec = ts.tsRotateByOrigin(_lane_direction, Math.PI / 2);
+      for (let i = 0; i < this.laneOut.length; i += 1) {
+        const laneDirection = ts.tsNormalize(this.tail.minus(this.head));
+        const perpendicularUnitVec = ts.tsRotateByOrigin(laneDirection, Math.PI / 2);
 
-        var _perpendicular_offset = _perpendicular_unit_vec.multiply((i + 0.5) * laneWidth);
+        const perpendicularOffset = perpendicularUnitVec.multiply((i + 0.5) * laneWidth);
 
-        this.lane_out[i].setHead(this.tail.plus(_perpendicular_offset));
-        this.lane_out[i].setTail(this.head.plus(_perpendicular_offset));
-      }
-    }
-
-    updateLaneWithOffset(leftOffset: vec2, rightOffset: vec2) {
-      const _offset_line = ts.line(leftOffset, rightOffset);
-      for (let i = 0; i < this.lane_in.length; ++i) {
-        const _lane_line = ts.line(this.lane_in[i].getTail(), this.lane_in[i].getHead());
-        const _intersection = ts.lineIntersection(_offset_line, _lane_line);
-        this.lane_in[i].setHead(_intersection);
-      }
-
-      for (let i = 0; i < this.lane_out.length; ++i) {
-        const _lane_line = ts.line(this.lane_out[i].getTail(), this.lane_out[i].getHead());
-        const _intersection = ts.lineIntersection(_offset_line, _lane_line);
-        this.lane_out[i].setTail(_intersection);
+        this.laneOut[i].setHead(this.tail.plus(perpendicularOffset));
+        this.laneOut[i].setTail(this.head.plus(perpendicularOffset));
       }
     }
 
-    offsetLanes(offset: vec2) {
-      for (let i = 0; i < this.lane_in.length; ++i) {
-        this.lane_in[i].setHead(this.lane_in[i].getHead().plus(offset));
-        this.lane_in[i].setTail(this.lane_in[i].getTail().plus(offset));
+    updateLaneWithOffset(leftOffset: Vec2, rightOffset: Vec2): void {
+      const offsetLine = ts.line(leftOffset, rightOffset);
+      for (let i = 0; i < this.laneIn.length; i += 1) {
+        const laneLine = ts.line(this.laneIn[i].getTail(), this.laneIn[i].getHead());
+        const intersection = ts.lineIntersection(offsetLine, laneLine);
+        this.laneIn[i].setHead(intersection);
       }
-      for (let i = 0; i < this.lane_out.length; ++i) {
-        this.lane_out[i].setHead(this.lane_out[i].getHead().plus(offset));
-        this.lane_out[i].setTail(this.lane_out[i].getTail().plus(offset));
+
+      for (let i = 0; i < this.laneOut.length; i += 1) {
+        const laneLine = ts.line(this.laneOut[i].getTail(), this.laneOut[i].getHead());
+        const intersection = ts.lineIntersection(offsetLine, laneLine);
+        this.laneOut[i].setTail(intersection);
       }
     }
 
-    objGone(lane_id: number, obj_id: number, isLaneIn?: boolean) {
+    offsetLanes(offset: Vec2): void {
+      for (let i = 0; i < this.laneIn.length; i += 1) {
+        this.laneIn[i].setHead(this.laneIn[i].getHead().plus(offset));
+        this.laneIn[i].setTail(this.laneIn[i].getTail().plus(offset));
+      }
+      for (let i = 0; i < this.laneOut.length; i += 1) {
+        this.laneOut[i].setHead(this.laneOut[i].getHead().plus(offset));
+        this.laneOut[i].setTail(this.laneOut[i].getTail().plus(offset));
+      }
+    }
+
+    objGone(laneId: number, objId: number, isLaneIn?: boolean): void {
       if (isLaneIn === true || isLaneIn === undefined) {
-        this.lane_in[lane_id].objGone(obj_id);
+        this.laneIn[laneId].objGone(objId);
       } else {
-        this.lane_out[lane_id].objGone(obj_id);
+        this.laneOut[laneId].objGone(objId);
       }
     }
 }
