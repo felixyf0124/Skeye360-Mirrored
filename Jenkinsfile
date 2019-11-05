@@ -22,11 +22,15 @@ pipeline {
                 //Testing frontend
                 stage('test_frontend') {
                     agent {
-                        docker "project_360_dashboard"
+                        docker {
+                            image 'project_360_dashboard'
+                        }
                     }
                     steps {
-                        dir("project/frontend/360_dashboard") {
-                            sh "yarn lint:js"
+                        script {
+                            dir("project/frontend/360_dashboard") {
+                                sh "yarn test"
+                            }
                         }
                     }
                 }
