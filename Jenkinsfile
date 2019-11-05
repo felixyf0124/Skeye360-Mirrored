@@ -8,7 +8,7 @@ pipeline {
                         echo "Building!"
                     }
                 }
-                // //Working with all the properties in the command
+                //Working with all the properties in the command
                 stage('test_sonarqube') {
                     steps {
                         script {
@@ -26,14 +26,17 @@ pipeline {
                     }
                     steps {
                         dir("project/frontend/360_dashboard") {
-                            //sh "yarn run test ." fails because it ask the user another input before running tests, to be fixed
+                            sh "yarn lint:js"
                         }
                     }
                 }
                 //Testing django api
                 stage('test_djangoapi') {
                     agent {
-                        docker "project_360_django"
+                        docker {
+                            image 'project_360_django'
+                            args '--network=app_net'
+                        }
                     }
                     steps {
                         script {
