@@ -1,9 +1,11 @@
-// import LanePointer from "../../containers/simulator/simulator_management/LanePointer";
+require('babel-core/register');
+
+import {LanePointer} from "../../containers/simulator/simulator_management/LanePointer.tsx";
 // import { expect } from 'chai';
 
 // const assertOriginal = require('assert');
 const assert = require('chai').expect;
-var lane = require('../../containers/simulator/simulator_management/LanePointer.tsx');
+// var lane = require('../../containers/simulator/simulator_management/LanePointer.tsx');
 const lanePointer = new (1,2);
 const spyLanePointer = spyOnProperty(lanePointer, 'getSectionId').and.callThrough();
 expect(lanePointer.getSectionId).toBe(1);
