@@ -70,6 +70,8 @@ pipeline {
     }
 
     post {
-        cleanWs(cleanWhenSuccess: true)
+        success {
+            cleanWs(cleanWhenSuccess: true)
+        }
     }
 }
