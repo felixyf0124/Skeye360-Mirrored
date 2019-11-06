@@ -1,5 +1,4 @@
 # A counter that counts how many cars are detected
-# TODO: adding different derections, type of objects
 
 from .direction import Direction
 

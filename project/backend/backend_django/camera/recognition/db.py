@@ -3,7 +3,7 @@
 import pymongo
 import datetime
 from .counter import Counter
-
+ 
 def connection():
     myclient = pymongo.MongoClient("mongodb://myUserAdmin:abc123@40.121.23.48:8300/")
     mydb = myclient["test"]
