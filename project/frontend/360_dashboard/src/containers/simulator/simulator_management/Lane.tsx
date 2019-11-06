@@ -12,12 +12,9 @@ export default class Lane {
     //1 or -1 same or opposite with road section
     laneDirection: number;
     roadSection_id: number;
-    //roadIntersection_id:number
-    objects:Array<Object>;
+    objects:Array<number>;
     head:Coordinate;
     tail:Coordinate;
-    // start:{x:number,y:number};
-    // end:{x:number,y:number};
     headLinks: Array<LanePointer>;
     tailLinks: Array<LanePointer>;
     trafficLight_id:number;
@@ -27,11 +24,7 @@ export default class Lane {
         this.laneType = laneType;
         this.laneDirection = laneDirection;
         this.roadSection_id = roadSection_id;
-        //this.roadIntersection_id = roadIntersection_id;
-        this.objects = new Array<Object>();
-        // is there anyway to make this null?
-        // this.start = {x:0,y:0};
-        // this.end = {x:0,y:0};
+        this.objects = new Array<number>();
         this.head = new Coordinate();
         this.tail = new Coordinate();
         this.headLinks = new Array<LanePointer>();
@@ -52,12 +45,13 @@ export default class Lane {
     getRoadSectionId(): number {
         return this.roadSection_id;
     }
-    // getRoadIntersectionId(): number {
-    //     return this.roadIntersection_id
-    // }
-    getObjectsOnLane(): Array<Object> {
+    getObjects(): Array<number> {
         return this.objects;
     }
+    getObjectIdByIndex(index:number){
+        return this.objects[index];
+    }
+
     
     getHead(): Coordinate {
         return this.head;
@@ -75,6 +69,18 @@ export default class Lane {
         return this.trafficLight_id;
     }
 
+    getObjIndex(id:number){
+        for(let i =0; i<this.objects.length; ++i)
+        {
+            if(this.objects[i] === id)
+            {
+                const _index = i;
+                return _index;
+            }
+        }
+        return -1;
+    }
+
     //Setters
     setId(id:number){
         this.id = id;
@@ -85,48 +91,47 @@ export default class Lane {
     setRoadSectionId(roadSection_id: number) {
         this.roadSection_id = roadSection_id;
     }
-    // setroadIntersectionId(roadIntersection_id: number) {
-    //     this.roadIntersection_id = roadIntersection_id;
-    // }
     setHead(head: Coordinate) {
         this.head = head;
     }
     setTail(tail: Coordinate) {
         this.tail = tail;
     }
+
+    bindTrafficLightId(id:number){
+        this.trafficLight_id = id;
+    }
+
     addHeadLink(headLink: LanePointer) {
         var _isExisted = false;
-        for(let i = 0; i < this.headLinks.length; ++i)
-        {
-            if(this.headLinks[i] === headLink)
+        for(let i = 0; i < this.headLinks.length; ++i) {
+            if(this.headLinks[i].section_id === headLink.section_id && this.headLinks[i].lane_id === headLink.lane_id)
             {
                 _isExisted = true;
             }
         }
-        if(!_isExisted)
-        {
+        if(!_isExisted) {
             this.headLinks.push(headLink);
         }
     }
 
     addTailLink(tailLink: LanePointer) {
         var _isExisted = false;
-        for(let i = 0; i < this.tailLinks.length; ++i)
-        {
-            if(this.tailLinks[i] === tailLink)
+        for(let i = 0; i < this.tailLinks.length; ++i) {
+            if(this.tailLinks[i].section_id === tailLink.section_id 
+                && this.tailLinks[i].lane_id === tailLink.lane_id)
             {
                 _isExisted = true;
             }
         }
-        if(!_isExisted)
-        {
+        if(!_isExisted) {
             this.tailLinks.push(tailLink);
         }
     }
 
-    addVehicle(VehicleObj:Vehicle)
+    addObjId(obj_id:number)
     {
-        this.objects.push(VehicleObj);
+        this.objects.push(obj_id);
     }
 
     clearHeadLinks(){
@@ -135,6 +140,10 @@ export default class Lane {
 
     clearTailLinks(){
         this.tailLinks = new Array<LanePointer>();
+    }
+
+    objGone(id:number){
+        this.objects.splice(this.getObjIndex(id),1); 
     }
 
 }

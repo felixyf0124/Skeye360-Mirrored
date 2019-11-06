@@ -2,36 +2,29 @@
  * @class Object
  */
 
-import Coordinate from "./vec2";
+import vec2 from "./vec2";
 
 export default class Object {
     
     id:number;
     lane_id:number;
     roadSection_id:number;
-    coordinate: Coordinate;
+    position: vec2;
     //State: move, stop
-    state: string;
+    state: number;
     speed: number;
 
-    //roadIntersection_id:number;
-    //state:string;
-    // REPLACED BY COORDINATE CLASS
-    // position:{
-    //     x:number,y:number
-    // };
-    
-    constructor(id:number, coordinate:Coordinate, lane_id:number, roadSection_id:number, speed:number){
+    constructor(id:number, lane_id:number, roadSection_id:number, speed:number, position?:vec2){
        this.id = id;
-       this.coordinate = new Coordinate();
+       this.position = position||new vec2();
        this.lane_id = lane_id;
        this.roadSection_id = roadSection_id;
-       this.state = "stop"
+       this.state = 0;
        this.speed = speed;
     }
 
     //Getters
-    getObjectId(): number {
+    getId(): number {
         return this.id;
     }
     getLaneId(): number {
@@ -40,13 +33,16 @@ export default class Object {
     getRoadSectionId(): number {
         return this.roadSection_id;
     }
-    getCoordinate(): Coordinate{
-        return this.coordinate;
+    getPosition(): vec2{
+        return this.position;
+    }
+    getSpeed(){
+        return this.speed;
     }
 
     //Setters
-    setCoordinate(coordinate: Coordinate) {
-        this.coordinate = coordinate;
+    setPosition(position: vec2) {
+        this.position = position;
     }
     setLaneId(lane_id: number) {
         this.lane_id = lane_id;
@@ -54,7 +50,7 @@ export default class Object {
     setRoadSectionId(roadSection_id: number) {
         this.roadSection_id = roadSection_id;
     }
-    setState(state: string) {
+    setState(state: number) {
         this.state = state;
     }
     setObjectSpeed(speed: number) {

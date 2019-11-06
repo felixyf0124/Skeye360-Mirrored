@@ -1,51 +1,148 @@
+//import { number } from "prop-types";
+
 /**
  * @class TrafficLight
  */
 export default class TrafficLight {
 
     id:number;
-    TLManagerId:number;
-    countDownSetting:Array<number>;
-    bindToLaneId:Array<number>;
-    trafficLightStatusCountDown:number;
-    //TrafficLightStatus: stop (blinks red), red, yellow, green
-    trafficLightStatus:string;
+    countDownSetting:{green:number,yellow:number};
+    boundLanes:Array<{section:number,id:number}>;
+    status:string;
+    isForced:boolean;
+    overlapOffset:number;
+    countDown:number;
 
-    constructor(id:number, TLManagerId:number){
+    constructor(id:number){
         this.id = id;
-        this.TLManagerId = TLManagerId;
-        this.countDownSetting = new Array<number>();
-        this.bindToLaneId = new Array<number>();
-        this.trafficLightStatusCountDown = 0;
-        this.trafficLightStatus = "stop";
+        this.countDownSetting = {green:0,yellow:0};
+        this.boundLanes = new Array<{section:number,id:number}>();
+        this.status = "red";
+        this.isForced = false;
+        this.overlapOffset = 0;
+        this.countDown = NaN;
     }
 
     //Getters
-    getTrafficLightId(): number {
+    getId(): number {
         return this.id;
     }
-    getTrafficLightManagerId(): number {
-        return this.TLManagerId;
-    }
-    getCountDownSetting(): Array<number> {
+    getCountDownSetting(): {green:number,yellow:number} {
         return this.countDownSetting;
     }
-    getBindToLaneId(): Array<number> {
-        return this.bindToLaneId;
+    getBoundLanes(): Array<{section:number,id:number}> {
+        return this.boundLanes;
     }
-    getStateCountDown(): number {
-        return this.trafficLightStatusCountDown;
+    getStatus(): string {
+        return this.status;
     }
-    getTrafficLightStatus(): string {
-        return this.trafficLightStatus;
+
+    getGreenTime():number{
+        return this.countDownSetting.green;
+    }
+
+    getYellowTime():number{
+        return this.countDownSetting.yellow;
+    }
+
+    /**
+     * total = green + yellow
+     */
+    getTotalTime():number{
+        const _total = this.countDownSetting.green + this.countDownSetting.yellow;
+        return _total;
+    }
+
+    getIsForced():boolean{
+        return this.isForced;
+    }
+
+    getOverlapOffset():number{
+        return this.overlapOffset;
+    }
+
+    getCountDown():number{
+        return this.countDown;
     }
 
     //Setters
-    setTrafficLightStatusCountDown(trafficLightStatusCountDown: number) {
-        this.trafficLightStatusCountDown = trafficLightStatusCountDown;
+    setId(id:number){
+        this.id = id;
     }
-    setTrafficLightStatus(trafficLightStatus: string) {
-        this.trafficLightStatus = trafficLightStatus;
+
+    /**
+     * this auto defines 
+     * yellow = 5
+     * green = totalTime - 5
+     * totalTime should > 5
+     * @param totalTime = 5 + green 
+     */
+    setTotalTime(totalTime:number){
+        try{
+            if(totalTime <= 5) throw "invalide total time coutdown setting \n  totalTime <= 5";
+            this.countDownSetting = {
+                green: totalTime - 5,
+                yellow: 5
+            };
+        }catch(e){
+            console.error(e);
+        }
+    }
+
+    setGreenTime(time:number){
+        this.countDownSetting.green = time;
+    }
+
+    setYellowTime(time:number){
+        this.countDownSetting.yellow = time;
+    }
+
+    setStatus(status: string) {
+        this.status = status;
+    }
+
+    setCountDown(countDown:number){
+        this.countDown = countDown;
+    }
+
+    setIsForced(isForced:boolean, status?:string){
+        this.isForced = isForced;
+        if(status !== undefined){
+            this.status = status;
+        }
+    }
+    
+    setOverlapOffset(overlapOffset:number){
+        this.overlapOffset = overlapOffset;
+    }
+
+    bindLane(lane:{section:number,id:number}){
+        this.boundLanes.push(lane);
+    }
+
+    bindLanes(lanes:Array<{section:number,id:number}>){
+        for(let i = 0; i<lanes.length; ++i)
+        {
+            if(!this.isLaneBound(lanes[i]))
+            {
+                this.boundLanes.push(lanes[i]);
+            }
+        }
+    }
+
+    bindNewLaneGroup(laneGroup:Array<{section:number,id:number}>){
+        this.boundLanes = laneGroup;
+    }
+
+    isLaneBound(lane:{section:number,id:number}){
+        for(let i = 0; i<this.boundLanes.length; ++i)
+        {
+            if(lane.section === this.boundLanes[i].section && lane.id === this.boundLanes[i].id)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
