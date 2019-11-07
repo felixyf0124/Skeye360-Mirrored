@@ -11,6 +11,7 @@ from ..coordinate import Coordinate
 from ..intersection import Intersection
 sys.modules['cv2'] = MagicMock()
 sys.modules['requests'] = MagicMock()
+sys.modules['numpy'] = MagicMock()
 from ..detection import Detector
 from ..views import cam,send_json
 from django.http import StreamingHttpResponse, HttpResponse
