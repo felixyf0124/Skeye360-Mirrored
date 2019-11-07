@@ -3,7 +3,6 @@ import sys
 import os
 import io
 import unittest
-import numpy as np
 from unittest.mock import MagicMock, patch
 from ..direction import Direction
 from ..counter import Counter
