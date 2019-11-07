@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import Chart from 'react-apexcharts';
-import NorthData from '../PostData/carsNorth.json';
-import NorthDataAfter from '../PostData/carsNorthAfter.json'
-import { valueToNode } from '@babel/types';
+import AvgWaitingTime from '../PostData/avgWaitingTime.json';
+import AvgWaitingTimeAfter from '../PostData/avgWaitingTimeAfter.json';
+
 //For more Line Chart information:
 //https://apexcharts.com/react-chart-demos/line-charts/basic/
 
-const data = NorthData.NorthDataBefore;
-const newData = NorthDataAfter.NorthDataAfter;
+const data = AvgWaitingTime.WaitTime;
+const newData = AvgWaitingTimeAfter.WaitTime;
 const getX = data.map((value) =>{
-    return value.time;
+    return value.hour;
 });
 const getY = data.map((value) => {
-    return value.cars;
+    return value.wait;
 });
 const getYAfter = newData.map((value) => {
-    return value.cars;
+    return value.wait;
 });
 
 interface ChartProps{
@@ -42,7 +42,7 @@ class NorthChart extends Component<ChartProps, ChartState> {
                     enabled: false
                 },
                 title: {
-                    text: 'Volume of Cars Going From North To South',
+                    text: 'Average Wait Time Per Hour',
                     align: 'center'
                 },
                 grid: {
@@ -58,18 +58,18 @@ class NorthChart extends Component<ChartProps, ChartState> {
                     }
                 },
                 yaxis: {
-                    title: {
-                        "text": "Number of Cars"
+                    title:{
+                        "text": "Wait Time (seconds)"
                     }
                 },
                 colors: ['#c7382e', '#b2e6a3']
             },
             series: [{
-                name: "Cars Before SkeYe",
-                data: getY,
+                name: "Avg Wait Time Before SkeYe",
+                data: getY
             },{
-                name: "Cars After SkeYe",
-                data: getYAfter,
+                name: "Avg Wait Time After SkeYe",
+                data: getYAfter
             }
         ],
         }
@@ -78,7 +78,6 @@ class NorthChart extends Component<ChartProps, ChartState> {
         return (
             <div className="bar-chart">
                 <Chart options={this.state.options} series={this.state.series} type="line" width="500" height="" />
-                
             </div>
         )
     }
