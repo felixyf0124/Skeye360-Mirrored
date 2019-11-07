@@ -13,7 +13,7 @@ router.register('api/time', TimeViewSet, 'time')
 router.register('api/prediction', PredictionViewSet, 'prediction')
 router.register('api/vehicle', VehicleViewSet, 'vehicle')
 router.register('api/pedestrian', PedestrianViewSet, 'pedestrian')
-#router.register('api/<int:id>', home, 'home')
+router.register('api/userlog', UserlogViewSet, 'userlog')
 
 urlpatterns = router.urls
 

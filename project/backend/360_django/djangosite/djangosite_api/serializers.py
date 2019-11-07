@@ -1,12 +1,12 @@
 """These classes are used to serialize data to send them in a JSON format"""
 from rest_framework import serializers
-from rest_framework.fields import UUIDField
 
 from .models import *
 
 
 # This is for /api
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    user_logs = serializers.StringRelatedField(many=True)
     id = serializers.UUIDField(read_only=True)
 
     class Meta:
@@ -66,3 +66,9 @@ class PedestrianSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Pedestrian
         fields = ['pedestrian_centroid', 'pedestrian_time']
+
+
+class UserlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Userlog
+        fields = ['log_message', 'log_time', 'user_id']
