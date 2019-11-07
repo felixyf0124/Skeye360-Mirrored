@@ -16,6 +16,8 @@ sys.modules['scipy'] = MagicMock()
 sys.modules['scipy.linalg'] = MagicMock()
 sys.modules['cmake'] = MagicMock()
 sys.modules['sklearn'] = MagicMock()
+sys.modules['sklearn.utils'] = MagicMock()
+sys.modules['sklearn.utils.linear_assignment_'] = MagicMock()
 sys.modules['tensorflow'] = MagicMock()
 from ..detection import Detector
 from ..views import cam,send_json
