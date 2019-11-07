@@ -4,7 +4,6 @@ import numpy as np
 import time
 import threading
 import sys
-import dlib
 from .db import *
 from .intersection import Intersection
 from .trackableobject import TrackableObject
@@ -62,7 +61,7 @@ class Detector:
 
     # count detection output at the same time detecting objects in the frame
     def counting(self,col,intersection):
-        WAIT_SECONDS = 5
+        WAIT_SECONDS = 200
         print(time.ctime())
         insert_count(col,intersection.counters)
         # cleanup db
@@ -173,10 +172,7 @@ class Detector:
 
             #get the size of the image
             Width = image.shape[1]
-            Height = image.shape[0]
-            
-	        # convert the frame from BGR to RGB for dlib
-            rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)            
+            Height = image.shape[0]                
             
             # convert the frame to a blob and detect through the network
             blob = cv2.dnn.blobFromImage(image, 1.0/255.0, (416,416), [0,0,0], True, crop=False)
