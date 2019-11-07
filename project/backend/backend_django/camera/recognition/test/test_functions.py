@@ -2,7 +2,6 @@
 import sys
 import os
 import io
-import requests
 import unittest
 import numpy as np
 from unittest.mock import MagicMock, patch
@@ -12,6 +11,7 @@ from ..trackableobject import TrackableObject
 from ..coordinate import Coordinate
 from ..intersection import Intersection
 sys.modules['cv2'] = MagicMock()
+sys.modules['requests'] = MagicMock()
 from ..detection import Detector
 from ..views import cam,send_json
 from django.http import StreamingHttpResponse, HttpResponse
