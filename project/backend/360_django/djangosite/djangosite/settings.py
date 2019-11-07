@@ -82,6 +82,7 @@ WSGI_APPLICATION = 'djangosite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': True,
         'NAME': '360backend',
         'HOST': 'mongodb://myUserAdmin:abc123@172.16.0.4:27017',
         'USER': 'myUserAdmin',
