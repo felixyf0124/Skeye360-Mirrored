@@ -12,6 +12,10 @@ from ..intersection import Intersection
 sys.modules['cv2'] = MagicMock()
 sys.modules['requests'] = MagicMock()
 sys.modules['numpy'] = MagicMock()
+sys.modules['scipy'] = MagicMock()
+sys.modules['cmake'] = MagicMock()
+sys.modules['sklearn'] = MagicMock()
+sys.modules['tensorflow'] = MagicMock()
 from ..detection import Detector
 from ..views import cam,send_json
 from django.http import StreamingHttpResponse, HttpResponse
