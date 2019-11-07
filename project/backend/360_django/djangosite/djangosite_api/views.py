@@ -138,3 +138,12 @@ class VehicleViewSet(viewsets.ModelViewSet):
 class PedestrianViewSet(viewsets.ModelViewSet):
     queryset = Pedestrian.objects.all()
     serializer_class = PedestrianSerializer
+
+
+class UserlogViewSet(viewsets.ModelViewSet):
+    def validate_user_id(self, value):
+        return
+
+    queryset = Userlog.objects.all()
+    serializer_class = UserlogSerializer
+    filter_fields = ('user_id',)

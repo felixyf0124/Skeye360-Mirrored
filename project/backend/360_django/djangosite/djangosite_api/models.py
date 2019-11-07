@@ -1,9 +1,13 @@
+import uuid
+
 from django.db import models
+from rest_framework.validators import UniqueValidator
 
 
 class User(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length=255, null=True)
-    token = models.CharField(max_length=255, null=True)
+    password = models.CharField(max_length=255, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
@@ -49,3 +53,9 @@ class Vehicle(models.Model):
 class Pedestrian(models.Model):
     pedestrian_centroid = models.CharField(max_length=30, null=True)
     pedestrian_time = models.DateTimeField(auto_now_add=True)
+
+
+class Userlog(models.Model):
+    log_message = models.CharField(max_length=255)
+    log_time = models.DateTimeField(auto_now_add=True)
+    user_id = models.ForeignKey(User, related_name='user_logs', on_delete=models.CASCADE)
