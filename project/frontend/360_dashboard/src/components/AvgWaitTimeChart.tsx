@@ -1,16 +1,16 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
-import NorthData from '../PostData/carsNorth.json';
-import NorthDataAfter from '../PostData/carsNorthAfter.json';
+import AvgWaitingTime from '../PostData/avgWaitingTime.json';
+import AvgWaitingTimeAfter from '../PostData/avgWaitingTimeAfter.json';
+
 // For more Line Chart information:
 // https://apexcharts.com/react-chart-demos/line-charts/basic/
 
-const data = NorthData.NorthDataBefore;
-const newData = NorthDataAfter.NorthDataAfter;
-const getX = data.map((value) => value.time);
-const getY = data.map((value) => value.cars);
-const getYAfter = newData.map((value) => value.cars);
-
+const data = AvgWaitingTime.WaitTime;
+const newData = AvgWaitingTimeAfter.WaitTime;
+const getX = data.map((value) => value.hour);
+const getY = data.map((value) => value.wait);
+const getYAfter = newData.map((value) => value.wait);
 
 interface ChartState {
   options: {};
@@ -18,7 +18,7 @@ interface ChartState {
 }
 
 // A chart that shows how many cars are coming from north to south per hour
-const NorthChart = (): JSX.Element => {
+const AvgWaitTimeChart = (): JSX.Element => {
   const state = {
     options: {
       chart: {
@@ -30,7 +30,7 @@ const NorthChart = (): JSX.Element => {
         enabled: false,
       },
       title: {
-        text: 'Volume of Cars Going From North To South',
+        text: 'Average Wait Time Per Hour',
         align: 'center',
       },
       grid: {
@@ -47,23 +47,20 @@ const NorthChart = (): JSX.Element => {
       },
       yaxis: {
         title: {
-          text: 'Number of Cars',
+          text: 'Wait Time (seconds)',
         },
       },
       colors: ['#c7382e', '#b2e6a3'],
     },
-    series: [
-      {
-        name: 'Cars Before SkeYe',
-        data: getY,
-      },
-      {
-        name: 'Cars After SkeYe',
-        data: getYAfter,
-      },
+    series: [{
+      name: 'Avg Wait Time Before SkeYe',
+      data: getY,
+    }, {
+      name: 'Avg Wait Time After SkeYe',
+      data: getYAfter,
+    },
     ],
   };
-
   return (
     <div className="bar-chart">
       <Chart options={state.options} series={state.series} type="line" width="500" height="" />
@@ -71,4 +68,4 @@ const NorthChart = (): JSX.Element => {
   );
 };
 
-export default NorthChart;
+export default AvgWaitTimeChart;
