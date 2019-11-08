@@ -489,7 +489,7 @@ class Scene extends Component {
             <td>
               <img
                 style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://52.170.42.166:8000/"
+                src="http://40.121.47.195/8000/cam"
                 alt=""
               />
             </td>
