@@ -3,12 +3,14 @@ import sys
 import os
 import io
 import unittest
+import mongomock
 from unittest.mock import MagicMock, patch
 from ..direction import Direction
 from ..counter import Counter
 from ..trackableobject import TrackableObject
 from ..coordinate import Coordinate
 from ..intersection import Intersection
+from ..db import Db
 sys.modules['cv2'] = MagicMock()
 sys.modules['requests'] = MagicMock()
 sys.modules['numpy'] = MagicMock()
@@ -19,6 +21,7 @@ sys.modules['sklearn'] = MagicMock()
 sys.modules['sklearn.utils'] = MagicMock()
 sys.modules['sklearn.utils.linear_assignment_'] = MagicMock()
 sys.modules['tensorflow'] = MagicMock()
+sys.modules['Db'] = MagicMock()
 from ..detection import Detector
 from ..views import cam,send_json
 from django.http import StreamingHttpResponse, HttpResponse
@@ -215,7 +218,7 @@ class YourTestClass(unittest.TestCase):
         video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
         detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
         _,_ = detector.load()
-        assert readNet.called
+        self.assertTrue(readNet.called)
 
     def test_get_outputs_names(self):
         yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
@@ -248,7 +251,7 @@ class YourTestClass(unittest.TestCase):
         video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
         detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
         _ = detector.open_video()
-        assert VideoCapture.called
+        self.assertTrue(VideoCapture.called)
 
     def test_create_intersection(self):
         yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
@@ -278,3 +281,23 @@ class YourTestClass(unittest.TestCase):
     def test_send_json(self,mock_request):
         output = send_json(mock_request)
         self.assertTrue(type(output) is HttpResponse)
+
+    #test db class
+    @patch('pymongo.MongoClient')
+    def test_connection(self, MongoClient):
+        MongoClient.return_value = mongomock.MongoClient().db.collection
+        database = Db()
+        database.connection()
+        self.assertTrue(MongoClient.called)
+
+    @patch('pymongo.MongoClient')
+    @patch('Db.insert_one')
+    def test_insert_count(self,insert_one ,MongoClient):        
+        MongoClient.return_value = mongomock.MongoClient().db.collection
+        database = Db()
+        collection = database.connection()
+        counter1 = Counter("A","B")
+        counter2 = Counter("B","A")
+        counters = [counter1,counter2]
+        numuber_of_insersions = database.insert_count(collection,counters)
+        self.assertEqual(numuber_of_insersions,2) 

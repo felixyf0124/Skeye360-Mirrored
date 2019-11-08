@@ -4,7 +4,7 @@ import numpy as np
 import time
 import threading
 import sys
-from .db import *
+from .db import Db
 from .intersection import Intersection
 from .trackableobject import TrackableObject
 from .coordinate import Coordinate
@@ -62,11 +62,12 @@ class Detector:
     # count detection output at the same time detecting objects in the frame
     def counting(self,col,intersection):
         WAIT_SECONDS = 200
+        db = Db()
         print(time.ctime())
-        insert_count(col,intersection.counters)
+        db.insert_count(col,intersection.counters)
         # cleanup db
         intersection.reset_counter()
-        find_all_count(col)
+        db.find_all_count(col)
         threading.Timer(WAIT_SECONDS, self.counting,[col,intersection]).start()
 
     # Open a video
