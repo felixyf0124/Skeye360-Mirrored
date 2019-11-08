@@ -138,3 +138,14 @@ class VehicleViewSet(viewsets.ModelViewSet):
 class PedestrianViewSet(viewsets.ModelViewSet):
     queryset = Pedestrian.objects.all()
     serializer_class = PedestrianSerializer
+
+
+class UserlogViewSet(viewsets.ModelViewSet):
+    queryset = Userlog.objects.all()
+    serializer_class = UserlogSerializer
+    filter_fields = ('user_id',)
+
+
+class CameraViewSet(viewsets.ModelViewSet):
+    queryset = Camera.objects.all()
+    serializer_class = CameraSerializer
