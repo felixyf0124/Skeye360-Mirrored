@@ -1,11 +1,10 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 
 const CameraForm = (props: {
-    city: string;
-    lat: number;
-    lng: number;
-    cameraURL: string;
-    street: string;
+    latitude: number;
+    longitude: number;
+    intersection_name: string;
     error: string;
 
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -13,7 +12,7 @@ const CameraForm = (props: {
 }): JSX.Element => {
   const [state] = React.useState(props);
   const {
-    city, lat, lng, cameraURL, street, error, handleChange, handleSubmit,
+    intersection_name, latitude, longitude, error, handleChange, handleSubmit,
   } = state;
 
   return (
@@ -31,11 +30,20 @@ const CameraForm = (props: {
       }}
       >
         <div className="form-group">
-          <div>City</div>
+          <div>District ID</div>
           <input
             type="text"
-            name="city"
-            value={city}
+            name="district_id"
+            value="1"
+            disabled
+          />
+        </div>
+        <div className="form-group">
+          <div>Intersection Name</div>
+          <input
+            type="text"
+            name="intersection_name"
+            value={intersection_name}
             onChange={handleChange}
           />
         </div>
@@ -43,8 +51,8 @@ const CameraForm = (props: {
           <div>Latitude</div>
           <input
             type="text"
-            name="lat"
-            value={lat}
+            name="latitude"
+            value={latitude}
             onChange={handleChange}
           />
         </div>
@@ -52,26 +60,8 @@ const CameraForm = (props: {
           <div>Longitude</div>
           <input
             type="text"
-            name="lng"
-            value={lng}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <div>Camera URL</div>
-          <input
-            type="text"
-            name="cameraURL"
-            value={cameraURL}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <div>Street Intersection</div>
-          <input
-            type="text"
-            name="street"
-            value={street}
+            name="longitude"
+            value={longitude}
             onChange={handleChange}
           />
         </div>

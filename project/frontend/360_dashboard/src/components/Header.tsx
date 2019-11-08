@@ -39,7 +39,7 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
               <Link to="/" className="nav-text">Map</Link>
             </div>
             <div className="map">
-              <Link to="/streetview/add" className="nav-text">Add</Link>
+              <Link to="/streetview/add" className="nav-text">Add Marker</Link>
             </div>
             <div className="map">
               <Link to="/chartsprototype" className="nav-text">Charts</Link>

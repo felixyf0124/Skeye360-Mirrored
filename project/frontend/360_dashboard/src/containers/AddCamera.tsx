@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -11,11 +12,9 @@ interface StateProps {
     authenticated: boolean;
     username: string;
 
-    city: string;
-    lat: number;
-    lng: number;
-    cameraURL: string;
-    street: string;
+    latitude: number;
+    longitude: number;
+    intersection_name: string;
 
     error: string;
 }
@@ -27,7 +26,7 @@ interface DispatchProps {
 const AddCamera = (props: StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
   const {
-    city, lat, lng, cameraURL, street, error,
+    latitude, longitude, intersection_name, error,
   } = state;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -45,11 +44,10 @@ const AddCamera = (props: StateProps & DispatchProps): JSX.Element => {
     <div>
       <Header />
       <CameraForm
-        city={city}
-        lat={lat}
-        lng={lng}
-        cameraURL={cameraURL}
-        street={street}
+        latitude={latitude}
+        longitude={longitude}
+        intersection_name={intersection_name}
+
         error={error}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
@@ -63,11 +61,9 @@ const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: state.authentication.authenticated,
   username: state.authentication.username,
 
-  city: 'Montreal',
-  lat: 0,
-  lng: 0,
-  cameraURL: '127.0.0.0.1:1234',
-  street: 'Guy St/St-Cath',
+  latitude: 0,
+  longitude: 0,
+  intersection_name: 'Guy St/St-Cath',
 
   error: '',
 });
