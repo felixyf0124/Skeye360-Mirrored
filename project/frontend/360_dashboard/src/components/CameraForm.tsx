@@ -2,17 +2,18 @@
 import React from 'react';
 
 const CameraForm = (props: {
-    latitude: number;
-    longitude: number;
+    latitude: string;
+    longitude: string;
     intersection_name: string;
+    district_id: string;
     error: string;
 
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleSubmit: () => void;
+    handleSubmit: () => any;
 }): JSX.Element => {
   const [state] = React.useState(props);
   const {
-    intersection_name, latitude, longitude, error, handleChange, handleSubmit,
+    intersection_name, latitude, longitude, district_id, error, handleChange, handleSubmit,
   } = state;
 
   return (
@@ -34,7 +35,8 @@ const CameraForm = (props: {
           <input
             type="text"
             name="district_id"
-            value="1"
+            value={district_id}
+            onChange={handleChange}
             disabled
           />
         </div>

@@ -12,9 +12,10 @@ interface StateProps {
     authenticated: boolean;
     username: string;
 
-    latitude: number;
-    longitude: number;
+    latitude: string;
+    longitude: string;
     intersection_name: string;
+    district_id: string;
 
     error: string;
 }
@@ -26,7 +27,7 @@ interface DispatchProps {
 const EditCamera = (props: StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
   const {
-    latitude, longitude, intersection_name, error,
+    latitude, longitude, intersection_name, district_id, error,
   } = state;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -47,6 +48,7 @@ const EditCamera = (props: StateProps & DispatchProps): JSX.Element => {
         latitude={latitude}
         longitude={longitude}
         intersection_name={intersection_name}
+        district_id={district_id}
         error={error}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
@@ -60,8 +62,9 @@ const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: state.authentication.authenticated,
   username: state.authentication.username,
 
-  latitude: 0,
-  longitude: 0,
+  latitude: '0',
+  longitude: '0',
+  district_id: '1',
   intersection_name: 'Guy St/St-Cath',
 
   error: '',

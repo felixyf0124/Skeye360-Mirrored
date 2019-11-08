@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import {
   call,
   put,
-  takeLatest,
 } from 'redux-saga/effects';
-import fetchDistricts, { Response as districtResponse } from '../api/fetchDistricts';
+import addIntersection, { Response as intersectionResponse } from '../api/addIntersection';
 
 export interface STATE {
   error: string;
@@ -13,64 +13,85 @@ const initState: STATE = {
   error: '',
 };
 
-export const GET_DISTRICTS = 'GET_DISTRICTS';
-export const GET_DISTRICTS_SUCCESS = 'GET_DISTRICTS_SUCCESS';
-export const GET_DISTRICTS_FAIL = 'GET_DISTRICTS_FAIL';
+export const ADD_INTERSECTION = 'ADD_INTERSECTION';
+export const ADD_INTERSECTION_SUCCESS = 'ADD_INTERSECTION_SUCCESS';
+export const ADD_INTERSECTION_FAIL = 'ADD_INTERSECTION_FAIL';
 
-export interface GetDistrictsAction {
-    type: string;
+export interface AddIntersectionAction {
+  type: string;
+  intersection_name: string;
+  latitude: string;
+  longitude: string;
+  district_id: string;
 }
 
-export const getDistricts = (): GetDistrictsAction => ({
-  type: GET_DISTRICTS,
+export const addNewIntersection = (
+  intersection_name: string,
+  latitude: string,
+  longitude: string,
+  district_id: string,
+): AddIntersectionAction => ({
+  type: ADD_INTERSECTION,
+  intersection_name,
+  latitude,
+  longitude,
+  district_id,
 });
 
-export interface GetDistrictsSuccessAction {
+export interface AddIntersectionSuccessAction {
   type: string;
-  data: districtResponse;
+  data: intersectionResponse;
 }
 
-export const getDistrictsSuccess = (data: districtResponse): GetDistrictsSuccessAction => ({
-  type: GET_DISTRICTS_SUCCESS,
+export const AddIntersectionSuccess = (
+  data: intersectionResponse,
+): AddIntersectionSuccessAction => ({
+  type: ADD_INTERSECTION_SUCCESS,
   data,
 });
 
-export interface GetDistrictsFailAction {
+export interface AddIntersectionFail {
   type: string;
 }
 
-export const getDistrictsFail = (): GetDistrictsFailAction => ({
-  type: GET_DISTRICTS_FAIL,
+export const AddIntersectionFail = (): AddIntersectionFail => ({
+  type: ADD_INTERSECTION_FAIL,
 });
 
 // SAGA
-export function* handleFetchDistricts(): Iterator<any> {
+export function* handleAddIntersection(
+  intersection_name: string,
+  latitude: string,
+  longitude: string,
+  district_id: string,
+): Iterator<any> {
   try {
-    const data = yield call(fetchDistricts);
+    const data = yield call(addIntersection, intersection_name, latitude, longitude, district_id);
     if (data !== undefined) {
-      yield put(getDistrictsSuccess(data));
+      yield put(AddIntersectionSuccess(data));
     }
   } catch (e) {
-    yield put(getDistrictsFail());
+    yield put(AddIntersectionFail());
     throw e;
   }
 }
 
 export function* saga(): Iterator<any> {
-  yield takeLatest(GET_DISTRICTS, handleFetchDistricts);
+  yield (call as any)(ADD_INTERSECTION, handleAddIntersection);
 }
 
 export default function reducer(state: STATE = initState, action: any): STATE {
   switch (action.type) {
-    case GET_DISTRICTS_SUCCESS: {
-      const { data } = action as GetDistrictsSuccessAction;
+    case ADD_INTERSECTION_SUCCESS: {
       return {
         ...state,
-        ...data,
       };
     }
-    case GET_DISTRICTS_FAIL: {
-      return initState;
+    case ADD_INTERSECTION_FAIL: {
+      return {
+        ...state,
+        error: 'Error while adding new intersection.',
+      };
     }
     default:
       return state;

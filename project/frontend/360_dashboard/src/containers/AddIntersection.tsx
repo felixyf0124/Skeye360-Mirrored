@@ -6,27 +6,35 @@ import { push } from 'connected-react-router';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
 import CameraForm from '../components/CameraForm';
+import { addNewIntersection } from '../contexts/intersection';
 
 interface StateProps {
     path: string;
     authenticated: boolean;
     username: string;
 
-    latitude: number;
-    longitude: number;
+    latitude: string;
+    longitude: string;
     intersection_name: string;
+    district_id: string;
 
     error: string;
 }
 
 interface DispatchProps {
     historyPush: (url: string) => void;
+    addNewIntersection: (
+      intersection_name: string,
+      latitude: string,
+      longitude: string,
+      district_id: string,
+    ) => any;
 }
 
-const AddCamera = (props: StateProps & DispatchProps): JSX.Element => {
+const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
   const {
-    latitude, longitude, intersection_name, error,
+    latitude, longitude, intersection_name, district_id, error,
   } = state;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -36,6 +44,12 @@ const AddCamera = (props: StateProps & DispatchProps): JSX.Element => {
   const handleSubmit = (): void => {
     const { historyPush } = props;
     historyPush('/camera/add');
+    props.addNewIntersection(
+      state.intersection_name,
+      state.latitude,
+      state.longitude,
+      state.district_id,
+    );
   };
 
   if (!state.authenticated) return <Redirect push to="/login" />;
@@ -47,6 +61,7 @@ const AddCamera = (props: StateProps & DispatchProps): JSX.Element => {
         latitude={latitude}
         longitude={longitude}
         intersection_name={intersection_name}
+        district_id={district_id}
 
         error={error}
         handleChange={handleChange}
@@ -61,8 +76,9 @@ const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: state.authentication.authenticated,
   username: state.authentication.username,
 
-  latitude: 0,
-  longitude: 0,
+  latitude: '0',
+  longitude: '0',
+  district_id: '1',
   intersection_name: 'Guy St/St-Cath',
 
   error: '',
@@ -70,9 +86,10 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 const mapDispatchToProps: DispatchProps = {
   historyPush: push,
+  addNewIntersection,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AddCamera);
+)(AddIntersection);
