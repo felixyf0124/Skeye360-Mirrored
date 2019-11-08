@@ -5,7 +5,7 @@ import { RootState } from '../reducers/rootReducer';
 import Header, { Head } from '../components/Header';
 import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
-import AvgWaitTime from '../components/AvgWaitTime';
+import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 
 interface Props {
   authenticated: boolean;
@@ -23,7 +23,7 @@ const StreetView = ({ authenticated }: Props): JSX.Element => {
       <Simulator />
       <div className="charts-row">
         <NorthChart />
-        <AvgWaitTime /> 
+        <AvgWaitTimeChart /> 
       </div>
     </div>
   );
