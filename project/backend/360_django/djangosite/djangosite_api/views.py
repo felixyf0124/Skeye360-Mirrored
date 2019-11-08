@@ -141,9 +141,11 @@ class PedestrianViewSet(viewsets.ModelViewSet):
 
 
 class UserlogViewSet(viewsets.ModelViewSet):
-    def validate_user_id(self, value):
-        return
-
     queryset = Userlog.objects.all()
     serializer_class = UserlogSerializer
     filter_fields = ('user_id',)
+
+
+class CameraViewSet(viewsets.ModelViewSet):
+    queryset = Camera.objects.all()
+    serializer_class = CameraSerializer
