@@ -85,6 +85,15 @@ class Scene extends Component {
 
   numberOfCars: number;
 
+  // for test map car
+  countDown: number;
+
+  deltaT: number;
+
+  makeUpCar: Array<{atTline:number, num:number}>;
+
+  atIndex: number;
+
   constructor(props: any) {
     super(props);
     this.windowScaleRatio = 0.5;
@@ -214,6 +223,37 @@ class Scene extends Component {
     for (let i = 0; i < 3; i += 1) {
       this.roadIntersection.addNewVehicle(0, 0, 0.06);
     }
+
+    this.countDown = Date.now();
+    this.deltaT = 0;
+    this.makeUpCar = [
+      { atTline:2800, num:1},
+      { atTline:3800, num:1},
+      { atTline:5600, num:1},
+      { atTline:6500, num:1},
+      { atTline:9500, num:1},
+      { atTline:10300, num:1},
+      { atTline:10900, num:1},
+      { atTline:11500, num:1},
+      { atTline:12000, num:1},
+      { atTline:12900, num:2},
+      { atTline:13500, num:1},
+      { atTline:14500, num:1},
+      { atTline:15800, num:1},
+      { atTline:16100, num:1},
+      { atTline:18900, num:1},
+      { atTline:20200, num:1},
+      { atTline:20900, num:1},
+      { atTline:22400, num:1},
+      { atTline:23400, num:1},
+      { atTline:25300, num:1},
+      { atTline:28000, num:1},
+      { atTline:29000, num:1},
+      { atTline:29900, num:1}
+    ];
+
+    this.atIndex = 0;
+
   }
 
   static getColor(lightState: string): string {
@@ -415,6 +455,21 @@ class Scene extends Component {
         }
       }
     }
+
+    if(this.atIndex < this.makeUpCar.length) {
+      this.deltaT = Date.now() - this.countDown;
+      let currentCD = 0;
+
+      for (let i = 0; i < this.atIndex + 1; i += 1) {
+        currentCD = this.makeUpCar[this.atIndex].atTline;
+      }
+
+      if(this.deltaT > currentCD) {
+        this.roadIntersection.addNewVehicle(0, 3, 0.06);
+        this.atIndex += 1;
+      }
+    }
+
     if (this.isUpdate()) {
       this.roadIntersection.tlCountingDown();
       this.drawRoad();
