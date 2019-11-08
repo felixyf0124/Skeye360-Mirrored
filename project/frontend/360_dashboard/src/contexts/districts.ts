@@ -6,31 +6,21 @@ import {
 import fetchDistricts, { Response as districtResponse } from '../api/fetchDistricts';
 
 export interface STATE {
-  district: {
-    [district: string]: {
+  [district: string]: {
+    id: number;
+    district_name: string;
+    intersections: {
       id: number;
-      district_name: string;
-      intersections: {
-        id: number;
-        intersection_name: string;
-        latitude: number;
-        cameras: [];
-        longitude: number;
-        district_id: number;
-      }[];
-    };
-  };
+      intersection_name: string;
+      latitude: number;
+      cameras: [];
+      longitude: number;
+      district_id: number;
+    }[];
+  }[];
 }
 
 const initState: STATE = {
-  district: {
-    Downtown: {
-      id: 1,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      district_name: 'Downtown',
-      intersections: [],
-    },
-  },
 };
 
 export const GET_DISTRICTS = 'GET_DISTRICTS';
@@ -84,16 +74,9 @@ export default function reducer(state: STATE = initState, action: any): STATE {
   switch (action.type) {
     case GET_DISTRICTS_SUCCESS: {
       const { data } = action as GetDistrictsSuccessAction;
-      // console.log(action.type);
       return {
         ...state,
-        district: data.district.reduce(
-          (memo, district) => ({
-            ...memo,
-            [district.district_name]: district,
-          }),
-          {},
-        ),
+        ...data,
       };
     }
     case GET_DISTRICTS_FAIL: {

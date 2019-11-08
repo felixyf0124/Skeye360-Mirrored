@@ -1,5 +1,5 @@
 export interface Response {
-  district: {
+  [district: string]: {
     id: number;
     district_name: string;
     intersections: {
