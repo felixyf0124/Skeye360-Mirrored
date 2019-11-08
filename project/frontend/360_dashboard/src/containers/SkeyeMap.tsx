@@ -15,7 +15,7 @@ interface DispatchProps {
   getDistricts(): GetDistrictsAction;
 }
 
-class SkeyeMap extends React.Component<StateProps & DispatchProps> {
+class SkeyeMap extends React.Component<StateProps & DispatchProps | any> {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { getDistricts } = this.props;
@@ -23,12 +23,12 @@ class SkeyeMap extends React.Component<StateProps & DispatchProps> {
   }
 
   public render(): JSX.Element {
-    const { authenticated } = this.props;
+    const { authenticated, districts } = this.props;
     if (!authenticated) return <Redirect push to="/login" />;
     return (
       <div>
         <Header />
-        <GoogleMap />
+        <GoogleMap districts={districts} />
       </div>
     );
   }
