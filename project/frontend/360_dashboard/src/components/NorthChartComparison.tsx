@@ -4,6 +4,7 @@ import NorthData from '../PostData/carsNorth.json';
 import NorthDataAfter from '../PostData/carsNorthAfter.json';
 // For more Line Chart information:
 // https://apexcharts.com/react-chart-demos/line-charts/basic/
+//TODO: Display percentages
 
 const data = NorthData.NorthDataBefore;
 const newData = NorthDataAfter.NorthDataAfter;

@@ -5,6 +5,7 @@ import AvgWaitingTimeAfter from '../PostData/avgWaitingTimeAfter.json';
 
 // For more Line Chart information:
 // https://apexcharts.com/react-chart-demos/line-charts/basic/
+//TODO: Display percentages
 
 const data = AvgWaitingTime.WaitTime;
 const newData = AvgWaitingTimeAfter.WaitTime;
