@@ -1,7 +1,5 @@
 import uuid
-
 from django.db import models
-from rest_framework.validators import UniqueValidator
 
 
 class User(models.Model):
@@ -20,8 +18,16 @@ class District(models.Model):
 
 
 class Intersection(models.Model):
+    intersection_name = models.CharField(max_length=50, null=True)
     latitude = models.IntegerField(null=True)
     longitude = models.IntegerField(null=True)
+    district_id = models.ForeignKey(District, related_name='intersections', on_delete=models.CASCADE, null=True)
+
+
+class Camera(models.Model):
+    id = models.AutoField(primary_key=True)
+    camera_url = models.CharField(max_length=20, null=True)
+    intersection_id = models.ForeignKey(Intersection, related_name='cameras', on_delete=models.CASCADE, null=True)
 
 
 class Trafficlight(models.Model):
