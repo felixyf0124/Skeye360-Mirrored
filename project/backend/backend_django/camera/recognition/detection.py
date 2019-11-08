@@ -147,7 +147,8 @@ class Detector:
 
         intersection = self.create_intersection("main@broadway")
         # connect db
-        col = connection()
+        database = Db()
+        col = database.connection()
 
         # start counting the objects to be detected
         self.counting(col,intersection)
