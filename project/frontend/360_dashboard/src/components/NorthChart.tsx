@@ -30,7 +30,7 @@ const NorthChart = (): JSX.Element => {
         enabled: false,
       },
       title: {
-        text: 'Volume of Cars Going From North To South',
+        text: 'Cars Passing from North to South',
         align: 'center',
       },
       grid: {
@@ -50,15 +50,10 @@ const NorthChart = (): JSX.Element => {
           text: 'Number of Cars',
         },
       },
-      colors: ['#c7382e', '#b2e6a3'],
+      colors: ['#04a777'],
     },
-    series: [
-      {
-        name: 'Cars Before SkeYe',
-        data: getY,
-      },
-      {
-        name: 'Cars After SkeYe',
+    series: [{
+        name: 'Number of cars passing',
         data: getYAfter,
       },
     ],

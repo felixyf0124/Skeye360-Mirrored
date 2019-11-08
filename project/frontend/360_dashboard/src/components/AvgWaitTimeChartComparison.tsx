@@ -50,12 +50,16 @@ const AvgWaitTimeChart = (): JSX.Element => {
           text: 'Wait Time (seconds)',
         },
       },
-      colors: ['#04a777'],
+      colors: ['#c7382e', '#04a777'],
     },
     series: [{
-      name: 'Avg Wait Time',
+      name: 'Avg Wait Time Before SkeYe',
+      data: getY,
+    }, {
+      name: 'Avg Wait Time After SkeYe',
       data: getYAfter,
-    }],
+    },
+    ],
   };
   return (
     <div className="bar-chart">
