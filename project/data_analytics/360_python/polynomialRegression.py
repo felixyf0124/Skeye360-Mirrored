@@ -30,7 +30,7 @@ matplot.show()
 # New result of Polynomial Regression prediction
 # The following predicts for 2 weeks
 predictions = line.predict(polynomial.fit_transform(date))
-
+print(predictions)
 
 # print(predictions[0][0])
 # print(len(predictions))
