@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import { Action } from 'redux';
 import {
   call,
   put,
+  takeLatest,
 } from 'redux-saga/effects';
 import addIntersection, { Response as intersectionResponse } from '../api/addIntersection';
 
@@ -17,8 +19,7 @@ export const ADD_INTERSECTION = 'ADD_INTERSECTION';
 export const ADD_INTERSECTION_SUCCESS = 'ADD_INTERSECTION_SUCCESS';
 export const ADD_INTERSECTION_FAIL = 'ADD_INTERSECTION_FAIL';
 
-export interface AddIntersectionAction {
-  type: string;
+export interface AddIntersectionAction extends Action {
   intersection_name: string;
   latitude: string;
   longitude: string;
@@ -59,12 +60,12 @@ export const AddIntersectionFail = (): AddIntersectionFail => ({
 });
 
 // SAGA
-export function* handleAddIntersection(
-  intersection_name: string,
-  latitude: string,
-  longitude: string,
-  district_id: string,
-): Iterator<any> {
+export function* handleAddIntersection({
+  intersection_name,
+  latitude,
+  longitude,
+  district_id,
+}: AddIntersectionAction): Iterator<any> {
   try {
     const data = yield call(addIntersection, intersection_name, latitude, longitude, district_id);
     if (data !== undefined) {
@@ -77,7 +78,7 @@ export function* handleAddIntersection(
 }
 
 export function* saga(): Iterator<any> {
-  yield (call as any)(ADD_INTERSECTION, handleAddIntersection);
+  yield takeLatest(ADD_INTERSECTION, handleAddIntersection);
 }
 
 export default function reducer(state: STATE = initState, action: any): STATE {
@@ -85,6 +86,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     case ADD_INTERSECTION_SUCCESS: {
       return {
         ...state,
+        error: 'New intersection created!',
       };
     }
     case ADD_INTERSECTION_FAIL: {

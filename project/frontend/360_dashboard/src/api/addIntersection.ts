@@ -26,10 +26,7 @@ const addIntersection = async (
   const settings = {
     method: 'POST',
     body: new URLSearchParams(params),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
+    headers: {},
   };
   const response = await fetch(url, settings);
   const data = (await response.json()) as Response;

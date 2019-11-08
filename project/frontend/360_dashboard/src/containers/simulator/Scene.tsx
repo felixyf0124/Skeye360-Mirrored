@@ -242,10 +242,11 @@ class Scene extends Component {
   //   // console.log("Raw data:" + await data.getDataFromCamera());
   // }
 
-  static async getNumberOfCars(): Promise<number> {
+  async getNumberOfCars(): Promise<number> {
     const rawData = await DataFromCamera.getDataFromCamera() || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
-    // console.log("Number of cars : " + numberCars);
+    console.log("Number of cars : " + numberCars);
+    this.numberOfCars = numberCars;
     return numberCars;
   }
 
@@ -427,15 +428,16 @@ class Scene extends Component {
       this.fps = this.fpsCounter;
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
-      // this.getNumberOfCars();
+      this.getNumberOfCars();
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
     fpsText.x = this.windowW / 2 - 80;
     fpsText.y = -this.windowH / 2;
     this.displayPlaneContainer.addChild(fpsText);
-    const numOfCar = this.roadIntersection.getVehiclesNum();
-    const numberCarsText = new PIXI.Text(`Cars: ${numOfCar}`, this.textStyle);
+    // const numOfCar = this.roadIntersection.getVehiclesNum();
+    // const numberCarsText = new PIXI.Text(`Cars: ${numOfCar}`, this.textStyle);
+    const numberCarsText = new PIXI.Text("Cars:" + this.numberOfCars, this.textStyle);
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
@@ -487,7 +489,7 @@ class Scene extends Component {
             <td>
               <img
                 style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://52.170.42.166:8000/"
+                src="http://40.121.47.195/8000/cam"
                 alt=""
               />
             </td>

@@ -19,7 +19,7 @@ const StreetView = ({ authenticated }: Props): JSX.Element => {
     <div>
       <Header />
       <Head>
-        <Link to="/streetview/edit" className="header-text">Edit</Link>
+        <Link to="/intersection/edit" className="header-text">Edit</Link>
       </Head>
       <Simulator />
       <div className="charts-row">

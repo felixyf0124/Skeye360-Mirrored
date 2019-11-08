@@ -10,7 +10,7 @@ import Login from './Login';
 import '../css/App.css';
 import SkeyeMap from './SkeyeMap';
 import AddIntersection from './AddIntersection';
-import EditCamera from './EditCamera';
+import EditIntersection from './EditIntersection';
 import StreetView from './StreetView';
 import ChartsPrototype from '../components/ChartsPrototype';
 
@@ -28,8 +28,8 @@ const App = (): JSX.Element => (
       <Switch>
         <Route exact path="/" component={SkeyeMap} />
         <Route exact path="/streetview" component={StreetView} />
-        <Route exact path="/streetview/add" component={AddIntersection} />
-        <Route exact path="/streetview/edit" component={EditCamera} />
+        <Route exact path="/intersection/add" component={AddIntersection} />
+        <Route exact path="/intersection/edit" component={EditIntersection} />
         <Route exact path="/chartsprototype" component={ChartsPrototype} />
       </Switch>
     </Route>
