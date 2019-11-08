@@ -17,20 +17,16 @@ const GoogleMap = (districts: districtState): JSX.Element => {
         defaultCenter={center}
         defaultZoom={zoom}
       >
-        <Marker
-          lat={districts.districts[0].intersections[0].latitude}
-          lng={districts.districts[0].intersections[0].longitude}
-          text="Camera_id"
-          color="red"
-          link="/streetview"
-        />
-        <Marker
-          lat={districts.districts[1].intersections[0].latitude}
-          lng={districts.districts[1].intersections[0].longitude}
-          text="Camera_id"
-          color="red"
-          link="/streetview"
-        />
+        {districts.districts[0].intersections.map((intersection) => (
+          <Marker
+            key={intersection.id}
+            lat={intersection.latitude}
+            lng={intersection.longitude}
+            text="Camera_id"
+            color="red"
+            link="/streetview"
+          />
+        ))}
       </GoogleMapReact>
     </div>
   );
