@@ -422,10 +422,11 @@ export default class RoadIntersection {
             sectionId = headLink[0].getSectionId();
             laneId = headLink[0].getLaneId();
 
+            //vehicle has to gone first from the section before update their now section and lane
+            this.vehicleGone(this.vehicles[i].getId());
+
             this.vehicles[i].setRoadSectionId(sectionId);
             this.vehicles[i].setLaneId(laneId);
-
-            this.vehicleGone(this.vehicles[i].getId());
           }
           if (this.vehicles[i].getAtPathSection() === 2) {
             this.roadSections[this.getRoadSectionIndex(this.vehicles[i].getRoadSectionId())]
