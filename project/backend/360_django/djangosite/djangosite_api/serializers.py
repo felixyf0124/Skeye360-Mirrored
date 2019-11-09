@@ -19,20 +19,17 @@ class CitySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CameraSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-
     class Meta:
         model = Camera
-        fields = ['id', 'camera_url', 'intersection_id']
+        fields = ['camera_url', 'intersection_id']
 
 
 class IntersectionSerializer(serializers.ModelSerializer):
     cameras = CameraSerializer(many=True, read_only=True)
-    id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Intersection
-        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'longitude', 'district_id']
+        fields = ['intersection_name', 'latitude', 'cameras', 'longitude', 'district_id']
 
 
 class DistrictSerializer(serializers.HyperlinkedModelSerializer):
