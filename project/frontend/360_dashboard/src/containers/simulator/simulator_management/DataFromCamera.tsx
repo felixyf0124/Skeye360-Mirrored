@@ -4,11 +4,11 @@
 export default class DataFromCamera {
   static async getDataFromCamera(): Promise<string> {
     try {
-      const response = await fetch('http://40.76.30.181:8000/coord/');
+      const response = await fetch('http://40.121.47.195:8000/coord/');
       // console.log("TEXT:" + await response.text());
       return await response.text();
     } catch (e) {
-      console.log(`ERROR:${e}`);
+      console.log(`ERROR in DataFromCamera:${e}`);
       return `ERROR:${e}`;
     }
   }
