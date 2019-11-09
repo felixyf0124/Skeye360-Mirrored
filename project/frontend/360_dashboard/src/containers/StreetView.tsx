@@ -24,7 +24,7 @@ const StreetView = ({ authenticated }: Props): JSX.Element => {
       <Simulator />
       <div className="charts-row">
         <NorthChart />
-        <SouthChart /> 
+        <SouthChart />
       </div>
     </div>
   );
