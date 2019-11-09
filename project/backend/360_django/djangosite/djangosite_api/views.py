@@ -1,11 +1,20 @@
+import json
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets, permissions, filters, generics
 from django.http import HttpResponse
 from knox.models import AuthToken
+from django.http import JsonResponse
+from django.contrib.auth import authenticate, login, logout
 from .models import *
 from .serializers import *
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.contrib.auth import authenticate, login, logout
 
 # For /api purpose
 class AccountViewSet(viewsets.ModelViewSet):
@@ -23,33 +32,66 @@ class AccountViewSet(viewsets.ModelViewSet):
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):
-    serializer_class = RegisterSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        _, token = AuthToken.objects.create(user)
-        return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": token
-        })
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        # expected Content-Type: application/json
+        # expected Json Body: {'username':'myname', password:'mypassword'}
+        try:
+            raw_data = json.loads(request.body)
+
+            username = raw_data['username']
+            password = raw_data['password']
+
+            if User.objects.filter(username=username).exists():
+                return JsonResponse({'error': 'Username already exists'}, status=400)
+
+            created_user = User.objects.create_user(
+                username=username, password=password)
+
+            created_user.save()
+
+            user = authenticate(request, username=username, password=password)
+            login(request, user)
+
+            return JsonResponse(UserSerializer(user).data)
+
+        except BaseException as error:  # either a json, key or user validation error
+            print(repr(error))
+            return JsonResponse({'error': repr(error)}, status=400)
+
+# Log the user in
 
 
-# Login API
 class LoginAPI(generics.GenericAPIView):
-    serializer_class = LoginSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
-        return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user)
-        })
-    
-# Get User API
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        # expected Content-Type: application/json
+        # expected Json Body: {'username':'myname', password:'mypassword'}
+        try:
+            raw_data = json.loads(request.body)
+            username = raw_data['username']
+            password = raw_data['password']
+
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return JsonResponse(UserSerializer(user).data)
+
+            return JsonResponse({'error': 'Wrong username/password'}, status=400)
+
+        except BaseException as error:  # either a json or key error
+            print(str(error))
+            return JsonResponse({'error': repr(error)}, status=400)
+
 
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
