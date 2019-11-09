@@ -1,31 +1,40 @@
 """These classes are used to serialize data to send them in a JSON format"""
 from rest_framework import serializers
+
 from .models import *
 
 
 # This is for /api
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username', 'token', 'timestamp']
-
-
 class CitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = City
         fields = ['city_name']
 
 
-class DistrictSerializer(serializers.HyperlinkedModelSerializer):
+class CameraSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
-        model = District
-        fields = ['district_name']
+        model = Camera
+        fields = ['id', 'camera_url', 'intersection_id']
 
 
-class IntersectionSerializer(serializers.HyperlinkedModelSerializer):
+class IntersectionSerializer(serializers.ModelSerializer):
+    cameras = CameraSerializer(many=True, read_only=True)
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Intersection
-        fields = ['latitude', 'longitude']
+        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'longitude', 'district_id']
+
+
+class DistrictSerializer(serializers.HyperlinkedModelSerializer):
+    intersections = IntersectionSerializer(many=True, read_only=True)
+    id = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = District
+        fields = ['id', 'district_name', 'intersections']
 
 
 class TrafficLightSerializer(serializers.HyperlinkedModelSerializer):
@@ -62,3 +71,18 @@ class PedestrianSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Pedestrian
         fields = ['pedestrian_centroid', 'pedestrian_time']
+
+
+class UserlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Userlog
+        fields = ['log_message', 'log_time', 'user_id']
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    user_logs = UserlogSerializer(many=True, read_only=True)
+    id = serializers.UUIDField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'password', 'timestamp', 'user_logs']

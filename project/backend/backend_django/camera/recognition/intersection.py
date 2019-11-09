@@ -1,3 +1,4 @@
+
 from .counter import Counter
 
 class Intersection:

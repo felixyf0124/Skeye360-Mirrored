@@ -103,11 +103,13 @@ class CityViewSet(viewsets.ModelViewSet):
 class DistrictViewSet(viewsets.ModelViewSet):
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
+    filter_fields = ('district_name',)
 
 
 class IntersectionViewSet(viewsets.ModelViewSet):
     queryset = Intersection.objects.all()
     serializer_class = IntersectionSerializer
+    filter_fields = ('intersection_name',)
 
 
 class TrafficLightViewSet(viewsets.ModelViewSet):
@@ -138,3 +140,14 @@ class VehicleViewSet(viewsets.ModelViewSet):
 class PedestrianViewSet(viewsets.ModelViewSet):
     queryset = Pedestrian.objects.all()
     serializer_class = PedestrianSerializer
+
+
+class UserlogViewSet(viewsets.ModelViewSet):
+    queryset = Userlog.objects.all()
+    serializer_class = UserlogSerializer
+    filter_fields = ('user_id',)
+
+
+class CameraViewSet(viewsets.ModelViewSet):
+    queryset = Camera.objects.all()
+    serializer_class = CameraSerializer

@@ -7,3 +7,4 @@ djongo
 sqlparse==0.2.4
 markdown
 pylint
+mongomock
