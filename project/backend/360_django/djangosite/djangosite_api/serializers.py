@@ -1,10 +1,42 @@
 """These classes are used to serialize data to send them in a JSON format"""
 from rest_framework import serializers
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 from .models import *
 
+# New UserSerializer using Django User model (19:39)
+class UserSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = User
+        # possibility to add more fields
+        fields = ['username']
 
-# This is for /api
+
+# Register Serializer
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = User
+        fields = ['username', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
+    
+    def create(self, validated_data):
+        user = User.objects.create_user(validated_data['username'], validated_data['password'])
+        return user
+
+
+# Login Serializer
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        user = authenticate(**data)
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Unable to log in with provided credentials.")
+
+
 class CitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = City
@@ -79,10 +111,10 @@ class UserlogSerializer(serializers.ModelSerializer):
         fields = ['log_message', 'log_time', 'user_id']
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class AccountSerializer(serializers.HyperlinkedModelSerializer):
     user_logs = UserlogSerializer(many=True, read_only=True)
     id = serializers.UUIDField(read_only=True)
 
     class Meta:
-        model = User
-        fields = ['id', 'username', 'password', 'timestamp', 'user_logs']
+        model = Account
+        fields = ['id', 'name', 'user_logs']

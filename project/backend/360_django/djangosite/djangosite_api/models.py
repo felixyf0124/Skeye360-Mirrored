@@ -1,12 +1,12 @@
 import uuid
 from django.db import models
+from django.contrib.auth.models import User
 
 
-class User(models.Model):
+class Account(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(max_length=255, null=True)
-    password = models.CharField(max_length=255, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=255, null=True)
+    owner = models.ForeignKey(User, related_name="account", on_delete=models.CASCADE, null=True)
 
 
 class City(models.Model):
@@ -64,4 +64,4 @@ class Pedestrian(models.Model):
 class Userlog(models.Model):
     log_message = models.CharField(max_length=255)
     log_time = models.DateTimeField(auto_now_add=True)
-    user_id = models.ForeignKey(User, related_name='user_logs', on_delete=models.CASCADE)
+    user_id = models.ForeignKey(Account, related_name='user_logs', on_delete=models.CASCADE)
