@@ -65,13 +65,14 @@ pipeline {
             }
         }
     }
-    triggers {
-        pollSCM('* * * * *')
-    }
 
     post {
-        success {
-            cleanWs(cleanWhenSuccess: true)
+        always {
+            cleanWs()
+        dir("${env.WORKSPACE}@tmp") {
+            deleteDir()
+        }
         }
     }
+
 }
