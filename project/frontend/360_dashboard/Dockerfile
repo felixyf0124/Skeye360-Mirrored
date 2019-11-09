@@ -1,4 +1,3 @@
-#Uses node:12.13.0-alpine
 FROM node:12.13.0-alpine
 
 #Create app directory
@@ -19,5 +18,4 @@ COPY . /app
 RUN yarn build
 
 #Execute the code with yarn start
-CMD [ "yarn","lint:js"]
 CMD [ "yarn", "start" ]
