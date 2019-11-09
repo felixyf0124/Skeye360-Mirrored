@@ -38,8 +38,6 @@ class RegisterAPI(generics.GenericAPIView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
-        # expected Content-Type: application/json
-        # expected Json Body: {'username':'myname', password:'mypassword'}
         try:
             raw_data = json.loads(request.body)
 
@@ -57,15 +55,14 @@ class RegisterAPI(generics.GenericAPIView):
             user = authenticate(request, username=username, password=password)
             login(request, user)
 
-            return JsonResponse(UserSerializer(user).data)
+            return JsonResponse({'username': username}, status=201)
 
-        except BaseException as error:  # either a json, key or user validation error
+        except BaseException as error:
             print(repr(error))
             return JsonResponse({'error': repr(error)}, status=400)
 
-# Log the user in
 
-
+# User login API
 class LoginAPI(generics.GenericAPIView):
 
     @method_decorator(csrf_exempt)
@@ -73,8 +70,6 @@ class LoginAPI(generics.GenericAPIView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
-        # expected Content-Type: application/json
-        # expected Json Body: {'username':'myname', password:'mypassword'}
         try:
             raw_data = json.loads(request.body)
             username = raw_data['username']
@@ -84,11 +79,11 @@ class LoginAPI(generics.GenericAPIView):
 
             if user is not None:
                 login(request, user)
-                return JsonResponse(UserSerializer(user).data)
+                return JsonResponse({'username': username}, status=200)
 
-            return JsonResponse({'error': 'Wrong username/password'}, status=400)
+            return JsonResponse({'error': 'Wrong username and/or password'}, status=400)
 
-        except BaseException as error:  # either a json or key error
+        except BaseException as error:
             print(str(error))
             return JsonResponse({'error': repr(error)}, status=400)
 
