@@ -103,11 +103,13 @@ class CityViewSet(viewsets.ModelViewSet):
 class DistrictViewSet(viewsets.ModelViewSet):
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
+    filter_fields = ('district_name',)
 
 
 class IntersectionViewSet(viewsets.ModelViewSet):
     queryset = Intersection.objects.all()
     serializer_class = IntersectionSerializer
+    filter_fields = ('intersection_name',)
 
 
 class TrafficLightViewSet(viewsets.ModelViewSet):
