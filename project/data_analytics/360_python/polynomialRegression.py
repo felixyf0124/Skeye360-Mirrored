@@ -32,24 +32,24 @@ matplot.show()
 predictions = line.predict(polynomial.fit_transform(date))
 print(predictions)
 
-# print(predictions[0][0])
-# print(len(predictions))
-
 # To connect to the database
-# db = client['mongoDatabase']
+db = client['mongoDatabase']
 # Collection are table in SQL
-# collection = db['predictions']
+collection = db['Prediction']
+
+# START of writing to MongoDB
 # For loop to insert into MongoDB
-# for index in range(len(predictions)):
-#     collection.insert_one({"date":date[index], "prediction":predictions[index][0]})
+for index in range(len(predictions)):
+    collection.insert_one({"date":date[index][0], "avgTimePredict":predictions[index][0]})
+# END of writing to MongoDB
 
 # START of retrieving data from MongoDB
-# print('----------------------------')
-# resultsRaw = collection.find({})
-# for row in resultsRaw:
-#     resultDate = str(row['date'])
-#     resultAvgTime = str(row['avgTime'])
-#     print(resultDate + " : " + resultAvgTime)
+print('----------------------------')
+resultsRaw = collection.find({})
+for row in resultsRaw:
+    resultDate = str(row['date'])
+    resultAvgTime = str(row['avgTimePredict'])
+    print(resultDate + " | " + resultAvgTime)
 # END of retrieving data from MongoDB
 
 
