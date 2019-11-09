@@ -1,41 +1,97 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import Header from '../components/Header';
-import { RootState } from '../reducers/rootReducer';
+/* eslint-disable @typescript-eslint/camelcase */
+import { Action } from 'redux';
+import {
+  call,
+  put,
+  takeLatest,
+} from 'redux-saga/effects';
+import logClicks, { Response as logResponse } from '../api/logClicks';
 
-interface StateProps {
-    path: string;
-    authenticated: boolean;
-    username: string;
-    log_message: string;
+export interface STATE {
+  error: string;
 }
 
-interface DispatchProps {
-    historyPush: (url: string) => void;
-    logClick: (
-        username: string,
-        log_message: string,
-    ) => any;
-
-}
-
-const LogClick = (props: StateProps & DispatchProps): JSX.Element => {
-    const [state, setState] = React.useState(props);
-    const {
-        username, log_message
-    } = state;
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setState({...state, [e.target.name]: e.target.value });
-    };
-
-    const handleClick = (): void => {
-        const { historyPush } = props;
-        historyPush('/userlogs/');
-        props.logClick(
-            state.username,
-            state.log_message,
-        );
-    };
+const initState: STATE = {
+  error: '',
 };
+
+export const ADD_LOG_CLICK = 'ADD_LOG';
+export const ADD_LOG_SUCCESS = 'ADD_LOG_SUCCESS';
+export const ADD_LOG_FAIL = 'ADD_LOG_FAIL';
+
+export interface LogAction extends Action {
+    username: string,
+    timestamp: string,
+    log_message: string,
+}
+
+export const LogClick = (
+  username: string,
+  timestamp: string, 
+  log_message: string,
+): LogAction => ({
+  type: ADD_LOG_CLICK,
+  username,
+  timestamp,
+  log_message,
+});
+
+export interface LogSuccessAction {
+  type: string;
+  data: logResponse;
+}
+
+export const LogSuccess = (
+  data: logResponse,
+): LogSuccessAction => ({
+  type: ADD_LOG_SUCCESS,
+  data,
+});
+
+export interface LogFail {
+  type: string;
+}
+
+export const LogFail = (): LogFail => ({
+  type: ADD_LOG_FAIL,
+});
+
+// SAGA
+export function* handleAddLog({
+  username,
+  log_message,
+  timestamp,
+}: LogAction): Iterator<any> {
+  try {
+    const data = yield call(logClicks, username, timestamp, log_message);
+    if (data !== undefined) {
+      yield put(LogSuccess(data));
+    }
+  } catch (e) {
+    yield put(LogFail());
+    throw e;
+  }
+}
+
+export function* saga(): Iterator<any> {
+  yield takeLatest(ADD_LOG_CLICK, handleAddLog);
+}
+
+export default function reducer(state: STATE = initState, action: any): STATE {
+  switch (action.type) {
+    case ADD_LOG_SUCCESS: {
+      return {
+        ...state,
+        error: 'Saved Log!',
+      };
+    }
+    case ADD_LOG_FAIL: {
+      return {
+        ...state,
+        error: 'Error while saving log.',
+      };
+    }
+    default:
+      return state;
+  }
+}
