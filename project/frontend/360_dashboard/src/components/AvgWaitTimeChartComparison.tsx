@@ -5,7 +5,7 @@ import AvgWaitingTimeAfter from '../PostData/avgWaitingTimeAfter.json';
 
 // For more Line Chart information:
 // https://apexcharts.com/react-chart-demos/line-charts/basic/
-//TODO: Display percentages
+// TODO: Display percentages
 
 const data = AvgWaitingTime.WaitTime;
 const newData = AvgWaitingTimeAfter.WaitTime;
@@ -18,7 +18,7 @@ interface ChartState {
   series: any;
 }
 
-//A chart that shows the average waiting time for cars going from north to south
+// A chart that shows the average waiting time for cars going from north to south
 const AvgWaitTimeChart = (): JSX.Element => {
   const state = {
     options: {

@@ -8,7 +8,7 @@ import NorthDataAfter from '../PostData/carsNorthAfter.json';
 const data = NorthData.NorthDataBefore;
 const newData = NorthDataAfter.NorthDataAfter;
 const getX = data.map((value) => value.time);
-//const getY = data.map((value) => value.cars);
+// const getY = data.map((value) => value.cars);
 const getYAfter = newData.map((value) => value.cars);
 
 
@@ -53,9 +53,9 @@ const NorthChart = (): JSX.Element => {
       colors: ['#04a777'],
     },
     series: [{
-        name: 'Number of cars passing',
-        data: getYAfter,
-      },
+      name: 'Number of cars passing',
+      data: getYAfter,
+    },
     ],
   };
 

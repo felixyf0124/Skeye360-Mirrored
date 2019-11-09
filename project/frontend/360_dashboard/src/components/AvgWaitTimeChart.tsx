@@ -9,7 +9,7 @@ import AvgWaitingTimeAfter from '../PostData/avgWaitingTimeAfter.json';
 const data = AvgWaitingTime.WaitTime;
 const newData = AvgWaitingTimeAfter.WaitTime;
 const getX = data.map((value) => value.hour);
-//const getY = data.map((value) => value.wait);
+// const getY = data.map((value) => value.wait);
 const getYAfter = newData.map((value) => value.wait);
 
 interface ChartState {
@@ -17,7 +17,7 @@ interface ChartState {
   series: any;
 }
 
-//A chart that shows the average waiting time for cars going from north to south
+// A chart that shows the average waiting time for cars going from north to south
 const AvgWaitTimeChart = (): JSX.Element => {
   const state = {
     options: {
