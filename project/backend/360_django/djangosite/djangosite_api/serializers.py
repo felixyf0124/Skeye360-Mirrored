@@ -5,13 +5,6 @@ from django.contrib.auth import authenticate
 
 from .models import *
 
-# New UserSerializer using Django User model (19:39)
-class UserSerializer(serializers.ModelSerializer):
-    class Meta: 
-        model = User
-        fields = ['username', 'password']
-
-
 class CitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = City
@@ -83,10 +76,9 @@ class UserlogSerializer(serializers.ModelSerializer):
         fields = ['log_message', 'log_time', 'user_id']
 
 
-class AccountSerializer(serializers.HyperlinkedModelSerializer):
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     user_logs = UserlogSerializer(many=True, read_only=True)
-    id = serializers.UUIDField(read_only=True)
 
     class Meta:
-        model = Account
-        fields = ['id', 'name', 'user_logs']
+        model = Profile
+        fields = ['user_id', 'name', 'user_logs']
