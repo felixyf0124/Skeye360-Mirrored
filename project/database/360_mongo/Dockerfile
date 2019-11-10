@@ -1,4 +1,3 @@
-
 # Get mongoDB image from dockerHub
 FROM mongo:latest
 

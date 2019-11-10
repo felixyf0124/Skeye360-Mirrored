@@ -14,7 +14,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
+
 # For /api purpose
+
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):
