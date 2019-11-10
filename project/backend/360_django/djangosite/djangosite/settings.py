@@ -141,20 +141,20 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
-    'http://0.0.0.0:3000',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://172.16.0.6:3000'
+    u'http://0.0.0.0:3000',
+    u'http://localhost:3000',
+    u'http://127.0.0.1:3000',
+    u'http://172.16.0.6:3000',
 )
 
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
+# CORS_ALLOW_METHODS = [
+#     'DELETE',
+#     'GET',
+#     'OPTIONS',
+#     'PATCH',
+#     'POST',
+#     'PUT',
+# ]
 
 # %(threadName)-14s (%(pathname)s:%(lineno)d)
 CONFIG_BASE_FILE = os.path.dirname(__file__)
