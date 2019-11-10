@@ -33,6 +33,19 @@ export const addIntersection = async (
   return data;
 };
 
+export const getIntersection = async (
+  id: string,
+): Promise<Response> => {
+  const url = `//${APIDomain}/api/intersection/${id}`;
+  const settings = {
+    method: 'GET',
+    headers: {},
+  };
+  const response = await fetch(url, settings);
+  const data = (await response.json()) as Response;
+  return data;
+};
+
 export const editIntersection = async (
   intersection_name: string,
   latitude: string,
@@ -59,18 +72,15 @@ export const editIntersection = async (
 export const deleteIntersection = async (
   id: string,
 ): Promise<any> => {
-  console.log('ASDASDASD');
   const url = `//${APIDomain}/api/intersection/${id}`;
-  const params = {
-    id,
-  };
   const settings = {
     method: 'DELETE',
-    body: new URLSearchParams(params),
     headers: {},
   };
   const response = await fetch(url, settings);
-  console.log(`DELETED${id}`);
+  console.log(`DELETED ${id}`);
   console.log(response);
-  return response;
+  const data = (await response.json()) as Response;
+  console.log(data);
+  return data;
 };

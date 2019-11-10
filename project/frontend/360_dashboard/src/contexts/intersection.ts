@@ -10,19 +10,34 @@ import {
   addIntersection,
   editIntersection,
   deleteIntersection,
+  getIntersection,
 } from '../api/intersection';
 
 export interface STATE {
+  intersection_id: string;
+  latitude: string;
+  longitude: string;
+  intersection_name: string;
+  district_id: string;
   error: string;
 }
 
 const initState: STATE = {
+  intersection_id: '',
+  latitude: '',
+  longitude: '',
+  intersection_name: '',
+  district_id: '',
   error: '',
 };
 
 export const ADD_INTERSECTION = 'ADD_INTERSECTION';
 export const ADD_INTERSECTION_SUCCESS = 'ADD_INTERSECTION_SUCCESS';
 export const ADD_INTERSECTION_FAIL = 'ADD_INTERSECTION_FAIL';
+
+export const GET_INTERSECTION = 'GET_INTERSECTION';
+export const GET_INTERSECTION_SUCCESS = 'GET_INTERSECTION_SUCCESS';
+export const GET_INTERSECTION_FAIL = 'GET_INTERSECTION_FAIL';
 
 export const EDIT_INTERSECTION = 'EDIT_INTERSECTION';
 export const EDIT_INTERSECTION_SUCCESS = 'EDIT_INTERSECTION_SUCCESS';
@@ -73,6 +88,39 @@ export const addIntersectionFail = (): AddIntersectionFail => ({
   type: ADD_INTERSECTION_FAIL,
 });
 
+// GET
+export interface GetIntersectionAction extends Action {
+  type: string;
+  id: string;
+}
+
+export const getExistingIntersection = (
+  id: string,
+): GetIntersectionAction => ({
+  type: GET_INTERSECTION,
+  id,
+});
+
+export interface GetIntersectionSuccessAction {
+  type: string;
+  data: intersectionResponse;
+}
+
+export const getIntersectionSuccess = (
+  data: intersectionResponse,
+): GetIntersectionSuccessAction => ({
+  type: GET_INTERSECTION_SUCCESS,
+  data,
+});
+
+export interface GetIntersectionFail {
+  type: string;
+}
+
+export const getIntersectionFail = (): GetIntersectionFail => ({
+  type: GET_INTERSECTION_FAIL,
+});
+
 // EDIT
 export interface EditIntersectionAction extends Action {
   intersection_name: string;
@@ -119,7 +167,7 @@ export interface DeleteIntersectionAction extends Action {
   id: string;
 }
 
-export const deleteNewIntersection = (
+export const deleteExistingIntersection = (
   id: string,
 ): DeleteIntersectionAction => ({
   type: DELETE_INTERSECTION,
@@ -164,6 +212,20 @@ export function* handleAddIntersection({
   }
 }
 
+export function* handleGetIntersection({
+  id,
+}: GetIntersectionAction): Iterator<any> {
+  try {
+    const data = yield call(getIntersection, id);
+    if (data !== undefined) {
+      yield put(getIntersectionSuccess(data));
+    }
+  } catch (e) {
+    yield put(getIntersectionFail());
+    throw e;
+  }
+}
+
 export function* handleEditIntersection({
   intersection_name,
   latitude,
@@ -188,13 +250,14 @@ export function* handleDeleteIntersection({
     yield call(deleteIntersection, id);
     yield put({ type: DELETE_INTERSECTION_SUCCESS });
   } catch (e) {
-    yield put(editIntersectionFail());
+    yield put(deleteIntersectionFail());
     throw e;
   }
 }
 
 export function* saga(): Iterator<any> {
   yield takeLatest(ADD_INTERSECTION, handleAddIntersection);
+  yield takeLatest(GET_INTERSECTION, handleGetIntersection);
   yield takeLatest(EDIT_INTERSECTION, handleEditIntersection);
   yield takeLatest(DELETE_INTERSECTION, handleDeleteIntersection);
 }
@@ -205,6 +268,18 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       return {
         ...state,
         error: 'New intersection created.',
+      };
+    }
+    case GET_INTERSECTION_SUCCESS: {
+      const { data } = action as GetIntersectionSuccessAction;
+      return {
+        ...state,
+        intersection_name: data.intersection_name,
+        latitude: String(data.latitude),
+        longitude: String(data.longitude),
+        district_id: String(data.district_id),
+        intersection_id: String(data.id),
+        error: '',
       };
     }
     case EDIT_INTERSECTION_SUCCESS: {
@@ -223,6 +298,12 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       return {
         ...state,
         error: 'Error while adding new intersection.',
+      };
+    }
+    case GET_INTERSECTION_FAIL: {
+      return {
+        ...state,
+        error: 'Error while getting existing intersection.',
       };
     }
     case EDIT_INTERSECTION_FAIL: {

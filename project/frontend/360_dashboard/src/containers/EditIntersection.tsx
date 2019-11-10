@@ -5,117 +5,78 @@ import { Redirect } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
+import { GetIntersectionAction, getExistingIntersection } from '../contexts/intersection';
+import EditIntersectionForm from '../components/EditIntersectionForm';
 
 interface StateProps {
-    path: string;
-    authenticated: boolean;
-    username: string;
+  path: string;
+  authenticated: boolean;
+  username: string;
 
-    latitude: string;
-    longitude: string;
-    intersection_name: string;
-    district_id: string;
+  intersection_id: string;
+  latitude: string;
+  longitude: string;
+  intersection_name: string;
+  district_id: string;
 
-    error: string;
+  error: string;
 }
 
 interface DispatchProps {
-    historyPush: (url: string) => void;
+  historyPush: (url: string) => void;
+  getExistingIntersection(id: string): GetIntersectionAction;
 }
 
-const EditIntersection = (props: StateProps & DispatchProps): JSX.Element => {
-  const [state, setState] = React.useState(props);
-  const {
-    latitude, longitude, intersection_name, district_id, error,
-  } = state;
+class EditIntersection extends React.Component<StateProps & DispatchProps> {
+  public componentDidMount(): void {
+    // eslint-disable-next-line no-shadow
+    const { intersection_id, getExistingIntersection } = this.props;
+    getExistingIntersection(intersection_id);
+  }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (): void => {
-    const { historyPush } = props;
-    historyPush('/camera/edit');
-  };
-
-  if (!state.authenticated) return <Redirect push to="/login" />;
-
-  return (
-    <div>
-      <Header />
-      <div className="form-container">
-        {error !== '' ? (
-          <div className="form-group">
-            <div>{error}</div>
-          </div>
-        ) : (
-          <div />
-        )}
-        <form onSubmit={(e): void => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-        >
-          <div className="form-group">
-            <div>District ID</div>
-            <input
-              type="text"
-              name="district_id"
-              value={district_id}
-              disabled
-            />
-          </div>
-          <div className="form-group">
-            <div>Intersection Name</div>
-            <input
-              type="text"
-              name="intersection_name"
-              value={intersection_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <div>Latitude</div>
-            <input
-              type="text"
-              name="latitude"
-              value={latitude}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <div>Longitude</div>
-            <input
-              type="text"
-              name="longitude"
-              value={longitude}
-              onChange={handleChange}
-            />
-          </div>
-          <button type="submit">
-                    Submit
-          </button>
-        </form>
+  public render(): JSX.Element {
+    const {
+      authenticated,
+      latitude,
+      longitude,
+      intersection_name,
+      district_id,
+      error,
+    } = this.props;
+    if (!authenticated) return <Redirect push to="/login" />;
+    return (
+      <div>
+        <Header />
+        <EditIntersectionForm
+          latitude={latitude}
+          longitude={longitude}
+          intersection_name={intersection_name}
+          district_id={district_id}
+          error={error}
+        />
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
+
 
 const mapStateToProps = (state: RootState): StateProps => ({
   path: '/streetview/add',
   authenticated: state.authentication.authenticated,
   username: state.authentication.username,
 
-  latitude: '0',
-  longitude: '0',
-  district_id: '1',
-  intersection_name: 'Guy St/St-Cath',
+  intersection_id: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
+  latitude: state.intersection.latitude,
+  longitude: state.intersection.longitude,
+  district_id: state.intersection.district_id,
+  intersection_name: state.intersection.intersection_name,
 
-  error: '',
+  error: state.intersection.error,
 });
 
 const mapDispatchToProps: DispatchProps = {
   historyPush: push,
+  getExistingIntersection,
 };
 
 export default connect(

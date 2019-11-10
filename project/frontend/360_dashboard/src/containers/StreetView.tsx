@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import Header, { Head } from '../components/Header';
-import Simulator from './simulator/Scene';
+// import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
 import SouthChart from '../components/SouthChart';
-import { deleteIntersection } from '../api/intersection';
+import { deleteExistingIntersection } from '../contexts/intersection';
 
 interface StateProps {
   authenticated: boolean;
@@ -14,7 +14,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  deleteIntersection: (id: string) => any;
+  deleteExistingIntersection: (id: string) => any;
 }
 
 const StreetView = (props: StateProps & DispatchProps): JSX.Element => {
@@ -26,7 +26,7 @@ const StreetView = (props: StateProps & DispatchProps): JSX.Element => {
   if (!authenticated) return <Redirect push to="/login" />;
 
   const handleDelete = (id: string): any => {
-    deleteIntersection(id);
+    state.deleteExistingIntersection(id);
     return (<Redirect push to="/" />);
   };
 
@@ -37,11 +37,11 @@ const StreetView = (props: StateProps & DispatchProps): JSX.Element => {
         <Link to={`/intersection/edit/${intersectionId}`} className="header-text">Edit</Link>
       </Head>
       <button onClick={(): any => handleDelete(intersectionId)} type="submit">Delete</button>
-      {/* <Simulator />
+      {/* <Simulator /> */}
       <div className="charts-row">
         <NorthChart />
         <SouthChart />
-      </div> */}
+      </div>
     </div>
   );
 };
@@ -52,7 +52,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 });
 
 const mapDispatchToProps: DispatchProps = {
-  deleteIntersection,
+  deleteExistingIntersection,
 };
 
 export default connect(
