@@ -4,7 +4,6 @@ import pytest
 
 
 # Create your tests here.
-
 @pytest.mark.django_db
 class YourTestClass(TestCase):
     @classmethod
@@ -14,7 +13,6 @@ class YourTestClass(TestCase):
 
     def setUp(self):
         print("setUp: Run once for every test method to setup clean data.")
-
         pass
 
     def test_false_is_false(self):
@@ -29,6 +27,10 @@ class YourTestClass(TestCase):
         print("Method: test_one_plus_one_equals_two.")
         self.assertEqual(2, 2)
 
-    def test_city(self):
-        city = mixer.blend('djangosite_api.City', city_name='Montreal')
-        self.assertEqual(city.city_name, 'Montreal')
+    def test_intersection(self):
+        # Test value
+        intersection1 = mixer.blend('djangosite_api.Intersection', intersection_name='Guy')
+        self.assertEqual(intersection1.intersection_name, 'Guy')
+        intersection2 = mixer.blend('djangosite_api.Intersection', intersection_name='Dupuis')
+        self.assertEqual(intersection2.intersection_name, 'Dupuis')
+        self.assertNotEqual(intersection2.intersection_name, 'Guy')
