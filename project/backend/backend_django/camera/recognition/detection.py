@@ -73,8 +73,6 @@ class Detector:
             # cleanup db
             intersection.reset_counter()
             db.find_all_count(col)            
-        threading.Timer(WAIT_SECONDS, self.counting,[col,intersection]).start()
-
     # Open a video
     def open_video(self):
         cap = cv2.VideoCapture(self.stream)
