@@ -43,7 +43,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "mocha --require babel-core/register 'src/**/*.spec.js' --exclude '**/node_modules/**'",
+    "test": "mocha--require ts-node/register 'src/**/*.spec.js' --exclude '**/node_modules/**'",
     "eject": "react-scripts eject",
     "lint": "yarn lint:js",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx .",
