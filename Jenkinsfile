@@ -18,6 +18,7 @@ pipeline {
                 //     }
                 // }
                 //Testing frontend
+                //removed test
                 stage('test_frontend') {
                     agent {
                         docker {
