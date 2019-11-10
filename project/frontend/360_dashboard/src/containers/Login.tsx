@@ -32,14 +32,21 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   const {
     username,
     password,
+    log_message,
     authenticated,
     name,
     error,
   } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    console.log("HELLO");
     setState({ ...state, [e.target.name]: e.target.value });
+    //setState({...state, log_message: login_log_message});
+    console.log(log_message);
+    console.log("LOG MESSAGE HERE");
   };
+
+  const login_log_message = "clcl login";
 
   // eslint-disable-next-line consistent-return
   const handleLoginClick = (): any => {
@@ -48,14 +55,9 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     if (!authenticated) {
       return <Redirect push to="/" />;
     }
+    console.log("handle click");
   };
 
-  const handleLog = (): any => {
-    props.logClick(
-      state.username,
-      state.log_message,
-    )
-  }
 
   // eslint-disable-next-line no-alert
   if (authenticated) alert(`Welcome ${name}! `);
@@ -69,6 +71,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
           e.preventDefault();
           props.authenticate(username, password);
           handleLoginClick();
+          props.logClick(username, log_message); 
         }}
         >
           {error !== '' ? (
@@ -98,7 +101,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               onChange={handleChange}
             />
           </div>
-          <button type="submit" onClick={handleLog} >
+          <button type="submit">
             Login
           </button>
         </form>
@@ -110,7 +113,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 const mapStateToProps = (state: RootState): StateProps => ({
   username: '',
   password: '',
-  log_message: 'Login Button Clicked',
+  log_message: '',
   authenticated: state.authentication.authenticated,
   name: state.authentication.username,
   sessionToken: state.authentication.sessionToken,

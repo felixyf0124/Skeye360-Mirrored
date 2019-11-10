@@ -15,7 +15,7 @@ const initState: STATE = {
   error: '',
 };
 
-export const ADD_LOG_CLICK = 'ADD_LOG';
+export const ADD_LOG_CLICK = 'ADD_LOG_CLICK';
 export const ADD_LOG_SUCCESS = 'ADD_LOG_SUCCESS';
 export const ADD_LOG_FAIL = 'ADD_LOG_FAIL';
 
