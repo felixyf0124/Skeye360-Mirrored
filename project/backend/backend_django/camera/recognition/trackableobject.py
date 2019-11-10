@@ -1,6 +1,3 @@
-
-from .direction import Direction
-
 class TrackableObject:
 	def __init__(self, objectID):
 		# store the object ID, then initialize a list of centroids
@@ -11,8 +8,6 @@ class TrackableObject:
 		# initialize a boolean used to indicate if the object has
 		# already been counted or not
 		self.counted = False
-		
-		
 		self.crossing = False
 		self.start_from = ""
 		self.go_to = ""

@@ -4,7 +4,6 @@ FROM node:12.13.0-alpine
 #Create app directory
 RUN mkdir -p /app
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
 
 COPY package.json /app/package.json
 
@@ -12,7 +11,7 @@ COPY package.json /app/package.json
 RUN yarn install
 
 #install mocha for global use
-RUN npm install mocha -g
+#RUN npm install mocha -g
 
 COPY . /app
 
@@ -20,4 +19,5 @@ COPY . /app
 RUN yarn build
 
 #Execute the code with yarn start
+CMD [ "yarn","lint:js"]
 CMD [ "yarn", "start" ]
