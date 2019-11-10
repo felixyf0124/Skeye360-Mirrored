@@ -62,6 +62,6 @@ class Pedestrian(models.Model):
 
 
 class Userlog(models.Model):
-    log_message = models.CharField(max_length=255)
-    log_time = models.DateTimeField(auto_now_add=True)
+    log_message = models.CharField(max_length=255, null=True)
+    log_time = models.DateTimeField(auto_now_add=True, null=True)
     user_id = models.ForeignKey(Account, related_name='user_logs', on_delete=models.CASCADE)
