@@ -5,6 +5,8 @@ django-extensions # ref: https://django-extensions.readthedocs.io/en/latest/inst
 django-filter # ref: https://django-filter.readthedocs.io/en/master/
 djongo
 sqlparse==0.2.4
+wheel
 markdown
 pylint
 mongomock
+django-rest-knox
