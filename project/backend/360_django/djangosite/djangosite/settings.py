@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'corsheaders',
+    'knox',
 ]
 
 MIDDLEWARE = [
@@ -133,7 +134,8 @@ STATIC_URL = '/static/'
 
 # For rest framework
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -142,6 +144,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://0.0.0.0:3000',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'http://172.16.0.6:3000'
 )
 
 CORS_ALLOW_METHODS = [

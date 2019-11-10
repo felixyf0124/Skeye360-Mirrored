@@ -1,10 +1,8 @@
 """These classes are used to serialize data to send them in a JSON format"""
 from rest_framework import serializers
-
 from .models import *
 
 
-# This is for /api
 class CitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = City
@@ -76,10 +74,13 @@ class UserlogSerializer(serializers.ModelSerializer):
         fields = ['log_message', 'log_time', 'user_id']
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    user_logs = UserlogSerializer(many=True, read_only=True)
-    id = serializers.UUIDField(read_only=True)
-
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'timestamp', 'user_logs']
+        fields = ['username', 'password']
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'password']

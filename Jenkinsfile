@@ -1,5 +1,4 @@
-pipeline 
-{
+pipeline {
     agent any
     stages {
                 stage('build') {
@@ -28,7 +27,7 @@ pipeline
                     steps {
                         script {
                             dir("project/frontend/360_dashboard") {
-                                //sh "yarn test"
+                                 sh "yarn test"
                             }
                         }
                     }
@@ -44,7 +43,7 @@ pipeline
                     steps {
                         script {
                             dir("project/backend/360_django/djangosite") {
-                                //sh "python3 manage.py test ."
+                                sh "python3 manage.py test ."
                             }
                         }
                     }
@@ -61,8 +60,8 @@ pipeline
                         }
                     }
                 }
-            }
-        
+    }
+
     post {
         always {
             cleanWs()
