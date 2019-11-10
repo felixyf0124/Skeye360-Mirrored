@@ -4,7 +4,6 @@ from .views import *
 app_name = 'skeye360'
 # This class is main url class using router, and the parameter is url, view, base_name
 router = routers.DefaultRouter()
-router.register('api/profile', ProfileViewSet, 'profile')
 router.register('api/city', CityViewSet, 'city')
 router.register('api/district', DistrictViewSet, 'district')
 router.register('api/intersection', IntersectionViewSet, 'intersection')

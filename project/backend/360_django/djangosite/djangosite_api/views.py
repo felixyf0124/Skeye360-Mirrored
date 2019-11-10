@@ -15,12 +15,10 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
 # For /api purpose
-class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -53,6 +51,7 @@ class RegisterAPI(generics.GenericAPIView):
 
 # User login API
 class LoginAPI(generics.GenericAPIView):
+    serializer_class = LoginSerializer
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):

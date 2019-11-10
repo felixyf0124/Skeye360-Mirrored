@@ -3,19 +3,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-# Refactored our user model to profile to use is as an extension of the Django User model
-# https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone
-class Profile(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, null=True)
-
-    # Profile is created whenever a user is created
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, **kwargs):
-        user = kwargs["instance"]
-        if kwargs["created"] is True:
-            Profile.objects.create(user_id=user)
-
 
 class City(models.Model):
     city_name = models.CharField(max_length=20, null=True)
@@ -72,4 +59,4 @@ class Pedestrian(models.Model):
 class Userlog(models.Model):
     log_message = models.CharField(max_length=255, null=True)
     log_time = models.DateTimeField(auto_now_add=True, null=True)
-    user_id = models.ForeignKey(Profile, related_name='user_logs', on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, related_name='user_logs', on_delete=models.CASCADE)

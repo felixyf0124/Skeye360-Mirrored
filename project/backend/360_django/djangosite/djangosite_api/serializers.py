@@ -76,9 +76,13 @@ class UserlogSerializer(serializers.ModelSerializer):
         fields = ['log_message', 'log_time', 'user_id']
 
 
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    user_logs = UserlogSerializer(many=True, read_only=True)
-
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Profile
-        fields = ['user_id', 'name', 'user_logs']
+        model = User
+        fields = ['username', 'password']
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
