@@ -1,10 +1,5 @@
-//require('babel-core/register');
-//require('ts-node/register');
 const assert = require('chai').assert;
-const expect = require('chai').expect;
 import LanePointer from "../../../containers/simulator/simulator_management/LanePointer";
-// const LanePointer = require("../../../containers/simulator/simulator_management/LanePointer");
-
 
 describe('class LanePointer', ()=>{
     it('constructor', ()=>{
@@ -19,7 +14,7 @@ describe('class LanePointer', ()=>{
 
     it('getters & setters', ()=>{
         let lanePointer = new LanePointer();
-        
+
         assert.deepEqual(lanePointer, { sectionId:0,laneId:0 });
 
         lanePointer.setSectionId(1);
