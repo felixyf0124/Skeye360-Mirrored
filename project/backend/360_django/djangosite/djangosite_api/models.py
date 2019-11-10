@@ -1,7 +1,8 @@
-from django.db import models
+from djongo import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
 
 # Refactored our user model to profile to use is as an extension of the Django User model
 # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html#onetoone

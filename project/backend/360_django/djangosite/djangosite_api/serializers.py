@@ -1,9 +1,7 @@
 """These classes are used to serialize data to send them in a JSON format"""
 from rest_framework import serializers
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-
 from .models import *
+
 
 class CitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
