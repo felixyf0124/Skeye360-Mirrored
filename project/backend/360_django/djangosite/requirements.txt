@@ -6,5 +6,10 @@ django-filter # ref: https://django-filter.readthedocs.io/en/master/
 djongo
 sqlparse==0.2.4
 markdown
+# For testing:
 pylint
 mongomock
+pytest-django
+pytest
+pytest-cov
+mixer

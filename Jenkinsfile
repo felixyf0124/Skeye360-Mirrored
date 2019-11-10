@@ -1,8 +1,7 @@
-pipeline {
+pipeline 
+{
     agent any
     stages {
-        stage("Parallel") {
-            parallel {
                 stage('build') {
                     steps {
                         echo "Building!"
@@ -45,7 +44,7 @@ pipeline {
                     steps {
                         script {
                             dir("project/backend/360_django/djangosite") {
-                                sh "python3 manage.py test ."
+                                //sh "python3 manage.py test ."
                             }
                         }
                     }
@@ -63,9 +62,7 @@ pipeline {
                     }
                 }
             }
-        }
-    }
-
+        
     post {
         always {
             cleanWs()

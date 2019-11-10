@@ -10,7 +10,7 @@ COPY package.json /app/package.json
 RUN yarn install
 
 #install mocha for global use
-#RUN npm install mocha -g
+RUN npm install mocha -g
 
 COPY . /app
 

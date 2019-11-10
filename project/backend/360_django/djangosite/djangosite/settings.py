@@ -89,6 +89,9 @@ DATABASES = {
         'HOST': 'mongodb://myUserAdmin:abc123@172.16.0.4:27017',
         'USER': 'myUserAdmin',
         'PASSWARD': 'abc123',
+    },
+    'test': {
+
     }
 }
 
@@ -149,7 +152,6 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
-
 
 # %(threadName)-14s (%(pathname)s:%(lineno)d)
 CONFIG_BASE_FILE = os.path.dirname(__file__)
@@ -226,7 +228,6 @@ LOGGING = {
 }
 
 
-
 def exception_hook(type, value, traceback):
     """
     Function to redirect uncaught exceptions to the logger.
@@ -236,6 +237,7 @@ def exception_hook(type, value, traceback):
     :param traceback: What was happening as a Traceback object
     """
     logging.getLogger('*excepthook*').critical(f'Uncaught Exception!', exc_info=(type, value, traceback))
+
 
 # The function assigned to sys.excepthook is called only just before control is returned to the prompt; in a Python
 # program this happens just before the program exits.

@@ -1,8 +1,11 @@
 from django.test import TestCase
+from mixer.backend.django import mixer
+import pytest
 
 
 # Create your tests here.
 
+@pytest.mark.django_db
 class YourTestClass(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -11,6 +14,7 @@ class YourTestClass(TestCase):
 
     def setUp(self):
         print("setUp: Run once for every test method to setup clean data.")
+
         pass
 
     def test_false_is_false(self):
@@ -23,4 +27,8 @@ class YourTestClass(TestCase):
 
     def test_one_plus_one_equals_two(self):
         print("Method: test_one_plus_one_equals_two.")
-        self.assertEqual(1 + 1, 2)
+        self.assertEqual(2, 2)
+
+    def test_city(self):
+        city = mixer.blend('djangosite_api.City', city_name='Montreal')
+        self.assertEqual(city.city_name, 'Montreal')
