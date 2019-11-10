@@ -3,11 +3,10 @@ export interface Response {
   log_message: string;
 }
 
-const APIDomain = '0.0.0.0:8000';
+const APIDomain = '127.0.0.1:8000';
 
 const logClicks = async (
-  username: string,
-  timestamp: string, 
+  username: string, 
   log_message: string,
 ): Promise<Response> => {
   const url = `//${APIDomain}/api/userlogs/`;

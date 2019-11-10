@@ -5,11 +5,13 @@ import { push } from 'connected-react-router';
 import { RootState } from '../reducers/rootReducer';
 import { authenticate } from '../contexts/authentication';
 import Header from '../components/Header';
+import { logClick } from '../contexts/LogClicks';
+
 
 interface StateProps {
     username: string;
     password: string;
-
+    log_message: string;
     authenticated: boolean;
     name: string;
     sessionToken: string;
@@ -19,6 +21,10 @@ interface StateProps {
 interface DispatchProps {
     authenticate: (username: string, password: string) => void;
     historyPush: (url: string) => void;
+    logClick: (
+      username: string,
+      log_message: string,
+    ) => any;
 }
 
 const Login = (props: StateProps & DispatchProps): JSX.Element => {
@@ -26,7 +32,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   const {
     username,
     password,
-
     authenticated,
     name,
     error,
@@ -44,6 +49,13 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
       return <Redirect push to="/" />;
     }
   };
+
+  const handleLog = (): any => {
+    props.logClick(
+      state.username,
+      state.log_message,
+    )
+  }
 
   // eslint-disable-next-line no-alert
   if (authenticated) alert(`Welcome ${name}! `);
@@ -86,7 +98,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               onChange={handleChange}
             />
           </div>
-          <button type="submit">
+          <button type="submit" onClick={handleLog} >
             Login
           </button>
         </form>
@@ -98,7 +110,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 const mapStateToProps = (state: RootState): StateProps => ({
   username: '',
   password: '',
-
+  log_message: 'Login Button Clicked',
   authenticated: state.authentication.authenticated,
   name: state.authentication.username,
   sessionToken: state.authentication.sessionToken,
@@ -108,6 +120,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 const mapDispatchToProps: DispatchProps = {
   authenticate,
   historyPush: push,
+  logClick,
 };
 
 export default connect(

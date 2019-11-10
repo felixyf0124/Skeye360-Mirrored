@@ -21,18 +21,15 @@ export const ADD_LOG_FAIL = 'ADD_LOG_FAIL';
 
 export interface LogAction extends Action {
     username: string,
-    timestamp: string,
     log_message: string,
 }
 
-export const LogClick = (
+export const logClick = (
   username: string,
-  timestamp: string, 
   log_message: string,
 ): LogAction => ({
   type: ADD_LOG_CLICK,
   username,
-  timestamp,
   log_message,
 });
 
@@ -60,10 +57,9 @@ export const LogFail = (): LogFail => ({
 export function* handleAddLog({
   username,
   log_message,
-  timestamp,
 }: LogAction): Iterator<any> {
   try {
-    const data = yield call(logClicks, username, timestamp, log_message);
+    const data = yield call(logClicks, username, log_message);
     if (data !== undefined) {
       yield put(LogSuccess(data));
     }
