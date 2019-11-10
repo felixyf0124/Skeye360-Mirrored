@@ -41,7 +41,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
   };
 
   // eslint-disable-next-line consistent-return
-  const handleSubmit = (): void => {
+  const handleSubmit = (): any => {
     const { historyPush } = props;
     historyPush('/intersection/add');
     props.addNewIntersection(
@@ -107,7 +107,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
             />
           </div>
           <button type="submit">
-                    Submit
+            Submit
           </button>
         </form>
       </div>

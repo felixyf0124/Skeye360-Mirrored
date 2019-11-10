@@ -34,7 +34,7 @@ const GoogleMap = (districts: districtState): JSX.Element => {
               lng={intersection.longitude}
               text="Camera_id"
               color="red"
-              link="/streetview"
+              link={`/streetview/${intersection.id}`}
             />
           ))
         )}

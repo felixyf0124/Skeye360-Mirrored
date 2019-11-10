@@ -27,9 +27,9 @@ const App = (): JSX.Element => (
     <Route>
       <Switch>
         <Route exact path="/" component={SkeyeMap} />
-        <Route exact path="/streetview" component={StreetView} />
+        <Route exact path="/streetview/:intersectionId" component={StreetView} />
         <Route exact path="/intersection/add" component={AddIntersection} />
-        <Route exact path="/intersection/edit" component={EditIntersection} />
+        <Route exact path="/intersection/edit/:intersectionId" component={EditIntersection} />
         <Route exact path="/chartsprototype" component={ChartsPrototype} />
       </Switch>
     </Route>
