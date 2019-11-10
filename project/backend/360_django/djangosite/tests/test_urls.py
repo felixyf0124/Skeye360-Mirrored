@@ -2,16 +2,25 @@ from django.test import SimpleTestCase
 # Ref: https://docs.djangoproject.com/en/2.2/ref/urlresolvers/
 from django.urls import reverse, resolve
 from djangosite_api.views import *
+import pytest
 
-
+@pytest.mark.django_db
 class TestUrls(SimpleTestCase):
     def test_root_url(self):
         url = reverse('skeye360:api-root')
+        print(resolve(url).view_name)
         self.assertEqual(resolve(url).route, '^$')
 
-    # factory = APIRequestFactory()
-    # request = factory.post('/user/', {'username': 'new idea'})
-    # print(request.body)
+    def test_user_url(self):
+        # client = APIClient(enforce_csrf_checks=True)
+        url = reverse('skeye360:user-list')
+        # data = {"username": "123", "password": "123"}
+        # client.post(url, data)
+        # response = client.get(url, format='json')
+        # print(response.data)
+        # self.assertEqual(response.data, "123")
+        # self.assertEqual(response.status_code, 200)
+        self.assertEqual(resolve(url).route, '^api/user/$')
 
     def test_city_url(self):
         url = reverse('skeye360:city-list')

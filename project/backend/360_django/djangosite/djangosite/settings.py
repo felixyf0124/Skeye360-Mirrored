@@ -90,6 +90,9 @@ DATABASES = {
         'HOST': 'mongodb://myUserAdmin:abc123@172.16.0.4:27017',
         'USER': 'myUserAdmin',
         'PASSWARD': 'abc123',
+    },
+    'test': {
+
     }
 }
 
@@ -138,21 +141,20 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
-    'http://0.0.0.0:3000',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://172.16.0.6:3000'
+    u'http://0.0.0.0:3000',
+    u'http://localhost:3000',
+    u'http://127.0.0.1:3000',
+    u'http://172.16.0.6:3000',
 )
 
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-
+# CORS_ALLOW_METHODS = [
+#     'DELETE',
+#     'GET',
+#     'OPTIONS',
+#     'PATCH',
+#     'POST',
+#     'PUT',
+# ]
 
 # %(threadName)-14s (%(pathname)s:%(lineno)d)
 CONFIG_BASE_FILE = os.path.dirname(__file__)
@@ -229,7 +231,6 @@ LOGGING = {
 }
 
 
-
 def exception_hook(type, value, traceback):
     """
     Function to redirect uncaught exceptions to the logger.
@@ -239,6 +240,7 @@ def exception_hook(type, value, traceback):
     :param traceback: What was happening as a Traceback object
     """
     logging.getLogger('*excepthook*').critical(f'Uncaught Exception!', exc_info=(type, value, traceback))
+
 
 # The function assigned to sys.excepthook is called only just before control is returned to the prompt; in a Python
 # program this happens just before the program exits.
