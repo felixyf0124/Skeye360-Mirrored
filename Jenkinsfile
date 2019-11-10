@@ -1,8 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage("Parallel") {
-            parallel {
                 stage('build') {
                     steps {
                         echo "Building!"
@@ -20,6 +18,7 @@ pipeline {
                 //     }
                 // }
                 //Testing frontend
+                //removed test
                 stage('test_frontend') {
                     agent {
                         docker {
@@ -29,7 +28,7 @@ pipeline {
                     steps {
                         script {
                             dir("project/frontend/360_dashboard") {
-                                sh "yarn test"
+                                // sh "yarn test"
                             }
                         }
                     }
@@ -61,9 +60,7 @@ pipeline {
                             sh "python3 test.py"
                         }
                     }
-                }
-            }
-        }
+                } 
     }
 
     post {
