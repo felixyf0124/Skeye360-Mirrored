@@ -1,8 +1,8 @@
-require('babel-core/register');
+//require('babel-core/register');
 //require('ts-node/register');
 const assert = require('chai').assert;
 import LanePointer from "../../../containers/simulator/simulator_management/LanePointer.tsx";
-//require("../../../containers/simulator/simulator_management/LanePointer");
+// require("../../../containers/simulator/simulator_management/LanePointer");
 
 
 describe('class LanePointer', ()=>{

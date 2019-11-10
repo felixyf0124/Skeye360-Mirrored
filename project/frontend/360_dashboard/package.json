@@ -38,12 +38,13 @@
     "redux-saga-test-plan": "^4.0.0-rc.3",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.4.0",
+    "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "mocha--require ts-node/register 'src/**/*.spec.js' --exclude '**/node_modules/**'",
+    "test": "mocha --require ts-node/register 'src/**/*.spec.js' --exclude '**/node_modules/**'",
     "eject": "react-scripts eject",
     "lint": "yarn lint:js",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx .",
