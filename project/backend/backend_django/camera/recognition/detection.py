@@ -4,6 +4,7 @@ import numpy as np
 import time
 import threading
 import sys
+import logging
 from .db import Db
 from .intersection import Intersection
 from .trackableobject import TrackableObject
@@ -16,6 +17,7 @@ from .deep_sort.tracker import Tracker
 from .tools import generate_detections as gdet
 from .deep_sort.detection import Detection as ddet
 
+logger = logging.getLogger("camera")
 #references:
 #https://stackoverflow.com/questions/54426573/is-there-a-way-to-capture-video-from-a-usb-camera-with-multiple-processes-in-pyt
 #http://emaraic.com/blog/yolov3-custom-object-detector
@@ -30,6 +32,8 @@ class Detector:
         self.class_names = class_names
         self.stream = video_stream
         self.coord = Coordinate()
+        self.start_counting = False
+        logger.info("Detector is created")
 
     # Load names classes
     def load(self):
@@ -38,6 +42,7 @@ class Detector:
             classes = [line.strip() for line in f.readlines()]
         # Define network from configuration file and load the weights from the given weights file
         net = cv2.dnn.readNet(self.weights,self.config)
+        logger.info("Loading deep learning net")        
         return classes, net
 
     # Get names of output layers, output for YOLOv3 is ['yolo_16', 'yolo_23']
@@ -60,19 +65,20 @@ class Detector:
         print(label, round(x+w/2), round(y+h/2))
 
     # count detection output at the same time detecting objects in the frame
-    def counting(self,col,intersection):
-        WAIT_SECONDS = 200
-        db = Db()
-        print(time.ctime())
-        db.insert_count(col,intersection.counters)
-        # cleanup db
-        intersection.reset_counter()
-        db.find_all_count(col)
+    def counting(self,col,intersection):        
+        WAIT_SECONDS = 20        
+        if self.start_counting is True:
+            db = Db()
+            db.insert_count(col,intersection.counters)
+            # cleanup db
+            intersection.reset_counter()
+            db.find_all_count(col)            
         threading.Timer(WAIT_SECONDS, self.counting,[col,intersection]).start()
 
     # Open a video
     def open_video(self):
         cap = cv2.VideoCapture(self.stream)
+        logger.info("Opening video stream")  
         return cap
 
     # Convert from frame to bytes
@@ -102,7 +108,7 @@ class Detector:
         # east_ROI = pts_east.reshape((-1,1,2))
         north_ROI = pts_north.reshape((-1,1,2))
         mid_ROI = pts_mid.reshape((-1,1,2))
-        
+        logger.info("Creating ROIs")  
         return [mid_ROI, {"south":south_ROI, "north":north_ROI}]
 
     # Find where the car is coming from and add the origin to the trackable object
@@ -129,6 +135,7 @@ class Detector:
         for r in ROI_list[1].values():
             cv2.polylines(image,[r],True,(255), 2)
         cv2.polylines(image,[ROI_list[0]],True,(255), 2)
+        logger.info("Drawing ROIs")  
     # create a deepsort tracker with deep_sort Definition of the parameters
 
     def create_tracker(self):
@@ -136,6 +143,7 @@ class Detector:
         nn_budget = None     
         metric = nn_matching.NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
         tracker = Tracker(metric)
+        logger.info("Creating deepsort tracker")  
         return tracker
 
     def create_encoder(self):
@@ -144,7 +152,7 @@ class Detector:
         
     # Generate StreamingHttpResponse
     def gen(self, classes, net):
-
+		
         intersection = self.create_intersection("main@broadway")
         # connect db
         database = Db()
@@ -170,6 +178,9 @@ class Detector:
         coord_dict = Coordinate()
         while True:
             hasframe, image = cap.read()
+            if not hasframe:
+                logger.error("Video importing error")
+                return -1                
             # image=cv2.resize(image, (620, 480))
 
             #get the size of the image
@@ -220,9 +231,6 @@ class Detector:
                 self.draw_pred(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h), classes)
                 self.print_pred(class_ids[i], x, y, w, h, classes)
 
-            # # increment the counter
-            # count.inc(len(yolo_indices))
-
             # apply non-maximum suppression algorithm on the bounding boxes
             t, _ = net.getPerfProfile()
 
@@ -248,7 +256,6 @@ class Detector:
                 cv2.putText(image, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 200, (0,255,0),2)
                 centroid = [int((bbox[0]+ bbox[2]) / 2.0), int((bbox[1] + bbox[3]) / 2.0)]
                 if track.track_id not in tracking_dict:
-                    print("creating...")
                     to = TrackableObject(track.track_id)
                     to.add_centroid(centroid)
                     tracking_dict[track.track_id] = to
@@ -279,6 +286,7 @@ class Detector:
             self.coord= coord_dict
             
             totalFrames += 1
+            self.start_counting = True
             self.draw_ROIs(image, ROI_list)
             label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
             cv2.putText(image, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))

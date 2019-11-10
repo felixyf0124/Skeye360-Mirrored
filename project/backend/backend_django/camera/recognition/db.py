@@ -3,6 +3,9 @@
 import pymongo
 import datetime
 from .counter import Counter
+import logging
+
+logger = logging.getLogger("camera")
 
 class Db:
 
@@ -10,6 +13,10 @@ class Db:
         myclient = pymongo.MongoClient("mongodb://myUserAdmin:abc123@40.121.23.48:8300/")
         mydb = myclient["test"]
         mycol = mydb["counts"]
+        if mycol is None:
+            logger.info("db connection failed")
+        else:
+            logger.info("db is connected")
         return mycol
 
     def insert_count(self,collection,counters):
@@ -20,15 +27,14 @@ class Db:
                 "time": datetime.datetime.utcnow(),
                 "category": "vehicle"}
             insersions = insersions + 1
-            collection.insert_one(new_count)
+            collection.insert_one(new_count)        
+            logger.info("Sending data to db")
         return insersions
         
 
     def find_all_count(self,collection):
-        print("++++++++++++")
-        for x in collection.find():
-            print(x)
-        print("++++++++++++")
+        logger.info("Retrieving data from db")
+        collection.find()
 
     def drop_count(self,collection):
         collection.drop()
