@@ -11,16 +11,16 @@ class UserViewTests(TestCase):
         User.objects.create_user(username="testuser2", password="testpassword")
         User.objects.create_user(username="myuser", password="testpassword")
 
-    def test_user_view(self):
-        response = self.client.get(
-            '/api/user/',
-            data={"limit": 10}
-        )
-        print('response++', response.json())
-        # user_list = response.json()['user_list']
-
-        self.assertIs(response.status_code, 200)
-        # self.assertEqual(len(user_list), 3)
+    # def test_user_view(self):
+    #     response = self.client.get(
+    #         '/api/user/',
+    #         data={"limit": 10}
+    #     )
+    #     print('response++', response.json())
+    #     # user_list = response.json()['user_list']
+    #
+    #     self.assertIs(response.status_code, 200)
+    #     # self.assertEqual(len(user_list), 3)
 
     def test_userview_inname(self):
         response = self.client.get(
