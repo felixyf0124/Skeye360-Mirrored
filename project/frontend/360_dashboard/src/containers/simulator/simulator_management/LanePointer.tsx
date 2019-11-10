@@ -7,8 +7,14 @@ export default class LanePointer {
     laneId: number;
 
     constructor(sectionId?: number, laneId?: number) {
-      this.sectionId = sectionId || 0;
-      this.laneId = laneId || 0;
+      this.sectionId = 0;
+      if( sectionId !== undefined){
+        this.sectionId = sectionId;
+      }
+      this.laneId = 0;
+      if( laneId !== undefined){
+        this.laneId = laneId;
+      }
     }
 
     // Getters

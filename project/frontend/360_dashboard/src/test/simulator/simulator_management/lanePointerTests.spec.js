@@ -1,30 +1,26 @@
 //require('babel-core/register');
 //require('ts-node/register');
 const assert = require('chai').assert;
-import LanePointer from "../../../containers/simulator/simulator_management/LanePointer.tsx";
-// require("../../../containers/simulator/simulator_management/LanePointer");
+const expect = require('chai').expect;
+import LanePointer from "../../../containers/simulator/simulator_management/LanePointer";
+// const LanePointer = require("../../../containers/simulator/simulator_management/LanePointer");
 
 
 describe('class LanePointer', ()=>{
     it('constructor', ()=>{
-        const lanePointer1 = new LanePointer();
-        assert.equal(lanePointer1.sectionID, 0);
-        assert.equal(lanePointer1.laneId, 0);
-        
-        assert.isNumber(lanePointer1.sectionID);
-        assert.isNumber(lanePointer1.laneId);
 
-        const lanePointer2 = new LanePointer(1,2);
-        assert.equal(lanePointer2.sectionID, 1);
-        assert.equal(lanePointer2.laneId, 2);
-        assert.isNumber(lanePointer2.sectionID);
-        assert.isNumber(lanePointer2.laneId);
+        let lanePointer1 = new LanePointer();
+        let lanePointer2 = new LanePointer(1,2);
+
+        assert.deepEqual(lanePointer1, { sectionId:0,laneId:0 });
+        assert.deepEqual(lanePointer2, { sectionId:1,laneId:2 });
+
     });
 
     it('getters & setters', ()=>{
-        const lanePointer = new LanePointer();
-        assert.equal(lanePointer.sectionID, 0);
-        assert.equal(lanePointer.laneId, 0);
+        let lanePointer = new LanePointer();
+        
+        assert.deepEqual(lanePointer, { sectionId:0,laneId:0 });
 
         lanePointer.setSectionId(1);
         lanePointer.setLaneId(2);
