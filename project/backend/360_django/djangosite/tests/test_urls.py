@@ -1,22 +1,34 @@
 from django.test import SimpleTestCase
-from rest_framework.test import APIRequestFactory, APITestCase
 # Ref: https://docs.djangoproject.com/en/2.2/ref/urlresolvers/
 from django.urls import reverse, resolve
-from rest_framework import routers
+from djangosite_api.views import *
 
-# class TestUrls(APITestCase):
-#     def test_root_url(self):
-#         url = reverse('skeye360:api-root')
-#         self.assertEqual(resolve(url).route, '^$')
 
-#     factory = APIRequestFactory()
-#     request = factory.post('/user/', {'username': 'new idea'})
+class TestUrls(SimpleTestCase):
+    def test_root_url(self):
+        url = reverse('skeye360:api-root')
+        self.assertEqual(resolve(url).route, '^$')
 
-#     def test_user_url(self):
-#         url = reverse('skeye360:user-list')
-#         data = {"username": "123", "token": "123"}
-#         self.client.post(url, data)
-#         response = self.client.get(url, format='json')
-#         print(response.data)
-#         self.assertEqual(response.status_code, 200)
-#         self.assertEqual(resolve(url).route, '^api/user/$')
+    # factory = APIRequestFactory()
+    # request = factory.post('/user/', {'username': 'new idea'})
+    # print(request.body)
+
+    def test_city_url(self):
+        url = reverse('skeye360:city-list')
+        self.assertEqual(resolve(url).route, '^api/city/$')
+
+    def test_district_url(self):
+        url = reverse('skeye360:district-list')
+        self.assertEqual(resolve(url).route, '^api/district/$')
+
+    def test_intersction_url(self):
+        url = reverse('skeye360:intersection-list')
+        self.assertEqual(resolve(url).route, '^api/intersection/$')
+
+    def test_camera_url(self):
+        url = reverse('skeye360:camera-list')
+        self.assertEqual(resolve(url).route, '^api/camera/$')
+
+    def test_userlog_url(self):
+        url = reverse('skeye360:userlog-list')
+        self.assertEqual(resolve(url).route, '^api/userlog/$')

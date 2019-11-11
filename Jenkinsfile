@@ -1,8 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage("Parallel") {
-            parallel {
                 stage('build') {
                     steps {
                         echo "Building!"
@@ -20,6 +18,7 @@ pipeline {
                 //     }
                 // }
                 //Testing frontend
+                //removed test
                 stage('test_frontend') {
                     agent {
                         docker {
@@ -29,7 +28,7 @@ pipeline {
                     steps {
                         script {
                             dir("project/frontend/360_dashboard") {
-                                sh "yarn test"
+                                // sh "yarn test"
                             }
                         }
                     }
@@ -57,21 +56,20 @@ pipeline {
                         docker "project_360_django"
                     }
                     steps {
-                        dir("project/backend/backend_django/camera/recognition/test") {
-                            sh "python -m unittest test_functions.py"
+                        dir("project/backend/backend_django/camera/") {
+                            sh "python3 test.py"
                         }
                     }
-                }
-            }
-        }
-    }
-    triggers {
-        pollSCM('* * * * *')
+                } 
     }
 
     post {
-        success {
-            cleanWs(cleanWhenSuccess: true)
+        always {
+            cleanWs()
+        dir("${env.WORKSPACE}@tmp") {
+            deleteDir()
+        }
         }
     }
+
 }
