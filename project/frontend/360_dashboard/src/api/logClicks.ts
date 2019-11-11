@@ -1,3 +1,5 @@
+//https://stackoverflow.com/questions/36855370/angular-2-how-to-set-double-float-int-boolean-type-params-in-get-post-req
+//Encoding number to string
 export interface Response {
   log_message: string;
   user_id: number;  
@@ -10,14 +12,17 @@ const logClicks = async (
   user_id: number,
 ): Promise<Response> => {
   const url = `//${APIDomain}/api/userlog/`;
+  const id = encodeURIComponent(JSON.stringify({type: 'number', value: user_id.toString()}));
+
   const params = {
     log_message,
-    user_id,
+    id,
   };
+
   const settings = {
     method: 'POST',
-    body: JSON.stringify(params),
-    headers: {},
+    body: new URLSearchParams(params),
+    headers: {'Content-Type': 'application/json'},
   }
 
   const response = await fetch(url, settings);
