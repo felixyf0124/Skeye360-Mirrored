@@ -56,8 +56,8 @@ pipeline {
                         docker "project_360_django"
                     }
                     steps {
-                        dir("project/backend/backend_django/camera/recognition/test") {
-                            sh "python -m unittest test_functions.py"
+                        dir("project/backend/backend_django/camera/") {
+                            sh "python3 test.py"
                         }
                     }
                 } 
