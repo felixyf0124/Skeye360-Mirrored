@@ -1,8 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage("Parallel") {
-            parallel {
                 stage('build') {
                     steps {
                         echo "Building!"
@@ -63,16 +61,13 @@ pipeline {
                         }
                     }
                 }
-            }
-        }
-    }
-    triggers {
-        pollSCM('* * * * *')
     }
 
     post {
-        success {
-            cleanWs(cleanWhenSuccess: true)
+        always {
+            cleanWs()
+            deleteDir()
         }
     }
+
 }

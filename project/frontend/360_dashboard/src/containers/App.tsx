@@ -9,8 +9,8 @@ import Login from './Login';
 
 import '../css/App.css';
 import SkeyeMap from './SkeyeMap';
-import AddCamera from './AddCamera';
-import EditCamera from './EditCamera';
+import AddIntersection from './AddIntersection';
+import EditIntersection from './EditIntersection';
 import StreetView from './StreetView';
 import ChartsPrototype from '../components/ChartsPrototype';
 
@@ -27,9 +27,9 @@ const App = (): JSX.Element => (
     <Route>
       <Switch>
         <Route exact path="/" component={SkeyeMap} />
-        <Route exact path="/streetview" component={StreetView} />
-        <Route exact path="/streetview/add" component={AddCamera} />
-        <Route exact path="/streetview/edit" component={EditCamera} />
+        <Route exact path="/streetview/:intersectionId" component={StreetView} />
+        <Route exact path="/intersection/add" component={AddIntersection} />
+        <Route exact path="/intersection/edit/:intersectionId" render={(): JSX.Element => <EditIntersection />} />
         <Route exact path="/chartsprototype" component={ChartsPrototype} />
       </Switch>
     </Route>

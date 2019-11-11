@@ -1,8 +1,10 @@
 from django.test import TestCase
+from mixer.backend.django import mixer
+import pytest
 
 
 # Create your tests here.
-
+@pytest.mark.django_db
 class YourTestClass(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -23,4 +25,12 @@ class YourTestClass(TestCase):
 
     def test_one_plus_one_equals_two(self):
         print("Method: test_one_plus_one_equals_two.")
-        self.assertEqual(1 + 1, 2)
+        self.assertEqual(2, 2)
+
+    def test_intersection(self):
+        # Test value
+        intersection1 = mixer.blend('djangosite_api.Intersection', intersection_name='Guy')
+        self.assertEqual(intersection1.intersection_name, 'Guy')
+        intersection2 = mixer.blend('djangosite_api.Intersection', intersection_name='Dupuis')
+        self.assertEqual(intersection2.intersection_name, 'Dupuis')
+        self.assertNotEqual(intersection2.intersection_name, 'Guy')
