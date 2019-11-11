@@ -23,7 +23,7 @@ const StreetView = ({ authenticated }: Props): JSX.Element => {
       <Simulator />
       <div className="charts-row">
         <NorthChart />
-        <AvgWaitTimeChart /> 
+        <AvgWaitTimeChart />
       </div>
     </div>
   );
