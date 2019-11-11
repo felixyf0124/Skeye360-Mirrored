@@ -1,0 +1,101 @@
+
+{
+    "NorthDataBefore": [
+        {
+            "time": 0,
+            "cars": 24
+        },
+        {
+            "time": 1,
+            "cars": 16
+        },
+        {
+            "time": 2,
+            "cars": 20
+        },
+        {
+            "time": 3,
+            "cars": 22
+        },
+        {
+            "time": 4,
+            "cars": 23
+        },
+        {
+            "time": 5,
+            "cars": 67
+        },
+        {
+            "time": 6,
+            "cars": 105
+        },
+        {
+            "time": 7,
+            "cars": 102
+        },
+        {
+            "time": 8,
+            "cars": 120
+        },
+        {
+            "time": 9,
+            "cars": 106
+        },
+        {
+            "time": 10,
+            "cars": 89
+        },
+        {
+            "time": 11,
+            "cars": 76
+        },
+        {
+            "time": 12,
+            "cars": 88
+        },
+        {
+            "time": 13,
+            "cars": 78
+        },
+        {
+            "time": 14,
+            "cars": 82
+        },
+        {
+            "time": 15,
+            "cars": 89
+        },
+        {
+            "time": 16,
+            "cars": 103
+        },
+        {
+            "time": 17,
+            "cars": 160
+        },
+        {
+            "time": 18,
+            "cars": 205
+        },
+        {
+            "time": 19,
+            "cars": 180
+        },
+        {
+            "time": 20,
+            "cars": 150
+        },
+        {
+            "time": 21,
+            "cars": 102
+        },
+        {
+            "time": 22,
+            "cars": 45
+        },
+        {
+            "time": 23,
+            "cars": 25
+        }
+    ]
+}

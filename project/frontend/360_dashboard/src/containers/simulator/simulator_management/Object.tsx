@@ -2,63 +2,70 @@
  * @class Object
  */
 
-import Coordinate from "./vec2";
+import Vec2 from './vec2';
 
 export default class Object {
-    
-    id:number;
-    lane_id:number;
-    roadSection_id:number;
-    coordinate: Coordinate;
-    //State: move, stop
-    state: string;
+    id: number;
+
+    laneId: number;
+
+    roadSectionId: number;
+
+    position: Vec2;
+
+    // State: move, stop
+    state: number;
+
     speed: number;
 
-    //roadIntersection_id:number;
-    //state:string;
-    // REPLACED BY COORDINATE CLASS
-    // position:{
-    //     x:number,y:number
-    // };
-    
-    constructor(id:number, coordinate:Coordinate, lane_id:number, roadSection_id:number, speed:number){
-       this.id = id;
-       this.coordinate = new Coordinate();
-       this.lane_id = lane_id;
-       this.roadSection_id = roadSection_id;
-       this.state = "stop"
-       this.speed = speed;
+    constructor(id: number, laneId: number, roadSectionId: number, speed: number, position?: Vec2) {
+      this.id = id;
+      this.position = position || new Vec2();
+      this.laneId = laneId;
+      this.roadSectionId = roadSectionId;
+      this.state = 0;
+      this.speed = speed;
     }
 
-    //Getters
-    getObjectId(): number {
-        return this.id;
+    // Getters
+    getId(): number {
+      return this.id;
     }
+
     getLaneId(): number {
-        return this.lane_id;
+      return this.laneId;
     }
+
     getRoadSectionId(): number {
-        return this.roadSection_id;
-    }
-    getCoordinate(): Coordinate{
-        return this.coordinate;
+      return this.roadSectionId;
     }
 
-    //Setters
-    setCoordinate(coordinate: Coordinate) {
-        this.coordinate = coordinate;
-    }
-    setLaneId(lane_id: number) {
-        this.lane_id = lane_id;
-    }
-    setRoadSectionId(roadSection_id: number) {
-        this.roadSection_id = roadSection_id;
-    }
-    setState(state: string) {
-        this.state = state;
-    }
-    setObjectSpeed(speed: number) {
-        this.speed = speed;
+    getPosition(): Vec2 {
+      return this.position;
     }
 
+    getSpeed(): number {
+      return this.speed;
+    }
+
+    // Setters
+    setPosition(position: Vec2): void {
+      this.position = position;
+    }
+
+    setLaneId(laneId: number): void {
+      this.laneId = laneId;
+    }
+
+    setRoadSectionId(roadSectionId: number): void {
+      this.roadSectionId = roadSectionId;
+    }
+
+    setState(state: number): void {
+      this.state = state;
+    }
+
+    setObjectSpeed(speed: number): void {
+      this.speed = speed;
+    }
 }

@@ -4,13 +4,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
 import createStore, { history } from './store';
 import './index.css';
 import App from './containers/App';
 import './custom.scss';
-import { ConnectedRouter } from 'connected-react-router';
 
-createStore().then(store => {
+createStore().then((store) => {
   ReactDOM.render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
