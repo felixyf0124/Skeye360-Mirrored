@@ -3,24 +3,41 @@ import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import Header, { Head } from '../components/Header';
-import Simulator from './simulator/Scene';
+// import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 
-interface Props {
+interface StateProps {
   authenticated: boolean;
+  intersectionId: string;
+  error: string;
 }
 
-const StreetView = ({ authenticated }: Props): JSX.Element => {
+interface DispatchProps {
+  deleteExistingIntersection: (id: string) => any;
+}
+
+const StreetView = (props: StateProps & DispatchProps): JSX.Element => {
+  const [state] = React.useState(props);
+  const {
+    authenticated,
+    intersectionId,
+  } = state;
   if (!authenticated) return <Redirect push to="/login" />;
+
+  // eslint-disable-next-line consistent-return
+  const handleDelete = (id: string): any => {
+    state.deleteExistingIntersection(id);
+  };
 
   return (
     <div>
       <Header />
       <Head>
-        <Link to="/streetview/edit" className="header-text">Edit</Link>
+        <Link to={`/intersection/edit/${intersectionId}`} className="header-text">Edit</Link>
+        <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">Delete</Link>
       </Head>
-      <Simulator />
+      {/* <Simulator /> */}
       <div className="charts-row">
         <NorthChart />
         <AvgWaitTimeChart />
@@ -29,10 +46,17 @@ const StreetView = ({ authenticated }: Props): JSX.Element => {
   );
 };
 
-const mapStateToProps = (state: RootState): Props => ({
+const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: state.authentication.authenticated,
+  intersectionId: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
+  error: state.intersection.error,
 });
+
+const mapDispatchToProps: DispatchProps = {
+  deleteExistingIntersection,
+};
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(StreetView);

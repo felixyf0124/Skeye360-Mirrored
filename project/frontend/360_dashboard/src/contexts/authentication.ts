@@ -6,11 +6,11 @@ import {
 import authenticateUser, { Response as authResponse } from '../api/authenticateUser';
 
 export interface STATE {
-    sessionToken: string;
-    username: string;
-    timestamp: string;
-    authenticated: boolean;
-    error: string;
+  sessionToken: string;
+  username: string;
+  timestamp: string;
+  authenticated: boolean;
+  error: string;
 }
 
 const initState: STATE = {

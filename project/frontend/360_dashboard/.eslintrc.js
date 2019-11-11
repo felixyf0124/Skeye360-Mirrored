@@ -6,6 +6,7 @@ module.exports = {
     browser: true,
     es6: true,
     node: true,
+    mocha: true,
   },
   extends: [
     'airbnb',
@@ -28,9 +29,9 @@ module.exports = {
       "error",
       {
           "packageDir": [
-              "./"
-          ]
-      }
+              "./",
+          ],
+      },
     ],
     "react/jsx-one-expression-per-line": [
       2,
@@ -39,7 +40,8 @@ module.exports = {
       }
     ],
     "@typescript-eslint/no-explicit-any": "off",
-    "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }]
+    "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
+    '@typescript-eslint/no-var-requires': 'off',
   },
   settings: {
     'import/resolver': {
