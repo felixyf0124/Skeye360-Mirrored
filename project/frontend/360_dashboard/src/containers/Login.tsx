@@ -39,11 +39,11 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     error,
     user_id,
   } = props;
-
+  const login_log_message="clicked login!";
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     console.log("HELLO");
     setState({ ...state, [e.target.name]: e.target.value });
-    //setState({...state, log_message: login_log_message});
+    setState({...state, log_message: login_log_message});
     console.log(log_message);
   
     console.log("LOG MESSAGE HERE");
