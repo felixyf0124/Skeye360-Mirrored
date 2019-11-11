@@ -1,12 +1,7 @@
-import uuid
-from django.db import models
-
-
-class User(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(max_length=255, null=True)
-    password = models.CharField(max_length=255, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+from djongo import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class City(models.Model):
@@ -14,11 +9,11 @@ class City(models.Model):
 
 
 class District(models.Model):
-    district_name = models.CharField(max_length=20, null=True)
+    district_name = models.CharField(max_length=20, unique=True, null=True)
 
 
 class Intersection(models.Model):
-    intersection_name = models.CharField(max_length=50, null=True)
+    intersection_name = models.CharField(max_length=50, unique=True, null=True)
     latitude = models.IntegerField(null=True)
     longitude = models.IntegerField(null=True)
     district_id = models.ForeignKey(District, related_name='intersections', on_delete=models.CASCADE, null=True)
@@ -26,8 +21,8 @@ class Intersection(models.Model):
 
 class Camera(models.Model):
     id = models.AutoField(primary_key=True)
-    camera_url = models.CharField(max_length=20, null=True)
-    intersection_id = models.ForeignKey(Intersection, related_name='cameras', on_delete=models.CASCADE, null=True)
+    camera_url = models.CharField(max_length=20)
+    intersection_id = models.ForeignKey(Intersection, related_name='cameras', on_delete=models.CASCADE)
 
 
 class Trafficlight(models.Model):

@@ -1,27 +1,24 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
-import SouthData from '../PostData/carsSouth.json';
+import AvgWaitingTime from '../PostData/avgWaitingTime.json';
+import AvgWaitingTimeAfter from '../PostData/avgWaitingTimeAfter.json';
 
 // For more Line Chart information:
 // https://apexcharts.com/react-chart-demos/line-charts/basic/
 
-// gets the arrays found in SouthData
-const data = SouthData.SouthData;
-
-// Retrieve all of the x values
-const getX = data.map((value) => value.x);
-// Retrieve all of the y values
-const getY = data.map((value) => value.y);
-
+const data = AvgWaitingTime.WaitTime;
+const newData = AvgWaitingTimeAfter.WaitTime;
+const getX = data.map((value) => value.hour);
+// const getY = data.map((value) => value.wait);
+const getYAfter = newData.map((value) => value.wait);
 
 interface ChartState {
   options: {};
   series: any;
 }
 
-
-// A chart that shows how many cars are coming from South to North per hour
-const SouthChart = (): JSX.Element => {
+// A chart that shows the average waiting time for cars going from north to south
+const AvgWaitTimeChart = (): JSX.Element => {
   const state = {
     options: {
       chart: {
@@ -33,7 +30,7 @@ const SouthChart = (): JSX.Element => {
         enabled: false,
       },
       title: {
-        text: 'Cars going North to South per hour',
+        text: 'Average Wait Time Per Hour',
         align: 'center',
       },
       grid: {
@@ -44,15 +41,20 @@ const SouthChart = (): JSX.Element => {
       },
       xaxis: {
         categories: getX,
+        title: {
+          text: 'Hours of the Day',
+        },
       },
-      stroke: {
-        width: 5,
-        curve: 'smooth',
+      yaxis: {
+        title: {
+          text: 'Wait Time (seconds)',
+        },
       },
+      colors: ['#04a777'],
     },
     series: [{
-      name: 'Cars',
-      data: getY,
+      name: 'Avg Wait Time',
+      data: getYAfter,
     }],
   };
   return (
@@ -61,4 +63,5 @@ const SouthChart = (): JSX.Element => {
     </div>
   );
 };
-export default SouthChart;
+
+export default AvgWaitTimeChart;

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'corsheaders',
+    'knox',
 ]
 
 MIDDLEWARE = [
@@ -84,11 +85,14 @@ WSGI_APPLICATION = 'djangosite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'ENFORCE_SCHEMA': True,
+        'ENFORCE_SCHEMA': False,
         'NAME': '360backend',
         'HOST': 'mongodb://myUserAdmin:abc123@172.16.0.4:27017',
         'USER': 'myUserAdmin',
         'PASSWARD': 'abc123',
+    },
+    'test': {
+
     }
 }
 
@@ -130,27 +134,9 @@ STATIC_URL = '/static/'
 
 # For rest framework
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
-
-CORS_ORIGIN_ALLOW_ALL = True
-
-CORS_ORIGIN_WHITELIST = (
-    'http://0.0.0.0:3000',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-)
-
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-
-
 # %(threadName)-14s (%(pathname)s:%(lineno)d)
 CONFIG_BASE_FILE = os.path.dirname(__file__)
 CONSOLE_LOGGING_FORMAT = '%(hostname)s %(asctime)s %(levelname)-8s %(name)s.%(funcName)s: %(message)s'
@@ -226,7 +212,6 @@ LOGGING = {
 }
 
 
-
 def exception_hook(type, value, traceback):
     """
     Function to redirect uncaught exceptions to the logger.
@@ -237,6 +222,37 @@ def exception_hook(type, value, traceback):
     """
     logging.getLogger('*excepthook*').critical(f'Uncaught Exception!', exc_info=(type, value, traceback))
 
+
 # The function assigned to sys.excepthook is called only just before control is returned to the prompt; in a Python
 # program this happens just before the program exits.
 sys.excepthook = exception_hook
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ORIGIN_WHITELIST = (
+#     u'http://0.0.0.0:3000',
+#     u'http://localhost:3000',
+#     u'http://127.0.0.1:3000',
+#     u'http://172.16.0.6:3000'
+# )
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]

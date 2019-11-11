@@ -1,69 +1,69 @@
 
 {
-    "NorthDataBefore": [
+    "NorthDataAfter": [
         {
             "time": 0,
             "cars": 24
         },
         {
             "time": 1,
-            "cars": 16
+            "cars": 34
         },
         {
             "time": 2,
-            "cars": 20
+            "cars": 42
         },
         {
             "time": 3,
-            "cars": 22
+            "cars": 32
         },
         {
             "time": 4,
-            "cars": 23
+            "cars": 33
         },
         {
             "time": 5,
-            "cars": 67
+            "cars": 80
         },
         {
             "time": 6,
-            "cars": 105
+            "cars": 110
         },
         {
             "time": 7,
-            "cars": 102
+            "cars": 130
         },
         {
             "time": 8,
-            "cars": 120
+            "cars": 140
         },
         {
             "time": 9,
-            "cars": 106
+            "cars": 130
         },
         {
             "time": 10,
-            "cars": 89
+            "cars": 100
         },
         {
             "time": 11,
-            "cars": 76
+            "cars": 98
         },
         {
             "time": 12,
-            "cars": 88
+            "cars": 100
         },
         {
             "time": 13,
-            "cars": 78
+            "cars": 100
         },
         {
             "time": 14,
-            "cars": 82
+            "cars": 120
         },
         {
             "time": 15,
-            "cars": 89
+            "cars": 110
         },
         {
             "time": 16,
@@ -71,31 +71,31 @@
         },
         {
             "time": 17,
-            "cars": 160
+            "cars": 200
         },
         {
             "time": 18,
-            "cars": 205
+            "cars": 250
         },
         {
             "time": 19,
-            "cars": 180
+            "cars": 230
         },
         {
             "time": 20,
-            "cars": 150
+            "cars": 190
         },
         {
             "time": 21,
-            "cars": 102
+            "cars": 120
         },
         {
             "time": 22,
-            "cars": 45
+            "cars": 80
         },
         {
             "time": 23,
-            "cars": 25
+            "cars": 77
         }
     ]
 }

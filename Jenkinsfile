@@ -1,8 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage("Parallel") {
-            parallel {
                 stage('build') {
                     steps {
                         echo "Building!"
@@ -29,7 +27,7 @@ pipeline {
                     steps {
                         script {
                             dir("project/frontend/360_dashboard") {
-                                sh "yarn test"
+                                 sh "yarn test"
                             }
                         }
                     }
@@ -45,7 +43,7 @@ pipeline {
                     steps {
                         script {
                             dir("project/backend/360_django/djangosite") {
-                                sh "python3 manage.py test ."
+                                sh "python3 manage.py test -k"
                             }
                         }
                     }
@@ -57,21 +55,17 @@ pipeline {
                         docker "project_360_django"
                     }
                     steps {
-                        dir("project/backend/backend_django/camera/recognition/test") {
-                            sh "python -m unittest test_functions.py"
+                        dir("project/backend/backend_django/camera/") {
+                            sh "python3 test.py"
                         }
                     }
                 }
-            }
-        }
     }
 
     post {
         always {
             cleanWs()
-        dir("${env.WORKSPACE}@tmp") {
             deleteDir()
-        }
         }
     }
 

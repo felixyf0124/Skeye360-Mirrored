@@ -1,10 +1,8 @@
 """These classes are used to serialize data to send them in a JSON format"""
 from rest_framework import serializers
-
 from .models import *
 
 
-# This is for /api
 class CitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = City
@@ -12,9 +10,11 @@ class CitySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CameraSerializer(serializers.ModelSerializer):
+    camera_url = serializers.CharField(required=True)
+
     class Meta:
         model = Camera
-        fields = ['camera_url', 'intersection_id']
+        fields = ['id', 'camera_url', 'intersection_id']
 
 
 class IntersectionSerializer(serializers.ModelSerializer):
@@ -22,12 +22,13 @@ class IntersectionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Intersection
-        fields = ['intersection_name', 'latitude', 'cameras', 'longitude', 'district_id']
+        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'longitude', 'district_id']
 
 
 class DistrictSerializer(serializers.HyperlinkedModelSerializer):
     intersections = IntersectionSerializer(many=True, read_only=True)
     id = serializers.IntegerField(read_only=True)
+    district_name = serializers.CharField(required=True)
 
     class Meta:
         model = District
@@ -76,10 +77,13 @@ class UserlogSerializer(serializers.ModelSerializer):
         fields = ['log_message', 'log_time', 'user_id']
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    user_logs = UserlogSerializer(many=True, read_only=True)
-    id = serializers.UUIDField(read_only=True)
-
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'timestamp', 'user_logs']
+        fields = ['username', 'password']
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'password']
