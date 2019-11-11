@@ -10,6 +10,8 @@ class CitySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CameraSerializer(serializers.ModelSerializer):
+    camera_url = serializers.CharField(required=True)
+
     class Meta:
         model = Camera
         fields = ['id', 'camera_url', 'intersection_id']
@@ -26,6 +28,7 @@ class IntersectionSerializer(serializers.ModelSerializer):
 class DistrictSerializer(serializers.HyperlinkedModelSerializer):
     intersections = IntersectionSerializer(many=True, read_only=True)
     id = serializers.IntegerField(read_only=True)
+    district_name = serializers.CharField(required=True)
 
     class Meta:
         model = District
@@ -83,4 +86,4 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ['id', 'username', 'password']
