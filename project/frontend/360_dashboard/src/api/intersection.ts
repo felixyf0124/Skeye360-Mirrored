@@ -36,7 +36,7 @@ export const addIntersection = async (
 export const getIntersection = async (
   id: string,
 ): Promise<Response> => {
-  const url = `//${APIDomain}/api/intersection/${id}`;
+  const url = `//${APIDomain}/api/intersection/${id}/`;
   const settings = {
     method: 'GET',
     headers: {},
@@ -47,12 +47,13 @@ export const getIntersection = async (
 };
 
 export const editIntersection = async (
+  intersection_id: string,
   intersection_name: string,
   latitude: string,
   longitude: string,
   district_id: string,
 ): Promise<Response> => {
-  const url = `//${APIDomain}/api/intersection/`;
+  const url = `//${APIDomain}/api/intersection/${intersection_id}/`;
   const params = {
     intersection_name,
     latitude,
@@ -60,7 +61,7 @@ export const editIntersection = async (
     district_id,
   };
   const settings = {
-    method: 'POST',
+    method: 'PUT',
     body: new URLSearchParams(params),
     headers: {},
   };
@@ -72,15 +73,11 @@ export const editIntersection = async (
 export const deleteIntersection = async (
   id: string,
 ): Promise<any> => {
-  const url = `//${APIDomain}/api/intersection/${id}`;
+  const url = `//${APIDomain}/api/intersection/${id}/`;
   const settings = {
     method: 'DELETE',
     headers: {},
   };
   const response = await fetch(url, settings);
-  console.log(`DELETED ${id}`);
-  console.log(response);
-  const data = (await response.json()) as Response;
-  console.log(data);
-  return data;
+  return response;
 };

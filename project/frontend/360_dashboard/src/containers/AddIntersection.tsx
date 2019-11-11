@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
@@ -21,13 +21,13 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    historyPush: (url: string) => void;
-    addNewIntersection: (
-      intersection_name: string,
-      latitude: string,
-      longitude: string,
-      district_id: string,
-    ) => any;
+  historyPush: (url: string) => void;
+  addNewIntersection: (
+    intersection_name: string,
+    latitude: string,
+    longitude: string,
+    district_id: string,
+  ) => any;
 }
 
 const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
@@ -36,14 +36,14 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
     latitude, longitude, intersection_name, district_id, error,
   } = state;
 
+  const history = useHistory();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
   // eslint-disable-next-line consistent-return
   const handleSubmit = (): any => {
-    const { historyPush } = props;
-    historyPush('/intersection/add');
     props.addNewIntersection(
       state.intersection_name,
       state.latitude,
@@ -68,6 +68,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
         <form onSubmit={(e): void => {
           e.preventDefault();
           handleSubmit();
+          history.push('/');
         }}
         >
           <div className="form-group">

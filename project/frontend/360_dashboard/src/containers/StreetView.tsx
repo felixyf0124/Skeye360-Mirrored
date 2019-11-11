@@ -11,6 +11,7 @@ import { deleteExistingIntersection } from '../contexts/intersection';
 interface StateProps {
   authenticated: boolean;
   intersectionId: string;
+  error: string;
 }
 
 interface DispatchProps {
@@ -25,9 +26,9 @@ const StreetView = (props: StateProps & DispatchProps): JSX.Element => {
   } = state;
   if (!authenticated) return <Redirect push to="/login" />;
 
+  // eslint-disable-next-line consistent-return
   const handleDelete = (id: string): any => {
     state.deleteExistingIntersection(id);
-    return (<Redirect push to="/" />);
   };
 
   return (
@@ -35,8 +36,8 @@ const StreetView = (props: StateProps & DispatchProps): JSX.Element => {
       <Header />
       <Head>
         <Link to={`/intersection/edit/${intersectionId}`} className="header-text">Edit</Link>
+        <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">Delete</Link>
       </Head>
-      <button onClick={(): any => handleDelete(intersectionId)} type="submit">Delete</button>
       {/* <Simulator /> */}
       <div className="charts-row">
         <NorthChart />
@@ -49,6 +50,7 @@ const StreetView = (props: StateProps & DispatchProps): JSX.Element => {
 const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: state.authentication.authenticated,
   intersectionId: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
+  error: state.intersection.error,
 });
 
 const mapDispatchToProps: DispatchProps = {

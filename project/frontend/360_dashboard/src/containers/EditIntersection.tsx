@@ -5,7 +5,10 @@ import { Redirect } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
-import { GetIntersectionAction, getExistingIntersection } from '../contexts/intersection';
+import {
+  GetIntersectionAction,
+  getExistingIntersection,
+} from '../contexts/intersection';
 import EditIntersectionForm from '../components/EditIntersectionForm';
 
 interface StateProps {
@@ -37,22 +40,23 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
   public render(): JSX.Element {
     const {
       authenticated,
+      intersection_id,
       latitude,
       longitude,
       intersection_name,
       district_id,
-      error,
+
     } = this.props;
     if (!authenticated) return <Redirect push to="/login" />;
     return (
       <div>
         <Header />
         <EditIntersectionForm
+          intersection_id={intersection_id}
           latitude={latitude}
           longitude={longitude}
           intersection_name={intersection_name}
           district_id={district_id}
-          error={error}
         />
       </div>
     );

@@ -1,31 +1,44 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
-import { editNewIntersection } from '../contexts/intersection';
+import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { editExistingIntersection, EditIntersectionAction } from '../contexts/intersection';
+import { RootState } from '../reducers/rootReducer';
 
 interface Props {
-    latitude: string;
-    longitude: string;
-    intersection_name: string;
-    district_id: string;
-    error: string;
+  intersection_id: string;
+  latitude: string;
+  longitude: string;
+  intersection_name: string;
+  district_id: string;
 }
 
-// interface DispatchProps {
-//   editNewIntersection
-// }
+interface StateProps {
+  error: string;
+}
 
-const EditIntersection = (props: Props): JSX.Element => {
+interface DispatchProps {
+  editExistingIntersection: (
+    intersection_id: string,
+    intersection_name: string,
+    latitude: string,
+    longitude: string,
+    district_id: string,
+  ) => EditIntersectionAction;
+}
+
+const EditIntersectionForm = (props: Props & StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
-  const {
-    latitude, longitude, intersection_name, district_id, error,
-  } = state;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
+  const history = useHistory();
+
   const handleSubmit = (): void => {
-    editNewIntersection(
+    props.editExistingIntersection(
+      state.intersection_id,
       state.intersection_name,
       state.latitude,
       state.longitude,
@@ -36,9 +49,9 @@ const EditIntersection = (props: Props): JSX.Element => {
   return (
     <div>
       <div className="form-container">
-        {error !== '' ? (
+        {state.error !== '' ? (
           <div className="form-group">
-            <div>{error}</div>
+            <div>{state.error}</div>
           </div>
         ) : (
           <div />
@@ -46,6 +59,7 @@ const EditIntersection = (props: Props): JSX.Element => {
         <form onSubmit={(e): void => {
           e.preventDefault();
           handleSubmit();
+          history.push(`/streetview/${state.intersection_id}`);
         }}
         >
           <div className="form-group">
@@ -53,7 +67,7 @@ const EditIntersection = (props: Props): JSX.Element => {
             <input
               type="text"
               name="district_id"
-              value={district_id}
+              value={state.district_id}
               disabled
             />
           </div>
@@ -62,7 +76,7 @@ const EditIntersection = (props: Props): JSX.Element => {
             <input
               type="text"
               name="intersection_name"
-              value={intersection_name}
+              value={state.intersection_name}
               onChange={handleChange}
             />
           </div>
@@ -71,7 +85,7 @@ const EditIntersection = (props: Props): JSX.Element => {
             <input
               type="text"
               name="latitude"
-              value={latitude}
+              value={state.latitude}
               onChange={handleChange}
             />
           </div>
@@ -80,12 +94,12 @@ const EditIntersection = (props: Props): JSX.Element => {
             <input
               type="text"
               name="longitude"
-              value={longitude}
+              value={state.longitude}
               onChange={handleChange}
             />
           </div>
           <button type="submit">
-                    Submit
+            Submit
           </button>
         </form>
       </div>
@@ -93,4 +107,15 @@ const EditIntersection = (props: Props): JSX.Element => {
   );
 };
 
-export default EditIntersection;
+const mapStateToProps = (state: RootState): StateProps => ({
+  error: state.intersection.error,
+});
+
+const mapDispatchToProps: DispatchProps = {
+  editExistingIntersection,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(EditIntersectionForm);

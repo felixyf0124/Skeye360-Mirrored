@@ -20,6 +20,7 @@ export interface STATE {
   intersection_name: string;
   district_id: string;
   error: string;
+  success: boolean;
 }
 
 const initState: STATE = {
@@ -29,6 +30,7 @@ const initState: STATE = {
   intersection_name: '',
   district_id: '',
   error: '',
+  success: false,
 };
 
 export const ADD_INTERSECTION = 'ADD_INTERSECTION';
@@ -123,19 +125,22 @@ export const getIntersectionFail = (): GetIntersectionFail => ({
 
 // EDIT
 export interface EditIntersectionAction extends Action {
+  intersection_id: string;
   intersection_name: string;
   latitude: string;
   longitude: string;
   district_id: string;
 }
 
-export const editNewIntersection = (
+export const editExistingIntersection = (
+  intersection_id: string,
   intersection_name: string,
   latitude: string,
   longitude: string,
   district_id: string,
 ): EditIntersectionAction => ({
   type: EDIT_INTERSECTION,
+  intersection_id,
   intersection_name,
   latitude,
   longitude,
@@ -227,13 +232,21 @@ export function* handleGetIntersection({
 }
 
 export function* handleEditIntersection({
+  intersection_id,
   intersection_name,
   latitude,
   longitude,
   district_id,
 }: EditIntersectionAction): Iterator<any> {
   try {
-    const data = yield call(editIntersection, intersection_name, latitude, longitude, district_id);
+    const data = yield call(
+      editIntersection,
+      intersection_id,
+      intersection_name,
+      latitude,
+      longitude,
+      district_id,
+    );
     if (data !== undefined) {
       yield put(editIntersectionSuccess(data));
     }
@@ -268,6 +281,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       return {
         ...state,
         error: 'New intersection created.',
+        success: true,
       };
     }
     case GET_INTERSECTION_SUCCESS: {
@@ -280,42 +294,49 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         district_id: String(data.district_id),
         intersection_id: String(data.id),
         error: '',
+        success: true,
       };
     }
     case EDIT_INTERSECTION_SUCCESS: {
       return {
         ...state,
         error: 'Intersection updated.',
+        success: true,
       };
     }
     case DELETE_INTERSECTION_SUCCESS: {
       return {
         ...state,
         error: 'Intersection deleted.',
+        success: true,
       };
     }
     case ADD_INTERSECTION_FAIL: {
       return {
         ...state,
         error: 'Error while adding new intersection.',
+        success: false,
       };
     }
     case GET_INTERSECTION_FAIL: {
       return {
         ...state,
         error: 'Error while getting existing intersection.',
+        success: false,
       };
     }
     case EDIT_INTERSECTION_FAIL: {
       return {
         ...state,
         error: 'Error while editing new intersection.',
+        success: false,
       };
     }
     case DELETE_INTERSECTION_FAIL: {
       return {
         ...state,
         error: 'Error while deleting new intersection.',
+        success: false,
       };
     }
     default:
