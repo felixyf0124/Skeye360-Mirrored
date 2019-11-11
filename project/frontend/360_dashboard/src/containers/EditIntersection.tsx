@@ -45,7 +45,6 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
       longitude,
       intersection_name,
       district_id,
-
     } = this.props;
     if (!authenticated) return <Redirect push to="/login" />;
     return (
