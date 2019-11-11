@@ -20,7 +20,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    authenticate: (username: string, password: string, user_id: number) => void;
+    authenticate: (username: string, password: string) => void;
     historyPush: (url: string) => void;
     logClick: (
       log_message: string,
@@ -42,8 +42,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   const login_log_message="clicked login!";
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [e.target.name]: e.target.value });
-    setState({...state, log_message: login_log_message});
-    console.log(log_message);
   };
 
 
@@ -54,10 +52,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     if (!authenticated) {
       return <Redirect push to="/" />;
     }
-    console.log("handle click");
-    
   };
-
 
   // eslint-disable-next-line no-alert
   if (authenticated) alert(`Welcome ${name}! `);
@@ -69,9 +64,9 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
       <div className="form-container">
         <form onSubmit={(e): void => {
           e.preventDefault();
-          props.authenticate(username, password, user_id);
+          props.authenticate(username, password);
           handleLoginClick();
-          props.logClick(log_message, user_id); 
+          props.logClick("Clicked Login", user_id); 
         }}
         >
           {error !== '' ? (
