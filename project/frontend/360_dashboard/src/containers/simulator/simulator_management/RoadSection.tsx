@@ -100,7 +100,7 @@ export default class RoadSection {
           lane.setTail(this.head);
           this.laneOut.push(lane);
         } else {
-          console.warn('invalide laneDiection input \n');
+          console.warn('invalid laneDirection input \n');
         }
       }
     }
