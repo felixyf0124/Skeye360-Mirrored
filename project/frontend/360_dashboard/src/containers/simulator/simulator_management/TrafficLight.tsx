@@ -128,7 +128,9 @@ export default class TrafficLight {
     }
 
     bindLane(lane: {section: number;id: number}): void {
-      this.boundLanes.push(lane);
+      if (!this.isLaneBound(lane)) {
+        this.boundLanes.push(lane);
+      }
     }
 
     bindLanes(lanes: Array<{section: number;id: number}>): void {
@@ -140,7 +142,8 @@ export default class TrafficLight {
     }
 
     bindNewLaneGroup(laneGroup: Array<{section: number;id: number}>): void {
-      this.boundLanes = laneGroup;
+      this.boundLanes = new Array<{section: number;id: number}>();
+      this.bindLanes(laneGroup);
     }
 
     isLaneBound(lane: {section: number;id: number}): boolean {
