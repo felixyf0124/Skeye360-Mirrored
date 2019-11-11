@@ -43,44 +43,38 @@ class YourTestClass(TestCase):
         response = self.client.post('/api/intersection/', form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    # def test_camera(self):
-    #     logging.info('test_camera')
-    #     # Test post request
-    #     data1 = {'camera_url': '192.168.0.1'}
-    #     data2 = {'camera_url': '192.168.0.2'}
-    #     camera1 = self.client.post('/api/camera', data1)
-    #     camera2 = self.client.post('/api/camera', data2)
-    #     self.assertEqual(camera1.status_code, status.HTTP_301_MOVED_PERMANENTLY)
-    #     self.assertEqual(camera2.status_code, status.HTTP_301_MOVED_PERMANENTLY)
-    #     # Test get request
-    #     response = self.client.get('/api/camera/')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # Two intersection should return 2
-    #     self.assertEqual(len(response.data), 2)
-    #     self.assertEqual(response.data[1].get('camera_url'), '192.168.0.2')
-    #     self.assertNotEqual(response.data[1].get('camera_url'), '192.168.0.1')
-    #     # Test intersection name duplication
-    #     form_data = {"intersection_name": "Guy"}
-    #     response = self.client.post('/api/camera/', form_data)
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    #
-    # def test_distinct(self):
-    #     logging.info('test_distinct')
-    #     # Test post request
-    #     data1 = {'district_name': 'Montreal_East'}
-    #     data2 = {'district_name': 'Montreal_West'}
-    #     district1 = self.client.post('/api/district', data1)
-    #     district2 = self.client.post('/api/district', data2)
-    #     self.assertEqual(district1.status_code, status.HTTP_301_MOVED_PERMANENTLY)
-    #     self.assertEqual(district2.status_code, status.HTTP_301_MOVED_PERMANENTLY)
-    #     # Test get request
-    #     response = self.client.get('/api/district/')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # Two intersection should return 2
-    #     self.assertEqual(len(response.data), 2)
-    #     self.assertEqual(response.data[1].get('district_name'), 'Montreal_West')
-    #     self.assertNotEqual(response.data[1].get('district_name'), 'Montreal_East')
-    #     # Test intersection name duplication
-    #     form_data = {"intersection_name": "Guy"}
-    #     response = self.client.post('/api/district/', form_data)
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_camera(self):
+        logging.info('test_camera')
+        # Test post request
+        camera1 = mixer.blend('djangosite_api.Camera', camera_url='192.168.0.1')
+        self.assertEqual(camera1.camera_url, '192.168.0.1')
+        camera2 = mixer.blend('djangosite_api.Camera', camera_url='192.168.0.2')
+        # Test get request
+        response = self.client.get('/api/camera/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Two intersection should return 2
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[1].get('camera_url'), '192.168.0.2')
+        self.assertNotEqual(response.data[1].get('camera_url'), '192.168.0.1')
+        # Test intersection name duplication
+        form_data = {"intersection_name": "Guy"}
+        response = self.client.post('/api/camera/', form_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_distinct(self):
+        logging.info('test_distinct')
+        # Test post request
+        district1 = mixer.blend('djangosite_api.District', district_name='Montreal_East')
+        self.assertEqual(district1.district_name, 'Montreal_East')
+        district2 = mixer.blend('djangosite_api.District', district_name='Montreal_West')
+        # Test get request
+        response = self.client.get('/api/district/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Two intersection should return 2
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[1].get('district_name'), 'Montreal_West')
+        self.assertNotEqual(response.data[1].get('district_name'), 'Montreal_East')
+        # Test intersection name duplication
+        form_data = {"intersection_name": "Guy"}
+        response = self.client.post('/api/district/', form_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
