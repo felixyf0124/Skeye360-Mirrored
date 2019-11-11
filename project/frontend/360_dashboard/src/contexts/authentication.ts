@@ -33,14 +33,12 @@ export interface AuthAction {
     type: string;
     username: string;
     password: string;
-    user_id: number;
 }
 
-export const authenticate = (username: string, password: string, user_id: number): AuthAction => ({
+export const authenticate = (username: string, password: string): AuthAction => ({
   type: AUTHENTICATE_TEST,
   username,
   password,
-  user_id,
 });
 
 export interface LogoutAction {
@@ -71,10 +69,10 @@ export const authFail = (): AuthFailAction => ({
 });
 
 // SAGA
-export function* handleAuthentication({ username, password, user_id }: AuthAction): Iterator<any> {
+export function* handleAuthentication({ username, password}: AuthAction): Iterator<any> {
   try {
     // console.log(`handleAuthentication${username}${password}`);
-    const data = yield call(authenticateUser, username, password, user_id);
+    const data = yield call(authenticateUser, username, password);
     if (data !== undefined) {
       yield put(authSuccess(data));
     }
