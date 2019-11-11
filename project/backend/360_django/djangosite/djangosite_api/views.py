@@ -44,7 +44,7 @@ class RegisterAPI(generics.GenericAPIView):
             user = authenticate(request, username=username, password=password)
             login(request, user)
 
-            return JsonResponse({'username': username}, status=201)
+            return JsonResponse({'username': username, 'user_id': user.id}, status=201)
 
         except BaseException as error:
             print(repr(error))
@@ -69,7 +69,7 @@ class LoginAPI(generics.GenericAPIView):
 
             if user is not None:
                 login(request, user)
-                return JsonResponse({'username': username}, status=200)
+                return JsonResponse({'username': username, 'user_id': user.id}, status=200)
 
             return JsonResponse({'error': 'Wrong username and/or password'}, status=400)
 
