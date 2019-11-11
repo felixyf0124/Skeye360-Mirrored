@@ -12,16 +12,15 @@ const logClicks = async (
   user_id: number,
 ): Promise<Response> => {
   const url = `//${APIDomain}/api/userlog/`;
-  const id = encodeURIComponent(JSON.stringify({type: 'number', value: user_id.toString()}));
-
-  const params = {
-    log_message,
-    id,
-  };
+  const body = {
+    "log_message": log_message,
+    "user_id": user_id
+  }
+  const bodyString=JSON.stringify(body);
 
   const settings = {
     method: 'POST',
-    body: new URLSearchParams(params),
+    body: bodyString,
     headers: {'Content-Type': 'application/json'},
   }
 
