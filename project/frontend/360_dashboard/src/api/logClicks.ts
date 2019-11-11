@@ -1,22 +1,22 @@
 export interface Response {
   log_message: string;
-  username: string;
+  user_id: number;  
 }
 
 const APIDomain = '127.0.0.1:8000';
 
 const logClicks = async (
   log_message: string,
-  username: string,
+  user_id: number,
 ): Promise<Response> => {
-  const url = `//${APIDomain}/api/userlog`;
+  const url = `//${APIDomain}/api/userlog/`;
   const params = {
     log_message,
-    username,
+    user_id, 
   };
   const settings = {
     method: 'POST',
-    body: new URLSearchParams(params),
+    body: new URLSearchParams(JSON.stringify(params)),
     headers: {},
   }
 

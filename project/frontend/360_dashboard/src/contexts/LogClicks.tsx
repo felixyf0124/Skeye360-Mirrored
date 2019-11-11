@@ -20,17 +20,17 @@ export const ADD_LOG_SUCCESS = 'ADD_LOG_SUCCESS';
 export const ADD_LOG_FAIL = 'ADD_LOG_FAIL';
 
 export interface LogAction extends Action {
-    username: string,
     log_message: string,
+    user_id: number,
 }
 
 export const logClick = (
-  username: string,
   log_message: string,
+  user_id: number,
 ): LogAction => ({
   type: ADD_LOG_CLICK,
-  username,
   log_message,
+  user_id,
 });
 
 export interface LogSuccessAction {
@@ -55,11 +55,11 @@ export const LogFail = (): LogFail => ({
 
 // SAGA
 export function* handleAddLog({
-  username,
   log_message,
+  user_id,
 }: LogAction): Iterator<any> {
   try {
-    const data = yield call(logClicks, username, log_message);
+    const data = yield call(logClicks, log_message, user_id);
     if (data !== undefined) {
       yield put(LogSuccess(data));
     }

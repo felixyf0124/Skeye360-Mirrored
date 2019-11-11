@@ -16,14 +16,15 @@ interface StateProps {
     name: string;
     sessionToken: string;
     error: string;
+    user_id: number;
 }
 
 interface DispatchProps {
     authenticate: (username: string, password: string) => void;
     historyPush: (url: string) => void;
     logClick: (
-      username: string,
       log_message: string,
+      user_id: number,
     ) => any;
 }
 
@@ -36,6 +37,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     authenticated,
     name,
     error,
+    user_id,
   } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -43,10 +45,11 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     setState({ ...state, [e.target.name]: e.target.value });
     //setState({...state, log_message: login_log_message});
     console.log(log_message);
+  
     console.log("LOG MESSAGE HERE");
+    console.log(username);
   };
 
-  const login_log_message = "clcl login";
 
   // eslint-disable-next-line consistent-return
   const handleLoginClick = (): any => {
@@ -56,6 +59,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
       return <Redirect push to="/" />;
     }
     console.log("handle click");
+    
   };
 
 
@@ -71,7 +75,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
           e.preventDefault();
           props.authenticate(username, password);
           handleLoginClick();
-          props.logClick(username, log_message); 
+          props.logClick(log_message, user_id); 
         }}
         >
           {error !== '' ? (
@@ -110,9 +114,11 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   );
 };
 
+
 const mapStateToProps = (state: RootState): StateProps => ({
   username: '',
   password: '',
+  user_id: 1,
   log_message: '',
   authenticated: state.authentication.authenticated,
   name: state.authentication.username,
