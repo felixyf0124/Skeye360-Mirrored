@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import Header, { Head } from '../components/Header';
-// import Simulator from './simulator/Scene';
+import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
-import { deleteExistingIntersection } from '../contexts/intersection';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
+import { deleteExistingIntersection } from '../contexts/intersection';
 
 interface StateProps {
   authenticated: boolean;
@@ -38,7 +38,7 @@ const StreetView = (props: StateProps & DispatchProps): JSX.Element => {
         <Link to={`/intersection/edit/${intersectionId}`} className="header-text">Edit</Link>
         <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">Delete</Link>
       </Head>
-      {/* <Simulator /> */}
+      <Simulator />
       <div className="charts-row">
         <NorthChart />
         <AvgWaitTimeChart />

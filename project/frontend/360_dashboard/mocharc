@@ -1,0 +1,4 @@
+--require ./mochaBabel
+--reporter dot
+--recursive
+./test/requirePolyfill.js

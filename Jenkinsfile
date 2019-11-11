@@ -27,6 +27,7 @@ pipeline {
                     steps {
                         script {
                             dir("project/frontend/360_dashboard") {
+                                sh "npm install mocha -g"
                                 sh "yarn test"
                             }
                         }

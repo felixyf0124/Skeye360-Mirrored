@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable no-undef */
-// eslint-disable-next-line import/no-unresolved
 const assert = require('assert');
 
 describe('Array', () => {
