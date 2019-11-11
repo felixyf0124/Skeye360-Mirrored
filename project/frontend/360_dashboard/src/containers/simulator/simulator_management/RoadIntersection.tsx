@@ -37,7 +37,7 @@ export default class RoadIntersection {
     }
 
     // Getters
-    getRoadIntersectionId(): number {
+    getId(): number {
       return this.id;
     }
 

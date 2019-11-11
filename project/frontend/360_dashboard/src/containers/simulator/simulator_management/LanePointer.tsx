@@ -8,11 +8,11 @@ export default class LanePointer {
 
     constructor(sectionId?: number, laneId?: number) {
       this.sectionId = 0;
-      if( sectionId !== undefined){
+      if (sectionId !== undefined) {
         this.sectionId = sectionId;
       }
       this.laneId = 0;
-      if( laneId !== undefined){
+      if (laneId !== undefined) {
         this.laneId = laneId;
       }
     }
