@@ -24,13 +24,13 @@ pipeline {
                             image 'project_360_dashboard'
                         }
                     }
-                    // steps {
-                    //     script {
-                    //         dir("project/frontend/360_dashboard") {
-                    //              sh "yarn test"
-                    //         }
-                    //     }
-                    // }
+                    steps {
+                        // script {
+                            // dir("project/frontend/360_dashboard") {
+                            //      sh "yarn test"
+                            // }
+                        // }
+                    }
                 }
                 //Testing django api
                 stage('test_djangoapi') {
