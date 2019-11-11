@@ -29,7 +29,7 @@ class UserViewTests(TestCase):
         )
         # user_list = response.json()['user_list']
 
-        self.assertIs(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
         # self.assertEqual(len(user_list), 2)
 
     @classmethod

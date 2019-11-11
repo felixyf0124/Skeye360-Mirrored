@@ -1,0 +1,351 @@
+devenv 2019-11-10 07:54:43,231 INFO     django.utils.autoreload.run_with_reloader: Watching for file changes with StatReloader
+devenv 2019-11-10 07:55:21,358 INFO     django.server.log_message: "GET /cam/ HTTP/1.1" 200 0
+devenv 2019-11-10 07:55:34,057 INFO     camera.cam: Camera is running now
+devenv 2019-11-10 07:55:34,060 INFO     camera.__init__: Intersection is created
+devenv 2019-11-10 07:55:34,061 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,061 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,062 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,062 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,063 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,064 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,065 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,067 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,068 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,070 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,071 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,073 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,075 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,078 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,079 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,079 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,080 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,080 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,081 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,081 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,081 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,082 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,083 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,083 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,085 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,085 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,085 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,086 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,087 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,087 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,088 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,089 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,089 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,090 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,091 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,091 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,091 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,092 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,095 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,095 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,096 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,097 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,097 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,098 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,098 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,098 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:55:34,099 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:55:34,099 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:55:34,101 INFO     camera.connection: db is connected
+devenv 2019-11-10 07:55:34,115 INFO     camera.open_video: Opening video stream
+devenv 2019-11-10 07:55:34,116 INFO     camera.create_ROIs: Creating ROIs
+devenv 2019-11-10 07:55:34,399 INFO     camera.create_tracker: Creating deepsort tracker
+devenv 2019-11-10 07:55:34,400 INFO     camera.__init__: Coordinate_list is created
+devenv 2019-11-10 07:55:34,401 ERROR    camera.gen: Video importing error
+devenv 2019-11-10 07:55:34,403 INFO     django.server.log_message: "GET /cam/ HTTP/1.1" 200 0
+devenv 2019-11-10 07:56:08,052 INFO     django.utils.autoreload.run_with_reloader: Watching for file changes with StatReloader
+devenv 2019-11-10 07:56:12,819 INFO     camera.__init__: Coordinate_list is created
+devenv 2019-11-10 07:56:12,838 INFO     camera.__init__: Detector is created
+devenv 2019-11-10 07:56:29,577 INFO     camera.load: Loading deep learning net
+devenv 2019-11-10 07:56:47,582 INFO     camera.cam: Camera is running now
+devenv 2019-11-10 07:56:47,594 INFO     camera.__init__: Intersection is created
+devenv 2019-11-10 07:56:47,595 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,597 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,598 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,600 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,606 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,615 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,617 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,620 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,635 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,638 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,639 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,643 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,646 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,655 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,656 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,659 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,661 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,664 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,665 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,668 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,669 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,693 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,695 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,697 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,704 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,734 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,734 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,735 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,735 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,738 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,739 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,740 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,743 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,757 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,775 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,803 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,804 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,804 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,805 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,805 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,806 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,806 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,809 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,810 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,813 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,832 INFO     camera.__init__: Direction is created
+devenv 2019-11-10 07:56:47,835 INFO     camera.__init__: Counter is created
+devenv 2019-11-10 07:56:47,837 INFO     camera.add_counter: Counter is added
+devenv 2019-11-10 07:56:47,850 INFO     camera.connection: db is connected
+devenv 2019-11-10 07:56:48,070 INFO     camera.open_video: Opening video stream
+devenv 2019-11-10 07:56:48,071 INFO     camera.create_ROIs: Creating ROIs
+devenv 2019-11-10 07:56:48,581 INFO     camera.create_tracker: Creating deepsort tracker
+devenv 2019-11-10 07:56:48,582 INFO     camera.__init__: Coordinate_list is created
+devenv 2019-11-10 07:56:53,546 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:56:56,889 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:56:59,217 INFO     camera.__init__: trackableObject is created
+devenv 2019-11-10 07:56:59,235 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:56:59,238 INFO     camera.__init__: trackableObject is created
+devenv 2019-11-10 07:56:59,240 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:56:59,248 INFO     camera.__init__: trackableObject is created
+devenv 2019-11-10 07:56:59,280 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:56:59,282 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:01,502 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:01,503 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:01,504 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:01,505 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:04,210 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:04,245 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:04,249 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:04,250 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:06,417 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:06,486 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:06,494 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:06,496 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:08,424 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:08,432 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:08,434 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:08,440 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:10,415 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:10,625 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:10,625 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:10,626 INFO     camera.__init__: trackableObject is created
+devenv 2019-11-10 07:57:10,627 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:10,629 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:12,965 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:12,985 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:12,992 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:12,996 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:13,000 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:14,991 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:15,036 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:15,037 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:15,255 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:15,258 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:17,597 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:17,706 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:17,708 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:17,709 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:17,712 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:20,568 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:20,586 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:20,589 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:20,655 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:20,670 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:22,718 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:22,719 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:22,720 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:22,720 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:22,722 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:24,566 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:24,567 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:24,568 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:24,568 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:24,571 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:26,904 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:26,908 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:26,909 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:26,909 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:26,911 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:28,846 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:28,847 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:28,847 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:28,848 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:28,848 INFO     camera.__init__: trackableObject is created
+devenv 2019-11-10 07:57:28,849 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:28,852 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:31,123 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:31,125 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:31,126 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:31,126 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:31,127 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:31,127 INFO     camera.__init__: trackableObject is created
+devenv 2019-11-10 07:57:31,127 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:31,128 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:33,320 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:33,322 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:33,322 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:33,324 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:33,327 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:33,328 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:33,329 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:35,461 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:35,462 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:35,463 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:35,463 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:35,464 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:37,575 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:37,576 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:37,576 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:37,577 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:37,577 INFO     camera.__init__: trackableObject is created
+devenv 2019-11-10 07:57:37,578 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:37,580 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:39,572 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:39,572 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:39,573 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:39,576 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:39,579 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:39,580 INFO     camera.__init__: trackableObject is created
+devenv 2019-11-10 07:57:39,580 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:39,581 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:42,033 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:42,034 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:42,035 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:42,036 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:42,037 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:42,040 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:42,043 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:44,329 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:44,331 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:44,332 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:44,332 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:44,335 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:44,336 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:44,343 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:46,475 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:46,476 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:46,476 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:46,477 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:46,477 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:46,477 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:46,478 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:48,300 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:48,301 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:48,301 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:48,302 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:48,303 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:48,307 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:50,648 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:50,648 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:50,649 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:50,650 INFO     camera.inc: Counter incremented
+devenv 2019-11-10 07:57:50,650 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:50,651 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:50,652 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:52,780 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:52,781 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:52,781 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:52,782 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:52,782 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:52,783 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:54,950 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:54,951 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:54,951 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:54,952 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:54,952 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:54,954 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:56,826 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:56,826 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:56,827 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:56,827 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:56,828 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:56,831 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:57:58,831 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:58,831 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:58,832 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:58,833 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:58,834 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:57:58,836 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:00,834 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:00,836 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:00,837 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:00,839 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:00,842 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:00,846 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:03,156 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:03,158 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:03,159 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:03,159 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:03,163 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:06,039 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:06,040 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:06,041 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:06,044 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:06,047 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:06,050 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:08,458 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:08,459 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:08,460 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:08,461 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:08,461 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:08,467 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:10,883 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:10,883 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:10,884 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:10,884 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:10,885 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:10,885 INFO     camera.__init__: trackableObject is created
+devenv 2019-11-10 07:58:10,886 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:10,887 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:13,117 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:13,117 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:13,118 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:13,119 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:13,120 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:13,120 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:13,122 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:15,604 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:15,605 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:15,606 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:15,606 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:15,607 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:15,608 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:15,609 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:18,035 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:18,036 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:18,038 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:18,038 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:18,039 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:18,039 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:18,040 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:18,043 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:20,385 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:20,386 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:20,387 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:20,396 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:20,400 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:20,404 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:20,412 INFO     camera.draw_ROIs: Drawing ROIs
+devenv 2019-11-10 07:58:22,420 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:22,421 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:22,421 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:22,422 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:22,422 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:22,423 INFO     camera.add_centroid: centroid updated
+devenv 2019-11-10 07:58:22,425 INFO     camera.draw_ROIs: Drawing ROIs
