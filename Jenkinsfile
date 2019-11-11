@@ -45,7 +45,6 @@ pipeline {
                         script {
                             dir("project/backend/360_django/djangosite") {
                                 sh "python3 manage.py test -k"
-                                sh "pylint **/*.py"
                             }
                         }
                     }
