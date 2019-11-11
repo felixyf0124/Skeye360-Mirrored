@@ -33,6 +33,8 @@ const initState: STATE = {
   success: false,
 };
 
+export const RESET_INTERSECTION = 'RESET_INTERSECTION';
+
 export const ADD_INTERSECTION = 'ADD_INTERSECTION';
 export const ADD_INTERSECTION_SUCCESS = 'ADD_INTERSECTION_SUCCESS';
 export const ADD_INTERSECTION_FAIL = 'ADD_INTERSECTION_FAIL';
@@ -48,6 +50,14 @@ export const EDIT_INTERSECTION_FAIL = 'EDIT_INTERSECTION_FAIL';
 export const DELETE_INTERSECTION = 'DELETE_INTERSECTION';
 export const DELETE_INTERSECTION_SUCCESS = 'DELETE_INTERSECTION_SUCCESS';
 export const DELETE_INTERSECTION_FAIL = 'DELETE_INTERSECTION_FAIL';
+
+export interface ResetIntersectionAction {
+  type: string;
+}
+
+export const resetIntersection = (): ResetIntersectionAction => ({
+  type: RESET_INTERSECTION,
+});
 
 // ADD
 export interface AddIntersectionAction extends Action {
@@ -277,6 +287,12 @@ export function* saga(): Iterator<any> {
 
 export default function reducer(state: STATE = initState, action: any): STATE {
   switch (action.type) {
+    case RESET_INTERSECTION: {
+      return {
+        ...initState,
+        success: true,
+      };
+    }
     case ADD_INTERSECTION_SUCCESS: {
       return {
         ...state,
@@ -320,7 +336,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     }
     case GET_INTERSECTION_FAIL: {
       return {
-        ...state,
+        ...initState,
         error: 'Error while getting existing intersection.',
         success: false,
       };

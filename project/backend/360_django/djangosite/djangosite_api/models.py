@@ -14,8 +14,8 @@ class District(models.Model):
 
 class Intersection(models.Model):
     intersection_name = models.CharField(max_length=50, unique=True, null=True)
-    latitude = models.IntegerField(null=True)
-    longitude = models.IntegerField(null=True)
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
     district_id = models.ForeignKey(District, related_name='intersections', on_delete=models.CASCADE, null=True)
 
 

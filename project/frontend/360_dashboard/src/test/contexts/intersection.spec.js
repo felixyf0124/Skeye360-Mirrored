@@ -21,6 +21,7 @@ import reducer, {
   handleDeleteIntersection,
   AddIntersectionAction,
   getIntersectionFail,
+  resetIntersection,
 } from '../../contexts/intersection';
 
 const data = {
@@ -34,6 +35,22 @@ const data = {
 
 describe('intersection redux', () => {
   describe('reducer', () => {
+    // RESET
+    it('should reset intersection state', () => {
+      const result = reducer(
+        initState,
+        resetIntersection(),
+      );
+      expect(result).to.include({
+        intersection_id: '',
+        latitude: '',
+        longitude: '',
+        intersection_name: '',
+        district_id: '',
+        error: '',
+        success: true,
+      });
+    });
     // SUCCESS
     it('should add new intersection successfully', () => {
       const result = reducer(

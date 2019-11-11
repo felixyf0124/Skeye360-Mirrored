@@ -8,11 +8,12 @@ import { RootState } from '../reducers/rootReducer';
 import {
   GetIntersectionAction,
   getExistingIntersection,
+  resetIntersection,
+  ResetIntersectionAction,
 } from '../contexts/intersection';
 import EditIntersectionForm from '../components/EditIntersectionForm';
 
 interface StateProps {
-  path: string;
   authenticated: boolean;
   username: string;
 
@@ -23,11 +24,13 @@ interface StateProps {
   district_id: string;
 
   error: string;
+  success: boolean;
 }
 
 interface DispatchProps {
   historyPush: (url: string) => void;
   getExistingIntersection(id: string): GetIntersectionAction;
+  resetIntersection(): ResetIntersectionAction;
 }
 
 class EditIntersection extends React.Component<StateProps & DispatchProps> {
@@ -35,6 +38,12 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
     // eslint-disable-next-line no-shadow
     const { intersection_id, getExistingIntersection } = this.props;
     getExistingIntersection(intersection_id);
+  }
+
+  public componentWillUnmount(): void {
+    // eslint-disable-next-line no-shadow
+    const { resetIntersection } = this.props;
+    resetIntersection();
   }
 
   public render(): JSX.Element {
@@ -45,19 +54,26 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
       longitude,
       intersection_name,
       district_id,
-
+      success,
     } = this.props;
     if (!authenticated) return <Redirect push to="/login" />;
+    if (success) {
+      return (
+        <div>
+          <Header />
+          <EditIntersectionForm
+            intersection_id={intersection_id}
+            latitude={latitude}
+            longitude={longitude}
+            intersection_name={intersection_name}
+            district_id={district_id}
+          />
+        </div>
+      );
+    }
     return (
       <div>
         <Header />
-        <EditIntersectionForm
-          intersection_id={intersection_id}
-          latitude={latitude}
-          longitude={longitude}
-          intersection_name={intersection_name}
-          district_id={district_id}
-        />
       </div>
     );
   }
@@ -65,7 +81,6 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
 
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  path: '/streetview/add',
   authenticated: state.authentication.authenticated,
   username: state.authentication.username,
 
@@ -76,11 +91,13 @@ const mapStateToProps = (state: RootState): StateProps => ({
   intersection_name: state.intersection.intersection_name,
 
   error: state.intersection.error,
+  success: state.intersection.success,
 });
 
 const mapDispatchToProps: DispatchProps = {
   historyPush: push,
   getExistingIntersection,
+  resetIntersection,
 };
 
 export default connect(
