@@ -328,14 +328,14 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     case EDIT_INTERSECTION_FAIL: {
       return {
         ...state,
-        error: 'Error while editing new intersection.',
+        error: 'Error while editing existing intersection.',
         success: false,
       };
     }
     case DELETE_INTERSECTION_FAIL: {
       return {
         ...state,
-        error: 'Error while deleting new intersection.',
+        error: 'Error while deleting existing intersection.',
         success: false,
       };
     }
