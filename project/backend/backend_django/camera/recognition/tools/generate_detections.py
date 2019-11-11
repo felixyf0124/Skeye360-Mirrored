@@ -72,14 +72,14 @@ class ImageEncoder(object):
 
     def __init__(self, checkpoint_filename, input_name="images",
                  output_name="features"):
-        self.session = tf.Session()
-        with tf.gfile.GFile(checkpoint_filename, "rb") as file_handle:
-            graph_def = tf.GraphDef()
+        self.session = tf.compat.v1.Session()
+        with tf.io.gfile.GFile(checkpoint_filename, "rb") as file_handle:
+            graph_def = tf.compat.v1.GraphDef()
             graph_def.ParseFromString(file_handle.read())
         tf.import_graph_def(graph_def, name="net")
-        self.input_var = tf.get_default_graph().get_tensor_by_name(
+        self.input_var = tf.compat.v1.get_default_graph().get_tensor_by_name(
             "net/%s:0" % input_name)
-        self.output_var = tf.get_default_graph().get_tensor_by_name(
+        self.output_var = tf.compat.v1.get_default_graph().get_tensor_by_name(
             "net/%s:0" % output_name)
 
         assert len(self.output_var.get_shape()) == 2
@@ -105,7 +105,6 @@ def create_box_encoder(model_filename, input_name="images",
         for box in boxes:
             patch = extract_image_patch(image, box, image_shape[:2])
             if patch is None:
-                print("WARNING: Failed to extract image patch: %s." % str(box))
                 patch = np.random.uniform(
                     0., 255., image_shape).astype(np.uint8)
             image_patches.append(patch)
@@ -168,7 +167,6 @@ def generate_detections(encoder, mot_dir, output_dir, detection_dir=None):
             rows = detections_in[mask]
 
             if frame_idx not in image_filenames:
-                print("WARNING could not find image for frame %d" % frame_idx)
                 continue
             bgr_image = cv2.imread(
                 image_filenames[frame_idx], cv2.IMREAD_COLOR)

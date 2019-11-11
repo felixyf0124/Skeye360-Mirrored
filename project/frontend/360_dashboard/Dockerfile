@@ -1,10 +1,8 @@
-#Uses node:12.13.0-alpine
 FROM node:12.13.0-alpine
 
 #Create app directory
 RUN mkdir -p /app
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
 
 COPY package.json /app/package.json
 

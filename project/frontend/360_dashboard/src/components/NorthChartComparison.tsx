@@ -4,11 +4,12 @@ import NorthData from '../PostData/carsNorth.json';
 import NorthDataAfter from '../PostData/carsNorthAfter.json';
 // For more Line Chart information:
 // https://apexcharts.com/react-chart-demos/line-charts/basic/
+//TODO: Display percentages
 
 const data = NorthData.NorthDataBefore;
 const newData = NorthDataAfter.NorthDataAfter;
 const getX = data.map((value) => value.time);
-// const getY = data.map((value) => value.cars);
+const getY = data.map((value) => value.cars);
 const getYAfter = newData.map((value) => value.cars);
 
 
@@ -50,12 +51,17 @@ const NorthChart = (): JSX.Element => {
           text: 'Number of Cars',
         },
       },
-      colors: ['#04a777'],
+      colors: ['#c7382e', '#04a777'],
     },
-    series: [{
-      name: 'Number of cars passing',
-      data: getYAfter,
-    },
+    series: [
+      {
+        name: 'Cars Before SkeYe',
+        data: getY,
+      },
+      {
+        name: 'Cars After SkeYe',
+        data: getYAfter,
+      },
     ],
   };
 

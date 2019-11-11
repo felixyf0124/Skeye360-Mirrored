@@ -1,0 +1,100 @@
+{
+    "WaitTime":[
+        {
+            "hour": 0,
+            "wait": 15
+        },
+        {
+            "hour": 1,
+            "wait": 15
+        },
+        {
+            "hour": 2,
+            "wait": 15
+        },
+        {
+            "hour": 3,
+            "wait": 15
+        },
+        {
+            "hour": 4,
+            "wait": 15
+        },
+        {
+            "hour": 5,
+            "wait": 16
+        },
+        {
+            "hour": 6,
+            "wait": 20
+        },
+        {
+            "hour": 7,
+            "wait": 18
+        },
+        {
+            "hour": 8,
+            "wait": 23
+        },
+        {
+            "hour": 9,
+            "wait": 21
+        },
+        {
+            "hour": 10,
+            "wait": 18
+        },
+        {
+            "hour": 11,
+            "wait": 20
+        },
+        {
+            "hour": 12,
+            "wait": 20
+        },
+        {
+            "hour": 13,
+            "wait": 19
+        },
+        {
+            "hour": 14,
+            "wait": 18
+        },
+        {
+            "hour": 15,
+            "wait": 19
+        },
+        {
+            "hour": 16,
+            "wait": 20
+        },
+        {
+            "hour": 17,
+            "wait": 19
+        },
+        {
+            "hour": 18,
+            "wait": 24
+        },
+        {
+            "hour": 19,
+            "wait": 22
+        },
+        {
+            "hour": 20,
+            "wait": 22
+        },
+        {
+            "hour": 21,
+            "wait": 18
+        },
+        {
+            "hour": 22,
+            "wait": 15
+        },
+        {
+            "hour": 23,
+            "wait": 15
+        }
+    ]
+}
