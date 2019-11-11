@@ -17,7 +17,7 @@ const logClicks = async (
   const settings = {
     method: 'POST',
     body: new URLSearchParams(JSON.stringify(params)),
-    headers: {},
+    headers: {'Content-Type': 'application/json'},
   }
 
   const response = await fetch(url, settings);
