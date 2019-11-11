@@ -20,7 +20,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    authenticate: (username: string, password: string) => void;
+    authenticate: (username: string, password: string, user_id: number) => void;
     historyPush: (url: string) => void;
     logClick: (
       log_message: string,
@@ -41,13 +41,9 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   } = props;
   const login_log_message="clicked login!";
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    console.log("HELLO");
     setState({ ...state, [e.target.name]: e.target.value });
     setState({...state, log_message: login_log_message});
     console.log(log_message);
-  
-    console.log("LOG MESSAGE HERE");
-    console.log(username);
   };
 
 
@@ -73,7 +69,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
       <div className="form-container">
         <form onSubmit={(e): void => {
           e.preventDefault();
-          props.authenticate(username, password);
+          props.authenticate(username, password, user_id);
           handleLoginClick();
           props.logClick(log_message, user_id); 
         }}
@@ -118,7 +114,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 const mapStateToProps = (state: RootState): StateProps => ({
   username: '',
   password: '',
-  user_id: 1,
+  user_id: state.authentication.user_id,
   log_message: '',
   authenticated: state.authentication.authenticated,
   name: state.authentication.username,

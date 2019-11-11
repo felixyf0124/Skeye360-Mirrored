@@ -12,12 +12,12 @@ const logClicks = async (
   const url = `//${APIDomain}/api/userlog/`;
   const params = {
     log_message,
-    user_id, 
+    user_id,
   };
   const settings = {
     method: 'POST',
-    body: new URLSearchParams(JSON.stringify(params)),
-    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(params),
+    headers: {},
   }
 
   const response = await fetch(url, settings);

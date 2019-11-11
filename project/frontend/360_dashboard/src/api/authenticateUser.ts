@@ -2,6 +2,7 @@ export interface Response {
   username: string;
   token: string;
   timestamp: string;
+  user_id: number;
 }
 
 const APIDomain = '0.0.0.0:8000';
@@ -9,8 +10,9 @@ const APIDomain = '0.0.0.0:8000';
 const authenticateUser = async (
   username: string,
   password: string,
+  user_id: number,
 ): Promise<Response> => {
-  const url = `//${APIDomain}/api/user/${username}/${password}/`;
+  const url = `//${APIDomain}/api/user/${username}/${password}/${user_id}`;
   // const params = {
   //   username,
   //   password,
