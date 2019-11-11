@@ -4,6 +4,9 @@ from django.http import StreamingHttpResponse
 from .detection import Detector
 from .coordinate import Coordinate
 import os
+import logging
+
+logger = logging.getLogger("camera")
 #reference: http://javabin.cn/2018/django_steam.html
 
 #setting path for yolo configuration
@@ -18,9 +21,11 @@ detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
 classes, net = detector.load()
 # sending streaming to frontend
 def cam(request): 
+    logger.info("Camera is running now")
     output=detector.gen(classes, net)
     return StreamingHttpResponse(output,content_type="multipart/x-mixed-replace;boundary=frame")
 
 def send_json(request):
+    logger.info("sending coordinates")
     j = detector.coord.dict.items()
     return HttpResponse(j,content_type="application/json")
