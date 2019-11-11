@@ -96,7 +96,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         sessionToken: 'TEST',
         username: 'TEST',
         authenticated: true,
-        user_id: 1111,
+        user_id: 1,
       };
     }
     case AUTHENTICATE_SUCCESS: {

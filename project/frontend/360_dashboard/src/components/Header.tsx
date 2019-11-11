@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import { logout } from '../contexts/authentication';
+import { logClick } from '../contexts/LogClicks';
 
 export const Head = styled.div`
   display: flex;
@@ -18,17 +19,27 @@ export const Head = styled.div`
 
 interface StateProps {
     authenticated: boolean;
+    user_id: number;
+    log_message: string;
 }
 
 interface DispatchProps {
     logout: () => any;
     handleMapButton: () => void;
+    logClick: (
+      log_message: string,
+      user_id: number,
+    ) => any;
 }
 
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
 const Header = (props: StateProps & DispatchProps): JSX.Element => {
   const [state] = React.useState(props);
+  const{
+    user_id,
+    log_message
+  } = props;
 
   return (
     <nav className="navbar">
@@ -49,7 +60,14 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
           <div />
         ) }
         <div className="container">
-          <Link to="/" className="header-text">Skeye 360</Link>
+          <Link to="/" className="header-text"
+            onClick={(e): void =>{
+              e.preventDefault();
+              props.logClick("Click Home", user_id);
+            }
+
+            }
+          >Skeye 360</Link>
         </div>
         {state.authenticated ? (
           <div className="logout">
@@ -71,11 +89,14 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: state.authentication.authenticated,
+  user_id: state.authentication.user_id,
+  log_message: '',
 });
 
 const mapDispatchToProps: DispatchProps = {
   logout,
   handleMapButton: () => handleMapButton(),
+  logClick,
 };
 
 export default connect(
