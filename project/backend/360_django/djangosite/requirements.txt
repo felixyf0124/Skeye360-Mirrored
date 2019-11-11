@@ -7,6 +7,11 @@ djongo
 sqlparse==0.2.4
 wheel
 markdown
+# For testing:
 pylint
 mongomock
 django-rest-knox
+pytest-django
+pytest
+pytest-cov
+mixer
