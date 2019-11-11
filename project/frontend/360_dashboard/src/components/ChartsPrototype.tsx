@@ -7,7 +7,8 @@ import LineChart from './LineChart';
 import MixedChart from './MixedChart';
 import Header from './Header';
 import { RootState } from '../reducers/rootReducer';
-
+import NorthChartComparison from './NorthChartComparison';
+import AvgWaitTimeChartComparison from './AvgWaitTimeChartComparison';
 
 interface Props {
     authenticated: boolean;
@@ -21,6 +22,10 @@ const ChartsPrototype = ({ authenticated }: Props): JSX.Element => {
       <Header />
       <div className="charts-prototype">
         <h1 className="charts-header">Chart Prototypes</h1>
+        <div className="charts-row">
+          <NorthChartComparison />
+          <AvgWaitTimeChartComparison />
+        </div>
         <div className="charts-row">
           <LineChart />
           <MixedChart />
