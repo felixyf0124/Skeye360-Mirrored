@@ -20,28 +20,28 @@ class YourTestClass(TestCase):
         pass
 
     # For mixer: https://github.com/klen/mixer
-    def test_intersection(self):
-        logging.info('test_intersection')
-        # Test post request
-        data1 = {'intersection_name': 'Guy'}
-        data2 = {'intersection_name': 'Dupuis'}
-        # Test post request
-        intersection1 = self.client.post('/api/intersection/', data1)
-        intersection2 = self.client.post('/api/intersection/', data2)
-        self.assertEqual(intersection1.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(intersection2.status_code, status.HTTP_201_CREATED)
-        # Test get request
-        response = self.client.get('/api/intersection/?intersection_name=Guy')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Two intersection should return 2
-        response = self.client.get('/api/intersection/')
-        self.assertEqual(len(response.data), 2)
-        self.assertEqual(response.data[1].get('intersection_name'), 'Dupuis')
-        self.assertNotEqual(response.data[1].get('intersection_name'), 'Guy')
-        # Test intersection name duplication
-        form_data = {"intersection_name": "Guy"}
-        response = self.client.post('/api/intersection/', form_data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    # def test_intersection(self):
+    #     logging.info('test_intersection')
+    #     # Test post request
+    #     data1 = {'intersection_name': 'Guy'}
+    #     data2 = {'intersection_name': 'Dupuis'}
+    #     # Test post request
+    #     intersection1 = self.client.post('/api/intersection/', data1)
+    #     intersection2 = self.client.post('/api/intersection/', data2)
+    #     self.assertEqual(intersection1.status_code, status.HTTP_201_CREATED)
+    #     self.assertEqual(intersection2.status_code, status.HTTP_201_CREATED)
+    #     # Test get request
+    #     response = self.client.get('/api/intersection/?intersection_name=Guy')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     # Two intersection should return 2
+    #     response = self.client.get('/api/intersection/')
+    #     self.assertEqual(len(response.data), 2)
+    #     self.assertEqual(response.data[1].get('intersection_name'), 'Dupuis')
+    #     self.assertNotEqual(response.data[1].get('intersection_name'), 'Guy')
+    #     # Test intersection name duplication
+    #     form_data = {"intersection_name": "Guy"}
+    #     response = self.client.post('/api/intersection/', form_data)
+    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     # def test_camera(self):
     #     logging.info('test_camera')
