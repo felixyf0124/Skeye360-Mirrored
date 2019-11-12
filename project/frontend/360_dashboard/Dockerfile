@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json /app/package.json
 
 #Run yarn install to install all the dependencies 
-RUN yarn install
+RUN yarn install --force
 
 #install mocha for global use
 RUN npm install mocha -g
