@@ -11,6 +11,7 @@ export interface STATE {
   timestamp: string;
   authenticated: boolean;
   error: string;
+  user_id: number;
 }
 
 const initState: STATE = {
@@ -19,6 +20,7 @@ const initState: STATE = {
   timestamp: '',
   authenticated: false,
   error: '',
+  user_id: 1,
 };
 
 export const AUTHENTICATE = 'AUTHENTICATE';
@@ -28,9 +30,9 @@ export const AUTHENTICATE_FAIL = 'AUTHENTICATE_FAIL';
 export const LOGOUT = 'LOGOUT';
 
 export interface AuthAction {
-    type: string;
-    username: string;
-    password: string;
+  type: string;
+  username: string;
+  password: string;
 }
 
 export const authenticate = (username: string, password: string): AuthAction => ({
@@ -40,7 +42,7 @@ export const authenticate = (username: string, password: string): AuthAction => 
 });
 
 export interface LogoutAction {
-    type: string;
+  type: string;
 }
 
 export const logout = (): LogoutAction => ({
@@ -48,8 +50,8 @@ export const logout = (): LogoutAction => ({
 });
 
 interface AuthSuccessAction {
-    type: string;
-    data: authResponse;
+  type: string;
+  data: authResponse;
 }
 export const authSuccess = (
   data: authResponse,
@@ -59,7 +61,7 @@ export const authSuccess = (
 });
 
 interface AuthFailAction {
-    type: string;
+  type: string;
 }
 
 export const authFail = (): AuthFailAction => ({
@@ -94,6 +96,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         sessionToken: 'TEST',
         username: 'TEST',
         authenticated: true,
+        user_id: 1,
       };
     }
     case AUTHENTICATE_SUCCESS: {
@@ -104,6 +107,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         sessionToken: data.token,
         username: data.username,
         timestamp: data.timestamp,
+        user_id: data.user_id,
         authenticated: true,
       };
     }
@@ -114,6 +118,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         timestamp: initState.timestamp,
         authenticated: initState.authenticated,
         error: 'Invalid credentials.',
+        user_id: initState.user_id,
       };
     }
     case LOGOUT: {
@@ -123,6 +128,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         timestamp: initState.timestamp,
         authenticated: initState.authenticated,
         error: initState.error,
+        user_id: initState.user_id,
       };
     }
     default:

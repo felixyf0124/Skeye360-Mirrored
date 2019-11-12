@@ -5,20 +5,26 @@ import { push } from 'connected-react-router';
 import { RootState } from '../reducers/rootReducer';
 import { authenticate } from '../contexts/authentication';
 import Header from '../components/Header';
+import { logClick } from '../contexts/LogClicks';
 
 interface StateProps {
-    username: string;
-    password: string;
-
-    authenticated: boolean;
-    name: string;
-    sessionToken: string;
-    error: string;
+  username: string;
+  password: string;
+  log_message: string;
+  authenticated: boolean;
+  name: string;
+  sessionToken: string;
+  error: string;
+  user_id: number;
 }
 
 interface DispatchProps {
-    authenticate: (username: string, password: string) => void;
-    historyPush: (url: string) => void;
+  authenticate: (username: string, password: string) => void;
+  historyPush: (url: string) => void;
+  logClick: (
+    log_message: string,
+    user_id: number,
+  ) => any;
 }
 
 const Login = (props: StateProps & DispatchProps): JSX.Element => {
@@ -26,20 +32,23 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   const {
     username,
     password,
-
+    log_message,
     authenticated,
     name,
     error,
+    user_id,
   } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
+
   // eslint-disable-next-line consistent-return
   const handleLoginClick = (): any => {
-    const { historyPush } = props;
+    const { historyPush, logClick } = props;
     historyPush('/login');
+    logClick("Clicked Login", user_id);
     if (!authenticated) {
       return <Redirect push to="/" />;
     }
@@ -64,8 +73,8 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               <div>{error}</div>
             </div>
           ) : (
-            <div />
-          )}
+              <div />
+            )}
           <div className="form-group">
             <label htmlFor="username">
               Username
@@ -98,7 +107,8 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 const mapStateToProps = (state: RootState): StateProps => ({
   username: '',
   password: '',
-
+  user_id: state.authentication.user_id,
+  log_message: '',
   authenticated: state.authentication.authenticated,
   name: state.authentication.username,
   sessionToken: state.authentication.sessionToken,
@@ -108,6 +118,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 const mapDispatchToProps: DispatchProps = {
   authenticate,
   historyPush: push,
+  logClick,
 };
 
 export default connect(

@@ -2,6 +2,7 @@ export interface Response {
   username: string;
   token: string;
   timestamp: string;
+  user_id: number;
 }
 
 const APIDomain = '0.0.0.0:8000';
