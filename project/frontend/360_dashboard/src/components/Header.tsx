@@ -60,14 +60,7 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
           <div />
         ) }
         <div className="container">
-          <Link to="/" className="header-text"
-            onClick={(e): void =>{
-              e.preventDefault();
-              props.logClick("Click Home", user_id);
-            }
-
-            }
-          >Skeye 360</Link>
+          <Link to="/" className="header-text">Skeye 360</Link>
         </div>
         {state.authenticated ? (
           <div className="logout">
