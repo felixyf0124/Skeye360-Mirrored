@@ -39,7 +39,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     error,
     user_id,
   } = props;
-  const login_log_message="clicked login!";
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -47,8 +47,9 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 
   // eslint-disable-next-line consistent-return
   const handleLoginClick = (): any => {
-    const { historyPush } = props;
+    const { historyPush, logClick } = props;
     historyPush('/login');
+    logClick("Clicked Login", user_id); 
     if (!authenticated) {
       return <Redirect push to="/" />;
     }
@@ -66,7 +67,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
           e.preventDefault();
           props.authenticate(username, password);
           handleLoginClick();
-          props.logClick("Clicked Login", user_id); 
         }}
         >
           {error !== '' ? (
