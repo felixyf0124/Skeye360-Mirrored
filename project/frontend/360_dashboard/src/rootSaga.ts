@@ -7,7 +7,7 @@ import { saga as logging } from './contexts/LogClicks';
 
 export default function* rootSaga(): IterableIterator<any> {
   yield fork(authentication);
-  yield fork(logging);
   yield fork(districts);
   yield fork(intersection);
+  yield fork(logging);
 }

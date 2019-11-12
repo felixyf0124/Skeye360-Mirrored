@@ -1,5 +1,3 @@
-//https://stackoverflow.com/questions/36855370/angular-2-how-to-set-double-float-int-boolean-type-params-in-get-post-req
-//Encoding number to string
 export interface Response {
   log_message: string;
   user_id: number;  

@@ -6,12 +6,12 @@ import {
 import authenticateUser, { Response as authResponse } from '../api/authenticateUser';
 
 export interface STATE {
-    sessionToken: string;
-    username: string;
-    timestamp: string;
-    authenticated: boolean;
-    error: string;
-    user_id: number;
+  sessionToken: string;
+  username: string;
+  timestamp: string;
+  authenticated: boolean;
+  error: string;
+  user_id: number;
 }
 
 const initState: STATE = {
@@ -30,9 +30,9 @@ export const AUTHENTICATE_FAIL = 'AUTHENTICATE_FAIL';
 export const LOGOUT = 'LOGOUT';
 
 export interface AuthAction {
-    type: string;
-    username: string;
-    password: string;
+  type: string;
+  username: string;
+  password: string;
 }
 
 export const authenticate = (username: string, password: string): AuthAction => ({
@@ -42,7 +42,7 @@ export const authenticate = (username: string, password: string): AuthAction => 
 });
 
 export interface LogoutAction {
-    type: string;
+  type: string;
 }
 
 export const logout = (): LogoutAction => ({
@@ -50,8 +50,8 @@ export const logout = (): LogoutAction => ({
 });
 
 interface AuthSuccessAction {
-    type: string;
-    data: authResponse;
+  type: string;
+  data: authResponse;
 }
 export const authSuccess = (
   data: authResponse,
@@ -61,7 +61,7 @@ export const authSuccess = (
 });
 
 interface AuthFailAction {
-    type: string;
+  type: string;
 }
 
 export const authFail = (): AuthFailAction => ({
@@ -69,7 +69,7 @@ export const authFail = (): AuthFailAction => ({
 });
 
 // SAGA
-export function* handleAuthentication({ username, password}: AuthAction): Iterator<any> {
+export function* handleAuthentication({ username, password }: AuthAction): Iterator<any> {
   try {
     // console.log(`handleAuthentication${username}${password}`);
     const data = yield call(authenticateUser, username, password);
