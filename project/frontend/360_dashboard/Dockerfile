@@ -7,11 +7,11 @@ WORKDIR /app
 COPY package.json /app/package.json
 
 #Run yarn install to install all the dependencies 
-RUN yarn install --force
+RUN yarn && yarn cache clean
 
 #install mocha for global use
 RUN npm install mocha -g
-RUN npm install ts-node
+#RUN npm install ts-node
 
 COPY . /app
 
