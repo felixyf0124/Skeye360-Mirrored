@@ -11,7 +11,7 @@ RUN yarn install --force
 
 #install mocha for global use
 RUN npm install mocha -g
-RUN yarn add ts-node
+RUN npm install ts-node
 
 COPY . /app
 
