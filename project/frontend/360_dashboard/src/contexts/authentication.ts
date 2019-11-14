@@ -37,7 +37,7 @@ export interface AuthAction {
 }
 
 export const authenticate = (username: string, password: string): AuthAction => ({
-  type: AUTHENTICATE_TEST,
+  type: AUTHENTICATE,
   username,
   password,
 });
@@ -54,6 +54,7 @@ interface AuthSuccessAction {
   type: string;
   data: authResponse;
 }
+
 export const authSuccess = (
   data: authResponse,
 ): AuthSuccessAction => ({
@@ -102,12 +103,16 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     }
     case AUTHENTICATE_SUCCESS: {
       const { data } = action as AuthSuccessAction;
-      // console.log(action.type);
+      if (data.user_id === undefined) {
+        return {
+          ...state,
+          authenticated: false,
+          error: 'Invalid credentials.',
+        };
+      }
       return {
         ...state,
-        sessionToken: data.token,
         username: data.username,
-        timestamp: data.timestamp,
         user_id: data.user_id,
         authenticated: true,
       };

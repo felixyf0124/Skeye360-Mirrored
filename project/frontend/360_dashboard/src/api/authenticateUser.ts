@@ -14,11 +14,12 @@ const authenticateUser = async (
     username,
     password,
   };
+  console.log(params);
 
   const settings = {
     method: 'POST',
-    body: new URLSearchParams(params),
-    headers: {},
+    body: JSON.stringify(params),
+    headers: { 'content-type': 'application/json' },
   };
 
   const response = await fetch(url, settings);
