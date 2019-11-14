@@ -61,20 +61,20 @@ class YourTestClass(TestCase):
     #     response = self.client.post('/api/camera/', form_data)
     #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
-    # def test_distinct(self):
-    #     logging.info('test_distinct')
-    #     # Test post request
-    #     district1 = mixer.blend('djangosite_api.District', district_name='Montreal_East',id=1)
-    #     self.assertEqual(district1.district_name, 'Montreal_East')
-    #     district2 = mixer.blend('djangosite_api.District', district_name='Montreal_West', id =2)
-    #     # Test get request
-    #     response = self.client.get('/api/district/')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # Two intersection should return 2
-    #     self.assertEqual(len(response.data), 2)
-    #     self.assertEqual(response.data[1].get('district_name'), 'Montreal_West')
-    #     self.assertNotEqual(response.data[1].get('district_name'), 'Montreal_East')
-    #     # Test intersection name duplication
-    #     form_data = {"intersection_name": "Guy"}
-    #     response = self.client.post('/api/district/', form_data)
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_distinct(self):
+        logging.info('test_distinct')
+        # Test post request
+        district1 = mixer.blend('djangosite_api.District', district_name='Montreal_East',id=1)
+        self.assertEqual(district1.district_name, 'Montreal_East')
+        district2 = mixer.blend('djangosite_api.District', district_name='Montreal_West', id =2)
+        # Test get request
+        response = self.client.get('/api/district/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Two intersection should return 2
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[1].get('district_name'), 'Montreal_West')
+        self.assertNotEqual(response.data[1].get('district_name'), 'Montreal_East')
+        # Test intersection name duplication
+        form_data = {"intersection_name": "Guy"}
+        response = self.client.post('/api/district/', form_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
