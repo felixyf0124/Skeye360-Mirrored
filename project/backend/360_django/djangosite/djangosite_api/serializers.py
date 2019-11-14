@@ -29,7 +29,7 @@ class IntersectionSerializer(DjongoModelSerializer):
 
 class DistrictSerializer(DjongoModelSerializer):
     intersections = IntersectionSerializer(many=True, read_only=True)
-    id = serializers.IntegerField(read_only=True)
+    #id = serializers.IntegerField(read_only=True)
     district_name = serializers.CharField(required=True)
 
     class Meta:
