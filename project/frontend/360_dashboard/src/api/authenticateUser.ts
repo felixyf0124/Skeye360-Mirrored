@@ -1,7 +1,5 @@
 export interface Response {
   username: string;
-  token: string;
-  timestamp: string;
   user_id: number;
 }
 
@@ -11,13 +9,19 @@ const authenticateUser = async (
   username: string,
   password: string,
 ): Promise<Response> => {
-  const url = `//${APIDomain}/api/user/${username}/${password}/`;
-  // const params = {
-  //   username,
-  //   password,
-  // };
+  const url = `//${APIDomain}/api/auth/login`;
+  const params = {
+    username,
+    password,
+  };
 
-  const response = await fetch(url);
+  const settings = {
+    method: 'POST',
+    body: new URLSearchParams(params),
+    headers: {},
+  };
+
+  const response = await fetch(url, settings);
   const data = (await response.json()) as Response;
   return data;
 };
