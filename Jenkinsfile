@@ -45,6 +45,7 @@ pipeline {
                         script {
                             dir("project/backend/360_django/djangosite") {
                                 sh "python3 manage.py test -k"
+                                sh "pytest --cov=djangosite_api tests/"
                             }
                         }
                     }
