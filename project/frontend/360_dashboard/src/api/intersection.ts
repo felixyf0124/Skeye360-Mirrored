@@ -8,7 +8,7 @@ export interface Response {
   district_id: number;
 }
 
-const APIDomain = '0.0.0.0:8000';
+const APIDomain = '40.121.23.48:8000';
 
 export const addIntersection = async (
   intersection_name: string,

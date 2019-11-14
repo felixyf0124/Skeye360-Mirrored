@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -32,7 +33,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   const {
     username,
     password,
-    log_message,
     authenticated,
     name,
     error,
@@ -46,9 +46,10 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 
   // eslint-disable-next-line consistent-return
   const handleLoginClick = (): any => {
+    // eslint-disable-next-line no-shadow
     const { historyPush, logClick } = props;
     historyPush('/login');
-    logClick("Clicked Login", user_id);
+    logClick('Clicked Login', user_id);
     if (!authenticated) {
       return <Redirect push to="/" />;
     }
@@ -73,8 +74,8 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               <div>{error}</div>
             </div>
           ) : (
-              <div />
-            )}
+            <div />
+          )}
           <div className="form-group">
             <label htmlFor="username">
               Username

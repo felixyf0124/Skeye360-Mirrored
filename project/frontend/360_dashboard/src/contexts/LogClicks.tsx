@@ -20,8 +20,8 @@ export const ADD_LOG_SUCCESS = 'ADD_LOG_SUCCESS';
 export const ADD_LOG_FAIL = 'ADD_LOG_FAIL';
 
 export interface LogAction extends Action {
-    log_message: string,
-    user_id: number,
+    log_message: string;
+    user_id: number;
 }
 
 export const logClick = (

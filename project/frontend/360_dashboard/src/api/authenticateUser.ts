@@ -5,7 +5,7 @@ export interface Response {
   user_id: number;
 }
 
-const APIDomain = '0.0.0.0:8000';
+const APIDomain = '40.121.23.48:8000';
 
 const authenticateUser = async (
   username: string,

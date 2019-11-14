@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/camelcase */
 export interface Response {
   log_message: string;
-  user_id: number;  
+  user_id: number;
 }
 
-const APIDomain = '127.0.0.1:8000';
+const APIDomain = '40.121.23.48:8000';
 
 const logClicks = async (
   log_message: string,
@@ -11,16 +12,16 @@ const logClicks = async (
 ): Promise<Response> => {
   const url = `//${APIDomain}/api/userlog/`;
   const body = {
-    "log_message": log_message,
-    "user_id": user_id
-  }
-  const bodyString=JSON.stringify(body);
+    log_message,
+    user_id,
+  };
+  const bodyString = JSON.stringify(body);
 
   const settings = {
     method: 'POST',
     body: bodyString,
-    headers: {'Content-Type': 'application/json'},
-  }
+    headers: { 'Content-Type': 'application/json' },
+  };
 
   const response = await fetch(url, settings);
   const data = (await response.json()) as Response;
