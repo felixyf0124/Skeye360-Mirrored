@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_meets_djongo.serializers import DjongoModelSerializer
 from .models import *
 
+#https://github.com/nesdis/djongo/issues/298
 
 class CitySerializer(DjongoModelSerializer):
     class Meta:
