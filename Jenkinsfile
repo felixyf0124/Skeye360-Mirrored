@@ -13,11 +13,16 @@ pipeline {
                 {
                    steps
                    {
-                       sh 'pwd'
-                       sh 'cd project/frontend/360_dashboard'
-                       sh 'ls'
-                       sh 'pwd'
-                       sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
+                    script 
+                       {
+                           dir("project/frontend/360_dashboard")
+                           {
+                           
+                                sh 'pwd'
+                                sh 'ls'
+                                sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
+                           }
+                       }
                     }
                 }
                 //Testing django api
