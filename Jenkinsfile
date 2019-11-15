@@ -1,26 +1,21 @@
 pipeline {
     agent any
-    stages {
+        stages 
+        {
                 stage('build') {
                     steps {
                         echo "Building!"
                     }
                 }
-                //Working with all the properties in the command
-                // stage('test_sonarqube') {
-                //     steps {
-                //         script {
-                //             scannerHome = tool 'SonarQubeScanner'
-                //         }
-                //         withSonarQubeEnv('SonarQube') { 
-                //             sh "${scannerHome}/bin/sonar-scanner -Dsonar.host.url=http://40.121.23.48:8100/  -Dsonar.login=93165dcba9ba70911fa482089e4d7429d3981b13 -Dsonar.projectName=sonarqubeTest -Dsonar.projectVersion=1 -Dsonar.projectKey=sonarqubeTest -Dsonar.sources=."
-                //         }
-                //     }
-                // }
+
                 //Testing frontend
-                stage('test_frontend') {
-                   sh 'pwd'
-                   sh 'docker build -t react-test -f Dockerfile.test --no-cache'
+                stage('test_frontend') 
+                {
+                   steps
+                   {
+                       sh 'pwd'
+                       sh 'docker build -t react-test -f Dockerfile.test --no-cache'
+                    }
                 }
                 //Testing django api
                 stage('test_djangoapi') {
@@ -41,7 +36,8 @@ pipeline {
                 }
                 //Testing django server
                 //Running unit tests only
-                stage('test_djangoserver') {
+                stage('test_djangoserver') 
+                {
                     agent {
                         docker "project_360_django"
                     }
@@ -52,10 +48,13 @@ pipeline {
                         }
                     }
                 }
-    }
+        }
 
-    post {
-        always {
+    // Clean up
+    post 
+    {
+        always 
+        {
             cleanWs()
             deleteDir()
         }
