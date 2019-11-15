@@ -15,6 +15,8 @@ pipeline {
                    {
                        sh 'pwd'
                        sh 'cd project/frontend/360_dashboard'
+                       sh 'ls'
+                       sh 'pwd'
                        sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
                     }
                 }
