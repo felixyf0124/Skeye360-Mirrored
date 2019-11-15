@@ -15,16 +15,16 @@ const authenticateUser = async (
     username,
     password,
   };
-
-  // POST REQUEST
   const settings = {
     method: 'POST',
     body: JSON.stringify(params),
     headers: { 'content-type': 'application/json' },
   };
 
-  // RESPONSE
+  // POST REQUEST
   const response = await fetch(url, settings);
+
+  // DATA RESPONSE
   const data = (await response.json()) as Response;
   return data;
 };

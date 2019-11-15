@@ -10,12 +10,14 @@ export interface Response {
 
 const APIDomain = '40.121.23.48:8000';
 
+// CREATE
 export const addIntersection = async (
   intersection_name: string,
   latitude: string,
   longitude: string,
   district_id: string,
 ): Promise<Response> => {
+  // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/intersection/`;
   const params = {
     intersection_name,
@@ -28,24 +30,35 @@ export const addIntersection = async (
     body: new URLSearchParams(params),
     headers: {},
   };
+
+  // POST REQUEST
   const response = await fetch(url, settings);
+
+  // DATA RESPONSE
   const data = (await response.json()) as Response;
   return data;
 };
 
+// READ
 export const getIntersection = async (
   id: string,
 ): Promise<Response> => {
+  // ENDPOINT
   const url = `//${APIDomain}/api/intersection/${id}/`;
+
   const settings = {
     method: 'GET',
     headers: {},
   };
+  // GET REQUEST
   const response = await fetch(url, settings);
+
+  // DATA RESPONSE
   const data = (await response.json()) as Response;
   return data;
 };
 
+// UPDATE
 export const editIntersection = async (
   intersection_id: string,
   intersection_name: string,
@@ -53,6 +66,7 @@ export const editIntersection = async (
   longitude: string,
   district_id: string,
 ): Promise<Response> => {
+  // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/intersection/${intersection_id}/`;
   const params = {
     intersection_name,
@@ -65,19 +79,29 @@ export const editIntersection = async (
     body: new URLSearchParams(params),
     headers: {},
   };
+
+  // PUT REQUEST
   const response = await fetch(url, settings);
+
+  // DATA RESPONSE
   const data = (await response.json()) as Response;
   return data;
 };
 
+// DELETE
 export const deleteIntersection = async (
   id: string,
 ): Promise<any> => {
+  // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/intersection/${id}/`;
   const settings = {
     method: 'DELETE',
     headers: {},
   };
+
+  // DELETE REQUEST
   const response = await fetch(url, settings);
+
+  // DATA RESPONSE
   return response;
 };

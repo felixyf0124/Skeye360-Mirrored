@@ -97,7 +97,6 @@ export function* saga(): Iterator<any> {
 
 // REDUCER
 export default function reducer(state: STATE = initState, action: any): STATE {
-  // console.log("REDUCER " + action.type);
   switch (action.type) {
     case AUTHENTICATE_TEST: {
       return {
