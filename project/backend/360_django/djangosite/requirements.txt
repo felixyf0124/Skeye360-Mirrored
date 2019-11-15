@@ -4,6 +4,7 @@ django-cors-headers
 django-extensions # ref: https://django-extensions.readthedocs.io/en/latest/installation_instructions.html
 django-filter # ref: https://django-filter.readthedocs.io/en/master/
 djongo
+rest-meets-djongo
 sqlparse==0.2.4
 wheel
 markdown
