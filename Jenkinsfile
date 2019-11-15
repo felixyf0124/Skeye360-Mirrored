@@ -19,19 +19,8 @@ pipeline {
                 // }
                 //Testing frontend
                 stage('test_frontend') {
-                    agent {
-                        docker {
-                            image 'project_360_dashboard'
-                        }
-                    }
-                    steps {
-                        script {
-                            dir("project/frontend/360_dashboard") {
-                                 //sh "yarn test" #some dependencies not there
-                            }
-                        }
-                        echo "Testing"
-                    }
+                   sh 'pwd'
+                   sh 'docker build -t react-test -f Dockerfile.test --no-cache'
                 }
                 //Testing django api
                 stage('test_djangoapi') {
