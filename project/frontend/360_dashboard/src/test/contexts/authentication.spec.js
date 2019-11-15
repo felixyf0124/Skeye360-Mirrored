@@ -14,20 +14,11 @@ describe('authentication redux', () => {
     it('should set username as the username in the input and authenticated to true', () => {
       const result = reducer(
         initState,
-        authenticate({ username: 'TEST', password: 'TEST' }),
+        authSuccess({ username: 'TEST', user_id: '1' }),
       );
       expect(result).to.include({
         username: 'TEST',
-        authenticated: true,
-      });
-    });
-    it('should set username as the username in the input and authenticated to true', () => {
-      const result = reducer(
-        initState,
-        authSuccess({ username: 'TEST', password: 'TEST' }),
-      );
-      expect(result).to.include({
-        username: 'TEST',
+        user_id: '1',
         authenticated: true,
       });
     });

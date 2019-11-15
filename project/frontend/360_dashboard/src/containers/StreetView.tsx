@@ -60,7 +60,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
       </div>
     );
   }
-};
+}
 
 const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: state.authentication.authenticated,
