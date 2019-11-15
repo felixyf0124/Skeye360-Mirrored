@@ -9,6 +9,7 @@ pipeline {
                 }
 
                 //Testing frontend
+                //Ref: https://hackernoon.com/continuous-delivery-of-react-app-with-jenkins-and-docker-8a1ae1511b86
                 stage('test_frontend') 
                 {
                    steps
@@ -17,10 +18,11 @@ pipeline {
                        {
                            dir("project/frontend/360_dashboard")
                            {
-                           
-                                sh 'pwd'
-                                sh 'ls'
                                 sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
+                                // Do tests
+                                sh 'docker run --rm react-test'
+                                // remove image
+                                sh 'sh 'docker rmi react-test'
                            }
                        }
                     }
