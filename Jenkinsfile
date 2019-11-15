@@ -22,7 +22,7 @@ pipeline {
                                 // Do tests
                                 sh 'docker run --rm react-test'
                                 // remove image
-                                sh 'sh 'docker rmi react-test'
+                                sh 'docker rmi react-test'
                            }
                        }
                     }
