@@ -9,19 +9,21 @@ const authenticateUser = async (
   username: string,
   password: string,
 ): Promise<Response> => {
+  // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/auth/login`;
   const params = {
     username,
     password,
   };
-  console.log(params);
 
+  // POST REQUEST
   const settings = {
     method: 'POST',
     body: JSON.stringify(params),
     headers: { 'content-type': 'application/json' },
   };
 
+  // RESPONSE
   const response = await fetch(url, settings);
   const data = (await response.json()) as Response;
   return data;

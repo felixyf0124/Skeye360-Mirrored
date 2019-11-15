@@ -40,7 +40,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 
   const {
     authenticated,
-    name,
     error,
     user_id,
   } = props;
@@ -61,7 +60,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   };
 
   // eslint-disable-next-line no-alert
-  if (authenticated) alert(`Welcome ${name}! `);
   if (authenticated) return <Redirect push to="/" />;
 
   return (

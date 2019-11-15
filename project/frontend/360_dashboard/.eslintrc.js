@@ -42,6 +42,9 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
     '@typescript-eslint/no-var-requires': 'off',
+    "linebreak-style": 0,
+    "global-require": 0,
+    "eslint linebreak-style": [0, "error", "windows"],
   },
   settings: {
     'import/resolver': {

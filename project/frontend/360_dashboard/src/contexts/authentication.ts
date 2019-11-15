@@ -15,6 +15,7 @@ export interface STATE {
   user_id: number;
 }
 
+// initState
 const initState: STATE = {
   sessionToken: '',
   username: '',
@@ -24,6 +25,7 @@ const initState: STATE = {
   user_id: 1,
 };
 
+// actions
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const AUTHENTICATE_SUCCESS = 'AUTHENTICATE_SUCCESS';
 export const AUTHENTICATE_TEST = 'AUTHENTICATE_TEST';
@@ -36,6 +38,7 @@ export interface AuthAction {
   password: string;
 }
 
+// authentication base case
 export const authenticate = (username: string, password: string): AuthAction => ({
   type: AUTHENTICATE,
   username,
@@ -46,6 +49,7 @@ export interface LogoutAction {
   type: string;
 }
 
+// logout
 export const logout = (): LogoutAction => ({
   type: LOGOUT,
 });
@@ -55,6 +59,7 @@ interface AuthSuccessAction {
   data: authResponse;
 }
 
+// authentication success case
 export const authSuccess = (
   data: authResponse,
 ): AuthSuccessAction => ({
@@ -66,6 +71,7 @@ interface AuthFailAction {
   type: string;
 }
 
+// authentication fail case
 export const authFail = (): AuthFailAction => ({
   type: AUTHENTICATE_FAIL,
 });
@@ -73,7 +79,6 @@ export const authFail = (): AuthFailAction => ({
 // SAGA
 export function* handleAuthentication({ username, password }: AuthAction): Iterator<any> {
   try {
-    // console.log(`handleAuthentication${username}${password}`);
     const data = yield call(authenticateUser, username, password);
     if (data !== undefined) {
       yield put(authSuccess(data));
@@ -84,11 +89,13 @@ export function* handleAuthentication({ username, password }: AuthAction): Itera
   }
 }
 
+// saga action mapper
 export function* saga(): Iterator<any> {
   // console.log("SAGA");
   yield takeLatest(AUTHENTICATE, handleAuthentication);
 }
 
+// REDUCER
 export default function reducer(state: STATE = initState, action: any): STATE {
   // console.log("REDUCER " + action.type);
   switch (action.type) {
