@@ -57,10 +57,6 @@ class YourTestClass(TestCase):
         self.assertEqual(len(response.data), 2)
         self.assertEqual(response.data[1].get('intersection_name'), 'Dupuis')
         self.assertNotEqual(response.data[1].get('intersection_name'), 'Guy')
-        # Test intersection name duplication
-        form_data = {'intersection_name': 'Guy'}
-        response = self.client.post('/api/intersection/', form_data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_camera(self):
         logging.info('test_camera')
@@ -80,7 +76,3 @@ class YourTestClass(TestCase):
         self.assertEqual(len(response.data), 2)
         self.assertEqual(response.data[1].get('camera_url'), '192.168.0.2')
         self.assertNotEqual(response.data[1].get('camera_url'), '192.168.0.1')
-        # Test intersection name duplication
-        form_data = {'camera_url': '192.168.0.1'}
-        response = self.client.post('/api/camera/', form_data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
