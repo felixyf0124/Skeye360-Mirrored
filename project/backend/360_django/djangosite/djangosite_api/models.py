@@ -20,7 +20,6 @@ class Intersection(models.Model):
 
 
 class Camera(models.Model):
-    #id = models.AutoField(primary_key=True)
     camera_url = models.CharField(max_length=20)
     intersection_id = models.ForeignKey(Intersection, related_name='cameras', on_delete=models.CASCADE)
 
