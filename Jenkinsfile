@@ -68,6 +68,10 @@ pipeline {
             cleanWs()
             deleteDir()
         }
+        failure{
+            echo 'pipeline failed, at least one step failed'
+            sh 'docker images -q |xargs docker rmi'
+        }
     }
 
 }
