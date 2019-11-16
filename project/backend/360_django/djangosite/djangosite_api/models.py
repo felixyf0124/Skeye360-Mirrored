@@ -16,12 +16,12 @@ class Intersection(models.Model):
     intersection_name = models.CharField(max_length=50, unique=True, null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
-    district_id = models.ForeignKey(District, related_name='intersections', on_delete=models.CASCADE, null=True)
+    district_id = models.ForeignKey(District, related_name='intersections', on_delete=models.CASCADE)
 
 
 class Camera(models.Model):
     camera_url = models.CharField(max_length=20)
-    intersection_id = models.ForeignKey(Intersection, related_name='cameras', on_delete=models.CASCADE, null=True)
+    intersection_id = models.ForeignKey(Intersection, related_name='cameras', on_delete=models.CASCADE)
 
 
 class Trafficlight(models.Model):
@@ -58,4 +58,4 @@ class Pedestrian(models.Model):
 class Userlog(models.Model):
     log_message = models.CharField(max_length=255, null=True)
     log_time = models.DateTimeField(auto_now_add=True, null=True)
-    user_id = models.ForeignKey(User, related_name='user_logs', on_delete=models.CASCADE,null=True)
+    user_id = models.ForeignKey(User, related_name='user_logs', on_delete=models.CASCADE)
