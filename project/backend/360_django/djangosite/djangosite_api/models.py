@@ -16,11 +16,11 @@ class Intersection(models.Model):
     intersection_name = models.CharField(max_length=50, unique=True, null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
-    district_id = models.ForeignKey(District, related_name='intersections', on_delete=models.CASCADE, null=True)
+    district_id = models.ForeignKey(District, related_name='intersections', on_delete=models.CASCADE)
 
 
 class Camera(models.Model):
-    id = models.AutoField(primary_key=True)
+    #id = models.AutoField(primary_key=True)
     camera_url = models.CharField(max_length=20)
     intersection_id = models.ForeignKey(Intersection, related_name='cameras', on_delete=models.CASCADE)
 
