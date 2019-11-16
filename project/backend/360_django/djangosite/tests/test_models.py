@@ -26,6 +26,7 @@ class YourTestClass(TestCase):
         district1 = mixer.blend('djangosite_api.District', district_name='Montreal_East', id=1)
         self.assertEqual(district1.district_name, 'Montreal_East')
         district2 = mixer.blend('djangosite_api.District', district_name='Montreal_West', id=2)
+        self.assertEqual(district2.district_name, 'Montreal_West')
         # Test get request
         response = self.client.get('/api/district/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -40,9 +41,11 @@ class YourTestClass(TestCase):
 
     def test_intersection(self):
         logging.info('test_intersection')
+        # Create district
+        mixer.blend('djangosite_api.District', district_name='Montreal_East', id=1)
         # Test post request
-        data1 = {'intersection_name': 'Guy', id: 1}
-        data2 = {'intersection_name': 'Dupuis', id: 2}
+        data1 = {'intersection_name': 'Guy', 'district_id': 1, id: 1}
+        data2 = {'intersection_name': 'Dupuis', 'district_id': 1, id: 2}
         # Test post request
         intersection1 = self.client.post('/api/intersection/', data1)
         intersection2 = self.client.post('/api/intersection/', data2)
@@ -63,10 +66,15 @@ class YourTestClass(TestCase):
 
     def test_camera(self):
         logging.info('test_camera')
+        # Create distinct
+        distinct = mixer.blend('djangosite_api.District', district_name='Montreal_East', id=1)
+        # Create intersection
+        intersection = mixer.blend('djangosite_api.Intersection', intersection_name='Guy', district_id=distinct, id=1)
         # Test post request
-        camera1 = mixer.blend('djangosite_api.Camera', camera_url='192.168.0.1', id=1)
+        camera1 = mixer.blend('djangosite_api.Camera', camera_url='192.168.0.1', intersection_id=intersection, id=1)
         self.assertEqual(camera1.camera_url, '192.168.0.1')
-        camera2 = mixer.blend('djangosite_api.Camera', camera_url='192.168.0.2', id=2)
+        camera2 = mixer.blend('djangosite_api.Camera', camera_url='192.168.0.2', intersection_id=intersection, id=2)
+        self.assertEqual(camera2.camera_url, '192.168.0.2')
         # Test get request
         response = self.client.get('/api/camera/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
