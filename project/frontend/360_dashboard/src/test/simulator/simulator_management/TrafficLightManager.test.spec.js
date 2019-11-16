@@ -80,7 +80,7 @@ describe('class TrafficLightManager', () => {
     if (deltaT > 500) {
       assert.deepEqual(trafficLightManager.isBlink(), true);
     } else {
-      assert.deepEqual(trafficLightManager.isBlink(), true);
+      assert.deepEqual(trafficLightManager.isBlink(), false);
     }
   });
 });
