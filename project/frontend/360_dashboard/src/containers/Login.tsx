@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -19,7 +20,10 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  authenticate: (username: string, password: string) => void;
+  authenticate: (
+    username: string,
+    password: string
+  ) => void;
   historyPush: (url: string) => void;
   logClick: (
     log_message: string,
@@ -32,9 +36,10 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   const {
     username,
     password,
-    log_message,
+  } = state;
+
+  const {
     authenticated,
-    name,
     error,
     user_id,
   } = props;
@@ -43,19 +48,18 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-
   // eslint-disable-next-line consistent-return
   const handleLoginClick = (): any => {
-    const { historyPush, logClick } = props;
-    historyPush('/login');
-    logClick("Clicked Login", user_id);
+    // eslint-disable-next-line no-shadow
+    const { logClick } = props;
+    props.authenticate(username, password);
+    logClick('Clicked Login', user_id);
     if (!authenticated) {
       return <Redirect push to="/" />;
     }
   };
 
   // eslint-disable-next-line no-alert
-  if (authenticated) alert(`Welcome ${name}! `);
   if (authenticated) return <Redirect push to="/" />;
 
   return (
@@ -64,7 +68,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
       <div className="form-container">
         <form onSubmit={(e): void => {
           e.preventDefault();
-          props.authenticate(username, password);
           handleLoginClick();
         }}
         >
@@ -73,8 +76,8 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               <div>{error}</div>
             </div>
           ) : (
-              <div />
-            )}
+            <div />
+          )}
           <div className="form-group">
             <label htmlFor="username">
               Username

@@ -23,6 +23,7 @@ export interface STATE {
   success: boolean;
 }
 
+// initState
 const initState: STATE = {
   intersection_id: '',
   latitude: '',
@@ -33,6 +34,7 @@ const initState: STATE = {
   success: false,
 };
 
+// actions
 export const RESET_INTERSECTION = 'RESET_INTERSECTION';
 
 export const ADD_INTERSECTION = 'ADD_INTERSECTION';
@@ -55,6 +57,7 @@ export interface ResetIntersectionAction {
   type: string;
 }
 
+// reset intersection state
 export const resetIntersection = (): ResetIntersectionAction => ({
   type: RESET_INTERSECTION,
 });
@@ -67,6 +70,7 @@ export interface AddIntersectionAction extends Action {
   district_id: string;
 }
 
+// base case
 export const addNewIntersection = (
   intersection_name: string,
   latitude: string,
@@ -85,6 +89,7 @@ export interface AddIntersectionSuccessAction {
   data: intersectionResponse;
 }
 
+// success case
 export const addIntersectionSuccess = (
   data: intersectionResponse,
 ): AddIntersectionSuccessAction => ({
@@ -96,16 +101,18 @@ export interface AddIntersectionFail {
   type: string;
 }
 
+// fail case
 export const addIntersectionFail = (): AddIntersectionFail => ({
   type: ADD_INTERSECTION_FAIL,
 });
 
-// GET
+// READ
 export interface GetIntersectionAction extends Action {
   type: string;
   id: string;
 }
 
+// base case
 export const getExistingIntersection = (
   id: string,
 ): GetIntersectionAction => ({
@@ -118,6 +125,7 @@ export interface GetIntersectionSuccessAction {
   data: intersectionResponse;
 }
 
+// success case
 export const getIntersectionSuccess = (
   data: intersectionResponse,
 ): GetIntersectionSuccessAction => ({
@@ -129,11 +137,12 @@ export interface GetIntersectionFail {
   type: string;
 }
 
+// fail case
 export const getIntersectionFail = (): GetIntersectionFail => ({
   type: GET_INTERSECTION_FAIL,
 });
 
-// EDIT
+// UPDATE
 export interface EditIntersectionAction extends Action {
   intersection_id: string;
   intersection_name: string;
@@ -142,6 +151,7 @@ export interface EditIntersectionAction extends Action {
   district_id: string;
 }
 
+// base case
 export const editExistingIntersection = (
   intersection_id: string,
   intersection_name: string,
@@ -162,6 +172,7 @@ export interface EditIntersectionSuccessAction {
   data: intersectionResponse;
 }
 
+// success case
 export const editIntersectionSuccess = (
   data: intersectionResponse,
 ): EditIntersectionSuccessAction => ({
@@ -173,6 +184,7 @@ export interface EditIntersectionFail {
   type: string;
 }
 
+// fail case
 export const editIntersectionFail = (): EditIntersectionFail => ({
   type: EDIT_INTERSECTION_FAIL,
 });
@@ -182,6 +194,7 @@ export interface DeleteIntersectionAction extends Action {
   id: string;
 }
 
+// base case
 export const deleteExistingIntersection = (
   id: string,
 ): DeleteIntersectionAction => ({
@@ -194,6 +207,7 @@ export interface DeleteIntersectionSuccessAction {
   id: string;
 }
 
+// success case
 export const deleteIntersectionSuccess = (
   id: string,
 ): DeleteIntersectionSuccessAction => ({
@@ -205,11 +219,14 @@ export interface DeleteIntersectionFail {
   type: string;
 }
 
+// fail case
 export const deleteIntersectionFail = (): DeleteIntersectionFail => ({
   type: DELETE_INTERSECTION_FAIL,
 });
 
 // SAGA
+
+// create
 export function* handleAddIntersection({
   intersection_name,
   latitude,
@@ -227,6 +244,7 @@ export function* handleAddIntersection({
   }
 }
 
+// read
 export function* handleGetIntersection({
   id,
 }: GetIntersectionAction): Iterator<any> {
@@ -241,6 +259,7 @@ export function* handleGetIntersection({
   }
 }
 
+// update
 export function* handleEditIntersection({
   intersection_id,
   intersection_name,
@@ -266,6 +285,7 @@ export function* handleEditIntersection({
   }
 }
 
+// delete
 export function* handleDeleteIntersection({
   id,
 }: DeleteIntersectionAction): Iterator<any> {
@@ -278,6 +298,8 @@ export function* handleDeleteIntersection({
   }
 }
 
+
+// saga action mapper
 export function* saga(): Iterator<any> {
   yield takeLatest(ADD_INTERSECTION, handleAddIntersection);
   yield takeLatest(GET_INTERSECTION, handleGetIntersection);
@@ -285,6 +307,7 @@ export function* saga(): Iterator<any> {
   yield takeLatest(DELETE_INTERSECTION, handleDeleteIntersection);
 }
 
+// REDUCER
 export default function reducer(state: STATE = initState, action: any): STATE {
   switch (action.type) {
     case RESET_INTERSECTION: {
