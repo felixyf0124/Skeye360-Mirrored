@@ -9,28 +9,22 @@ import reducer, {
   // handleAuthentication,
 } from '../../contexts/authentication';
 
+// AUTHENTICATION TEST
 describe('authentication redux', () => {
   describe('reducer', () => {
+    // Authenticate Success
     it('should set username as the username in the input and authenticated to true', () => {
       const result = reducer(
         initState,
-        authenticate({ username: 'TEST', password: 'TEST' }),
+        authSuccess({ username: 'TEST', user_id: '1' }),
       );
       expect(result).to.include({
         username: 'TEST',
+        user_id: '1',
         authenticated: true,
       });
     });
-    it('should set username as the username in the input and authenticated to true', () => {
-      const result = reducer(
-        initState,
-        authSuccess({ username: 'TEST', password: 'TEST' }),
-      );
-      expect(result).to.include({
-        username: 'TEST',
-        authenticated: true,
-      });
-    });
+    // Authenticate Fail
     it('failed authentication', () => {
       const result = reducer(
         initState,
@@ -44,6 +38,7 @@ describe('authentication redux', () => {
         error: 'Invalid credentials.',
       });
     });
+    // Logout
     it('logout redux', () => {
       const result = reducer(
         initState,

@@ -5,15 +5,12 @@ import { connect } from 'react-redux';
 import { editExistingIntersection, EditIntersectionAction } from '../contexts/intersection';
 import { RootState } from '../reducers/rootReducer';
 
-interface Props {
+interface StateProps {
   intersection_id: string;
   latitude: string;
   longitude: string;
   intersection_name: string;
   district_id: string;
-}
-
-interface StateProps {
   error: string;
 }
 
@@ -27,7 +24,7 @@ interface DispatchProps {
   ) => EditIntersectionAction;
 }
 
-const EditIntersectionForm = (props: Props & StateProps & DispatchProps): JSX.Element => {
+const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -108,6 +105,11 @@ const EditIntersectionForm = (props: Props & StateProps & DispatchProps): JSX.El
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
+  district_id: state.intersection.district_id,
+  intersection_id: state.intersection.intersection_id,
+  latitude: state.intersection.latitude,
+  longitude: state.intersection.longitude,
+  intersection_name: state.intersection.intersection_name,
   error: state.intersection.error,
 });
 

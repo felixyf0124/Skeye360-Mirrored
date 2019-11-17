@@ -6,55 +6,83 @@ import Header, { Head } from '../components/Header';
 import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
-import { deleteExistingIntersection } from '../contexts/intersection';
+import {
+  getExistingIntersection, deleteExistingIntersection, resetIntersection, ResetIntersectionAction,
+} from '../contexts/intersection';
+import { getDistricts } from '../contexts/districts';
 
 interface StateProps {
   authenticated: boolean;
   intersectionId: string;
+  intersectionName: string;
   error: string;
 }
 
 interface DispatchProps {
   deleteExistingIntersection: (id: string) => any;
+  getExistingIntersection: (id: string) => any;
+  getDistricts: () => any;
+  resetIntersection(): ResetIntersectionAction;
 }
 
-const StreetView = (props: StateProps & DispatchProps): JSX.Element => {
-  const [state] = React.useState(props);
-  const {
-    authenticated,
-    intersectionId,
-  } = state;
-  if (!authenticated) return <Redirect push to="/login" />;
+class StreetView extends React.Component<StateProps & DispatchProps> {
+  public componentDidMount(): void {
+    // eslint-disable-next-line no-shadow
+    const { intersectionId, getExistingIntersection } = this.props;
+    getExistingIntersection(intersectionId);
+  }
 
-  // eslint-disable-next-line consistent-return
-  const handleDelete = (id: string): any => {
-    state.deleteExistingIntersection(id);
-  };
+  public componentWillUnmount(): void {
+    // eslint-disable-next-line no-shadow
+    const { resetIntersection } = this.props;
+    resetIntersection();
+  }
 
-  return (
-    <div>
-      <Header />
-      <Head>
-        <Link to={`/intersection/edit/${intersectionId}`} className="header-text">Edit</Link>
-        <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">Delete</Link>
-      </Head>
-      <Simulator />
-      <div className="charts-row">
-        <NorthChart />
-        <AvgWaitTimeChart />
+  public render(): JSX.Element {
+    const {
+      authenticated,
+      intersectionId,
+      intersectionName,
+    } = this.props;
+    if (!authenticated) return <Redirect push to="/login" />;
+
+    // eslint-disable-next-line consistent-return
+    const handleDelete = (id: string): any => {
+      // eslint-disable-next-line no-shadow
+      const { deleteExistingIntersection } = this.props;
+      deleteExistingIntersection(id);
+    };
+
+    return (
+      <div>
+        <Header />
+        <h1 className="header-text">{intersectionName}</h1>
+        <Head>
+          <Link to={`/intersection/edit/${intersectionId}`} className="header-text">Edit</Link>
+          <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">Delete</Link>
+        </Head>
+        <Simulator />
+        <div className="charts-row">
+          <NorthChart />
+          <AvgWaitTimeChart />
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: state.authentication.authenticated,
   intersectionId: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
+  intersectionName: state.intersection.intersection_name,
   error: state.intersection.error,
 });
 
 const mapDispatchToProps: DispatchProps = {
   deleteExistingIntersection,
+  getExistingIntersection,
+  getDistricts,
+  resetIntersection,
 };
 
 export default connect(

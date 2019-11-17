@@ -121,8 +121,8 @@ const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: state.authentication.authenticated,
   username: state.authentication.username,
 
-  latitude: '0',
-  longitude: '0',
+  latitude: '45.5017',
+  longitude: '-73.5673',
   district_id: '1',
   intersection_name: 'Guy St/St-Cath',
 

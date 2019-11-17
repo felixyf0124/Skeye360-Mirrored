@@ -25,7 +25,7 @@ const GoogleMap = (districts: districtState): JSX.Element => {
             lng={-73.5673}
             text="Camera_id"
             color="red"
-            link="/streetview"
+            link="/streetview/1"
           />
         ) : (
           districts.districts[0].intersections.map((intersection) => (
