@@ -6,7 +6,9 @@ import Header, { Head } from '../components/Header';
 import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
-import { getExistingIntersection, deleteExistingIntersection } from '../contexts/intersection';
+import {
+  getExistingIntersection, deleteExistingIntersection, resetIntersection, ResetIntersectionAction,
+} from '../contexts/intersection';
 import { getDistricts } from '../contexts/districts';
 
 interface StateProps {
@@ -20,6 +22,7 @@ interface DispatchProps {
   deleteExistingIntersection: (id: string) => any;
   getExistingIntersection: (id: string) => any;
   getDistricts: () => any;
+  resetIntersection(): ResetIntersectionAction;
 }
 
 class StreetView extends React.Component<StateProps & DispatchProps> {
@@ -27,6 +30,12 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
     // eslint-disable-next-line no-shadow
     const { intersectionId, getExistingIntersection } = this.props;
     getExistingIntersection(intersectionId);
+  }
+
+  public componentWillUnmount(): void {
+    // eslint-disable-next-line no-shadow
+    const { resetIntersection } = this.props;
+    resetIntersection();
   }
 
   public render(): JSX.Element {
@@ -73,6 +82,7 @@ const mapDispatchToProps: DispatchProps = {
   deleteExistingIntersection,
   getExistingIntersection,
   getDistricts,
+  resetIntersection,
 };
 
 export default connect(

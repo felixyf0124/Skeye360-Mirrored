@@ -9,8 +9,10 @@ import reducer, {
   // handleAuthentication,
 } from '../../contexts/authentication';
 
+// AUTHENTICATION TEST
 describe('authentication redux', () => {
   describe('reducer', () => {
+    // Authenticate Success
     it('should set username as the username in the input and authenticated to true', () => {
       const result = reducer(
         initState,
@@ -22,6 +24,7 @@ describe('authentication redux', () => {
         authenticated: true,
       });
     });
+    // Authenticate Fail
     it('failed authentication', () => {
       const result = reducer(
         initState,
@@ -35,6 +38,7 @@ describe('authentication redux', () => {
         error: 'Invalid credentials.',
       });
     });
+    // Logout
     it('logout redux', () => {
       const result = reducer(
         initState,

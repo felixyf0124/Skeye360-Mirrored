@@ -52,6 +52,7 @@ describe('intersection redux', () => {
       });
     });
     // SUCCESS
+    // CREATE
     it('should add new intersection successfully', () => {
       const result = reducer(
         initState,
@@ -67,6 +68,7 @@ describe('intersection redux', () => {
         success: true,
       });
     });
+    // READ
     it('should get intersection successfully', () => {
       const result = reducer(
         initState,
@@ -82,6 +84,7 @@ describe('intersection redux', () => {
         success: true,
       });
     });
+    // UPDATE
     it('should edit intersection successfully', () => {
       const result = reducer(
         initState,
@@ -97,6 +100,7 @@ describe('intersection redux', () => {
         success: true,
       });
     });
+    // DELETE
     it('should delete intersection successfully', () => {
       const result = reducer(
         initState,
@@ -113,6 +117,7 @@ describe('intersection redux', () => {
       });
     });
     // FAIL
+    // CREATE
     it('should fail to add intersection', () => {
       const result = reducer(
         initState,
@@ -128,6 +133,7 @@ describe('intersection redux', () => {
         success: false,
       });
     });
+    // READ
     it('should fail to get intersection', () => {
       const result = reducer(
         initState,
@@ -143,6 +149,7 @@ describe('intersection redux', () => {
         success: false,
       });
     });
+    // UPDATE
     it('should fail to edit intersection', () => {
       const result = reducer(
         initState,
@@ -158,6 +165,7 @@ describe('intersection redux', () => {
         success: false,
       });
     });
+    // DELETE
     it('should fail to delete intersection', () => {
       const result = reducer(
         initState,

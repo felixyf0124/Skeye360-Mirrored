@@ -13,7 +13,7 @@ export interface Response {
   }[];
 }
 
-const APIDomain = '40.121.23.48:8000';
+const APIDomain = '0.0.0.0:8000';
 
 const fetchDistricts = async (): Promise<Response> => {
   const url = `//${APIDomain}/api/district/`;
