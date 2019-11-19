@@ -51,16 +51,23 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   // eslint-disable-next-line consistent-return
   const handleLoginClick = (): any => {
     // eslint-disable-next-line no-shadow
-    const { logClick } = props;
     props.authenticate(username, password);
-    logClick('Clicked Login', user_id);
     if (!authenticated) {
       return <Redirect push to="/" />;
     }
   };
 
+  const handleLog = (): any => {
+    const { logClick } = props;
+    logClick("Clicked Login", user_id);
+  }
   // eslint-disable-next-line no-alert
-  if (authenticated) return <Redirect push to="/" />;
+  if (authenticated) {
+    handleLog();
+    return (
+    <Redirect push to="/" />
+    );
+  }
 
   return (
     <div>
