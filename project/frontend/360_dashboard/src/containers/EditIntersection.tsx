@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
@@ -12,7 +11,6 @@ import {
 import EditIntersectionForm from '../components/EditIntersectionForm';
 
 interface StateProps {
-  authenticated: boolean;
   username: string;
 
   intersection_id: string;
@@ -39,10 +37,8 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
 
   public render(): JSX.Element {
     const {
-      authenticated,
       success,
     } = this.props;
-    if (!authenticated) return <Redirect push to="/login" />;
     if (success) {
       return (
         <div>
@@ -61,7 +57,6 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
 
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  authenticated: state.authentication.authenticated,
   username: state.authentication.username,
 
   intersection_id: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),

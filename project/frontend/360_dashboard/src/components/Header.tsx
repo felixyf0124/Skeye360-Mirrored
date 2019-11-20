@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
-import { logout } from '../contexts/authentication';
+import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
 
 export const Head = styled.div`
@@ -78,7 +78,7 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  authenticated: state.authentication.authenticated,
+  authenticated: authenticated(),
   user_id: state.authentication.user_id,
   log_message: '',
 });

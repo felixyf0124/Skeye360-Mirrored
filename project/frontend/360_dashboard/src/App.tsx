@@ -12,11 +12,13 @@ import EditIntersection from './containers/EditIntersection';
 import StreetView from './containers/StreetView';
 import ChartsPrototype from './components/ChartsPrototype';
 import SessionRoutes from './SessionRoutes';
+import { authenticated } from './contexts/authentication';
 
 interface StateProps {
   authenticated: boolean;
 }
 
+// eslint-disable-next-line no-shadow
 const App = ({ authenticated }: StateProps): JSX.Element => (
   <Switch>
     <Route
@@ -39,7 +41,7 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
 
 const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
-  authenticated: state.authentication.authenticated,
+  authenticated: authenticated(),
 });
 
 export default connect(

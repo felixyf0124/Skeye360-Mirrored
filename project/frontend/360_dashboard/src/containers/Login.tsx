@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { RootState } from '../reducers/rootReducer';
-import { authenticate } from '../contexts/authentication';
+import { authenticate, authenticated } from '../contexts/authentication';
 import Header from '../components/Header';
 import { logClick } from '../contexts/LogClicks';
 
@@ -38,10 +38,13 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     password,
   } = state;
 
+  const history = useHistory();
+
   const {
-    authenticated,
     error,
     user_id,
+    // eslint-disable-next-line no-shadow
+    authenticated,
   } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -54,13 +57,9 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     const { logClick } = props;
     props.authenticate(username, password);
     logClick('Clicked Login', user_id);
-    if (!authenticated) {
-      return <Redirect push to="/" />;
-    }
   };
 
-  // eslint-disable-next-line no-alert
-  if (authenticated) return <Redirect push to="/" />;
+  if (authenticated) return <Redirect to="/" />;
 
   return (
     <div>
@@ -69,6 +68,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
         <form onSubmit={(e): void => {
           e.preventDefault();
           handleLoginClick();
+          history.push('/');
         }}
         >
           {error !== '' ? (
@@ -112,7 +112,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   password: '',
   user_id: state.authentication.user_id,
   log_message: '',
-  authenticated: state.authentication.authenticated,
+  authenticated: authenticated(),
   name: state.authentication.username,
   sessionToken: state.authentication.sessionToken,
   error: state.authentication.error,
