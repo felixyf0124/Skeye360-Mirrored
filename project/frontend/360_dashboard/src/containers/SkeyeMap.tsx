@@ -1,13 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import GoogleMap from '../components/GoogleMap';
 import Header from '../components/Header';
 import { STATE as districtState, GetDistrictsAction, getDistricts } from '../contexts/districts';
 
 interface StateProps {
-  authenticated: boolean;
   districts: districtState;
 }
 
@@ -35,8 +33,7 @@ class SkeyeMap extends React.Component<StateProps & DispatchProps | any> {
   }
 
   public render(): JSX.Element {
-    const { authenticated, districts } = this.props;
-    if (!authenticated) return <Redirect push to="/login" />;
+    const { districts } = this.props;
     return (
       <div>
         <Header />
@@ -47,7 +44,6 @@ class SkeyeMap extends React.Component<StateProps & DispatchProps | any> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  authenticated: state.authentication.authenticated,
   districts: state.districts,
 });
 

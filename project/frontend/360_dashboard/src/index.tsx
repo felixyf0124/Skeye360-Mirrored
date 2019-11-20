@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import createStore, { history } from './store';
 import './index.css';
-import App from './containers/App';
+import App from './App';
 import './custom.scss';
 
 createStore().then((store) => {

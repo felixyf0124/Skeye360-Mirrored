@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import Header, { Head } from '../components/Header';
 import Simulator from './simulator/Scene';
@@ -12,7 +12,6 @@ import {
 import { getDistricts } from '../contexts/districts';
 
 interface StateProps {
-  authenticated: boolean;
   intersectionId: string;
   intersectionName: string;
   error: string;
@@ -40,11 +39,9 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
 
   public render(): JSX.Element {
     const {
-      authenticated,
       intersectionId,
       intersectionName,
     } = this.props;
-    if (!authenticated) return <Redirect push to="/login" />;
 
     // eslint-disable-next-line consistent-return
     const handleDelete = (id: string): any => {
@@ -72,7 +69,6 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  authenticated: state.authentication.authenticated,
   intersectionId: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
   intersectionName: state.intersection.intersection_name,
   error: state.intersection.error,

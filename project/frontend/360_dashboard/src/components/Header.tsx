@@ -19,28 +19,24 @@ export const Head = styled.div`
 `;
 
 interface StateProps {
-    authenticated: boolean;
-    user_id: number;
-    log_message: string;
+  authenticated: boolean;
+  user_id: number;
+  log_message: string;
 }
 
 interface DispatchProps {
-    logout: () => any;
-    handleMapButton: () => void;
-    logClick: (
-      log_message: string,
-      user_id: number,
-    ) => any;
+  logout: () => any;
+  handleMapButton: () => void;
+  logClick: (
+    log_message: string,
+    user_id: number,
+  ) => any;
 }
 
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
 const Header = (props: StateProps & DispatchProps): JSX.Element => {
   const [state] = React.useState(props);
-  // const {
-  //   user_id,
-  //   log_message,
-  // } = props;
 
   return (
     <nav className="navbar">
