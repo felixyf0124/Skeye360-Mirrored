@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import {
-  call,
-  put,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import authenticateUser, { Response as authResponse } from '../api/authenticateUser';
 
 export interface STATE {
@@ -15,7 +11,7 @@ export interface STATE {
 }
 
 // initState
-const initState: STATE = {
+export const initState: STATE = {
   sessionToken: '',
   username: '',
   timestamp: '',
@@ -58,9 +54,7 @@ interface AuthSuccessAction {
 }
 
 // authentication success case
-export const authSuccess = (
-  data: authResponse,
-): AuthSuccessAction => ({
+export const authSuccess = (data: authResponse): AuthSuccessAction => ({
   type: AUTHENTICATE_SUCCESS,
   data,
 });
@@ -100,7 +94,6 @@ export function* handleAuthentication({ username, password }: AuthAction): Itera
     const data = yield call(authenticateUser, username, password);
     if (data !== undefined) {
       yield put(authSuccess(data));
-      localStorage.setItem('user', JSON.stringify(data));
     }
   } catch (e) {
     yield put(authFail());
@@ -133,6 +126,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
           error: 'Invalid credentials.',
         };
       }
+      localStorage.setItem('user', JSON.stringify(data));
       return {
         ...state,
         sessionToken: `${data.username}-${data.user_id}`,

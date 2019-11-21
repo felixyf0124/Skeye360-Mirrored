@@ -53,20 +53,16 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
         ) : (
           <div />
         )}
-        <form onSubmit={(e): void => {
-          e.preventDefault();
-          handleSubmit();
-          history.push(`/streetview/${state.intersection_id}`);
-        }}
+        <form
+          onSubmit={(e): void => {
+            e.preventDefault();
+            handleSubmit();
+            history.push(`/streetview/${state.intersection_id}`);
+          }}
         >
           <div className="form-group">
             <div>District ID</div>
-            <input
-              type="text"
-              name="district_id"
-              value={state.district_id}
-              disabled
-            />
+            <input type="text" name="district_id" value={state.district_id} disabled />
           </div>
           <div className="form-group">
             <div>Intersection Name</div>
@@ -79,25 +75,13 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
           </div>
           <div className="form-group">
             <div>Latitude</div>
-            <input
-              type="text"
-              name="latitude"
-              value={state.latitude}
-              onChange={handleChange}
-            />
+            <input type="text" name="latitude" value={state.latitude} onChange={handleChange} />
           </div>
           <div className="form-group">
             <div>Longitude</div>
-            <input
-              type="text"
-              name="longitude"
-              value={state.longitude}
-              onChange={handleChange}
-            />
+            <input type="text" name="longitude" value={state.longitude} onChange={handleChange} />
           </div>
-          <button type="submit">
-            Submit
-          </button>
+          <button type="submit">Submit</button>
         </form>
       </div>
     </div>
@@ -117,7 +101,4 @@ const mapDispatchToProps: DispatchProps = {
   editExistingIntersection,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(EditIntersectionForm);
+export default connect(mapStateToProps, mapDispatchToProps)(EditIntersectionForm);

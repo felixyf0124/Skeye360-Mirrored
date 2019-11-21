@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import { useHistory, Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { RootState } from '../reducers/rootReducer';
 import { authenticate, authenticated } from '../contexts/authentication';
@@ -12,7 +12,7 @@ interface StateProps {
   username: string;
   password: string;
   log_message: string;
-  authenticated: boolean;
+  isAuthenticated: boolean;
   name: string;
   sessionToken: string;
   error: string;
@@ -20,33 +20,28 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  authenticate: (
-    username: string,
-    password: string
-  ) => void;
+  authenticated: () => boolean;
+  authenticate: (username: string, password: string) => void;
   historyPush: (url: string) => void;
-  logClick: (
-    log_message: string,
-    user_id: number,
-  ) => any;
+  logClick: (log_message: string, user_id: number) => any;
 }
 
 const Login = (props: StateProps & DispatchProps): JSX.Element => {
+  // state
   const [state, setState] = React.useState(props);
-  const {
-    username,
-    password,
-  } = state;
+  const { username, password } = state;
 
   const history = useHistory();
 
+  // props
   const {
     error,
     user_id,
     // eslint-disable-next-line no-shadow
-    authenticated,
+    isAuthenticated,
   } = props;
 
+  // update state on change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -59,17 +54,18 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     logClick('Clicked Login', user_id);
   };
 
-  if (authenticated) return <Redirect to="/" />;
+  if (isAuthenticated) return <Redirect to="/" />;
 
   return (
     <div>
       <Header />
       <div className="form-container">
-        <form onSubmit={(e): void => {
-          e.preventDefault();
-          handleLoginClick();
-          history.push('/');
-        }}
+        <form
+          onSubmit={(e): void => {
+            e.preventDefault();
+            handleLoginClick();
+            history.push('/');
+          }}
         >
           {error !== '' ? (
             <div className="form-group">
@@ -81,26 +77,14 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
           <div className="form-group">
             <label htmlFor="username">
               Username
-              <input
-                type="text"
-                name="username"
-                value={username}
-                onChange={handleChange}
-              />
+              <input type="text" name="username" value={username} onChange={handleChange} />
             </label>
           </div>
           <div className="form-group">
             <div>Password</div>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={handleChange}
-            />
+            <input type="password" name="password" value={password} onChange={handleChange} />
           </div>
-          <button type="submit">
-            Login
-          </button>
+          <button type="submit">Login</button>
         </form>
       </div>
     </div>
@@ -112,19 +96,17 @@ const mapStateToProps = (state: RootState): StateProps => ({
   password: '',
   user_id: state.authentication.user_id,
   log_message: '',
-  authenticated: authenticated(),
+  isAuthenticated: authenticated(),
   name: state.authentication.username,
   sessionToken: state.authentication.sessionToken,
   error: state.authentication.error,
 });
 
 const mapDispatchToProps: DispatchProps = {
+  authenticated,
   authenticate,
   historyPush: push,
   logClick,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
