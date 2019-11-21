@@ -2,12 +2,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
+import { Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
-import {
-  resetIntersection,
-  ResetIntersectionAction,
-} from '../contexts/intersection';
+import { resetIntersection, ResetIntersectionAction } from '../contexts/intersection';
 import EditIntersectionForm from '../components/EditIntersectionForm';
 
 interface StateProps {
@@ -36,9 +34,9 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
   }
 
   public render(): JSX.Element {
-    const {
-      success,
-    } = this.props;
+    const { success, district_id } = this.props;
+    if (district_id === '') return <Redirect to="/" />;
+
     if (success) {
       return (
         <div>
@@ -55,11 +53,12 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
   }
 }
 
-
 const mapStateToProps = (state: RootState): StateProps => ({
   username: state.authentication.username,
 
-  intersection_id: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
+  intersection_id: state.router.location.pathname.substring(
+    state.router.location.pathname.lastIndexOf('/') + 1,
+  ),
   latitude: state.intersection.latitude,
   longitude: state.intersection.longitude,
   district_id: state.intersection.district_id,
@@ -74,7 +73,4 @@ const mapDispatchToProps: DispatchProps = {
   resetIntersection,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(EditIntersection);
+export default connect(mapStateToProps, mapDispatchToProps)(EditIntersection);

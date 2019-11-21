@@ -3,7 +3,13 @@ import { connect } from 'react-redux';
 import { RootState } from '../reducers/rootReducer';
 import GoogleMap from '../components/GoogleMap';
 import Header from '../components/Header';
-import { STATE as districtState, GetDistrictsAction, getDistricts } from '../contexts/districts';
+import {
+  STATE as districtState,
+  GetDistrictsAction,
+  getDistricts,
+  resetIntersection,
+  ResetDistrictAction,
+} from '../contexts/districts';
 
 interface StateProps {
   districts: districtState;
@@ -11,9 +17,10 @@ interface StateProps {
 
 interface DispatchProps {
   getDistricts(): GetDistrictsAction;
+  resetIntersection(): ResetDistrictAction;
 }
 
-class SkeyeMap extends React.Component<StateProps & DispatchProps | any> {
+class SkeyeMap extends React.Component<(StateProps & DispatchProps) | any> {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { getDistricts } = this.props;
@@ -28,8 +35,8 @@ class SkeyeMap extends React.Component<StateProps & DispatchProps | any> {
 
   public componentWillUnmount(): void {
     // eslint-disable-next-line no-shadow
-    const { getDistricts } = this.props;
-    getDistricts();
+    const { resetIntersection } = this.props;
+    resetIntersection();
   }
 
   public render(): JSX.Element {
@@ -49,9 +56,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 const mapDispatchToProps: DispatchProps = {
   getDistricts,
+  resetIntersection,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SkeyeMap);
+export default connect(mapStateToProps, mapDispatchToProps)(SkeyeMap);

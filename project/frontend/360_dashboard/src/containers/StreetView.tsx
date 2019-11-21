@@ -7,7 +7,10 @@ import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 import {
-  getExistingIntersection, deleteExistingIntersection, resetIntersection, ResetIntersectionAction,
+  getExistingIntersection,
+  deleteExistingIntersection,
+  resetIntersection,
+  ResetIntersectionAction,
 } from '../contexts/intersection';
 import { getDistricts } from '../contexts/districts';
 
@@ -38,10 +41,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
   }
 
   public render(): JSX.Element {
-    const {
-      intersectionId,
-      intersectionName,
-    } = this.props;
+    const { intersectionId, intersectionName } = this.props;
 
     // eslint-disable-next-line consistent-return
     const handleDelete = (id: string): any => {
@@ -55,8 +55,12 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
         <Header />
         <h1 className="header-text">{intersectionName}</h1>
         <Head>
-          <Link to={`/intersection/edit/${intersectionId}`} className="header-text">Edit</Link>
-          <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">Delete</Link>
+          <Link to={`/intersection/edit/${intersectionId}`} className="header-text">
+            Edit
+          </Link>
+          <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">
+            Delete
+          </Link>
         </Head>
         <Simulator />
         <div className="charts-row">
@@ -69,7 +73,9 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  intersectionId: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
+  intersectionId: state.router.location.pathname.substring(
+    state.router.location.pathname.lastIndexOf('/') + 1,
+  ),
   intersectionName: state.intersection.intersection_name,
   error: state.intersection.error,
 });
@@ -81,7 +87,4 @@ const mapDispatchToProps: DispatchProps = {
   resetIntersection,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(StreetView);
+export default connect(mapStateToProps, mapDispatchToProps)(StreetView);

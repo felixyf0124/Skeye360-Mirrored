@@ -21,17 +21,18 @@ interface StateProps {
 // eslint-disable-next-line no-shadow
 const App = ({ authenticated }: StateProps): JSX.Element => (
   <Switch>
-    <Route
-      path="/login"
-      render={(): JSX.Element => <Login />}
-    />
+    <Route path="/login" render={(): JSX.Element => <Login />} />
     <Route>
       <Switch>
         <SessionRoutes authenticated={authenticated}>
           <Route exact path="/" component={SkeyeMap} />
           <Route exact path="/streetview/:intersectionId" component={StreetView} />
           <Route exact path="/intersection/add" component={AddIntersection} />
-          <Route exact path="/intersection/edit/:intersectionId" render={(): JSX.Element => <EditIntersection />} />
+          <Route
+            exact
+            path="/intersection/edit/:intersectionId"
+            render={(): JSX.Element => <EditIntersection />}
+          />
           <Route exact path="/chartsprototype" component={ChartsPrototype} />
         </SessionRoutes>
       </Switch>
@@ -44,6 +45,4 @@ const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: authenticated(),
 });
 
-export default connect(
-  mapStateToProps,
-)(App);
+export default connect(mapStateToProps)(App);
