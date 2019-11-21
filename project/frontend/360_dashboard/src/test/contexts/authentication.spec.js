@@ -1,12 +1,9 @@
 import { expect } from 'chai';
-
 import reducer, {
   initState,
-  authenticate,
   logout,
   authSuccess,
   authFail,
-  // handleAuthentication,
 } from '../../contexts/authentication';
 
 // AUTHENTICATION TEST
@@ -21,7 +18,6 @@ describe('authentication redux', () => {
       expect(result).to.include({
         username: 'TEST',
         user_id: '1',
-        authenticated: true,
       });
     });
     // Authenticate Fail
@@ -34,7 +30,6 @@ describe('authentication redux', () => {
         sessionToken: '',
         username: '',
         timestamp: '',
-        authenticated: false,
         error: 'Invalid credentials.',
       });
     });
@@ -42,13 +37,13 @@ describe('authentication redux', () => {
     it('logout redux', () => {
       const result = reducer(
         initState,
+        global.window = { localStorage: initState },
         logout(),
       );
       expect(result).to.include({
         sessionToken: '',
         username: '',
         timestamp: '',
-        authenticated: false,
         error: '',
       });
     });
