@@ -20,9 +20,11 @@ export interface STATE {
   }[];
 }
 
+// initState
 const initState: STATE = {
 };
 
+// actions
 export const GET_DISTRICTS = 'GET_DISTRICTS';
 export const GET_DISTRICTS_SUCCESS = 'GET_DISTRICTS_SUCCESS';
 export const GET_DISTRICTS_FAIL = 'GET_DISTRICTS_FAIL';
@@ -31,6 +33,7 @@ export interface GetDistrictsAction {
     type: string;
 }
 
+// get district base case
 export const getDistricts = (): GetDistrictsAction => ({
   type: GET_DISTRICTS,
 });
@@ -40,6 +43,7 @@ export interface GetDistrictsSuccessAction {
   data: districtResponse;
 }
 
+// get district success case
 export const getDistrictsSuccess = (data: districtResponse): GetDistrictsSuccessAction => ({
   type: GET_DISTRICTS_SUCCESS,
   data,
@@ -49,6 +53,7 @@ export interface GetDistrictsFailAction {
   type: string;
 }
 
+// get district fail case
 export const getDistrictsFail = (): GetDistrictsFailAction => ({
   type: GET_DISTRICTS_FAIL,
 });
@@ -66,10 +71,12 @@ export function* handleFetchDistricts(): Iterator<any> {
   }
 }
 
+// saga action mapper
 export function* saga(): Iterator<any> {
   yield takeLatest(GET_DISTRICTS, handleFetchDistricts);
 }
 
+// REDUCER
 export default function reducer(state: STATE = initState, action: any): STATE {
   switch (action.type) {
     case GET_DISTRICTS_SUCCESS: {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -36,10 +37,10 @@ const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
 const Header = (props: StateProps & DispatchProps): JSX.Element => {
   const [state] = React.useState(props);
-  const{
-    user_id,
-    log_message
-  } = props;
+  // const {
+  //   user_id,
+  //   log_message,
+  // } = props;
 
   return (
     <nav className="navbar">

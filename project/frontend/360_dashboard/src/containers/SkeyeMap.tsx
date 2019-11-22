@@ -22,6 +22,18 @@ class SkeyeMap extends React.Component<StateProps & DispatchProps | any> {
     getDistricts();
   }
 
+  public componentDidUpdate(): void {
+    // eslint-disable-next-line no-shadow
+    const { getDistricts } = this.props;
+    getDistricts();
+  }
+
+  public componentWillUnmount(): void {
+    // eslint-disable-next-line no-shadow
+    const { getDistricts } = this.props;
+    getDistricts();
+  }
+
   public render(): JSX.Element {
     const { authenticated, districts } = this.props;
     if (!authenticated) return <Redirect push to="/login" />;
