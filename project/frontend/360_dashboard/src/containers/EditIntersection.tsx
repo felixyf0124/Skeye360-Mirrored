@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import { Redirect } from 'react-router';
+import { Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
 import { resetIntersection, ResetIntersectionAction } from '../contexts/intersection';
