@@ -2,7 +2,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import { Redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
 import { resetIntersection, ResetIntersectionAction } from '../contexts/intersection';
@@ -34,8 +33,8 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
   }
 
   public render(): JSX.Element {
-    const { success, district_id } = this.props;
-    if (district_id === '') return <Redirect to="/" />;
+    const { success } = this.props;
+    // if (district_id === '') return <Redirect to="/" />;
 
     if (success) {
       return (
