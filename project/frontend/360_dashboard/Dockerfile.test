@@ -26,4 +26,4 @@ COPY . /usr/src/app
 ENV NODE_ENV test
 
 # Main command
-CMD [ "npm", "test" ]
+CMD [ "bash","start_test.sh" ]
