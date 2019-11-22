@@ -43,7 +43,7 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
 
   const history = useHistory();
 
-  const handleSubmit = (): void => {    
+  const handleSubmit = (): void => {
     // const { logClick } = props;
     props.editExistingIntersection(
       state.intersection_id,

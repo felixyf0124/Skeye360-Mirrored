@@ -26,6 +26,7 @@ const authenticateUser = async (
 
   // DATA RESPONSE
   const data = (await response.json()) as Response;
+  console.log(data);
   return data;
 };
 

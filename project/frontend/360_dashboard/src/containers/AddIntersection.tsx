@@ -33,7 +33,7 @@ interface DispatchProps {
   logClick: (
     log_message: string,
     user_id: number,
-  ) => any; 
+  ) => any;
 }
 
 const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
@@ -42,9 +42,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
     latitude, longitude, intersection_name, district_id, error,
   } = state;
 
-  const {
-    user_id
-  } = props; 
+  const { user_id } = props;
 
   const history = useHistory();
 

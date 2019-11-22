@@ -19,9 +19,9 @@ export const Head = styled.div`
 `;
 
 interface StateProps {
-    authenticated: boolean;
-    user_id: number;
-    log_message: string;
+  authenticated: boolean;
+  user_id: number;
+  log_message: string;
 }
 
 interface DispatchProps {
@@ -43,14 +43,11 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
   // } = props;
   const { user_id } = props;
   const { logout } = props;
-  const handleLogout = (): void =>  {
-    
-      
+  const handleLogout = (): void => {
     const { logClick } = props;
-    logClick("Logged out", user_id);
-    setState({...state, logout});
-    
-  }
+    logClick('Logged out', user_id);
+    setState({ ...state, logout });
+  };
 
   return (
     <nav className="navbar">
@@ -77,7 +74,7 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
           <div className="logout">
             <a
               href="/"
-              onClick={ handleLogout }
+              onClick={handleLogout}
               className="nav-text"
             >
               Logout

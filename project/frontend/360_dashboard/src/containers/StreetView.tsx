@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
@@ -28,7 +29,7 @@ interface DispatchProps {
   logClick: (
     log_message: string,
     user_id: number,
-  ) => any; 
+  ) => any;
 }
 
 class StreetView extends React.Component<StateProps & DispatchProps> {
@@ -53,8 +54,8 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
     if (!authenticated) return <Redirect push to="/login" />;
 
     const {
-      user_id
-    } = this.props; 
+      user_id,
+    } = this.props;
 
     // eslint-disable-next-line consistent-return
     const handleDelete = (id: string): any => {

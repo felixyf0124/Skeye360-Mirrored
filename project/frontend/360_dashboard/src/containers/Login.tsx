@@ -59,13 +59,13 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 
   const handleLog = (): any => {
     const { logClick } = props;
-    logClick("Clicked Login", user_id);
-  }
+    logClick('Clicked Login', user_id);
+  };
   // eslint-disable-next-line no-alert
   if (authenticated) {
     handleLog();
     return (
-    <Redirect push to="/" />
+      <Redirect push to="/" />
     );
   }
 
