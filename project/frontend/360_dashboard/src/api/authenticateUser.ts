@@ -5,10 +5,7 @@ export interface Response {
 
 const APIDomain = '0.0.0.0:8000';
 
-const authenticateUser = async (
-  username: string,
-  password: string,
-): Promise<Response> => {
+const authenticateUser = async (username: string, password: string): Promise<Response> => {
   // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/auth/login`;
   const params = {

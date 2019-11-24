@@ -1,21 +1,26 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import Header, { Head } from '../components/Header';
 import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 import {
-  getExistingIntersection, deleteExistingIntersection, resetIntersection, ResetIntersectionAction,
+  getExistingIntersection,
+  deleteExistingIntersection,
+  resetIntersection,
+  ResetIntersectionAction,
 } from '../contexts/intersection';
 import { getDistricts } from '../contexts/districts';
+import { logClick } from '../contexts/LogClicks';
 
 interface StateProps {
-  authenticated: boolean;
   intersectionId: string;
   intersectionName: string;
   error: string;
+  user_id: number;
 }
 
 interface DispatchProps {
@@ -23,6 +28,10 @@ interface DispatchProps {
   getExistingIntersection: (id: string) => any;
   getDistricts: () => any;
   resetIntersection(): ResetIntersectionAction;
+  logClick: (
+    log_message: string,
+    user_id: number,
+  ) => any;
 }
 
 class StreetView extends React.Component<StateProps & DispatchProps> {
@@ -39,18 +48,19 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
   }
 
   public render(): JSX.Element {
+    const { intersectionId, intersectionName } = this.props;
+
     const {
-      authenticated,
-      intersectionId,
-      intersectionName,
+      user_id,
     } = this.props;
-    if (!authenticated) return <Redirect push to="/login" />;
 
     // eslint-disable-next-line consistent-return
     const handleDelete = (id: string): any => {
       // eslint-disable-next-line no-shadow
       const { deleteExistingIntersection } = this.props;
+      const { logClick } = this.props;
       deleteExistingIntersection(id);
+      logClick('Deleted Intersection', user_id);
     };
 
     return (
@@ -58,8 +68,12 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
         <Header />
         <h1 className="header-text">{intersectionName}</h1>
         <Head>
-          <Link to={`/intersection/edit/${intersectionId}`} className="header-text">Edit</Link>
-          <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">Delete</Link>
+          <Link to={`/intersection/edit/${intersectionId}`} className="header-text">
+            Edit
+          </Link>
+          <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">
+            Delete
+          </Link>
         </Head>
         <Simulator />
         <div className="charts-row">
@@ -72,10 +86,12 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  authenticated: state.authentication.authenticated,
-  intersectionId: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
+  intersectionId: state.router.location.pathname.substring(
+    state.router.location.pathname.lastIndexOf('/') + 1,
+  ),
   intersectionName: state.intersection.intersection_name,
   error: state.intersection.error,
+  user_id: state.authentication.user_id,
 });
 
 const mapDispatchToProps: DispatchProps = {
@@ -83,9 +99,7 @@ const mapDispatchToProps: DispatchProps = {
   getExistingIntersection,
   getDistricts,
   resetIntersection,
+  logClick,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(StreetView);
+export default connect(mapStateToProps, mapDispatchToProps)(StreetView);
