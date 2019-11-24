@@ -73,14 +73,14 @@ describe('class TrafficLightManager', () => {
     assert.deepEqual(trafficLight2.status, 'stop');
   });
 
-  it('isBlink for true', () => {
+  it('isBlink for true at 0.5-1, for false at 0-0.5', () => {
     const current = Date.now();
     const last = trafficLightManager.getStartTime();
     const deltaT = (current - last) % 1000;
     if (deltaT > 500) {
       assert.deepEqual(trafficLightManager.isBlink(), true);
     } else {
-      assert.deepEqual(trafficLightManager.isBlink(), true);
+      assert.deepEqual(trafficLightManager.isBlink(), false);
     }
   });
 });
