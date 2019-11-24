@@ -13,7 +13,7 @@ logger = logging.getLogger("camera")
 yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
 yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.weights'
 yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/coco.names'
-video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
+video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/20191117_1600.mp4'
 
 # initialize a detector object
 detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
