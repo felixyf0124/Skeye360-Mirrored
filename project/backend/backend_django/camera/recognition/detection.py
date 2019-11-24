@@ -1,10 +1,10 @@
-import cv2 
 import os
 import numpy as np
 import time
 import threading
 import sys
 import logging
+import cv2 
 from .db import Db
 from .intersection import Intersection
 from .trackableobject import TrackableObject
@@ -28,7 +28,7 @@ logger = logging.getLogger("camera")
 
 
 class Detector:
-    def __init__(self, config, weights, class_names,video_stream):
+    def __init__(self, config, weights, class_names, video_stream):
         self.config = config
         self.weights = weights
         self.class_names = class_names
@@ -58,8 +58,8 @@ class Detector:
         COLORS = np.random.uniform(0, 255, size=(len(classes), 3))        
         label = str(classes[class_id])
         color = COLORS[class_id]
-        cv2.rectangle(img, (x,y), (x_plus_w,y_plus_h), color, 2)
-        cv2.putText(img, label, (x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), color, 2)
+        cv2.putText(img, label, (x-10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
     # print detection output 
     def print_pred(self, class_id, x, y, w, h, classes):
@@ -67,14 +67,19 @@ class Detector:
         print(label, round(x+w/2), round(y+h/2))
 
     # count detection output at the same time detecting objects in the frame
-    def counting(self,col,intersection):        
-        WAIT_SECONDS = 20        
+    def counting(self,col,intersection):
+        WAIT_SECONDS = 5
+        print(self.start_counting)
         if self.start_counting is True:
+            print(self.start_counting)
             db = Db()
-            db.insert_count(col,intersection.counters)
             # cleanup db
-            intersection.reset_counter()
-            db.find_all_count(col)            
+            db.drop_count(col)
+            db.insert_count(col,intersection.counters)
+            # intersection.reset_counter()
+            db.find_all_count(col)
+        threading.Timer(WAIT_SECONDS, self.counting,[col,intersection]).start()
+                               
     # Open a video
     def open_video(self):
         cap = cv2.VideoCapture(self.stream)
@@ -82,14 +87,14 @@ class Detector:
         return cap
 
     # Convert from frame to bytes
-    def frame_to_bytes(self,image):
-        ret,jpeg = cv2.imencode('.jpg',image)
+    def frame_to_bytes(self, image):
+        _, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tobytes()
     
     # Create an intersection
     def create_intersection(self, name):
         intersection = Intersection(name)
-        directions = ["east","west","north","south"]
+        directions = ["east", "west", "north", "south"]
         for d1 in directions:
             for d2 in directions:
                 intersection.add_counter(d1,d2)
@@ -97,19 +102,19 @@ class Detector:
 
     # create regions of interst
     def create_ROIs(self):
-        # pts_west = np.array([[533,191],[679,601],[1,639],[1,125]], np.int32)
-        pts_north = np.array([[0,230],[640,230],[640,0],[0,0]], np.int32)
-        # pts_east = np.array([[1119,321],[1223,487],[1279,475],[1279,298]], np.int32)
-        pts_south = np.array([[0,260],[640,260],[640,450],[0,450]], np.int32)
-        pts_mid = np.array([[0,230],[640,230],[640,260],[0,260]], np.int32)
+        pts_west = np.array([[0,197],[263,247],[355,171],[0,99]], np.int32)
+        pts_north = np.array([[474,155],[568,164],[666, 0],[507, 0]], np.int32)
+        pts_east = np.array([[850,344],[850,208],[658,184],[568,326],[631,315]], np.int32)
+        pts_south = np.array([[225,340],[431,403],[374,475],[0,475],[0,447]], np.int32)
+        pts_mid = np.array([[236,297],[504,374],[628,184],[393,156]], np.int32)
 
-        # west_ROI = pts_west.reshape((-1,1,2))
-        south_ROI = pts_south.reshape((-1,1,2))
-        # east_ROI = pts_east.reshape((-1,1,2))
-        north_ROI = pts_north.reshape((-1,1,2))
-        mid_ROI = pts_mid.reshape((-1,1,2))
-        logger.info("Creating ROIs")  
-        return [mid_ROI, {"south":south_ROI, "north":north_ROI}]
+        west_ROI = pts_west.reshape((-1,1,2))
+        south_ROI = pts_south.reshape((-1, 1, 2))
+        east_ROI = pts_east.reshape((-1,1,2))
+        north_ROI = pts_north.reshape((-1, 1, 2))
+        mid_ROI = pts_mid.reshape((-1, 1, 2))
+        logger.info("Creating ROIs")
+        return [mid_ROI, {"west":west_ROI, "south":south_ROI, "east":east_ROI, "north":north_ROI}]
 
     # Find where the car is coming from and add the origin to the trackable object
     def get_origin(self,start_point, trackableObject, ROI_list):        
@@ -131,25 +136,25 @@ class Detector:
                 break
 
     # Draw ROIs
-    def draw_ROIs(self,image, ROI_list):
+    def draw_ROIs(self, image, ROI_list):
         for r in ROI_list[1].values():
-            cv2.polylines(image,[r],True,(255), 2)
-        cv2.polylines(image,[ROI_list[0]],True,(255), 2)
-        logger.info("Drawing ROIs")  
+            cv2.polylines(image, [r], True, (255), 2)
+        cv2.polylines(image, [ROI_list[0]], True, (255), 2)
+        logger.info("Drawing ROIs")
     # create a deepsort tracker with deep_sort Definition of the parameters
 
     def create_tracker(self):
         max_cosine_distance = 0.5#0.9 
-        nn_budget = None     
+        nn_budget = None
         metric = nn_matching.NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
         tracker = Tracker(metric)
         logger.info("Creating deepsort tracker")  
         return tracker
 
     def create_encoder(self):
-        model_filename = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/recognition/model_data/market1501.pb'
-        return gdet.create_box_encoder(model_filename,batch_size=1)
-        
+        model_filename = os.path.abspath(os.path.join(os.getcwd(), ".."))+'/camera/recognition/model_data/market1501.pb'
+        return gdet.create_box_encoder(model_filename, batch_size=1)
+
     # Generate StreamingHttpResponse
     def gen(self, classes, net):
 		
@@ -160,7 +165,7 @@ class Detector:
 
         # start counting the objects to be detected
         self.counting(col,intersection)
-
+        
         cap = self.open_video()        
 
         # initialize the total number of frames by far
@@ -176,6 +181,10 @@ class Detector:
         tracker = self.create_tracker()
         tracking_dict = {}
         coord_dict = Coordinate()
+		
+		# set the threshold for success detection 
+        conf_threshold = 0.6
+        nms_threshold = 0.5
 		
 		# now we start to read video frame by frame to detect and tracking the vehicles appear on the frames
         while True:
@@ -199,10 +208,6 @@ class Detector:
             confidences = []
             boxes = []
             yolo_boxes = []
-			
-			# set the threshold for success detection 
-            conf_threshold = 0.6
-            nms_threshold = 0.5
 			
 			# potential detection out of deep learning network
             for out in outs: 
@@ -239,7 +244,7 @@ class Detector:
 				
 				#output object detected on the frame
                 self.draw_pred(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h), classes)
-                self.print_pred(class_ids[i], x, y, w, h, classes)
+                # self.print_pred(class_ids[i], x, y, w, h, classes)
 			
 			# ready to use DeepSort algorithm to track the vehicles that are detected
             # apply non-maximum suppression algorithm on the bounding boxes
@@ -287,13 +292,13 @@ class Detector:
                         intersection.inc(x.start_from, x.go_to)
                 
 			# draw both the ID of the object and the centroid of the
-			# object on the output frame
-            for x in tracking_dict.values():
-                print("ID {}".format(x.objectID)+ ' start: ', end="")
-                print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
+			# object on the output frame  COMMENTED OUT, NEEDED FOR FUTURE REFACTORY
+            # for x in tracking_dict.values():
+                # print("ID {}".format(x.objectID)+ ' start: ', end="")
+                # print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
                 # print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
-                print(x.start_from)
-                print(x.go_to)
+                # print(x.start_from)
+                # print(x.go_to)
             
             # save the coordinates for the tracked vehicles and get ready for front end to retrieve them
             self.coord= coord_dict
@@ -304,8 +309,8 @@ class Detector:
             label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
             cv2.putText(image, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
             frame = self.frame_to_bytes(image)
-			
-			# yield the bytes of frame, and get ready for front end to retrieve them
+            intersection.print_counters()
+            # yield the bytes of frame, and get ready for front end to retrieve them
             yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         

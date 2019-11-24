@@ -8,7 +8,8 @@ import { STATE as districtState } from '../contexts/districts';
 const API_KEY = 'AIzaSyDF3Bsq5rm-uhEMAqqyMqzgc-dXUPl9Byw';
 
 const GoogleMap = (districts: districtState): JSX.Element => {
-  const [center] = useState({ lat: 0, lng: 0 });
+  const [center] = useState({ lat: 45.5017, lng: -73.5673 });
+  // const [center] = useState({ lat: 0, lng: 0 });
   const [zoom] = useState(11);
   return (
     <div style={{ height: '100vh', width: '100%' }}>
@@ -20,11 +21,11 @@ const GoogleMap = (districts: districtState): JSX.Element => {
         {districts.districts[0] === undefined ? (
           <Marker
             key={0}
-            lat={0}
-            lng={0}
+            lat={45.5017}
+            lng={-73.5673}
             text="Camera_id"
             color="red"
-            link="/streetview"
+            link="/streetview/1"
           />
         ) : (
           districts.districts[0].intersections.map((intersection) => (

@@ -1,30 +1,46 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import GoogleMap from '../components/GoogleMap';
 import Header from '../components/Header';
-import { STATE as districtState, GetDistrictsAction, getDistricts } from '../contexts/districts';
+import {
+  STATE as districtState,
+  GetDistrictsAction,
+  getDistricts,
+  resetIntersection,
+  ResetDistrictAction,
+} from '../contexts/districts';
 
 interface StateProps {
-  authenticated: boolean;
   districts: districtState;
 }
 
 interface DispatchProps {
   getDistricts(): GetDistrictsAction;
+  resetIntersection(): ResetDistrictAction;
 }
 
-class SkeyeMap extends React.Component<StateProps & DispatchProps | any> {
+class SkeyeMap extends React.Component<(StateProps & DispatchProps) | any> {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { getDistricts } = this.props;
     getDistricts();
   }
 
+  public componentDidUpdate(): void {
+    // eslint-disable-next-line no-shadow
+    const { getDistricts } = this.props;
+    getDistricts();
+  }
+
+  public componentWillUnmount(): void {
+    // eslint-disable-next-line no-shadow
+    const { resetIntersection } = this.props;
+    resetIntersection();
+  }
+
   public render(): JSX.Element {
-    const { authenticated, districts } = this.props;
-    if (!authenticated) return <Redirect push to="/login" />;
+    const { districts } = this.props;
     return (
       <div>
         <Header />
@@ -35,15 +51,12 @@ class SkeyeMap extends React.Component<StateProps & DispatchProps | any> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  authenticated: state.authentication.authenticated,
   districts: state.districts,
 });
 
 const mapDispatchToProps: DispatchProps = {
   getDistricts,
+  resetIntersection,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SkeyeMap);
+export default connect(mapStateToProps, mapDispatchToProps)(SkeyeMap);

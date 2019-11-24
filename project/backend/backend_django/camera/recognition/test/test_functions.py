@@ -239,7 +239,7 @@ class YourTestClass(unittest.TestCase):
         classes,_= detector.load()      
         output = io.StringIO()                  
         sys.stdout = output        
-        detector.print_pred(2, 100, 100, 100, 100, classes)  
+        detector.print_pred(0, 100, 100, 100, 100, classes)  
         sys.stdout = sys.__stdout__             
         self.assertEqual(output.getvalue(), "car 150 150\n")
 
