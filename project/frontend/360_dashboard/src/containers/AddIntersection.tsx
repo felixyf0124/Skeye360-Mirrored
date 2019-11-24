@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
@@ -10,7 +10,6 @@ import { logClick } from '../contexts/LogClicks';
 
 interface StateProps {
     path: string;
-    authenticated: boolean;
     username: string;
 
     latitude: string;
@@ -61,8 +60,6 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
     );
     logClick('Added Intersection', user_id);
   };
-
-  if (!state.authenticated) return <Redirect push to="/login" />;
 
   return (
     <div>
@@ -128,7 +125,6 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   path: '/intersection/add',
-  authenticated: state.authentication.authenticated,
   username: state.authentication.username,
 
   latitude: '45.5017',

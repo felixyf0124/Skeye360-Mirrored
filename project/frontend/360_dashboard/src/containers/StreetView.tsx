@@ -1,20 +1,22 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import Header, { Head } from '../components/Header';
 import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 import {
-  getExistingIntersection, deleteExistingIntersection, resetIntersection, ResetIntersectionAction,
+  getExistingIntersection,
+  deleteExistingIntersection,
+  resetIntersection,
+  ResetIntersectionAction,
 } from '../contexts/intersection';
 import { getDistricts } from '../contexts/districts';
 import { logClick } from '../contexts/LogClicks';
 
 interface StateProps {
-  authenticated: boolean;
   intersectionId: string;
   intersectionName: string;
   error: string;
@@ -46,12 +48,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
   }
 
   public render(): JSX.Element {
-    const {
-      authenticated,
-      intersectionId,
-      intersectionName,
-    } = this.props;
-    if (!authenticated) return <Redirect push to="/login" />;
+    const { intersectionId, intersectionName } = this.props;
 
     const {
       user_id,
@@ -71,8 +68,12 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
         <Header />
         <h1 className="header-text">{intersectionName}</h1>
         <Head>
-          <Link to={`/intersection/edit/${intersectionId}`} className="header-text">Edit</Link>
-          <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">Delete</Link>
+          <Link to={`/intersection/edit/${intersectionId}`} className="header-text">
+            Edit
+          </Link>
+          <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">
+            Delete
+          </Link>
         </Head>
         <Simulator />
         <div className="charts-row">
@@ -85,8 +86,9 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  authenticated: state.authentication.authenticated,
-  intersectionId: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
+  intersectionId: state.router.location.pathname.substring(
+    state.router.location.pathname.lastIndexOf('/') + 1,
+  ),
   intersectionName: state.intersection.intersection_name,
   error: state.intersection.error,
   user_id: state.authentication.user_id,
@@ -100,7 +102,4 @@ const mapDispatchToProps: DispatchProps = {
   logClick,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(StreetView);
+export default connect(mapStateToProps, mapDispatchToProps)(StreetView);
