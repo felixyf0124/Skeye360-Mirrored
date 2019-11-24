@@ -6,6 +6,7 @@ import { push } from 'connected-react-router';
 import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
+import { logClick } from '../contexts/LogClicks';
 
 interface StateProps {
     path: string;
@@ -18,6 +19,7 @@ interface StateProps {
     district_id: string;
 
     error: string;
+    user_id: number;
 }
 
 interface DispatchProps {
@@ -28,6 +30,10 @@ interface DispatchProps {
     longitude: string,
     district_id: string,
   ) => any;
+  logClick: (
+    log_message: string,
+    user_id: number,
+  ) => any;
 }
 
 const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
@@ -35,6 +41,8 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
   const {
     latitude, longitude, intersection_name, district_id, error,
   } = state;
+
+  const { user_id } = props;
 
   const history = useHistory();
 
@@ -44,12 +52,14 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
 
   // eslint-disable-next-line consistent-return
   const handleSubmit = (): any => {
+    const { logClick } = props;
     props.addNewIntersection(
       state.intersection_name,
       state.latitude,
       state.longitude,
       state.district_id,
     );
+    logClick('Added Intersection', user_id);
   };
 
   if (!state.authenticated) return <Redirect push to="/login" />;
@@ -127,11 +137,13 @@ const mapStateToProps = (state: RootState): StateProps => ({
   intersection_name: 'Guy St/St-Cath',
 
   error: state.intersection.error,
+  user_id: state.authentication.user_id,
 });
 
 const mapDispatchToProps: DispatchProps = {
   historyPush: push,
   addNewIntersection,
+  logClick,
 };
 
 export default connect(

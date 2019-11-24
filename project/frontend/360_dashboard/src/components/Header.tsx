@@ -19,9 +19,9 @@ export const Head = styled.div`
 `;
 
 interface StateProps {
-    authenticated: boolean;
-    user_id: number;
-    log_message: string;
+  authenticated: boolean;
+  user_id: number;
+  log_message: string;
 }
 
 interface DispatchProps {
@@ -36,11 +36,18 @@ interface DispatchProps {
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
 const Header = (props: StateProps & DispatchProps): JSX.Element => {
-  const [state] = React.useState(props);
+  const [state, setState] = React.useState(props);
   // const {
   //   user_id,
   //   log_message,
   // } = props;
+  const { user_id } = props;
+  const { logout } = props;
+  const handleLogout = (): void => {
+    const { logClick } = props;
+    logClick('Logged out', user_id);
+    setState({ ...state, logout });
+  };
 
   return (
     <nav className="navbar">
@@ -67,7 +74,7 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
           <div className="logout">
             <a
               href="/"
-              onClick={state.logout}
+              onClick={handleLogout}
               className="nav-text"
             >
               Logout

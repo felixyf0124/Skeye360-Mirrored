@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { editExistingIntersection, EditIntersectionAction } from '../contexts/intersection';
 import { RootState } from '../reducers/rootReducer';
+import { logClick } from '../contexts/LogClicks';
 
 interface StateProps {
   intersection_id: string;
@@ -12,6 +13,7 @@ interface StateProps {
   intersection_name: string;
   district_id: string;
   error: string;
+  user_id: number;
 }
 
 interface DispatchProps {
@@ -22,6 +24,10 @@ interface DispatchProps {
     longitude: string,
     district_id: string,
   ) => EditIntersectionAction;
+  logClick: (
+    log_message: string,
+    user_id: number,
+  ) => any;
 }
 
 const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element => {
@@ -31,9 +37,14 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
+  const {
+    user_id,
+  } = props;
+
   const history = useHistory();
 
   const handleSubmit = (): void => {
+    // const { logClick } = props;
     props.editExistingIntersection(
       state.intersection_id,
       state.intersection_name,
@@ -41,6 +52,7 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
       state.longitude,
       state.district_id,
     );
+    props.logClick('Edited Intersection', user_id);
   };
 
   return (
@@ -111,10 +123,12 @@ const mapStateToProps = (state: RootState): StateProps => ({
   longitude: state.intersection.longitude,
   intersection_name: state.intersection.intersection_name,
   error: state.intersection.error,
+  user_id: state.authentication.user_id,
 });
 
 const mapDispatchToProps: DispatchProps = {
   editExistingIntersection,
+  logClick,
 };
 
 export default connect(

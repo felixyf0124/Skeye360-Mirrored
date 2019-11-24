@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
@@ -10,12 +11,14 @@ import {
   getExistingIntersection, deleteExistingIntersection, resetIntersection, ResetIntersectionAction,
 } from '../contexts/intersection';
 import { getDistricts } from '../contexts/districts';
+import { logClick } from '../contexts/LogClicks';
 
 interface StateProps {
   authenticated: boolean;
   intersectionId: string;
   intersectionName: string;
   error: string;
+  user_id: number;
 }
 
 interface DispatchProps {
@@ -23,6 +26,10 @@ interface DispatchProps {
   getExistingIntersection: (id: string) => any;
   getDistricts: () => any;
   resetIntersection(): ResetIntersectionAction;
+  logClick: (
+    log_message: string,
+    user_id: number,
+  ) => any;
 }
 
 class StreetView extends React.Component<StateProps & DispatchProps> {
@@ -46,11 +53,17 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
     } = this.props;
     if (!authenticated) return <Redirect push to="/login" />;
 
+    const {
+      user_id,
+    } = this.props;
+
     // eslint-disable-next-line consistent-return
     const handleDelete = (id: string): any => {
       // eslint-disable-next-line no-shadow
       const { deleteExistingIntersection } = this.props;
+      const { logClick } = this.props;
       deleteExistingIntersection(id);
+      logClick('Deleted Intersection', user_id);
     };
 
     return (
@@ -76,6 +89,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   intersectionId: state.router.location.pathname.substring(state.router.location.pathname.lastIndexOf('/') + 1),
   intersectionName: state.intersection.intersection_name,
   error: state.intersection.error,
+  user_id: state.authentication.user_id,
 });
 
 const mapDispatchToProps: DispatchProps = {
@@ -83,6 +97,7 @@ const mapDispatchToProps: DispatchProps = {
   getExistingIntersection,
   getDistricts,
   resetIntersection,
+  logClick,
 };
 
 export default connect(
