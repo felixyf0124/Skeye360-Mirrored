@@ -29,6 +29,14 @@ Note that this procedure has been tested from a Windows host only, but should wo
     ```
     Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All
     ```
+    	* if you are having a problem of VM crash at
+	  ```
+	  Stderr: VBoxManage.exe: error: Call to WHvSetupPartition failed: ERROR_SUCCESS (Last=0xc000000d/87) (VERR_NEM_VM_CREATE_FAILED)
+	  ```
+	  that means your Hyper-V is properly not turned off even if your `Turn Windows feature on or off` shows the unticked Hyper-V. 
+	
+	  * Run > CMD >  `bcdedit /set hypervisorlaunchtype off`, then reboot host machine.
+    
     
 2.	**Install Oracle [VM VirtualBox Manager](https://download.virtualbox.org/virtualbox/6.0.2/VirtualBox-6.0.2-128162-Win.exe) (preferably v  6.0.2).**
 
