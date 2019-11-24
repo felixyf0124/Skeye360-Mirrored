@@ -25,6 +25,7 @@ module.exports = {
     "react"
   ],
   rules: {
+    "no-shadow": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {

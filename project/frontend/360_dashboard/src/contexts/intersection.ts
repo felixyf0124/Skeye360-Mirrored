@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { Action } from 'redux';
-import {
-  call,
-  put,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import {
   Response as intersectionResponse,
   addIntersection,
@@ -113,9 +109,7 @@ export interface GetIntersectionAction extends Action {
 }
 
 // base case
-export const getExistingIntersection = (
-  id: string,
-): GetIntersectionAction => ({
+export const getExistingIntersection = (id: string): GetIntersectionAction => ({
   type: GET_INTERSECTION,
   id,
 });
@@ -195,9 +189,7 @@ export interface DeleteIntersectionAction extends Action {
 }
 
 // base case
-export const deleteExistingIntersection = (
-  id: string,
-): DeleteIntersectionAction => ({
+export const deleteExistingIntersection = (id: string): DeleteIntersectionAction => ({
   type: DELETE_INTERSECTION,
   id,
 });
@@ -208,9 +200,7 @@ export interface DeleteIntersectionSuccessAction {
 }
 
 // success case
-export const deleteIntersectionSuccess = (
-  id: string,
-): DeleteIntersectionSuccessAction => ({
+export const deleteIntersectionSuccess = (id: string): DeleteIntersectionSuccessAction => ({
   type: DELETE_INTERSECTION_SUCCESS,
   id,
 });
@@ -245,9 +235,7 @@ export function* handleAddIntersection({
 }
 
 // read
-export function* handleGetIntersection({
-  id,
-}: GetIntersectionAction): Iterator<any> {
+export function* handleGetIntersection({ id }: GetIntersectionAction): Iterator<any> {
   try {
     const data = yield call(getIntersection, id);
     if (data !== undefined) {
@@ -286,9 +274,7 @@ export function* handleEditIntersection({
 }
 
 // delete
-export function* handleDeleteIntersection({
-  id,
-}: DeleteIntersectionAction): Iterator<any> {
+export function* handleDeleteIntersection({ id }: DeleteIntersectionAction): Iterator<any> {
   try {
     yield call(deleteIntersection, id);
     yield put({ type: DELETE_INTERSECTION_SUCCESS });
@@ -297,7 +283,6 @@ export function* handleDeleteIntersection({
     throw e;
   }
 }
-
 
 // saga action mapper
 export function* saga(): Iterator<any> {

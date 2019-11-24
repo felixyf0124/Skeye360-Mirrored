@@ -1,28 +1,22 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import {
-  call,
-  put,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import authenticateUser, { Response as authResponse } from '../api/authenticateUser';
 
 export interface STATE {
   sessionToken: string;
   username: string;
   timestamp: string;
-  authenticated: boolean;
   error: string;
   user_id: number;
 }
 
 // initState
-const initState: STATE = {
+export const initState: STATE = {
   sessionToken: '',
   username: '',
   timestamp: '',
-  authenticated: false,
   error: '',
-  user_id: 1,
+  user_id: 0,
 };
 
 // actions
@@ -30,7 +24,16 @@ export const AUTHENTICATE = 'AUTHENTICATE';
 export const AUTHENTICATE_SUCCESS = 'AUTHENTICATE_SUCCESS';
 export const AUTHENTICATE_TEST = 'AUTHENTICATE_TEST';
 export const AUTHENTICATE_FAIL = 'AUTHENTICATE_FAIL';
+export const GET_USER_DATA = 'GET_USER_DATA';
 export const LOGOUT = 'LOGOUT';
+
+// selector
+export const authenticated = (): boolean => {
+  if (localStorage.getItem('user') !== null) {
+    return true;
+  }
+  return false;
+};
 
 export interface AuthAction {
   type: string;
@@ -45,24 +48,13 @@ export const authenticate = (username: string, password: string): AuthAction => 
   password,
 });
 
-export interface LogoutAction {
-  type: string;
-}
-
-// logout
-export const logout = (): LogoutAction => ({
-  type: LOGOUT,
-});
-
 interface AuthSuccessAction {
   type: string;
   data: authResponse;
 }
 
 // authentication success case
-export const authSuccess = (
-  data: authResponse,
-): AuthSuccessAction => ({
+export const authSuccess = (data: authResponse): AuthSuccessAction => ({
   type: AUTHENTICATE_SUCCESS,
   data,
 });
@@ -74,6 +66,26 @@ interface AuthFailAction {
 // authentication fail case
 export const authFail = (): AuthFailAction => ({
   type: AUTHENTICATE_FAIL,
+});
+
+export interface LogoutAction {
+  type: string;
+}
+
+interface GetUserDataAction {
+  type: string;
+  data: STATE;
+}
+
+// get user data
+export const getUserData = (data: STATE): GetUserDataAction => ({
+  type: GET_USER_DATA,
+  data,
+});
+
+// logout
+export const logout = (): LogoutAction => ({
+  type: LOGOUT,
 });
 
 // SAGA
@@ -91,7 +103,6 @@ export function* handleAuthentication({ username, password }: AuthAction): Itera
 
 // saga action mapper
 export function* saga(): Iterator<any> {
-  // console.log("SAGA");
   yield takeLatest(AUTHENTICATE, handleAuthentication);
 }
 
@@ -103,24 +114,26 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         ...state,
         sessionToken: 'TEST',
         username: 'TEST',
-        authenticated: true,
         user_id: 1,
       };
     }
     case AUTHENTICATE_SUCCESS: {
       const { data } = action as AuthSuccessAction;
+      const d = new Date();
       if (data.user_id === undefined) {
         return {
           ...state,
-          authenticated: false,
           error: 'Invalid credentials.',
         };
       }
+      localStorage.setItem('user', JSON.stringify(data));
       return {
         ...state,
+        sessionToken: `${data.username}-${data.user_id}`,
         username: data.username,
+        timestamp: d.toUTCString(),
+        error: '',
         user_id: data.user_id,
-        authenticated: true,
       };
     }
     case AUTHENTICATE_FAIL: {
@@ -128,17 +141,30 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         sessionToken: initState.sessionToken,
         username: initState.username,
         timestamp: initState.timestamp,
-        authenticated: initState.authenticated,
         error: 'Invalid credentials.',
         user_id: initState.user_id,
       };
     }
+    case GET_USER_DATA: {
+      const { data } = action as GetUserDataAction;
+      if (localStorage.getItem('user') !== null) {
+        return {
+          ...state,
+          sessionToken: data.sessionToken,
+          username: data.username,
+          timestamp: data.timestamp,
+          error: '',
+          user_id: data.user_id,
+        };
+      }
+      return initState;
+    }
     case LOGOUT: {
+      localStorage.removeItem('user');
       return {
         sessionToken: initState.sessionToken,
         username: initState.username,
         timestamp: initState.timestamp,
-        authenticated: initState.authenticated,
         error: initState.error,
         user_id: initState.user_id,
       };

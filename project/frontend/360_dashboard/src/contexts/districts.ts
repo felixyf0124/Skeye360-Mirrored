@@ -1,8 +1,4 @@
-import {
-  call,
-  put,
-  takeLatest,
-} from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import fetchDistricts, { Response as districtResponse } from '../api/fetchDistricts';
 
 export interface STATE {
@@ -21,16 +17,16 @@ export interface STATE {
 }
 
 // initState
-const initState: STATE = {
-};
+const initState: STATE = {};
 
 // actions
 export const GET_DISTRICTS = 'GET_DISTRICTS';
 export const GET_DISTRICTS_SUCCESS = 'GET_DISTRICTS_SUCCESS';
 export const GET_DISTRICTS_FAIL = 'GET_DISTRICTS_FAIL';
+export const RESET_INTERSECTION = 'RESET_INTERSECTION';
 
 export interface GetDistrictsAction {
-    type: string;
+  type: string;
 }
 
 // get district base case
@@ -56,6 +52,15 @@ export interface GetDistrictsFailAction {
 // get district fail case
 export const getDistrictsFail = (): GetDistrictsFailAction => ({
   type: GET_DISTRICTS_FAIL,
+});
+
+export interface ResetDistrictAction {
+  type: string;
+}
+
+// reset district state
+export const resetIntersection = (): ResetDistrictAction => ({
+  type: RESET_INTERSECTION,
 });
 
 // SAGA
@@ -87,6 +92,9 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       };
     }
     case GET_DISTRICTS_FAIL: {
+      return initState;
+    }
+    case RESET_INTERSECTION: {
       return initState;
     }
     default:
