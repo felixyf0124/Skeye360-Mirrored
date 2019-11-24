@@ -1,5 +1,5 @@
 ### Please provide the link associated with the issue.
-Fix #
+fixes #
 
 ### Please provide a brief summary of this pull request.
 ** summary **
