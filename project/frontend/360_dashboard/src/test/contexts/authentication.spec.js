@@ -12,11 +12,11 @@ describe('authentication redux', () => {
         initState,
         (global.window = {
           username: 'TEST',
-          user_id: 1,
+          user_id: 0,
         }),
         authSuccess({
           username: 'TEST',
-          user_id: 1,
+          user_id: 0,
         }),
       );
       console.log('BBB');
@@ -24,7 +24,7 @@ describe('authentication redux', () => {
       expect(result).to.include({
         sessionToken: '',
         username: '',
-        user_id: 1,
+        user_id: 0,
         error: '',
       });
     });
