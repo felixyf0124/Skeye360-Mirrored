@@ -292,20 +292,20 @@ class Scene extends Component {
 
   initialize = (): void => {
     window.addEventListener('resize', this.resize);
-    this.app.stage.on('click', onclick = (): void => { 
-      //console.log("User events: click");
+    this.app.stage.on('click', onclick = (): void => {
+      // console.log("User events: click");
     });
     this.app.stage.on('mouseup', onmouseup = (): void => {
-      //console.log("User events: mouseup");
+      // console.log("User events: mouseup");
     });
     this.app.stage.on('mousedown', onmousedown = (): void => {
-      //console.log("User events: mousedown");
+      // console.log("User events: mousedown");
     });
     this.app.stage.on('mouseover', onmouseover = (): void => {
-      //console.log("User events: mouseover");
+      // console.log("User events: mouseover");
     });
     this.app.stage.on('mouseout', onmouseout = (): void => {
-      //console.log("User events: mouseout");
+      // console.log("User events: mouseout");
     });
 
     this.initialButtons();
