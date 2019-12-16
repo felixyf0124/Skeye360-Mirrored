@@ -3,10 +3,10 @@
 
 import numpy as np
 import pandas as panda
+from adfullerResults import printResults
 from matplotlib import pyplot as matplot
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
-from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.arima_model import ARIMA
 
@@ -55,16 +55,12 @@ def plotAndTest(timeseriesData):
     matplot.show()
 
     # The code below gives out values, which are used to determine if it stationary or not
-    adfullerResults = adfuller(timeseriesData['numberOfCars'])
-    print('ADF Statistic: {}'.format(adfullerResults[0]))
-    print('p-value: {}'.format(adfullerResults[1]))
-    print('Critical Values:')
-    for key, value in adfullerResults[4].items():
-        print('\t{}: {}'.format(key, value))
+    # printResults function is calling another file called adfullerResults.py
+    printResults(timeseriesData['numberOfCars'])
 
 
 # Original data, without rendering it
-# plotAndTest(dataFrame)
+plotAndTest(dataFrame)
 
 # Ways learned from the tutorial where we can transform a non-stationary into stationary
 dataFrame_log = np.log(dataFrame)
@@ -73,7 +69,7 @@ rolling_mean = dataFrame_log.rolling(4).mean()
 dataFrame_log_minus_mean = dataFrame_log - rolling_mean
 dataFrame_log_minus_mean.dropna(inplace=True)
 # To view the graph and the values of the test, uncomment the code below
-plotAndTest(dataFrame_log_minus_mean)
+# plotAndTest(dataFrame_log_minus_mean)
 
 # 2nd way is to apply exponential decay
 rolling_mean_exp_decay = dataFrame_log.ewm(halflife=12, min_periods=0, adjust=True).mean()
