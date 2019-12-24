@@ -323,13 +323,13 @@ class Scene extends Component {
 
     this.initialButtons();
 
-    // // the following two sequence matters, will affect the listeners;
-    // this.isControlPanelShown = false;
-    // this.isCPAnimating = true;
-    // // this.updateControlPanelDisplayState(0);
-    // this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
-    // // this.drawRoad();
-    // // this.renderObjects();
+    // the following two sequence matters, will affect the listeners;
+    this.isControlPanelShown = false;
+    this.isCPAnimating = true;
+    this.updateControlPanelDisplayState(0);
+    this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
+    this.drawRoad();
+    this.renderObjects();
 
     this.app.ticker.add(this.animation);
   };
@@ -456,27 +456,27 @@ class Scene extends Component {
   }
 
   animation = (): void => {
-    // if (this.btnShowCP.isPressed()) {
-    //   if (!this.isCPAnimating) {
-    //     this.isControlPanelShown = !this.isControlPanelShown;
-    //     this.isCPAnimating = true;
-    //   }
-    // }
-    // this.updateControlPanelDisplayState(8);
-    // this.updateTLCountDownDisplayPanel();
-    // if (this.btnStop.isPressed()) {
-    //   this.isStopClicked = !this.isStopClicked;
-    //   if (this.isStopClicked) {
-    //     for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
-    //       this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(), 'red');
-    //     }
-    //   } else {
-    //     for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
-    //       const tempId = this.roadIntersection.getTrafficLightQueue()[i].getId();
-    //       this.roadIntersection.deForceTLState(tempId);
-    //     }
-    //   }
-    // }
+    if (this.btnShowCP.isPressed()) {
+      if (!this.isCPAnimating) {
+        this.isControlPanelShown = !this.isControlPanelShown;
+        this.isCPAnimating = true;
+      }
+    }
+    this.updateControlPanelDisplayState(8);
+    this.updateTLCountDownDisplayPanel();
+    if (this.btnStop.isPressed()) {
+      this.isStopClicked = !this.isStopClicked;
+      if (this.isStopClicked) {
+        for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
+          this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(), 'red');
+        }
+      } else {
+        for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
+          const tempId = this.roadIntersection.getTrafficLightQueue()[i].getId();
+          this.roadIntersection.deForceTLState(tempId);
+        }
+      }
+    }
 
     // if (this.atIndex < this.makeUpCar.length) {
     //   this.deltaT = Date.now() - this.countDown;
@@ -492,10 +492,10 @@ class Scene extends Component {
     //   }
     // }
 
-    // if (this.isUpdate()) {
-    //   this.roadIntersection.tlCountingDown();
-    //   this.drawRoad();
-    // }
+    if (this.isUpdate()) {
+      this.roadIntersection.tlCountingDown();
+      this.drawRoad();
+    }
     // this.roadIntersection.updateVehiclePos();
     // this.renderObjects();
     // this.displayPlaneContainer.removeChildren();
@@ -578,7 +578,19 @@ class Scene extends Component {
   )
 
   updateTLCountDownDisplayPanel(): void {
-    this.tlDisplayPanelContainer.removeChildren();
+    // this.tlDisplayPanelContainer.removeChildren();
+    // this.tlDisplayPanelContainer.destroy({
+    //   children: true,
+    //   texture: true,
+    //   baseTexture: true
+    // });
+    for (let i = this.tlDisplayPanelContainer.children.length - 1; i >= 0; i--) {
+      // this.tlDisplayPanelContainer.children[i].destroy();
+      let child = this.tlDisplayPanelContainer.children[i];
+      // this.tlDisplayPanelContainer
+      // .removeChild(child);
+      child.destroy();
+    };
     const rowOffset = 26;
     const textStyle = {
       fontFamily: 'Courier',
