@@ -217,6 +217,18 @@ class Scene extends Component {
     // this.getNumberOfCars();
 
 
+    this.app.stage.on('mouseup', onmouseup = (): void => {
+      // console.log("User events: mouseup");
+    });
+    this.app.stage.on('mousedown', onmousedown = (): void => {
+      // console.log("User events: mousedown");
+    });
+    this.app.stage.on('mouseover', onmouseover = (): void => {
+      // console.log("User events: mouseover");
+    });
+    this.app.stage.on('mouseout', onmouseout = (): void => {
+      // console.log("User events: mouseout");
+    });
     // h c car obj
 
     this.numberOfCars = 3;
@@ -284,39 +296,40 @@ class Scene extends Component {
   async getNumberOfCars(): Promise<number> {
     const rawData = await DataFromCamera.getDataFromCamera() || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
-    console.log(`Number of cars : ${numberCars}`);
-    this.numberOfCars = numberCars;
+    //console.log(`Number of cars : ${numberCars}`);
+    //this.numberOfCars = numberCars;
     return numberCars;
   }
 
 
   initialize = (): void => {
+    window.removeEventListener('resize', this.resize);
     window.addEventListener('resize', this.resize);
-    this.app.stage.on('click', onclick = (): void => {
-      // console.log("User events: click");
-    });
-    this.app.stage.on('mouseup', onmouseup = (): void => {
-      // console.log("User events: mouseup");
-    });
-    this.app.stage.on('mousedown', onmousedown = (): void => {
-      // console.log("User events: mousedown");
-    });
-    this.app.stage.on('mouseover', onmouseover = (): void => {
-      // console.log("User events: mouseover");
-    });
-    this.app.stage.on('mouseout', onmouseout = (): void => {
-      // console.log("User events: mouseout");
-    });
+    // this.app.stage.on('click', onclick = (): void => {
+    //   // console.log("User events: click");
+    // });
+    // this.app.stage.on('mouseup', onmouseup = (): void => {
+    //   // console.log("User events: mouseup");
+    // });
+    // this.app.stage.on('mousedown', onmousedown = (): void => {
+    //   // console.log("User events: mousedown");
+    // });
+    // this.app.stage.on('mouseover', onmouseover = (): void => {
+    //   // console.log("User events: mouseover");
+    // });
+    // this.app.stage.on('mouseout', onmouseout = (): void => {
+    //   // console.log("User events: mouseout");
+    // });
 
     this.initialButtons();
 
-    // the following two sequence matters, will affect the listeners;
-    this.isControlPanelShown = false;
-    this.isCPAnimating = true;
-    this.updateControlPanelDisplayState(0);
-    this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
-    this.drawRoad();
-    this.renderObjects();
+    // // the following two sequence matters, will affect the listeners;
+    // this.isControlPanelShown = false;
+    // this.isCPAnimating = true;
+    // // this.updateControlPanelDisplayState(0);
+    // this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
+    // // this.drawRoad();
+    // // this.renderObjects();
 
     this.app.ticker.add(this.animation);
   };
@@ -443,68 +456,68 @@ class Scene extends Component {
   }
 
   animation = (): void => {
-    if (this.btnShowCP.isPressed()) {
-      if (!this.isCPAnimating) {
-        this.isControlPanelShown = !this.isControlPanelShown;
-        this.isCPAnimating = true;
-      }
-    }
-    this.updateControlPanelDisplayState(8);
-    this.updateTLCountDownDisplayPanel();
-    if (this.btnStop.isPressed()) {
-      this.isStopClicked = !this.isStopClicked;
-      if (this.isStopClicked) {
-        for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
-          this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(), 'red');
-        }
-      } else {
-        for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
-          const tempId = this.roadIntersection.getTrafficLightQueue()[i].getId();
-          this.roadIntersection.deForceTLState(tempId);
-        }
-      }
-    }
+    // if (this.btnShowCP.isPressed()) {
+    //   if (!this.isCPAnimating) {
+    //     this.isControlPanelShown = !this.isControlPanelShown;
+    //     this.isCPAnimating = true;
+    //   }
+    // }
+    // this.updateControlPanelDisplayState(8);
+    // this.updateTLCountDownDisplayPanel();
+    // if (this.btnStop.isPressed()) {
+    //   this.isStopClicked = !this.isStopClicked;
+    //   if (this.isStopClicked) {
+    //     for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
+    //       this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(), 'red');
+    //     }
+    //   } else {
+    //     for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
+    //       const tempId = this.roadIntersection.getTrafficLightQueue()[i].getId();
+    //       this.roadIntersection.deForceTLState(tempId);
+    //     }
+    //   }
+    // }
 
-    if (this.atIndex < this.makeUpCar.length) {
-      this.deltaT = Date.now() - this.countDown;
-      let currentCD = 0;
+    // if (this.atIndex < this.makeUpCar.length) {
+    //   this.deltaT = Date.now() - this.countDown;
+    //   let currentCD = 0;
 
-      for (let i = 0; i < this.atIndex + 1; i += 1) {
-        currentCD = this.makeUpCar[this.atIndex].atTline;
-      }
+    //   for (let i = 0; i < this.atIndex + 1; i += 1) {
+    //     currentCD = this.makeUpCar[this.atIndex].atTline;
+    //   }
 
-      if (this.deltaT > currentCD) {
-        this.roadIntersection.addNewVehicle(0, 3, 0.06);
-        this.atIndex += 1;
-      }
-    }
+    //   if (this.deltaT > currentCD) {
+    //     this.roadIntersection.addNewVehicle(0, 3, 0.06);
+    //     this.atIndex += 1;
+    //   }
+    // }
 
-    if (this.isUpdate()) {
-      this.roadIntersection.tlCountingDown();
-      this.drawRoad();
-    }
-    this.roadIntersection.updateVehiclePos();
-    this.renderObjects();
-    this.displayPlaneContainer.removeChildren();
-    const deltaTime = Date.now() - this.timeLastMoment;
-    this.fpsCounter += 1;
-    if (deltaTime > 1000) {
-      this.fps = this.fpsCounter;
-      this.timeLastMoment = Date.now();
-      this.fpsCounter = 0;
-      this.getNumberOfCars();
-    }
+    // if (this.isUpdate()) {
+    //   this.roadIntersection.tlCountingDown();
+    //   this.drawRoad();
+    // }
+    // this.roadIntersection.updateVehiclePos();
+    // this.renderObjects();
+    // this.displayPlaneContainer.removeChildren();
+    // const deltaTime = Date.now() - this.timeLastMoment;
+    // this.fpsCounter += 1;
+    // if (deltaTime > 1000) {
+    //   this.fps = this.fpsCounter;
+    //   this.timeLastMoment = Date.now();
+    //   this.fpsCounter = 0;
+    //   this.getNumberOfCars();
+    // }
 
-    const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
-    fpsText.x = this.windowW / 2 - 80;
-    fpsText.y = -this.windowH / 2;
-    this.displayPlaneContainer.addChild(fpsText);
-    // const numOfCar = this.roadIntersection.getVehiclesNum();
-    // const numberCarsText = new PIXI.Text(`Cars: ${numOfCar}`, this.textStyle);
-    const numberCarsText = new PIXI.Text(`Cars:${this.numberOfCars}`, this.textStyle);
-    numberCarsText.x = this.windowW / 2 - 80;
-    numberCarsText.y = -this.windowH / 2 + 20;
-    this.displayPlaneContainer.addChild(numberCarsText);
+    // const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
+    // fpsText.x = this.windowW / 2 - 80;
+    // fpsText.y = -this.windowH / 2;
+    // this.displayPlaneContainer.addChild(fpsText);
+    // // const numOfCar = this.roadIntersection.getVehiclesNum();
+    // // const numberCarsText = new PIXI.Text(`Cars: ${numOfCar}`, this.textStyle);
+    // const numberCarsText = new PIXI.Text(`Cars:${this.numberOfCars}`, this.textStyle);
+    // numberCarsText.x = this.windowW / 2 - 80;
+    // numberCarsText.y = -this.windowH / 2 + 20;
+    // this.displayPlaneContainer.addChild(numberCarsText);
   }
 
   drawTriangle = (topVertex: Vec2, height: number, width: number,
