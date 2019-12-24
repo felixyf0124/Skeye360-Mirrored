@@ -305,22 +305,7 @@ class Scene extends Component {
   initialize = (): void => {
     window.removeEventListener('resize', this.resize);
     window.addEventListener('resize', this.resize);
-    // this.app.stage.on('click', onclick = (): void => {
-    //   // console.log("User events: click");
-    // });
-    // this.app.stage.on('mouseup', onmouseup = (): void => {
-    //   // console.log("User events: mouseup");
-    // });
-    // this.app.stage.on('mousedown', onmousedown = (): void => {
-    //   // console.log("User events: mousedown");
-    // });
-    // this.app.stage.on('mouseover', onmouseover = (): void => {
-    //   // console.log("User events: mouseover");
-    // });
-    // this.app.stage.on('mouseout', onmouseout = (): void => {
-    //   // console.log("User events: mouseout");
-    // });
-
+    
     this.initialButtons();
 
     // the following two sequence matters, will affect the listeners;
@@ -381,6 +366,12 @@ class Scene extends Component {
   drawRoad=(): void => {
     this.roadG.clear();
     this.roadG.removeChildren();
+    // for (let i = this.roadG.children.length - 1; i >= 0; i--) {
+    //   let child = this.roadG.children[i];
+    //   this.roadG
+    //   .removeChild(child);
+    //   child.destroy();
+    // };
     const sections = this.roadIntersection.getRoadSections();
     const startBlinkTime = 10;
 
@@ -496,14 +487,13 @@ class Scene extends Component {
       this.roadIntersection.tlCountingDown();
       this.drawRoad();
     }
-    // this.roadIntersection.updateVehiclePos();
-    // this.renderObjects();
+    this.roadIntersection.updateVehiclePos();
+    this.renderObjects();
     //this.displayPlaneContainer.removeChildren();
     for (let i = this.displayPlaneContainer.children.length - 1; i >= 0; i--) {
-      // this.tlDisplayPanelContainer.children[i].destroy();
       let child = this.displayPlaneContainer.children[i];
-      // this.tlDisplayPanelContainer
-      // .removeChild(child);
+      this.displayPlaneContainer
+      .removeChild(child);
       child.destroy();
     };
     const deltaTime = Date.now() - this.timeLastMoment;
@@ -519,12 +509,12 @@ class Scene extends Component {
     fpsText.x = this.windowW / 2 - 80;
     fpsText.y = -this.windowH / 2;
     this.displayPlaneContainer.addChild(fpsText);
-    // // const numOfCar = this.roadIntersection.getVehiclesNum();
-    // // const numberCarsText = new PIXI.Text(`Cars: ${numOfCar}`, this.textStyle);
-    // const numberCarsText = new PIXI.Text(`Cars:${this.numberOfCars}`, this.textStyle);
-    // numberCarsText.x = this.windowW / 2 - 80;
-    // numberCarsText.y = -this.windowH / 2 + 20;
-    // this.displayPlaneContainer.addChild(numberCarsText);
+    // const numOfCar = this.roadIntersection.getVehiclesNum();
+    // const numberCarsText = new PIXI.Text(`Cars: ${numOfCar}`, this.textStyle);
+    const numberCarsText = new PIXI.Text(`Cars:${this.numberOfCars}`, this.textStyle);
+    numberCarsText.x = this.windowW / 2 - 80;
+    numberCarsText.y = -this.windowH / 2 + 20;
+    this.displayPlaneContainer.addChild(numberCarsText);
   }
 
   drawTriangle = (topVertex: Vec2, height: number, width: number,
@@ -573,7 +563,7 @@ class Scene extends Component {
             <td>
               <img
                 style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://40.121.47.195/8000/cam"
+                src="http://40.121.47.195:8000/cam"
                 alt=""
               />
             </td>
@@ -586,16 +576,12 @@ class Scene extends Component {
 
   updateTLCountDownDisplayPanel(): void {
     // this.tlDisplayPanelContainer.removeChildren();
-    // this.tlDisplayPanelContainer.destroy({
-    //   children: true,
-    //   texture: true,
-    //   baseTexture: true
-    // });
+    
     for (let i = this.tlDisplayPanelContainer.children.length - 1; i >= 0; i--) {
       // this.tlDisplayPanelContainer.children[i].destroy();
       let child = this.tlDisplayPanelContainer.children[i];
-      // this.tlDisplayPanelContainer
-      // .removeChild(child);
+      this.tlDisplayPanelContainer
+      .removeChild(child);
       child.destroy();
     };
     const rowOffset = 26;
@@ -645,6 +631,12 @@ class Scene extends Component {
 
   drawBackground(color: number, alpha: number): void {
     this.backGroundG.clear();
+    for (let i = this.backGroundG.children.length - 1; i >= 0; i--) {
+      let child = this.backGroundG.children[i];
+      this.backGroundG
+      .removeChild(child);
+      child.destroy();
+    };
     this.backGroundG.beginFill(color, alpha);
     this.backGroundG
       .drawRect(-this.coordinateOffset.x, -this.coordinateOffset.y, this.windowW, this.windowH);
