@@ -478,19 +478,19 @@ class Scene extends Component {
       }
     }
 
-    // if (this.atIndex < this.makeUpCar.length) {
-    //   this.deltaT = Date.now() - this.countDown;
-    //   let currentCD = 0;
+    if (this.atIndex < this.makeUpCar.length) {
+      this.deltaT = Date.now() - this.countDown;
+      let currentCD = 0;
 
-    //   for (let i = 0; i < this.atIndex + 1; i += 1) {
-    //     currentCD = this.makeUpCar[this.atIndex].atTline;
-    //   }
+      for (let i = 0; i < this.atIndex + 1; i += 1) {
+        currentCD = this.makeUpCar[this.atIndex].atTline;
+      }
 
-    //   if (this.deltaT > currentCD) {
-    //     this.roadIntersection.addNewVehicle(0, 3, 0.06);
-    //     this.atIndex += 1;
-    //   }
-    // }
+      if (this.deltaT > currentCD) {
+        this.roadIntersection.addNewVehicle(0, 3, 0.06);
+        this.atIndex += 1;
+      }
+    }
 
     if (this.isUpdate()) {
       this.roadIntersection.tlCountingDown();
@@ -498,20 +498,27 @@ class Scene extends Component {
     }
     // this.roadIntersection.updateVehiclePos();
     // this.renderObjects();
-    // this.displayPlaneContainer.removeChildren();
-    // const deltaTime = Date.now() - this.timeLastMoment;
-    // this.fpsCounter += 1;
-    // if (deltaTime > 1000) {
-    //   this.fps = this.fpsCounter;
-    //   this.timeLastMoment = Date.now();
-    //   this.fpsCounter = 0;
-    //   this.getNumberOfCars();
-    // }
+    //this.displayPlaneContainer.removeChildren();
+    for (let i = this.displayPlaneContainer.children.length - 1; i >= 0; i--) {
+      // this.tlDisplayPanelContainer.children[i].destroy();
+      let child = this.displayPlaneContainer.children[i];
+      // this.tlDisplayPanelContainer
+      // .removeChild(child);
+      child.destroy();
+    };
+    const deltaTime = Date.now() - this.timeLastMoment;
+    this.fpsCounter += 1;
+    if (deltaTime > 1000) {
+      this.fps = this.fpsCounter;
+      this.timeLastMoment = Date.now();
+      this.fpsCounter = 0;
+      this.getNumberOfCars();
+    }
 
-    // const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
-    // fpsText.x = this.windowW / 2 - 80;
-    // fpsText.y = -this.windowH / 2;
-    // this.displayPlaneContainer.addChild(fpsText);
+    const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
+    fpsText.x = this.windowW / 2 - 80;
+    fpsText.y = -this.windowH / 2;
+    this.displayPlaneContainer.addChild(fpsText);
     // // const numOfCar = this.roadIntersection.getVehiclesNum();
     // // const numberCarsText = new PIXI.Text(`Cars: ${numOfCar}`, this.textStyle);
     // const numberCarsText = new PIXI.Text(`Cars:${this.numberOfCars}`, this.textStyle);
