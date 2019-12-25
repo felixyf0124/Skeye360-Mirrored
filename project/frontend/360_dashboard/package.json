@@ -4,6 +4,8 @@
   "private": true,
   "moduleResolution": "node",
   "dependencies": {
+    "@material-ui/core": "^4.8.0",
+    "@material-ui/icons": "^4.5.1",
     "@types/google-map-react": "^1.1.0",
     "@types/jquery": "^3.3.31",
     "@types/react-router-dom": "^5.1.0",
