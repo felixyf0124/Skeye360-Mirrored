@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { RootState } from '../reducers/rootReducer';
 import GoogleMap from '../components/GoogleMap';
 import Header from '../components/Header';
+import SideDrawer from '../components/SideDrawer';
+
 import {
   STATE as districtState,
   GetDistrictsAction,
@@ -43,7 +45,7 @@ class SkeyeMap extends React.Component<(StateProps & DispatchProps) | any> {
     const { districts } = this.props;
     return (
       <div>
-        <Header />
+        <SideDrawer /> 
         <GoogleMap districts={districts} />
       </div>
     );
