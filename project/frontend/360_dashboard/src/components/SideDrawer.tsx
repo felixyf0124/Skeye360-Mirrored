@@ -40,10 +40,6 @@ interface DispatchProps {
 
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />
 
-
-
-
-
 const drawerWidth = 240;
 
 //CSS for the drawer and header
@@ -183,7 +179,6 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
           }),
         }}
       >
-         
         <div className={classes.toolbar} style={{ justifyContent: 'space-between'}}>
           <h6 style={{ paddingLeft: '65px'}}>SkeYe 360</h6>
           <IconButton onClick={handleDrawerClose}>
@@ -204,7 +199,7 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
                     <ListItemText primary="View Map" />
                 </ListItem>
             </Link>
-            <Link to="profile">
+            <Link to="/">
                 <ListItem button key="Profile">
                     <ListItemIcon className={classes.iconHover}><PersonIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
                     <ListItemText primary="Profile" />
