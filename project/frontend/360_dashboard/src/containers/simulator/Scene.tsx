@@ -287,7 +287,7 @@ class Scene extends Component {
     }
   }
 
-  async getNumberOfCars(): Promise<number> {
+  static async getNumberOfCars(): Promise<number> {
     const rawData = await DataFromCamera.getDataFromCamera() || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
     // console.log(`Number of cars : ${numberCars}`);
@@ -491,7 +491,7 @@ class Scene extends Component {
       this.fps = this.fpsCounter;
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
-      this.getNumberOfCars();
+      Scene.getNumberOfCars();
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -507,7 +507,7 @@ class Scene extends Component {
 
     const url = window.location.href;
     if (!url.includes('/streetview/')) {
-      this.componentWillUnmount();
+      this.unmountDestroy();
     }
   }
 
@@ -544,7 +544,7 @@ class Scene extends Component {
   }
 
   // unmount content destroy
-  public componentWillUnmount(): void {
+  unmountDestroy(): void {
     this.app.ticker.remove(this.animation);
     this.app.ticker.stop();
     this.app.destroy();
