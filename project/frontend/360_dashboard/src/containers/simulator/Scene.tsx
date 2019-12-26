@@ -287,17 +287,11 @@ class Scene extends Component {
     }
   }
 
-
-  // static async getRealTimeData(): Promise<void> {
-  //   const data = new DataFromCamera();
-  //   // console.log("Raw data:" + await data.getDataFromCamera());
-  // }
-
   async getNumberOfCars(): Promise<number> {
     const rawData = await DataFromCamera.getDataFromCamera() || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
-    //console.log(`Number of cars : ${numberCars}`);
-    //this.numberOfCars = numberCars;
+    // console.log(`Number of cars : ${numberCars}`);
+    // this.numberOfCars = numberCars;
     return numberCars;
   }
 
@@ -305,7 +299,7 @@ class Scene extends Component {
   initialize = (): void => {
     window.removeEventListener('resize', this.resize);
     window.addEventListener('resize', this.resize);
-    
+
     this.initialButtons();
 
     // the following two sequence matters, will affect the listeners;
@@ -366,12 +360,7 @@ class Scene extends Component {
   drawRoad=(): void => {
     this.roadG.clear();
     this.roadG.removeChildren();
-    // for (let i = this.roadG.children.length - 1; i >= 0; i--) {
-    //   let child = this.roadG.children[i];
-    //   this.roadG
-    //   .removeChild(child);
-    //   child.destroy();
-    // };
+
     const sections = this.roadIntersection.getRoadSections();
     const startBlinkTime = 10;
 
@@ -489,13 +478,13 @@ class Scene extends Component {
     }
     this.roadIntersection.updateVehiclePos();
     this.renderObjects();
-    //this.displayPlaneContainer.removeChildren();
-    for (let i = this.displayPlaneContainer.children.length - 1; i >= 0; i--) {
-      let child = this.displayPlaneContainer.children[i];
+    // this.displayPlaneContainer.removeChildren();
+    for (let i = this.displayPlaneContainer.children.length - 1; i >= 0; i -= 1) {
+      const child = this.displayPlaneContainer.children[i];
       this.displayPlaneContainer
-      .removeChild(child);
+        .removeChild(child);
       child.destroy();
-    };
+    }
     const deltaTime = Date.now() - this.timeLastMoment;
     this.fpsCounter += 1;
     if (deltaTime > 1000) {
@@ -516,9 +505,8 @@ class Scene extends Component {
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
 
-    let url = window.location.href;
-    if(!url.includes('/streetview/'))
-    {
+    const url = window.location.href;
+    if (!url.includes('/streetview/')) {
       this.componentWillUnmount();
     }
   }
@@ -555,7 +543,7 @@ class Scene extends Component {
     return triangle;
   }
 
-  //unmount content destroy
+  // unmount content destroy
   public componentWillUnmount(): void {
     this.app.ticker.remove(this.animation);
     this.app.ticker.stop();
@@ -592,7 +580,8 @@ class Scene extends Component {
     delete this.context;
     delete this.render;
   }
-  //render
+
+  // render
   render = (): JSX.Element => (
     <div>
       <table>
@@ -619,15 +608,12 @@ class Scene extends Component {
   )
 
   updateTLCountDownDisplayPanel(): void {
-    // this.tlDisplayPanelContainer.removeChildren();
-    
-    for (let i = this.tlDisplayPanelContainer.children.length - 1; i >= 0; i--) {
-      // this.tlDisplayPanelContainer.children[i].destroy();
-      let child = this.tlDisplayPanelContainer.children[i];
+    for (let i = this.tlDisplayPanelContainer.children.length - 1; i >= 0; i -= 1) {
+      const child = this.tlDisplayPanelContainer.children[i];
       this.tlDisplayPanelContainer
-      .removeChild(child);
+        .removeChild(child);
       child.destroy();
-    };
+    }
     const rowOffset = 26;
     const textStyle = {
       fontFamily: 'Courier',
@@ -675,12 +661,12 @@ class Scene extends Component {
 
   drawBackground(color: number, alpha: number): void {
     this.backGroundG.clear();
-    for (let i = this.backGroundG.children.length - 1; i >= 0; i--) {
-      let child = this.backGroundG.children[i];
+    for (let i = this.backGroundG.children.length - 1; i >= 0; i -= 1) {
+      const child = this.backGroundG.children[i];
       this.backGroundG
-      .removeChild(child);
+        .removeChild(child);
       child.destroy();
-    };
+    }
     this.backGroundG.beginFill(color, alpha);
     this.backGroundG
       .drawRect(-this.coordinateOffset.x, -this.coordinateOffset.y, this.windowW, this.windowH);
