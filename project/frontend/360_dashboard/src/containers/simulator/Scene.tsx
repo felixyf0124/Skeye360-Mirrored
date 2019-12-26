@@ -515,6 +515,12 @@ class Scene extends Component {
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
+
+    let url = window.location.href;
+    if(!url.includes('/streetview/'))
+    {
+      this.componentWillUnmount();
+    }
   }
 
   drawTriangle = (topVertex: Vec2, height: number, width: number,
@@ -549,6 +555,44 @@ class Scene extends Component {
     return triangle;
   }
 
+  //unmount content destroy
+  public componentWillUnmount(): void {
+    this.app.ticker.remove(this.animation);
+    this.app.ticker.stop();
+    this.app.destroy();
+    this.btnShowCP.destroy();
+    this.btnStop.destroy();
+    this.backGroundG.destroy();
+    this.mapContainer.destroy();
+    this.objectContainer.destroy();
+    this.controlPanelContainer.destroy();
+    this.displayPlaneContainer.destroy();
+    this.tlDisplayPanelContainer.destroy();
+    this.roadG.destroy();
+    this.trafficLightG.destroy();
+    this.controlPanelG.destroy();
+    delete this.windowW;
+    delete this.windowH;
+    delete this.windowMin;
+    delete this.windowScaleRatio;
+    delete this.roadIntersection;
+    delete this.roadData;
+    delete this.trafficLightData;
+    delete this.laneW;
+    delete this.trafficLightCounterOffset;
+    delete this.trafficLightCounter;
+    delete this.timeLastMoment;
+    delete this.fps;
+    delete this.fpsCounter;
+    delete this.textStyle;
+    delete this.coordinateOffset;
+    delete this.vehicles;
+    delete this.makeUpCar;
+    delete this.pixiContent;
+    delete this.context;
+    delete this.render;
+  }
+  //render
   render = (): JSX.Element => (
     <div>
       <table>
