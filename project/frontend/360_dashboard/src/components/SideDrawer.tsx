@@ -17,7 +17,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme, createGenerateClassName } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
@@ -25,7 +25,10 @@ import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
 
-
+/*
+  Template for Material-UI Drawer found at: 
+  https://material-ui.com/components/drawers/
+*/ 
 interface StateProps {
     authenticated: boolean;
     user_id: number;
@@ -44,6 +47,7 @@ const handleMapButton = (): JSX.Element => <Redirect push to="/" />
 const drawerWidth = 240;
 
 //CSS for the drawer and header
+//Uses useStyles and makeStyles which is integrated in material-UI 
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -111,6 +115,9 @@ const useStyles = makeStyles(theme => ({
   listItem: {
     color: '#FFFFFF',
     textDecoration: 'none!important',
+  },
+  iconStyle: {
+    color: '#FFFFFF'
   }
 }));
 
@@ -177,26 +184,27 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
         <div className={classes.toolbar} style={{ justifyContent: 'space-between'}}>
           <h6 style={{ paddingLeft: '65px'}}>SkeYe 360</h6>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon style={{ color: "#FFFFFF"}} /> : <ChevronLeftIcon style={{ color: "#FFFFFF"}} />}
+            {theme.direction === 'rtl' ? <ChevronRightIcon className={classes.iconStyle} /> : <ChevronLeftIcon className={classes.iconStyle} />}
           </IconButton>
         </div>
         <Divider />
-        <List style={{ color: '#FFFFFF', textDecoration: 'none'}}>
+
+        <List>
             <Link to="">
                 <ListItem button key="Home">
-                    <ListItemIcon><HomeIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
-                    <ListItemText className={ classes.listItem }primary="Home" />
+                    <ListItemIcon><HomeIcon className={classes.iconStyle}/></ListItemIcon>
+                    <ListItemText className={ classes.listItem } primary="Home" />
                 </ListItem>
             </Link>
             <Link to="map">
                 <ListItem button key="View Map">
-                    <ListItemIcon><MapIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
+                    <ListItemIcon><MapIcon className={classes.iconStyle}/></ListItemIcon>
                     <ListItemText className={ classes.listItem } primary="View Map" />
                 </ListItem>
             </Link>
             <Link to="/">
                 <ListItem button key="Profile">
-                    <ListItemIcon><PersonIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
+                    <ListItemIcon><PersonIcon className={classes.iconStyle}/></ListItemIcon>
                     <ListItemText className={ classes.listItem } primary="Profile" />
                 </ListItem>
             </Link>
@@ -205,7 +213,7 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
         <List className={classes.listItem}>
             <ListItem button key="Logout" href="/" onClick={handleLogout}>
                 <ListItemIcon>
-                    <ExitToAppIcon style={{ color: '#FFFFFF' }}/>
+                    <ExitToAppIcon className={classes.iconStyle}/>
                 </ListItemIcon>
                 <ListItemText primary="Log Out" />
             </ListItem>
