@@ -25,11 +25,12 @@ import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
 
-//Add the redux stuff
+
 interface StateProps {
     authenticated: boolean;
     user_id: number;
     log_message: string;
+    header_title: string; 
 }
 
 interface DispatchProps {
@@ -107,15 +108,9 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
-  iconHover:{
-      "&:hover": {
-          backgroundColor: "#04A777",
-          borderRadius: '50%',
-          paddingRight: '10px'
-      },
-      "&:active": {
-        backgroundColor: "#04A777"
-      }
+  listItem: {
+    color: '#FFFFFF',
+    textDecoration: 'none!important',
   }
 }));
 
@@ -162,7 +157,7 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Montreal, Quebec
+            {props.header_title}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -186,34 +181,33 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
           </IconButton>
         </div>
         <Divider />
-        <List>
+        <List style={{ color: '#FFFFFF', textDecoration: 'none'}}>
             <Link to="">
                 <ListItem button key="Home">
-                    <ListItemIcon className={classes.iconHover}><HomeIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
-                    <ListItemText primary="Home" />
+                    <ListItemIcon><HomeIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
+                    <ListItemText className={ classes.listItem }primary="Home" />
                 </ListItem>
             </Link>
             <Link to="map">
                 <ListItem button key="View Map">
-                    <ListItemIcon className={classes.iconHover}><MapIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
-                    <ListItemText primary="View Map" />
+                    <ListItemIcon><MapIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
+                    <ListItemText className={ classes.listItem } primary="View Map" />
                 </ListItem>
             </Link>
             <Link to="/">
                 <ListItem button key="Profile">
-                    <ListItemIcon className={classes.iconHover}><PersonIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
-                    <ListItemText primary="Profile" />
+                    <ListItemIcon><PersonIcon style={{ color: '#FFFFFF' }}/></ListItemIcon>
+                    <ListItemText className={ classes.listItem } primary="Profile" />
                 </ListItem>
             </Link>
         </List>
         <Divider />
-        <List style={{ color: '#FFFFFF'}}>
+        <List className={classes.listItem}>
             <ListItem button key="Logout" href="/" onClick={handleLogout}>
-                <ListItemIcon className={classes.iconHover} style={{ backgroundColor: 'red'}}>
+                <ListItemIcon>
                     <ExitToAppIcon style={{ color: '#FFFFFF' }}/>
                 </ListItemIcon>
-                <ListItemText primary="Log Out" style={{ backgroundColor: 'red'}} />
-      
+                <ListItemText primary="Log Out" />
             </ListItem>
         </List>
       </Drawer>
@@ -225,6 +219,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
     authenticated: authenticated(),
     user_id: state.authentication.user_id,
     log_message: '',
+    header_title: '',
 });
   
   const mapDispatchToProps: DispatchProps = {
