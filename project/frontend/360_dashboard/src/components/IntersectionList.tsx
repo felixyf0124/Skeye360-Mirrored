@@ -9,7 +9,12 @@ interface StateProps {
 interface DispatchProps{
     
 }
+const headerTitle = "Intersection List";
 class IntersectionList extends React.Component<StateProps & DispatchProps> {
+    constructor(props: any) {
+        super(props);
+        this.state = { header_title: ''};
+    }
     public render(): JSX.Element{
         return (
             <div>
