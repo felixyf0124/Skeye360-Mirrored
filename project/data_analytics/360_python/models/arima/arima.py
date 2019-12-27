@@ -65,11 +65,14 @@ plotAndTest(dataFrame)
 # Ways learned from the tutorial where we can transform a non-stationary into stationary
 dataFrame_log = np.log(dataFrame)
 # 1st way is to remove the rolling mean
-rolling_mean = dataFrame_log.rolling(4).mean()
-dataFrame_log_minus_mean = dataFrame_log - rolling_mean
-dataFrame_log_minus_mean.dropna(inplace=True)
-# To view the graph and the values of the test, uncomment the code below
-# plotAndTest(dataFrame_log_minus_mean)
+def makeStationarySubstract(dataframe):
+    dataFrame_log = np.log(dataframe)
+    rolling_mean = dataFrame_log.rolling(4).mean()
+    dataFrame_log_minus_mean = dataFrame_log - rolling_mean
+    dataFrame_log_minus_mean.dropna(inplace=True)
+    # To view the graph and the values of the test, uncomment the code below
+    # plotAndTest(dataFrame_log_minus_mean)
+    printResults(dataFrame_log_minus_mean)
 
 # 2nd way is to apply exponential decay
 rolling_mean_exp_decay = dataFrame_log.ewm(halflife=12, min_periods=0, adjust=True).mean()
