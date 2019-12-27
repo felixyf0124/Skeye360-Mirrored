@@ -267,6 +267,8 @@ class Scene extends Component {
       { atTline: 29000, num: 1 },
       { atTline: 29900, num: 1 },
     ];
+    
+    
 
     this.atIndex = 0;
   }
@@ -299,9 +301,15 @@ class Scene extends Component {
     return numberCars;
   }
 
-  async getRawData(): Promise<void> {
+  async retrieveRawData(): Promise<void> {
     const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
+    
+    /*
+    test
+    (1, [524, 127])(2, [290, 166])(3, [747, 221])(4, [204, 192])(5, [537, 168])(6, [384, 203])(7, [60, 160])(8, [792, 247])(9, [95, 178])(10, [151, 185])(11, [528, 256])
+    */
     this.objRawData = rawDataStr;
+    this.objRawData = "(1, [524, 127])(2, [290, 166])(3, [747, 221])(4, [204, 192])(5, [537, 168])(6, [384, 203])(7, [60, 160])(8, [792, 247])(9, [95, 178])(10, [151, 185])(11, [528, 256])";
     // return rawDataStr;
   }
 
@@ -469,23 +477,26 @@ class Scene extends Component {
 
     // async raw data
     // console.log(this.objRawData);
-    this.getRawData();
-    console.log(this.objRawData);
+    // this.retrieveRawData();
+    // console.log(this.objRawData);
+    this.vehicleUpdate();
 
     // make up car
-    if (this.atIndex < this.makeUpCar.length) {
-      this.deltaT = Date.now() - this.countDown;
-      let currentCD = 0;
+    // if (this.atIndex < this.makeUpCar.length) {
+    //   this.deltaT = Date.now() - this.countDown;
+    //   let currentCD = 0;
 
-      for (let i = 0; i < this.atIndex + 1; i += 1) {
-        currentCD = this.makeUpCar[this.atIndex].atTline;
-      }
+    //   for (let i = 0; i < this.atIndex + 1; i += 1) {
+    //     currentCD = this.makeUpCar[this.atIndex].atTline;
+    //   }
 
-      if (this.deltaT > currentCD) {
-        this.roadIntersection.addNewVehicle(0, 3, 0.06);
-        this.atIndex += 1;
-      }
-    }
+    //   if (this.deltaT > currentCD) {
+    //     this.roadIntersection.addNewVehicle(0, 3, 0.06);
+    //     this.atIndex += 1;
+    //   }
+    // }
+
+    
 
     if (this.isUpdate()) {
       this.roadIntersection.tlCountingDown();
@@ -778,6 +789,9 @@ class Scene extends Component {
     }
   }
 
+  /**
+   * update traffic light blink state
+   */
   isUpdate(): boolean {
     if (this.lastBlinkState !== this.roadIntersection.isBlink()) {
       this.lastBlinkState = this.roadIntersection.isBlink();
@@ -785,6 +799,40 @@ class Scene extends Component {
     }
     return false;
   }
+
+  /**
+   * retrieve and update vehicle mapping
+   */
+  vehicleUpdate(): void {
+    this.retrieveRawData();
+    //(1, [524, 127])(2, [290, 166])(3, [747, 221])
+    const formedData = new Array<{id:number,position:Vec2}>();
+    let startIndex = -1;
+    let endIndex = -1;
+    for(let i =0;i<this.objRawData.length; i+=1) {
+      if(this.objRawData.charAt(i) == "(")
+      {
+        startIndex = i;
+      }else if( this.objRawData.charAt(i) == ")" && startIndex >-1){
+        const substr = this.objRawData.substring(startIndex +1,endIndex);
+        //const simpleVehicleFormat = /\d\, \[\d\, \d\]/g;
+        let simpleVehicleFormat = /\d+(\.\d+)?/g;
+        
+        let matches_array = substr.match(simpleVehicleFormat);
+        if(matches_array!=null) {
+          const id = parseInt(matches_array[0]);
+          const x =parseInt(matches_array[1]);
+          const y =parseInt(matches_array[2]);
+          const pos = ts.tsVec2(x,y);
+          const simpleVehicleData = {id:id,position:pos};
+          formedData.push(simpleVehicleData);
+          console.log(simpleVehicleData);
+        }
+      }
+    }
+    
+  }
+
 }
 
 

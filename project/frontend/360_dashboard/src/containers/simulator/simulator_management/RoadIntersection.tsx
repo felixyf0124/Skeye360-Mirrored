@@ -24,6 +24,9 @@ export default class RoadIntersection {
 
     vehicles: Array<Vehicle>;
 
+    //this array is for simple mapping vehicles
+    simpleVehicles: Array<Vehicle>;
+
     vehicleCount: number;
 
     constructor(id: number, mapCoordinate: Vec2, TLManager?: TrafficLightManager) {
@@ -33,6 +36,7 @@ export default class RoadIntersection {
       this.TLManager = TLManager || new TrafficLightManager(id);
       this.laneWidth = 0;
       this.vehicles = new Array<Vehicle>();
+      this.simpleVehicles = new Array<Vehicle>();
       this.vehicleCount = 0;
     }
 
@@ -109,6 +113,10 @@ export default class RoadIntersection {
       return this.vehicles;
     }
 
+    getSimpleVehicles(): Array<Vehicle> {
+      return this.simpleVehicles;
+    }
+
     getVehiclesNum(): number {
       return this.vehicles.length;
     }
@@ -176,6 +184,11 @@ export default class RoadIntersection {
       }
       this.vehicles.push(objV);
       this.vehicleCount += 1;
+    }
+
+    addNewSimpleVehicle(vehicleId:number, position:Vec2) {
+      const objV = new Vehicle(vehicleId,NaN,NaN,NaN,position);
+      this.simpleVehicles.push(objV);
     }
 
     bindTrafficLight(trafficLight: TrafficLight): void {
