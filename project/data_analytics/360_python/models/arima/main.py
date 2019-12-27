@@ -1,5 +1,7 @@
 # Reference: The steps are based on the following simple auto-ARIMA example found online
 # https://pypi.org/project/pmdarima/
+# Reference: The parameters are based on the tips given from the alkaline-ml.com website
+# http://alkaline-ml.com/pmdarima/develop/tips_and_tricks.html
 # Reference: Used r2_score to evaluate the accuracy of the prediction
 # https://towardsdatascience.com/get-a-glimpse-of-future-using-time-series-forecasting-using-auto-arima-and-artificial-intelligence-273efabec6aa
 
@@ -100,7 +102,6 @@ else:
 print(arimaModel.summary())
 x = np.arange(test.shape[0])
 forecast = arimaModel.predict(n_periods=test.shape[0])
-
 # The following evaluates the accuracy of the forecast/prediction on the test values that was not trained
 accuracy = r2_score(test.values, forecast)
 print(accuracy)
