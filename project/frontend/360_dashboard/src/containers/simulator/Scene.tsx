@@ -287,11 +287,11 @@ class Scene extends Component {
     }
   }
 
-  static async getNumberOfCars(): Promise<number> {
+  async getNumberOfCars(): Promise<number> {
     const rawData = await DataFromCamera.getDataFromCamera() || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
     // console.log(`Number of cars : ${numberCars}`);
-    // this.numberOfCars = numberCars;
+    this.numberOfCars = numberCars;
     return numberCars;
   }
 
@@ -491,7 +491,7 @@ class Scene extends Component {
       this.fps = this.fpsCounter;
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
-      Scene.getNumberOfCars();
+      this.getNumberOfCars();
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
