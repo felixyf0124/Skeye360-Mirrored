@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import AppBar from '@material-ui/core/AppBar';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -5,7 +6,7 @@ import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import HomeIcon from '@material-ui/icons/Home'; 
+import HomeIcon from '@material-ui/icons/Home';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -17,7 +18,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme, createGenerateClassName } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
@@ -26,14 +27,14 @@ import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
 
 /*
-  Template for Material-UI Drawer found at: 
+  Template for Material-UI Drawer found at:
   https://material-ui.com/components/drawers/
-*/ 
+*/
 interface StateProps {
     authenticated: boolean;
     user_id: number;
     log_message: string;
-    header_title: string; 
+    header_title: string;
 }
 
 interface DispatchProps {
@@ -42,19 +43,19 @@ interface DispatchProps {
     logClick: (log_message: string, user_id: number) => any;
 }
 
-const handleMapButton = (): JSX.Element => <Redirect push to="/" />
+const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
 const drawerWidth = 240;
 
-//CSS for the drawer and header
-//Uses useStyles and makeStyles which is integrated in material-UI 
-const useStyles = makeStyles(theme => ({
+// CSS for the drawer and header
+// Uses useStyles and makeStyles which is integrated in material-UI
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: "#04A777",
+    backgroundColor: '#04A777',
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -86,7 +87,7 @@ const useStyles = makeStyles(theme => ({
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
-      
+
     }),
   },
   drawerClose: {
@@ -117,8 +118,8 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none!important',
   },
   iconStyle: {
-    color: '#FFFFFF'
-  }
+    color: '#FFFFFF',
+  },
 }));
 
 const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
@@ -126,16 +127,16 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = () => {
+  const handleDrawerOpen = (): any => {
     setOpen(true);
   };
 
-  const handleDrawerClose = () => {
+  const handleDrawerClose = (): any => {
     setOpen(false);
   };
 
-  const {user_id, logout } = props; 
-  
+  const { user_id, logout } = props;
+
   const handleLogout = (): void => {
     const { logClick } = props;
     logClick('Logged out', user_id);
@@ -164,7 +165,7 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            {props.header_title}
+            Page Title
           </Typography>
         </Toolbar>
       </AppBar>
@@ -181,8 +182,8 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
           }),
         }}
       >
-        <div className={classes.toolbar} style={{ justifyContent: 'space-between'}}>
-          <h6 style={{ paddingLeft: '65px'}}>SkeYe 360</h6>
+        <div className={classes.toolbar} style={{ justifyContent: 'space-between' }}>
+          <h6 style={{ paddingLeft: '65px' }}>SkeYe 360</h6>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon className={classes.iconStyle} /> : <ChevronLeftIcon className={classes.iconStyle} />}
           </IconButton>
@@ -190,49 +191,49 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
         <Divider />
 
         <List>
-            <Link to="">
-                <ListItem button key="Home">
-                    <ListItemIcon><HomeIcon className={classes.iconStyle}/></ListItemIcon>
-                    <ListItemText className={ classes.listItem } primary="Home" />
-                </ListItem>
-            </Link>
-            <Link to="map">
-                <ListItem button key="View Map">
-                    <ListItemIcon><MapIcon className={classes.iconStyle}/></ListItemIcon>
-                    <ListItemText className={ classes.listItem } primary="View Map" />
-                </ListItem>
-            </Link>
-            <Link to="/">
-                <ListItem button key="Profile">
-                    <ListItemIcon><PersonIcon className={classes.iconStyle}/></ListItemIcon>
-                    <ListItemText className={ classes.listItem } primary="Profile" />
-                </ListItem>
-            </Link>
+          <Link to="/">
+            <ListItem button key="Home">
+              <ListItemIcon><HomeIcon className={classes.iconStyle} /></ListItemIcon>
+              <ListItemText className={classes.listItem} primary="Home" />
+            </ListItem>
+          </Link>
+          <Link to="map">
+            <ListItem button key="View Map">
+              <ListItemIcon><MapIcon className={classes.iconStyle} /></ListItemIcon>
+              <ListItemText className={classes.listItem} primary="View Map" />
+            </ListItem>
+          </Link>
+          <Link to="/">
+            <ListItem button key="Profile">
+              <ListItemIcon><PersonIcon className={classes.iconStyle} /></ListItemIcon>
+              <ListItemText className={classes.listItem} primary="Profile" />
+            </ListItem>
+          </Link>
         </List>
         <Divider />
         <List className={classes.listItem}>
-            <ListItem button key="Logout" href="/" onClick={handleLogout}>
-                <ListItemIcon>
-                    <ExitToAppIcon className={classes.iconStyle}/>
-                </ListItemIcon>
-                <ListItemText primary="Log Out" />
-            </ListItem>
+          <ListItem button key="Logout" href="/" onClick={handleLogout}>
+            <ListItemIcon>
+              <ExitToAppIcon className={classes.iconStyle} />
+            </ListItemIcon>
+            <ListItemText primary="Log Out" />
+          </ListItem>
         </List>
       </Drawer>
     </div>
   );
-}
+};
 
 const mapStateToProps = (state: RootState): StateProps => ({
-    authenticated: authenticated(),
-    user_id: state.authentication.user_id,
-    log_message: '',
-    header_title: '',
+  authenticated: authenticated(),
+  user_id: state.authentication.user_id,
+  log_message: '',
+  header_title: '',
 });
-  
-  const mapDispatchToProps: DispatchProps = {
-    logout,
-    handleMapButton: () => handleMapButton(),
-    logClick,
+
+const mapDispatchToProps: DispatchProps = {
+  logout,
+  handleMapButton: () => handleMapButton(),
+  logClick,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SideDrawer);

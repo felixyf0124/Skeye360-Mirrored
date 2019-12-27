@@ -1,27 +1,12 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
-import { connect } from 'react-redux';
-import { RootState } from '../reducers/rootReducer';
-import SideDrawer from '../components/SideDrawer';
+import SideDrawer from './SideDrawer';
 
-interface StateProps {
-
-}
-interface DispatchProps{
-    
-}
-const headerTitle = "Intersection List";
-class IntersectionList extends React.Component<StateProps & DispatchProps> {
-    constructor(props: any) {
-        super(props);
-        this.state = { header_title: ''};
-    }
-    public render(): JSX.Element{
-        return (
-            <div>
-                <SideDrawer />
-            </div>
-        )
-    }
-}
+// const headerTitle = "Intersection List";
+const IntersectionList = (): any => (
+  <div>
+    <SideDrawer />
+  </div>
+);
 
 export default IntersectionList;
