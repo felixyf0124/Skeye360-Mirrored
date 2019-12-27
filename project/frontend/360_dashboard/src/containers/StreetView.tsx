@@ -19,6 +19,7 @@ import SouthChart from '../components/SouthChart';
 import GoogleMiniMap from '../components/GoogleMiniMap';
 import { SKEYE_WHITE } from '../css/custom';
 
+// styled-component for map, chart and flexboxes
 const MapContainer = styled.div`
   position: relative;
   height: 20vh;
@@ -58,6 +59,7 @@ const ChartHorizontalFlexBox = styled.div`
   align-content: stretch;
 `;
 
+// state & props
 interface StateProps {
   intersection: intersectionState;
   intersectionId: string;
@@ -75,13 +77,16 @@ interface DispatchProps {
   logClick: (log_message: string, user_id: number) => any;
 }
 
+// StreetView class
 class StreetView extends React.Component<StateProps & DispatchProps> {
+  // component mount will fetch existing intersection
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { intersectionId, getExistingIntersection } = this.props;
     getExistingIntersection(intersectionId);
   }
 
+  // component unmount resets the loaded data
   public componentWillUnmount(): void {
     // eslint-disable-next-line no-shadow
     const { resetCurrentIntersection } = this.props;
@@ -97,6 +102,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
       user_id,
     } = this.props;
 
+    // delete button
     // eslint-disable-next-line consistent-return
     const handleDelete = (id: string): any => {
       // eslint-disable-next-line no-shadow
@@ -106,6 +112,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
       logClick('Deleted Intersection', user_id);
     };
 
+    // components render
     return (
       <div>
         <Header />
@@ -149,6 +156,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
   }
 }
 
+// state mapping
 const mapStateToProps = (state: RootState): StateProps => ({
   intersection: state.intersection,
   intersectionId: state.router.location.pathname.substring(
@@ -161,6 +169,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   user_id: state.authentication.user_id,
 });
 
+// props dispatching
 const mapDispatchToProps: DispatchProps = {
   deleteExistingIntersection,
   getExistingIntersection,
