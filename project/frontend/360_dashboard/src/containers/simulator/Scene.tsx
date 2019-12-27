@@ -814,6 +814,8 @@ class Scene extends Component {
       {
         startIndex = i;
       }else if( this.objRawData.charAt(i) == ")" && startIndex >-1){
+        endIndex = i;
+        
         const substr = this.objRawData.substring(startIndex +1,endIndex);
         //const simpleVehicleFormat = /\d\, \[\d\, \d\]/g;
         let simpleVehicleFormat = /\d+(\.\d+)?/g;
@@ -826,6 +828,7 @@ class Scene extends Component {
           const pos = ts.tsVec2(x,y);
           const simpleVehicleData = {id:id,position:pos};
           formedData.push(simpleVehicleData);
+          console.log(substr);
           console.log(simpleVehicleData);
         }
       }
