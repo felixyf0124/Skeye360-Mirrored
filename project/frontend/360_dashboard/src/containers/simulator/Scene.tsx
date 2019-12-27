@@ -94,6 +94,8 @@ class Scene extends Component {
 
   atIndex: number;
 
+  objRawData: string;
+
   constructor(props: any) {
     super(props);
     this.windowScaleRatio = 0.5;
@@ -236,6 +238,8 @@ class Scene extends Component {
       this.roadIntersection.addNewVehicle(0, 0, 0.06);
     }
 
+    this.objRawData = '';
+
     this.countDown = Date.now();
     this.deltaT = 0;
     this.makeUpCar = [
@@ -287,14 +291,19 @@ class Scene extends Component {
     }
   }
 
-  static async getNumberOfCars(): Promise<number> {
+  async getNumberOfCars(): Promise<number> {
     const rawData = await DataFromCamera.getDataFromCamera() || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
     // console.log(`Number of cars : ${numberCars}`);
-    // this.numberOfCars = numberCars;
+    this.numberOfCars = numberCars;
     return numberCars;
   }
 
+  async getRawData(): Promise<void> {
+    const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
+    this.objRawData = rawDataStr;
+    // return rawDataStr;
+  }
 
   initialize = (): void => {
     window.removeEventListener('resize', this.resize);
@@ -458,6 +467,12 @@ class Scene extends Component {
       }
     }
 
+    // async raw data
+    // console.log(this.objRawData);
+    this.getRawData();
+    console.log(this.objRawData);
+
+    // make up car
     if (this.atIndex < this.makeUpCar.length) {
       this.deltaT = Date.now() - this.countDown;
       let currentCD = 0;
@@ -491,7 +506,7 @@ class Scene extends Component {
       this.fps = this.fpsCounter;
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
-      Scene.getNumberOfCars();
+      this.getNumberOfCars();
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -507,7 +522,7 @@ class Scene extends Component {
 
     const url = window.location.href;
     if (!url.includes('/streetview/')) {
-      this.unmountDestroy();
+      // this.unmountDestroy();
     }
   }
 
