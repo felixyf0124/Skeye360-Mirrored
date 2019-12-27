@@ -52,16 +52,14 @@ const AvgWaitTimeChart = (): JSX.Element => {
       },
       colors: ['#04a777'],
     },
-    series: [{
-      name: 'Avg Wait Time',
-      data: getYAfter,
-    }],
+    series: [
+      {
+        name: 'Avg Wait Time',
+        data: getYAfter,
+      },
+    ],
   };
-  return (
-    <div className="bar-chart">
-      <Chart options={state.options} series={state.series} type="line" width="500" height="" />
-    </div>
-  );
+  return <Chart options={state.options} series={state.series} type="line" />;
 };
 
 export default AvgWaitTimeChart;
