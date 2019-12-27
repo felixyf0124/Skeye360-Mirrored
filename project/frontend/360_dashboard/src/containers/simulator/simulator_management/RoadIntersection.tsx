@@ -24,7 +24,7 @@ export default class RoadIntersection {
 
     vehicles: Array<Vehicle>;
 
-    //this array is for simple mapping vehicles
+    // this array is for simple mapping vehicles
     simpleVehicles: Array<Vehicle>;
 
     vehicleCount: number;
@@ -186,9 +186,53 @@ export default class RoadIntersection {
       this.vehicleCount += 1;
     }
 
-    addNewSimpleVehicle(vehicleId:number, position:Vec2) {
-      const objV = new Vehicle(vehicleId,NaN,NaN,NaN,position);
+    addNewSimpleVehicle(vehicleId: number, position: Vec2): void {
+      const objV = new Vehicle(vehicleId, NaN, NaN, NaN, position);
       this.simpleVehicles.push(objV);
+    }
+
+    initSimpleVehicles(): void {
+      this.simpleVehicles = new Array<Vehicle>();
+    }
+
+    /**
+     * try to add new simple vehicle, if exists then update position
+     * otherwise, add a new one
+     * @param vehicleId
+     * @param position
+     */
+    tryAddSimpleVehicle(vehicleId: number, position: Vec2): void {
+      if (this.isSimpleVehicleExist(vehicleId)) {
+        this.SimpleVehiclePosUpdate(vehicleId, position);
+      } else {
+        this.addNewSimpleVehicle(vehicleId, position);
+      }
+    }
+
+    /**
+     * check if vehicle at id @param id is already existed
+     * @param id
+     */
+    isSimpleVehicleExist(id: number): boolean {
+      for (let i = 0; i < this.simpleVehicles.length; i += 1) {
+        if (this.simpleVehicles[i].getId() === id) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * update simple vehicle position at @param id
+     * @param id
+     * @param pos
+     */
+    SimpleVehiclePosUpdate(id: number, pos: Vec2): void {
+      for (let i = 0; i < this.simpleVehicles.length; i += 1) {
+        if (this.simpleVehicles[i].getId() === id) {
+          this.simpleVehicles[i].setPosition(pos);
+        }
+      }
     }
 
     bindTrafficLight(trafficLight: TrafficLight): void {

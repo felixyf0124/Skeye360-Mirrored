@@ -267,8 +267,7 @@ class Scene extends Component {
       { atTline: 29000, num: 1 },
       { atTline: 29900, num: 1 },
     ];
-    
-    
+
 
     this.atIndex = 0;
   }
@@ -299,18 +298,6 @@ class Scene extends Component {
     // console.log(`Number of cars : ${numberCars}`);
     this.numberOfCars = numberCars;
     return numberCars;
-  }
-
-  async retrieveRawData(): Promise<void> {
-    const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
-    
-    /*
-    test
-    (1, [524, 127])(2, [290, 166])(3, [747, 221])(4, [204, 192])(5, [537, 168])(6, [384, 203])(7, [60, 160])(8, [792, 247])(9, [95, 178])(10, [151, 185])(11, [528, 256])
-    */
-    this.objRawData = rawDataStr;
-    this.objRawData = "(1, [524, 127])(2, [290, 166])(3, [747, 221])(4, [204, 192])(5, [537, 168])(6, [384, 203])(7, [60, 160])(8, [792, 247])(9, [95, 178])(10, [151, 185])(11, [528, 256])";
-    // return rawDataStr;
   }
 
   initialize = (): void => {
@@ -444,7 +431,7 @@ class Scene extends Component {
 
   renderObjects = (): void => {
     this.objectContainer.removeChildren();
-    const vehicles = this.roadIntersection.getVehicles();
+    const vehicles = this.roadIntersection.getSimpleVehicles();
 
     for (let i = 0; i < vehicles.length; i += 1) {
       const position = vehicles[i].getPosition();
@@ -479,7 +466,7 @@ class Scene extends Component {
     // console.log(this.objRawData);
     // this.retrieveRawData();
     // console.log(this.objRawData);
-    this.vehicleUpdate();
+    this.vehicleUpdate(852, 478);
 
     // make up car
     // if (this.atIndex < this.makeUpCar.length) {
@@ -496,7 +483,6 @@ class Scene extends Component {
     //   }
     // }
 
-    
 
     if (this.isUpdate()) {
       this.roadIntersection.tlCountingDown();
@@ -567,6 +553,23 @@ class Scene extends Component {
       triangle.endFill();
     }
     return triangle;
+  }
+
+  async retrieveRawData(): Promise<void> {
+    const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
+
+    /*
+    test
+    (1, [524, 127])
+    (2, [290, 166])
+    (3, [747, 221])
+    (4, [204, 192])(5, [537, 168])(6, [384, 203])
+    (7, [60, 160])(8, [792, 247])(9, [95, 178])
+    (10, [151, 185])(11, [528, 256])
+    */
+    this.objRawData = rawDataStr;
+    this.objRawData = '(1, [524, 127])(2, [290, 166])(3, [747, 221])(4, [204, 192])(5, [537, 168])(6, [384, 203])(7, [60, 160])(8, [792, 247])(9, [95, 178])(10, [151, 185])(11, [528, 256])';
+    // return rawDataStr;
   }
 
   // unmount content destroy
@@ -802,40 +805,44 @@ class Scene extends Component {
 
   /**
    * retrieve and update vehicle mapping
+   * @param videoW
+   * @param videoH
    */
-  vehicleUpdate(): void {
+  vehicleUpdate(videoW: number, videoH: number): void {
     this.retrieveRawData();
-    //(1, [524, 127])(2, [290, 166])(3, [747, 221])
-    const formedData = new Array<{id:number,position:Vec2}>();
+    // (1, [524, 127])(2, [290, 166])(3, [747, 221])
+    const formedData = new Array<{id: number;position: Vec2}>();
     let startIndex = -1;
     let endIndex = -1;
-    for(let i =0;i<this.objRawData.length; i+=1) {
-      if(this.objRawData.charAt(i) == "(")
-      {
+    this.roadIntersection.initSimpleVehicles();
+    console.log('update');
+    for (let i = 0; i < this.objRawData.length; i += 1) {
+      if (this.objRawData.charAt(i) === '(') {
         startIndex = i;
-      }else if( this.objRawData.charAt(i) == ")" && startIndex >-1){
+      } else if (this.objRawData.charAt(i) === ')' && startIndex > -1) {
         endIndex = i;
-        
-        const substr = this.objRawData.substring(startIndex +1,endIndex);
-        //const simpleVehicleFormat = /\d\, \[\d\, \d\]/g;
-        let simpleVehicleFormat = /\d+(\.\d+)?/g;
-        
-        let matches_array = substr.match(simpleVehicleFormat);
-        if(matches_array!=null) {
-          const id = parseInt(matches_array[0]);
-          const x =parseInt(matches_array[1]);
-          const y =parseInt(matches_array[2]);
-          const pos = ts.tsVec2(x,y);
-          const simpleVehicleData = {id:id,position:pos};
+
+        const substr = this.objRawData.substring(startIndex + 1, endIndex);
+        // const simpleVehicleFormat = /\d\, \[\d\, \d\]/g;
+        const simpleVehicleFormat = /\d+(\.\d+)?/g;
+
+        const matchesArray = substr.match(simpleVehicleFormat);
+        if (matchesArray != null) {
+          const id = parseInt(matchesArray[0], 1);
+          const x = (parseInt(matchesArray[1], 1) / videoW)
+          * this.windowW - this.coordinateOffset.x;
+          const y = (parseInt(matchesArray[2], 1) / videoH)
+          * this.windowH - this.coordinateOffset.y;
+          const pos = ts.tsVec2(x, y);
+          const simpleVehicleData = { id, position: pos };
           formedData.push(simpleVehicleData);
-          console.log(substr);
-          console.log(simpleVehicleData);
+          // console.log(substr);
+          // console.log(simpleVehicleData);
+          this.roadIntersection.tryAddSimpleVehicle(id, pos);
         }
       }
     }
-    
   }
-
 }
 
 
