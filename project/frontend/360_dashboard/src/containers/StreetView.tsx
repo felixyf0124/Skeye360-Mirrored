@@ -2,23 +2,68 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import Header, { Head } from '../components/Header';
-import Simulator from './simulator/Scene';
 import NorthChart from '../components/NorthChart';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 import {
+  STATE as intersectionState,
   getExistingIntersection,
   deleteExistingIntersection,
-  resetIntersection,
+  resetIntersection as resetCurrentIntersection,
   ResetIntersectionAction,
 } from '../contexts/intersection';
-import { getDistricts } from '../contexts/districts';
 import { logClick } from '../contexts/LogClicks';
+import SouthChart from '../components/SouthChart';
+import GoogleMiniMap from '../components/GoogleMiniMap';
+import { SKEYE_WHITE } from '../css/custom';
+
+const MapContainer = styled.div`
+  position: relative;
+  height: 20vh;
+  width: 80vw;
+  margin: 1rem;
+`;
+
+const SmallChartContainer = styled.div`
+  background-color: ${SKEYE_WHITE};
+  width: 30vw;
+  position: relative;
+  margin: 1rem;
+`;
+
+const BigChartContainer = styled.div`
+  background-color: ${SKEYE_WHITE};
+  position: relative;
+  width: 50vw;
+  margin: 1rem;
+`;
+
+const ChartVerticalFlexBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  align-content: stretch;
+`;
+
+const ChartHorizontalFlexBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: stretch;
+  align-content: stretch;
+`;
 
 interface StateProps {
+  intersection: intersectionState;
   intersectionId: string;
   intersectionName: string;
+  intersectionLat: string;
+  intersectionLng: string;
   error: string;
   user_id: number;
 }
@@ -26,12 +71,8 @@ interface StateProps {
 interface DispatchProps {
   deleteExistingIntersection: (id: string) => any;
   getExistingIntersection: (id: string) => any;
-  getDistricts: () => any;
-  resetIntersection(): ResetIntersectionAction;
-  logClick: (
-    log_message: string,
-    user_id: number,
-  ) => any;
+  resetCurrentIntersection(): ResetIntersectionAction;
+  logClick: (log_message: string, user_id: number) => any;
 }
 
 class StreetView extends React.Component<StateProps & DispatchProps> {
@@ -43,14 +84,16 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
 
   public componentWillUnmount(): void {
     // eslint-disable-next-line no-shadow
-    const { resetIntersection } = this.props;
-    resetIntersection();
+    const { resetCurrentIntersection } = this.props;
+    resetCurrentIntersection();
   }
 
   public render(): JSX.Element {
-    const { intersectionId, intersectionName } = this.props;
-
     const {
+      intersectionId,
+      intersectionName,
+      intersectionLat,
+      intersectionLng,
       user_id,
     } = this.props;
 
@@ -66,8 +109,8 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
     return (
       <div>
         <Header />
-        <h1 className="header-text">{intersectionName}</h1>
         <Head>
+          <h1 className="header-text">{intersectionName}</h1>
           <Link to={`/intersection/edit/${intersectionId}`} className="header-text">
             Edit
           </Link>
@@ -75,21 +118,45 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
             Delete
           </Link>
         </Head>
-        <Simulator />
-        <div className="charts-row">
-          <NorthChart />
-          <AvgWaitTimeChart />
-        </div>
+        <ChartHorizontalFlexBox>
+          <MapContainer>
+            {intersectionLat === '' ? (
+              <p>Loading...</p>
+            ) : (
+              <GoogleMiniMap
+                intersectionId={intersectionId}
+                intersectionLat={intersectionLat}
+                intersectionLng={intersectionLng}
+              />
+            )}
+          </MapContainer>
+        </ChartHorizontalFlexBox>
+        <ChartHorizontalFlexBox>
+          <ChartVerticalFlexBox>
+            <SmallChartContainer>
+              <NorthChart />
+            </SmallChartContainer>
+            <SmallChartContainer>
+              <SouthChart />
+            </SmallChartContainer>
+          </ChartVerticalFlexBox>
+          <BigChartContainer>
+            <AvgWaitTimeChart />
+          </BigChartContainer>
+        </ChartHorizontalFlexBox>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
+  intersection: state.intersection,
   intersectionId: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
   ),
   intersectionName: state.intersection.intersection_name,
+  intersectionLat: state.intersection.latitude,
+  intersectionLng: state.intersection.longitude,
   error: state.intersection.error,
   user_id: state.authentication.user_id,
 });
@@ -97,8 +164,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 const mapDispatchToProps: DispatchProps = {
   deleteExistingIntersection,
   getExistingIntersection,
-  getDistricts,
-  resetIntersection,
+  resetCurrentIntersection,
   logClick,
 };
 
