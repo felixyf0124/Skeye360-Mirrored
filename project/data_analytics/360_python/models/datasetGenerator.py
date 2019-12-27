@@ -6,12 +6,47 @@ from datetime import timedelta
 
 # Function to prepare the row to be inserted
 def rowPreparator(id, direction, fromD, toD, am45Data, am56Data, am67Data, am78Data, am89Data):
+    startedYear = (datetime.now().date() - timedelta(days=10000)).year
     # We add 'n' number of days depending on the id to simulate the dates
-    date = datetime.now().date() + timedelta(days=id)
+    date = datetime.now().date() - timedelta(days=10000) + timedelta(days=id)
+    data45 = numCar(startedYear, date, am45Data)
+    data56 = numCar(startedYear, date, am56Data)
+    data67 = numCar(startedYear, date, am67Data)
+    data78 = numCar(startedYear, date, am78Data)
+    data89 = numCar(startedYear, date, am89Data)
     row = {'id': id, 'direction': direction, 'from': fromD, 'to': toD, 'date': date,
-                '4:00-5:00am': am45Data, '5:00-6:00am': am56Data, '6:00-7:00am': am67Data,
-                '7:00-8:00am': am78Data, '8:00-9:00am': am89Data}
+                '4:00-5:00am': data45, '5:00-6:00am': data56, '6:00-7:00am': data67,
+                '7:00-8:00am': data78, '8:00-9:00am': data89}
     return row
+
+def numCar(startedYear, date, numCar):
+    month = date.month
+    year = date.year
+    yearElapsed = year - startedYear
+    return numCarAdderByMonth(yearElapsed, month, numCar)
+
+def numCarAdderByMonth(yearElapsed, month, numCar):
+    randomAdder = (yearElapsed * random.randint(1, 3))
+    monthSwitch = {
+        1: (numCar * 0.6),
+        2: (numCar * 0.8),
+        3: numCar,
+        4: numCar,
+        5: (numCar * 0.8),
+        6: (numCar * 0.7),
+        7: (numCar * 0.5),
+        8: (numCar * 0.6),
+        9: (numCar * 0.8),
+        10: numCar,
+        11: (numCar * 0.9),
+        12: (numCar * 0.5)
+    }
+    # if(yearElapsed == 0 and month == 12):
+    #     print("monthSwitch: ", int(monthSwitch.get(month)), " | randomAdder: ", randomAdder, " | equal: ", int(monthSwitch.get(month)) + randomAdder)
+    return (int(monthSwitch.get(month)) + randomAdder)
+
+
+
 
 # Function to generate random number for 'n' times, with 2 parameters to set the boundary (or range) and returns the results as a list
 def numberGenerator(minNum, maxNum):
@@ -23,13 +58,14 @@ def numberGenerator(minNum, maxNum):
         listOfRandomNumbers.append(random.randint(minNum, maxNum))
     return listOfRandomNumbers
 
+
 # Main part of the code
 
 # am45 correspond to 4:00am to 5:00am and we generate 'n' number of times of data for each hours, where 'n' is set in the numberGenerator function
 am45 = numberGenerator(20, 40)
-am56 = numberGenerator(30, 70)
-am67 = numberGenerator(50, 100)
-am78 = numberGenerator(60, 100)
+am56 = numberGenerator(50, 70)
+am67 = numberGenerator(80, 100)
+am78 = numberGenerator(90, 110)
 am89 = numberGenerator(60, 90)
 
 # For Mac OS, uncomment the "with open" command below and comment out the second "with open"
