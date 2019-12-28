@@ -31,16 +31,16 @@ import { logClick } from '../contexts/LogClicks';
   https://material-ui.com/components/drawers/
 */
 interface StateProps {
-    authenticated: boolean;
-    user_id: number;
-    log_message: string;
-    header_title: string;
+  authenticated: boolean;
+  user_id: number;
+  log_message: string;
+  header_title: string;
 }
 
 interface DispatchProps {
-    logout: () => any;
-    handleMapButton: () => void;
-    logClick: (log_message: string, user_id: number) => any;
+  logout: () => any;
+  handleMapButton: () => void;
+  logClick: (log_message: string, user_id: number) => any;
 }
 
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
