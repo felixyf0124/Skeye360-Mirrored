@@ -135,38 +135,38 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
       <header className={classes.loginHeader}> Skeye 360 </header>
       <div className="background-style">
         <div className={classes.loginBox}>
-            <div className={classes.textInput}>
-              <PersonIcon className={classes.iconStyle}/>
-            </div>
-            <form
-              onSubmit={(e): void => {
-                e.preventDefault();
-                handleLoginClick();
-                history.push('/');
-              }}
-            >
+          <div className={classes.textInput}>
+            <PersonIcon className={classes.iconStyle} />
+          </div>
+          <form
+            onSubmit={(e): void => {
+              e.preventDefault();
+              handleLoginClick();
+              history.push('/');
+            }}
+          >
             {error !== '' ? (
               <div className="form-group">
                 <div className={classes.invalid}>{error}</div>
-                </div>
+              </div>
             ) : (
               <div />
             )}
             <div className="form-group">
               <input type="text" name="username" className={classes.loginTextfield} placeholder="Username" value={username} onChange={handleChange} />
             </div>
-              <div className="form-group">
+            <div className="form-group">
               <input type="password" name="password" className={classes.loginTextfield} placeholder="Password" value={password} onChange={handleChange} />
             </div>
-              <div className="form-group">
+            <div className="form-group">
               <button className={classes.loginButton} type="submit">Login</button>
             </div>
-            </form>
+          </form>
         </div>
       </div>
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
 const mapStateToProps = (state: RootState): StateProps => ({
   username: '',
