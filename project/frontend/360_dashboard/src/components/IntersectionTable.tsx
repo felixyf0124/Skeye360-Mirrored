@@ -14,6 +14,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import { Link } from 'react-router-dom';
 
+import {STATE as districtState } from '../contexts/districts';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -52,9 +54,8 @@ const rows = [
     createData('St-Cath/Guy', 'downtown', 'high', 'simulator link', 'edit', 'delete')
 ]
 
-export default function IntersectionList() {
+const IntersectionTable = (districts: districtState): JSX.Element => {
     const classes = useStyles();
-
     return (
         <main className={classes.content}>
             <TableContainer component={Paper}>
@@ -70,28 +71,51 @@ export default function IntersectionList() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map(row =>(
-                            <TableRow key={row.intersectionName}>
+                        {districts.districts[0] === undefined ? (
+                            <TableRow>
+                            <TableCell component="th" scope="row">
+                                St-Cath
+                            </TableCell>
+                            <TableCell>
+                                Downtown
+                            </TableCell>
+                            <TableCell>
+                                Undefined
+                            </TableCell>
+                            <TableCell>
+                                <CallMadeIcon />
+                            </TableCell>
+                            <TableCell>
+                                <EditIcon />
+                            </TableCell>
+                            <TableCell>
+                                <DeleteIcon />
+                            </TableCell>
+                        </TableRow>
+                        ) : (
+                            districts.districts[0].intersections.map((intersection) => (
+                                <TableRow>
                                 <TableCell component="th" scope="row">
-                                    {row.intersectionName}
+                                    {intersection.intersection_name}
                                 </TableCell>
                                 <TableCell>
-                                    {row.district}
+                                    {districts.districts[0].district_name}
                                 </TableCell>
                                 <TableCell>
-                                    {row.trafficIntensity}
+                                    Undefined
                                 </TableCell>
                                 <TableCell>
                                     <CallMadeIcon />
                                 </TableCell>
                                 <TableCell>
-                                    <EditIcon />
+                                    <Link to={`/intersection/edit/${intersection.id}`}><EditIcon /></Link>
                                 </TableCell>
                                 <TableCell>
-                                   <DeleteIcon />
+                                    <DeleteIcon />
                                 </TableCell>
                             </TableRow>
-                        ))}
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -103,3 +127,4 @@ export default function IntersectionList() {
         </main>
     )
 }
+export default IntersectionTable;
