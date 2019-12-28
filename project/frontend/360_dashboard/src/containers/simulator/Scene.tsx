@@ -828,10 +828,10 @@ class Scene extends Component {
 
         const matchesArray = substr.match(simpleVehicleFormat);
         if (matchesArray != null) {
-          const id = parseInt(matchesArray[0], 1);
-          const x = (parseInt(matchesArray[1], 1) / videoW)
+          const id = parseInt(matchesArray[0], 10);
+          const x = (parseInt(matchesArray[1], 10) / videoW)
           * this.windowW - this.coordinateOffset.x;
-          const y = (parseInt(matchesArray[2], 1) / videoH)
+          const y = (parseInt(matchesArray[2], 10) / videoH)
           * this.windowH - this.coordinateOffset.y;
           const pos = ts.tsVec2(x, y);
           const simpleVehicleData = { id, position: pos };
