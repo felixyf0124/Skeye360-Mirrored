@@ -25,7 +25,6 @@ import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
-
 /*
   Template for Material-UI Drawer found at:
   https://material-ui.com/components/drawers/
@@ -36,7 +35,6 @@ interface StateProps {
     log_message: string;
     header_title: string;
 }
-
 interface DispatchProps {
     logout: () => any;
     handleMapButton: () => void;
@@ -144,7 +142,7 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
   };
 
   return (
-    <div className={classes.root}>
+    <div>
       <CssBaseline />
       <AppBar
         position="fixed"
