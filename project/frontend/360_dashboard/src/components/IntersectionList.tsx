@@ -12,7 +12,7 @@ import {
   ResetDistrictAction
 } from '../contexts/districts';
 import { connect } from 'react-redux';
-
+const title = 'Intersection List';
 interface StateProps {
   districts: districtState;
 }
@@ -45,7 +45,9 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
     const { districts } = this.props;
     return (
       <div style={{ display: 'flex'}}>
-        <SideDrawer />
+        <SideDrawer
+          headerTitle={title}
+        />
         <IntersectionTable districts={districts} />
       </div>
     );

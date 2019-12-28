@@ -30,15 +30,18 @@ import { logClick } from '../contexts/LogClicks';
   https://material-ui.com/components/drawers/
 */
 interface StateProps {
-    authenticated: boolean;
-    user_id: number;
-    log_message: string;
-    header_title: string;
+  authenticated: boolean;
+  user_id: number;
+  log_message: string;
+}
+
+interface HeaderProps {
+  headerTitle: string;
 }
 interface DispatchProps {
-    logout: () => any;
-    handleMapButton: () => void;
-    logClick: (log_message: string, user_id: number) => any;
+  logout: () => any;
+  handleMapButton: () => void;
+  logClick: (log_message: string, user_id: number) => any;
 }
 
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
@@ -85,7 +88,6 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
-
     }),
   },
   drawerClose: {
@@ -120,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
+const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Element => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -133,7 +135,7 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
     setOpen(false);
   };
 
-  const { user_id, logout } = props;
+  const { user_id, logout, headerTitle } = props;
 
   const handleLogout = (): void => {
     const { logClick } = props;
@@ -163,7 +165,7 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Page Title
+            {headerTitle}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -183,7 +185,11 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
         <div className={classes.toolbar} style={{ justifyContent: 'space-between' }}>
           <h6 style={{ paddingLeft: '65px' }}>SkeYe 360</h6>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon className={classes.iconStyle} /> : <ChevronLeftIcon className={classes.iconStyle} />}
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon className={classes.iconStyle} />
+            ) : (
+              <ChevronLeftIcon className={classes.iconStyle} />
+            )}
           </IconButton>
         </div>
         <Divider />
@@ -191,19 +197,25 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
         <List>
           <Link to="/">
             <ListItem button key="Home">
-              <ListItemIcon><HomeIcon className={classes.iconStyle} /></ListItemIcon>
+              <ListItemIcon>
+                <HomeIcon className={classes.iconStyle} />
+              </ListItemIcon>
               <ListItemText className={classes.listItem} primary="Home" />
             </ListItem>
           </Link>
-          <Link to="map">
+          <Link to="/map">
             <ListItem button key="View Map">
-              <ListItemIcon><MapIcon className={classes.iconStyle} /></ListItemIcon>
+              <ListItemIcon>
+                <MapIcon className={classes.iconStyle} />
+              </ListItemIcon>
               <ListItemText className={classes.listItem} primary="View Map" />
             </ListItem>
           </Link>
           <Link to="/">
             <ListItem button key="Profile">
-              <ListItemIcon><PersonIcon className={classes.iconStyle} /></ListItemIcon>
+              <ListItemIcon>
+                <PersonIcon className={classes.iconStyle} />
+              </ListItemIcon>
               <ListItemText className={classes.listItem} primary="Profile" />
             </ListItem>
           </Link>
@@ -226,7 +238,6 @@ const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: authenticated(),
   user_id: state.authentication.user_id,
   log_message: '',
-  header_title: '',
 });
 
 const mapDispatchToProps: DispatchProps = {
@@ -234,4 +245,5 @@ const mapDispatchToProps: DispatchProps = {
   handleMapButton: () => handleMapButton(),
   logClick,
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(SideDrawer);

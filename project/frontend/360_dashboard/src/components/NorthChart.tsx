@@ -11,7 +11,6 @@ const getX = data.map((value) => value.time);
 // const getY = data.map((value) => value.cars);
 const getYAfter = newData.map((value) => value.cars);
 
-
 interface ChartState {
   options: {};
   series: any;
@@ -52,18 +51,15 @@ const NorthChart = (): JSX.Element => {
       },
       colors: ['#04a777'],
     },
-    series: [{
-      name: 'Number of cars passing',
-      data: getYAfter,
-    },
+    series: [
+      {
+        name: 'Number of cars passing',
+        data: getYAfter,
+      },
     ],
   };
 
-  return (
-    <div className="bar-chart">
-      <Chart options={state.options} series={state.series} type="line" width="500" height="" />
-    </div>
-  );
+  return <Chart options={state.options} series={state.series} type="line" />;
 };
 
 export default NorthChart;

@@ -42,10 +42,13 @@ class SkeyeMap extends React.Component<(StateProps & DispatchProps) | any> {
 
   public render(): JSX.Element {
     const { districts } = this.props;
+    const title = 'Map';
     return (
       <div>
-        <SideDrawer />
-        <GoogleMap districts={districts} />
+        <SideDrawer headerTitle={title} />
+        <div style={{ height: '100vh', width: '100%' }}>
+          <GoogleMap districts={districts} />
+        </div>
       </div>
     );
   }
