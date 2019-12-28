@@ -19,8 +19,6 @@ describe('authentication redux', () => {
           user_id: 0,
         }),
       );
-      console.log('BBB');
-      console.log(result);
       expect(result).to.include({
         sessionToken: '',
         username: '',

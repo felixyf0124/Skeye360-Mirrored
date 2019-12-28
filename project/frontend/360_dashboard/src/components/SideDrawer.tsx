@@ -90,7 +90,6 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
-
     }),
   },
   drawerClose: {
@@ -140,7 +139,6 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
 
   const { user_id, logout, headerTitle } = props;
 
-
   const handleLogout = (): void => {
     const { logClick } = props;
     logClick('Logged out', user_id);
@@ -189,7 +187,11 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
         <div className={classes.toolbar} style={{ justifyContent: 'space-between' }}>
           <h6 style={{ paddingLeft: '65px' }}>SkeYe 360</h6>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon className={classes.iconStyle} /> : <ChevronLeftIcon className={classes.iconStyle} />}
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon className={classes.iconStyle} />
+            ) : (
+              <ChevronLeftIcon className={classes.iconStyle} />
+            )}
           </IconButton>
         </div>
         <Divider />
@@ -197,19 +199,25 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
         <List>
           <Link to="/">
             <ListItem button key="Home">
-              <ListItemIcon><HomeIcon className={classes.iconStyle} /></ListItemIcon>
+              <ListItemIcon>
+                <HomeIcon className={classes.iconStyle} />
+              </ListItemIcon>
               <ListItemText className={classes.listItem} primary="Home" />
             </ListItem>
           </Link>
-          <Link to="map">
+          <Link to="/map">
             <ListItem button key="View Map">
-              <ListItemIcon><MapIcon className={classes.iconStyle} /></ListItemIcon>
+              <ListItemIcon>
+                <MapIcon className={classes.iconStyle} />
+              </ListItemIcon>
               <ListItemText className={classes.listItem} primary="View Map" />
             </ListItem>
           </Link>
           <Link to="/">
             <ListItem button key="Profile">
-              <ListItemIcon><PersonIcon className={classes.iconStyle} /></ListItemIcon>
+              <ListItemIcon>
+                <PersonIcon className={classes.iconStyle} />
+              </ListItemIcon>
               <ListItemText className={classes.listItem} primary="Profile" />
             </ListItem>
           </Link>
@@ -239,4 +247,5 @@ const mapDispatchToProps: DispatchProps = {
   handleMapButton: () => handleMapButton(),
   logClick,
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(SideDrawer);
