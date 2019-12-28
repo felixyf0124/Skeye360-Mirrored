@@ -2,10 +2,12 @@
 import React from 'react';
 import SideDrawer from './SideDrawer';
 
-// const headerTitle = "Intersection List";
-const IntersectionList = (): any => (
+const title = 'Intersection List';
+const IntersectionList = (): JSX.Element => (
   <div>
-    <SideDrawer />
+    <SideDrawer
+      headerTitle={title}
+    />
   </div>
 );
 

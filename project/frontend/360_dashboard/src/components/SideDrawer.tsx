@@ -34,7 +34,10 @@ interface StateProps {
   authenticated: boolean;
   user_id: number;
   log_message: string;
-  header_title: string;
+}
+
+interface HeaderProps {
+  headerTitle: string;
 }
 
 interface DispatchProps {
@@ -122,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
+const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Element => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -135,7 +138,8 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
     setOpen(false);
   };
 
-  const { user_id, logout } = props;
+  const { user_id, logout, headerTitle } = props;
+
 
   const handleLogout = (): void => {
     const { logClick } = props;
@@ -165,7 +169,7 @@ const SideDrawer = (props: StateProps & DispatchProps): JSX.Element => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Page Title
+            {headerTitle}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -228,7 +232,6 @@ const mapStateToProps = (state: RootState): StateProps => ({
   authenticated: authenticated(),
   user_id: state.authentication.user_id,
   log_message: '',
-  header_title: '',
 });
 
 const mapDispatchToProps: DispatchProps = {
