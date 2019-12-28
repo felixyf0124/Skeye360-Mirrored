@@ -3,11 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
+import { makeStyles } from '@material-ui/core/styles';
+import PersonIcon from '@material-ui/icons/Person';
 import { RootState } from '../reducers/rootReducer';
 import { authenticate, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
-import { makeStyles } from '@material-ui/core/styles';
-import PersonIcon from '@material-ui/icons/Person';
 
 interface StateProps {
   username: string;
@@ -27,10 +27,10 @@ interface DispatchProps {
   logClick: (log_message: string, user_id: number) => any;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
-      width: 200,    
+      width: 200,
     },
   },
 
@@ -63,7 +63,6 @@ const useStyles = makeStyles(theme => ({
     height: '4rem',
     fontSize: '1.5rem',
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     color: '#04A777',
@@ -134,10 +133,8 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   return (
     <div>
       <header className={classes.loginHeader}> Skeye 360 </header>
-        {/* <div className={classes.loginBody}> */}
-        <div className="background-style">
-          <div className={classes.loginBox}>
-            {/* icon */}
+      <div className="background-style">
+        <div className={classes.loginBox}>
             <div className={classes.textInput}>
               <PersonIcon className={classes.iconStyle}/>
             </div>
@@ -151,25 +148,25 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
             {error !== '' ? (
               <div className="form-group">
                 <div className={classes.invalid}>{error}</div>
-              </div>
+                </div>
             ) : (
               <div />
             )}
             <div className="form-group">
               <input type="text" name="username" className={classes.loginTextfield} placeholder="Username" value={username} onChange={handleChange} />
             </div>
-            <div className="form-group">
+              <div className="form-group">
               <input type="password" name="password" className={classes.loginTextfield} placeholder="Password" value={password} onChange={handleChange} />
             </div>
-            <div className="form-group">
+              <div className="form-group">
               <button className={classes.loginButton} type="submit">Login</button>
             </div>
-          </form>
+            </form>
         </div>
       </div>
-    </div>
-  );
-};
+      </div>
+    );
+  };
 
 const mapStateToProps = (state: RootState): StateProps => ({
   username: '',
