@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import Header, { Head } from '../components/Header';
@@ -10,7 +9,6 @@ import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 import {
   STATE as intersectionState,
   getExistingIntersection,
-  deleteExistingIntersection,
   resetIntersection as resetCurrentIntersection,
   ResetIntersectionAction,
 } from '../contexts/intersection';
@@ -23,7 +21,7 @@ import { SKEYE_WHITE } from '../css/custom';
 const MapContainer = styled.div`
   position: relative;
   height: 20vh;
-  width: 80vw;
+  width: 100vw;
   margin: 1rem;
 `;
 
@@ -37,7 +35,7 @@ const SmallChartContainer = styled.div`
 const BigChartContainer = styled.div`
   background-color: ${SKEYE_WHITE};
   position: relative;
-  width: 50vw;
+  width: 70vw;
   margin: 1rem;
 `;
 
@@ -71,7 +69,6 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  deleteExistingIntersection: (id: string) => any;
   getExistingIntersection: (id: string) => any;
   resetCurrentIntersection(): ResetIntersectionAction;
   logClick: (log_message: string, user_id: number) => any;
@@ -95,22 +92,8 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
 
   public render(): JSX.Element {
     const {
-      intersectionId,
-      intersectionName,
-      intersectionLat,
-      intersectionLng,
-      user_id,
+      intersectionId, intersectionName, intersectionLat, intersectionLng,
     } = this.props;
-
-    // delete button
-    // eslint-disable-next-line consistent-return
-    const handleDelete = (id: string): any => {
-      // eslint-disable-next-line no-shadow
-      const { deleteExistingIntersection } = this.props;
-      const { logClick } = this.props;
-      deleteExistingIntersection(id);
-      logClick('Deleted Intersection', user_id);
-    };
 
     // components render
     return (
@@ -118,12 +101,6 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
         <Header />
         <Head>
           <h1 className="header-text">{intersectionName}</h1>
-          <Link to={`/intersection/edit/${intersectionId}`} className="header-text">
-            Edit
-          </Link>
-          <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">
-            Delete
-          </Link>
         </Head>
         <ChartHorizontalFlexBox>
           <MapContainer>
@@ -171,7 +148,6 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 // props dispatching
 const mapDispatchToProps: DispatchProps = {
-  deleteExistingIntersection,
   getExistingIntersection,
   resetCurrentIntersection,
   logClick,
