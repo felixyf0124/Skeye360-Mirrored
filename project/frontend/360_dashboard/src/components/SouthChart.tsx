@@ -13,12 +13,10 @@ const getX = data.map((value) => value.x);
 // Retrieve all of the y values
 const getY = data.map((value) => value.y);
 
-
 interface ChartState {
   options: {};
   series: any;
 }
-
 
 // A chart that shows how many cars are coming from South to North per hour
 const SouthChart = (): JSX.Element => {
@@ -50,15 +48,13 @@ const SouthChart = (): JSX.Element => {
         curve: 'smooth',
       },
     },
-    series: [{
-      name: 'Cars',
-      data: getY,
-    }],
+    series: [
+      {
+        name: 'Cars',
+        data: getY,
+      },
+    ],
   };
-  return (
-    <div className="bar-chart">
-      <Chart options={state.options} series={state.series} type="line" width="500" height="" />
-    </div>
-  );
+  return <Chart options={state.options} series={state.series} type="line" />;
 };
 export default SouthChart;
