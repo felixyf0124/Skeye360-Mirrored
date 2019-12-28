@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
-import Header, { Head } from '../components/Header';
+import SideDrawer from '../components/SideDrawer';
 import NorthChart from '../components/NorthChart';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 import {
@@ -18,6 +18,11 @@ import GoogleMiniMap from '../components/GoogleMiniMap';
 import { SKEYE_WHITE } from '../css/custom';
 
 // styled-component for map, chart and flexboxes
+const Body = styled.div`
+  margin-left: 5rem;
+  margin-top: 5rem;
+`;
+
 const MapContainer = styled.div`
   position: relative;
   height: 20vh;
@@ -98,36 +103,35 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
     // components render
     return (
       <div>
-        <Header />
-        <Head>
-          <h1 className="header-text">{intersectionName}</h1>
-        </Head>
-        <ChartHorizontalFlexBox>
-          <MapContainer>
-            {intersectionLat === '' ? (
-              <p>Loading...</p>
-            ) : (
-              <GoogleMiniMap
-                intersectionId={intersectionId}
-                intersectionLat={intersectionLat}
-                intersectionLng={intersectionLng}
-              />
-            )}
-          </MapContainer>
-        </ChartHorizontalFlexBox>
-        <ChartHorizontalFlexBox>
-          <ChartVerticalFlexBox>
-            <SmallChartContainer>
-              <NorthChart />
-            </SmallChartContainer>
-            <SmallChartContainer>
-              <SouthChart />
-            </SmallChartContainer>
-          </ChartVerticalFlexBox>
-          <BigChartContainer>
-            <AvgWaitTimeChart />
-          </BigChartContainer>
-        </ChartHorizontalFlexBox>
+        <SideDrawer headerTitle={intersectionName} />
+        <Body>
+          <ChartHorizontalFlexBox>
+            <MapContainer>
+              {intersectionLat === '' ? (
+                <p>Loading...</p>
+              ) : (
+                <GoogleMiniMap
+                  intersectionId={intersectionId}
+                  intersectionLat={intersectionLat}
+                  intersectionLng={intersectionLng}
+                />
+              )}
+            </MapContainer>
+          </ChartHorizontalFlexBox>
+          <ChartHorizontalFlexBox>
+            <ChartVerticalFlexBox>
+              <SmallChartContainer>
+                <NorthChart />
+              </SmallChartContainer>
+              <SmallChartContainer>
+                <SouthChart />
+              </SmallChartContainer>
+            </ChartVerticalFlexBox>
+            <BigChartContainer>
+              <AvgWaitTimeChart />
+            </BigChartContainer>
+          </ChartHorizontalFlexBox>
+        </Body>
       </div>
     );
   }
