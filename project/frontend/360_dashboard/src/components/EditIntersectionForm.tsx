@@ -26,10 +26,7 @@ interface DispatchProps {
     longitude: string,
     district_id: string,
   ) => EditIntersectionAction;
-  logClick: (
-    log_message: string,
-    user_id: number,
-  ) => any;
+  logClick: (log_message: string, user_id: number) => any;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -97,9 +94,7 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  const {
-    user_id,
-  } = props;
+  const { user_id } = props;
 
   const history = useHistory();
 
