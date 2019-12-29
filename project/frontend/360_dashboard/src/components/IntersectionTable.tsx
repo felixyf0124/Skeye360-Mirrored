@@ -13,8 +13,17 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import {STATE as districtState } from '../contexts/districts';
+import { RootState } from '../reducers/rootReducer';
+import {
+    getExistingIntersection,
+    deleteExistingIntersection,
+    resetIntersection,
+    ResetIntersectionAction,
+} from '../contexts/intersection';
+import { getDistricts } from '../contexts/districts';
 
 
 
@@ -45,6 +54,18 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+interface StateProps {
+    intersectionId: string;
+    intersectionName: string;
+    error: string;
+}
+interface DispatchProps {
+    deleteExistingIntersection: (id: string) => any;
+    getExistingIntersection: (id: string) => any;
+    getDistricts: () => any;
+    resetIntersection(): ResetIntersectionAction;
+}
+
 function createData(intersectionName: any, district: any, trafficIntensity: any, simulatorLink: any, editIntersection: any, deleteIntersection: any){
     return {intersectionName, district, trafficIntensity, simulatorLink, editIntersection, deleteIntersection};
 }
@@ -54,8 +75,13 @@ const rows = [
     createData('St-Cath/Guy', 'downtown', 'high', 'simulator link', 'edit', 'delete')
 ]
 
+
+
 const IntersectionTable = (districts: districtState): JSX.Element => {
     const classes = useStyles();
+    const handleConsoleLog = (): any => {
+        console.log(districts.districts[0]);
+    }
     return (
         <main className={classes.content}>
             <TableContainer component={Paper}>
@@ -94,7 +120,7 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                         </TableRow>
                         ) : (
                             districts.districts[0].intersections.map((intersection) => (
-                                <TableRow>
+                                <TableRow onClick={handleConsoleLog}>
                                 <TableCell component="th" scope="row">
                                     {intersection.intersection_name}
                                 </TableCell>
@@ -127,4 +153,19 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
         </main>
     )
 }
-export default IntersectionTable;
+
+const mapStateToProps = (state: RootState): StateProps => ({
+    intersectionId: state.router.location.pathname.substring(
+        state.router.location.pathname.lastIndexOf('/') + 1,
+    ),
+    intersectionName: state.intersection.intersection_name,
+    error: state.intersection.error,
+});
+const mapDispatchToProps: DispatchProps = {
+    deleteExistingIntersection,
+    getExistingIntersection,
+    getDistricts,
+    resetIntersection,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(IntersectionTable);
