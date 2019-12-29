@@ -1,6 +1,7 @@
 import RoadIntersection from '../../../containers/simulator/simulator_management/RoadIntersection';
 import Vec2 from '../../../containers/simulator/simulator_management/vec2';
 import RoadSection from '../../../containers/simulator/simulator_management/RoadSection';
+import TrafficLightManager from '../../../containers/simulator/simulator_management/TrafficLightManager';
 
 const { expect } = require('chai');
 const sinon = require('sinon');
@@ -62,6 +63,62 @@ describe('road intersection', () => {
   //     expect(intersection.getVehiclesNum()).to.equal(0);
   // });
 
-  it
+  it('addNewSimpleVehicle', ()=>{
+    expect(intersection.getSimpleVehicles().length).to.equal(0);
+    intersection.addNewSimpleVehicle(12,new Vec2(33, 34));
+
+    let simpleVehicleList = intersection.getSimpleVehicles();
+    expect(simpleVehicleList.length).to.equal(1);
+    expect(simpleVehicleList[0].getId()).to.equal(12);
+    expect(simpleVehicleList[0].getPosition()).to.deep.equal(new Vec2(33, 34));
+
+  });
+
+  it('initSimpleVehicles', ()=>{
+    expect(intersection.getSimpleVehicles().length).to.equal(1);
+    intersection.initSimpleVehicles();
+    expect(intersection.getSimpleVehicles().length).to.equal(0);
+  });
+
+  it('isSimpleVehicleExist', ()=>{
+    expect(intersection.getSimpleVehicles().length).to.equal(0);
+    intersection.addNewSimpleVehicle(12,new Vec2(33, 34));
+    expect(intersection.isSimpleVehicleExist(12)).to.equal(true);
+    expect(intersection.isSimpleVehicleExist(16)).to.equal(false);
+  });
+
+  it('SimpleVehiclePosUpdate', ()=>{
+    let simpleVehicleList = intersection.getSimpleVehicles();
+    expect(simpleVehicleList.length).to.equal(1);
+    expect(simpleVehicleList[0].getId()).to.equal(12);
+    expect(simpleVehicleList[0].getPosition()).to.deep.equal(new Vec2(33, 34));
+
+    intersection.SimpleVehiclePosUpdate(12, new Vec2(66, 67));
+    expect(simpleVehicleList[0].getPosition()).to.deep.equal(new Vec2(66, 67));
+
+    intersection.SimpleVehiclePosUpdate(11, new Vec2(66, 67));
+    expect(simpleVehicleList[0].getPosition()).to.deep.equal(new Vec2(66, 67));
+  });
+
+  it('tryAddSimpleVehicle', ()=>{
+    
+    expect(intersection.getSimpleVehicles().length).to.equal(1);
+    let simpleVehicleList = intersection.getSimpleVehicles();
+    expect(simpleVehicleList[0].getId()).to.equal(12);
+    expect(simpleVehicleList[0].getPosition()).to.deep.equal(new Vec2(66, 67));
+
+    intersection.tryAddSimpleVehicle(12, new Vec2(77, 77));
+    expect(intersection.getSimpleVehicles().length).to.equal(1);
+    expect(simpleVehicleList[0].getId()).to.equal(12);
+    expect(simpleVehicleList[0].getPosition()).to.deep.equal(new Vec2(77, 77));
+
+    intersection.tryAddSimpleVehicle(22, new Vec2(222, 233));
+    simpleVehicleList = intersection.getSimpleVehicles();
+    expect(simpleVehicleList.length).to.equal(2);
+    expect(simpleVehicleList[0].getId()).to.equal(12);
+    expect(simpleVehicleList[1].getId()).to.equal(22);
+    expect(simpleVehicleList[1].getPosition()).to.deep.equal(new Vec2(222, 233));
+    
+  });
 
 });
