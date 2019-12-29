@@ -8,7 +8,7 @@ const sinon = require('sinon');
 // import * as ts from '../../../containers/simulator/TSGeometry';
 
 describe('road intersection', () => {
-  // let intersection = new RoadIntersection(1, new Vec2(123, 321));
+  let intersection = new RoadIntersection(1, new Vec2(123, 321));
 
   // let section1, section2, section3, section4;
 
@@ -19,13 +19,14 @@ describe('road intersection', () => {
   //     section4 = new RoadSection(3, 1, new Vec2(0,-120));
   // });
 
-  // it('get intersection id, getId', ()=>{
-  //     expect(intersection.getId()).to.equal(1);
-  // });
+  it('get intersection id, getId', ()=>{
+      expect(intersection.getId()).to.equal(1);
+  });
 
-  // it('getMapCoordinate', ()=>{
-  //     expect(intersection.getMapCoordinate()).to.equal({x:123,y:321});
-  // });
+  it('getMapCoordinate', ()=>{
+      expect(intersection.getMapCoordinate().x).to.equal(123);
+      expect(intersection.getMapCoordinate().y).to.equal(321);
+  });
 
   // it('addNewRoadSection', ()=>{
   //     expect(intersection.getRoadSections().length).to.equal(0);

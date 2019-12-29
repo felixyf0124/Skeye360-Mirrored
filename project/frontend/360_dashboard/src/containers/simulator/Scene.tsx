@@ -503,7 +503,7 @@ class Scene extends Component {
       this.fps = this.fpsCounter;
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
-      //this.getNumberOfCars();
+      // this.getNumberOfCars();
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
