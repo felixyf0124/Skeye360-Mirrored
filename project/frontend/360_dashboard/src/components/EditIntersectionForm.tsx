@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import SideDrawer from '../components/SideDrawer';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { editExistingIntersection, EditIntersectionAction } from '../contexts/intersection';
@@ -30,6 +32,64 @@ interface DispatchProps {
   ) => any;
 }
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      width: 200,
+    },
+  },
+
+  centeredBox: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+
+  textEntry: {
+    color: '#FFFFFF',
+    marginBottom: '0rem',
+  },
+
+  addButton: {
+    marginTop: '1em',
+    height: '2.5rem',
+    width: '6rem',
+    border: 'none',
+    background: '#04A777',
+    color: '#ffffff',
+    borderRadius: '5px',
+  },
+
+  content: {
+    backgroundColor: '#212121',
+    margin: 'auto',
+    marginTop: '20rem',
+    width: '25rem',
+    height: '30rem',
+    border: '1px solid grey',
+    borderRadius: '15px',
+    zIndex: 1,
+  },
+
+  invalid: {
+    color: '#FFFFFF',
+  },
+
+  textField: {
+    marginTop: '1rem',
+    marginBottom: '1rem',
+    background: 'transparent',
+    outline: 0,
+    borderWidth: '0 0 1px',
+    borderColor: 'grey',
+    color: '#FFFFFF',
+  },
+
+  innerBox: {
+    marginTop: '2rem',
+  },
+
+}));
+
 const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
 
@@ -55,12 +115,18 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
     props.logClick('Edited Intersection', user_id);
   };
 
+  const title = 'Edit Intersection';
+  const classes = useStyles();
+
   return (
     <div>
-      <div className="form-container">
+          <SideDrawer
+      headerTitle={title}
+    />
+      <div className={classes.content}>
         {state.error !== '' ? (
           <div className="form-group">
-            <div>{state.error}</div>
+            <div className={classes.invalid}>{state.error}</div>
           </div>
         ) : (
           <div />
@@ -72,28 +138,33 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
             history.push(`/streetview/${state.intersection_id}`);
           }}
         >
+        <div className={classes.innerBox}>
           <div className="form-group">
-            <div>District ID</div>
-            <input type="text" name="district_id" value={state.district_id} disabled />
+            <div className={classes.textEntry}>District ID</div>
+            <input type="text" className={classes.textField} name="district_id" value={state.district_id} disabled />
           </div>
           <div className="form-group">
-            <div>Intersection Name</div>
+            <div className={classes.textEntry}>Intersection Name</div>
             <input
               type="text"
               name="intersection_name"
               value={state.intersection_name}
+              className={classes.textField}
               onChange={handleChange}
             />
           </div>
           <div className="form-group">
-            <div>Latitude</div>
-            <input type="text" name="latitude" value={state.latitude} onChange={handleChange} />
+            <div className={classes.textEntry}>Latitude</div>
+            <input type="text" name="latitude" className={classes.textField} value={state.latitude} onChange={handleChange} />
           </div>
           <div className="form-group">
-            <div>Longitude</div>
-            <input type="text" name="longitude" value={state.longitude} onChange={handleChange} />
+            <div className={classes.textEntry}>Longitude</div>
+            <input type="text" name="longitude" className={classes.textField} value={state.longitude} onChange={handleChange} />
           </div>
-          <button type="submit">Submit</button>
+          <div className={classes.centeredBox}>
+          <button className={classes.addButton} type="submit">Edit</button>
+          </div>
+        </div>
         </form>
       </div>
     </div>
