@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import SideDrawer from '../components/SideDrawer';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
+import SideDrawer from './SideDrawer';
 import { editExistingIntersection, EditIntersectionAction } from '../contexts/intersection';
 import { RootState } from '../reducers/rootReducer';
 import { logClick } from '../contexts/LogClicks';
@@ -115,9 +115,9 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
 
   return (
     <div>
-          <SideDrawer
-      headerTitle={title}
-    />
+      <SideDrawer
+        headerTitle={title}
+      />
       <div className={classes.content}>
         {state.error !== '' ? (
           <div className="form-group">
@@ -133,33 +133,33 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
             history.push(`/streetview/${state.intersection_id}`);
           }}
         >
-        <div className={classes.innerBox}>
-          <div className="form-group">
-            <div className={classes.textEntry}>District ID</div>
-            <input type="text" className={classes.textField} name="district_id" value={state.district_id} disabled />
+          <div className={classes.innerBox}>
+            <div className="form-group">
+              <div className={classes.textEntry}>District ID</div>
+              <input type="text" className={classes.textField} name="district_id" value={state.district_id} disabled />
+            </div>
+            <div className="form-group">
+              <div className={classes.textEntry}>Intersection Name</div>
+              <input
+                type="text"
+                name="intersection_name"
+                value={state.intersection_name}
+                className={classes.textField}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <div className={classes.textEntry}>Latitude</div>
+              <input type="text" name="latitude" className={classes.textField} value={state.latitude} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <div className={classes.textEntry}>Longitude</div>
+              <input type="text" name="longitude" className={classes.textField} value={state.longitude} onChange={handleChange} />
+            </div>
+            <div className={classes.centeredBox}>
+              <button className={classes.addButton} type="submit">Edit</button>
+            </div>
           </div>
-          <div className="form-group">
-            <div className={classes.textEntry}>Intersection Name</div>
-            <input
-              type="text"
-              name="intersection_name"
-              value={state.intersection_name}
-              className={classes.textField}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <div className={classes.textEntry}>Latitude</div>
-            <input type="text" name="latitude" className={classes.textField} value={state.latitude} onChange={handleChange} />
-          </div>
-          <div className="form-group">
-            <div className={classes.textEntry}>Longitude</div>
-            <input type="text" name="longitude" className={classes.textField} value={state.longitude} onChange={handleChange} />
-          </div>
-          <div className={classes.centeredBox}>
-          <button className={classes.addButton} type="submit">Edit</button>
-          </div>
-        </div>
         </form>
       </div>
     </div>

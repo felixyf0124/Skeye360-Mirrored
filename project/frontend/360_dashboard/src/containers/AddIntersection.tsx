@@ -123,11 +123,11 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
   const title = 'Add Intersection';
   const classes = useStyles();
 
-  return (      
-  <div>
-    <SideDrawer
-      headerTitle={title}
-    />
+  return (
+    <div>
+      <SideDrawer
+        headerTitle={title}
+      />
       <div className={classes.content}>
 
         {error !== '' ? (
@@ -143,51 +143,51 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
           history.push('/');
         }}
         >
-        <div className={classes.innerBox}>
-          <div className="form-group">
-            <div className={classes.textEntry}>District ID</div>
-            <input
-              type="text"
-              name="district_id"
-              value={district_id}
-              className={classes.textField}
-              disabled
-            />
+          <div className={classes.innerBox}>
+            <div className="form-group">
+              <div className={classes.textEntry}>District ID</div>
+              <input
+                type="text"
+                name="district_id"
+                value={district_id}
+                className={classes.textField}
+                disabled
+              />
+            </div>
+            <div className="form-group">
+              <div className={classes.textEntry}>Intersection Name</div>
+              <input
+                type="text"
+                name="intersection_name"
+                value={intersection_name}
+                className={classes.textField}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <div className={classes.textEntry}>Latitude</div>
+              <input
+                type="text"
+                name="latitude"
+                value={latitude}
+                className={classes.textField}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <div className={classes.textEntry}>Longitude</div>
+              <input
+                type="text"
+                name="longitude"
+                value={longitude}
+                className={classes.textField}
+                onChange={handleChange}
+              />
+            </div>
+            <div className={classes.centeredBox}>
+              <button className={classes.addButton} type="submit">Add</button>
+            </div>
           </div>
-          <div className="form-group">
-            <div className={classes.textEntry}>Intersection Name</div>
-            <input
-              type="text"
-              name="intersection_name"
-              value={intersection_name}
-              className={classes.textField}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <div className={classes.textEntry}>Latitude</div>
-            <input
-              type="text"
-              name="latitude"
-              value={latitude}
-              className={classes.textField}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <div className={classes.textEntry}>Longitude</div>
-            <input
-              type="text"
-              name="longitude"
-              value={longitude}
-              className={classes.textField}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={classes.centeredBox}>
-          <button className={classes.addButton} type="submit">Add</button>
-          </div>
-        </div>
         </form>
       </div>
     </div>
