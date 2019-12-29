@@ -3,22 +3,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
-import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
 import { logClick } from '../contexts/LogClicks';
+import SideDrawer from '../components/SideDrawer';
 
 interface StateProps {
-    path: string;
-    username: string;
+  path: string;
+  username: string;
 
-    latitude: string;
-    longitude: string;
-    intersection_name: string;
-    district_id: string;
+  latitude: string;
+  longitude: string;
+  intersection_name: string;
+  district_id: string;
 
-    error: string;
-    user_id: number;
+  error: string;
+  user_id: number;
 }
 
 interface DispatchProps {
@@ -29,10 +29,7 @@ interface DispatchProps {
     longitude: string,
     district_id: string,
   ) => any;
-  logClick: (
-    log_message: string,
-    user_id: number,
-  ) => any;
+  logClick: (log_message: string, user_id: number) => any;
 }
 
 const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
@@ -61,9 +58,11 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
     logClick('Added Intersection', user_id);
   };
 
+  const headerTitle = 'Add Intersection';
+
   return (
     <div>
-      <Header />
+      <SideDrawer headerTitle={headerTitle} />
       <div className="form-container">
         {error !== '' ? (
           <div className="form-group">
@@ -72,20 +71,16 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
         ) : (
           <div />
         )}
-        <form onSubmit={(e): void => {
-          e.preventDefault();
-          handleSubmit();
-          history.push('/');
-        }}
+        <form
+          onSubmit={(e): void => {
+            e.preventDefault();
+            handleSubmit();
+            history.push('/');
+          }}
         >
           <div className="form-group">
             <div>District ID</div>
-            <input
-              type="text"
-              name="district_id"
-              value={district_id}
-              disabled
-            />
+            <input type="text" name="district_id" value={district_id} disabled />
           </div>
           <div className="form-group">
             <div>Intersection Name</div>
@@ -98,25 +93,13 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
           </div>
           <div className="form-group">
             <div>Latitude</div>
-            <input
-              type="text"
-              name="latitude"
-              value={latitude}
-              onChange={handleChange}
-            />
+            <input type="text" name="latitude" value={latitude} onChange={handleChange} />
           </div>
           <div className="form-group">
             <div>Longitude</div>
-            <input
-              type="text"
-              name="longitude"
-              value={longitude}
-              onChange={handleChange}
-            />
+            <input type="text" name="longitude" value={longitude} onChange={handleChange} />
           </div>
-          <button type="submit">
-            Submit
-          </button>
+          <button type="submit">Submit</button>
         </form>
       </div>
     </div>
@@ -142,7 +125,4 @@ const mapDispatchToProps: DispatchProps = {
   logClick,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AddIntersection);
+export default connect(mapStateToProps, mapDispatchToProps)(AddIntersection);
