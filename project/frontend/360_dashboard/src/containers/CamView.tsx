@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import Simulator from './simulator/Scene';
 import AvgWaitTimeChartComparison from '../components/AvgWaitTimeChartComparison';
@@ -9,10 +10,9 @@ import {
 } from '../contexts/intersection';
 import { getDistricts } from '../contexts/districts';
 import SideDrawer from '../components/SideDrawer';
-import styled from 'styled-components';
 import { SKEYE_WHITE } from '../css/custom';
 
-//Container Row
+// Container Row
 const DivRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -20,7 +20,7 @@ const DivRow = styled.div`
   margin-top: 2rem;
 `;
 
-//Outer Container
+// Outer Container
 const OuterDiv = styled.div`
   margin-left: 5rem;
   margin-top: 5rem; 
@@ -28,7 +28,7 @@ const OuterDiv = styled.div`
   flex-direction: column;
 `;
 
-//Single Container
+// Single Container
 const InnerDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -83,11 +83,11 @@ class CamView extends React.Component<StateProps & DispatchProps> {
   public render(): JSX.Element {
     const { intersectionName } = this.props;
 
-  
+
     // eslint-disable-next-line consistent-return
     return (
       <div>
-        <SideDrawer headerTitle = {intersectionName} />
+        <SideDrawer headerTitle={intersectionName} />
         <OuterDiv>
           <DivRow>
             <InnerDiv>
