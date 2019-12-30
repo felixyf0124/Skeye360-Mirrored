@@ -52,8 +52,8 @@ pipeline {
                         docker "project_360_django"
                     }
                     steps {
-                        dir("project/backend/camera/") {
-                            sh "python3 manage.py test -k"
+                        dir("project/backend/backend_django/camera/") {
+                            sh "python3 test.py"
                             sh "pytest --cov=recognition recognition/test/test_functions.py"
                         }
                     }

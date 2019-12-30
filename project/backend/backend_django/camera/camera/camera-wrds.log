@@ -47000,3 +47000,53 @@ chen-desktop 2019-12-29 16:29:45,576 INFO     camera.add_centroid: centroid upda
 chen-desktop 2019-12-29 16:29:45,576 INFO     camera.add_centroid: centroid updated
 chen-desktop 2019-12-29 16:29:45,576 INFO     camera.draw_ROIs: Drawing ROIs
 chen-desktop 2019-12-29 16:29:45,583 INFO     django.server.log_message: "GET /cam/ HTTP/1.1" 200 58830918
+devenv 2019-12-30 01:10:43,138 INFO     django.utils.autoreload.run_with_reloader: Watching for file changes with StatReloader
+devenv 2019-12-30 01:10:43,566 CRITICAL *excepthook*.exception_hook: Uncaught Exception!
+Traceback (most recent call last):
+  File "manage.py", line 21, in <module>
+    main()
+  File "manage.py", line 17, in main
+    execute_from_command_line(sys.argv)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/core/management/__init__.py", line 381, in execute_from_command_line
+    utility.execute()
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/core/management/__init__.py", line 375, in execute
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/core/management/base.py", line 323, in run_from_argv
+    self.execute(*args, **cmd_options)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/core/management/commands/runserver.py", line 60, in execute
+    super().execute(*args, **options)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/core/management/base.py", line 364, in execute
+    output = self.handle(*args, **options)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/core/management/commands/runserver.py", line 95, in handle
+    self.run(**options)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/core/management/commands/runserver.py", line 102, in run
+    autoreload.run_with_reloader(self.inner_run, **options)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/utils/autoreload.py", line 579, in run_with_reloader
+    start_django(reloader, main_func, *args, **kwargs)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/utils/autoreload.py", line 564, in start_django
+    reloader.run(django_main_thread)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/utils/autoreload.py", line 272, in run
+    get_resolver().urlconf_module
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/utils/functional.py", line 80, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/Chen/.local/lib/python3.6/site-packages/django/urls/resolvers.py", line 564, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/usr/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 678, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/SOEN490/project/backend/camera/camera/urls.py", line 19, in <module>
+    from recognition import views as recognition_views
+  File "/SOEN490/project/backend/camera/recognition/views.py", line 4, in <module>
+    from .detection import Detector
+  File "/SOEN490/project/backend/camera/recognition/detection.py", line 9, in <module>
+    from darknet import darknet
+  File "../darknet/darknet.py", line 124, in <module>
+    lib = CDLL("/home/chen/alex/darknet/libdarknet.so", RTLD_GLOBAL)
+  File "/usr/lib/python3.6/ctypes/__init__.py", line 348, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: /home/chen/alex/darknet/libdarknet.so: cannot open shared object file: No such file or directory
