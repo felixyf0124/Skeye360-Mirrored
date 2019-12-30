@@ -1,104 +1,159 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
-import Header, { Head } from '../components/Header';
-import Simulator from './simulator/Scene';
+import SideDrawer from '../components/SideDrawer';
 import NorthChart from '../components/NorthChart';
 import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 import {
+  STATE as intersectionState,
   getExistingIntersection,
-  deleteExistingIntersection,
-  resetIntersection,
+  resetIntersection as resetCurrentIntersection,
   ResetIntersectionAction,
 } from '../contexts/intersection';
-import { getDistricts } from '../contexts/districts';
 import { logClick } from '../contexts/LogClicks';
+import SouthChart from '../components/SouthChart';
+import GoogleMiniMap from '../components/GoogleMiniMap';
+import { SKEYE_WHITE } from '../css/custom';
 
+// styled-component for map, chart and flexboxes
+const Body = styled.div`
+  margin-left: 5rem;
+  margin-top: 5rem;
+`;
+
+const MapContainer = styled.div`
+  position: relative;
+  height: 20vh;
+  width: 100vw;
+  margin: 1rem;
+`;
+
+const SmallChartContainer = styled.div`
+  background-color: ${SKEYE_WHITE};
+  width: 30vw;
+  position: relative;
+  margin: 1rem;
+`;
+
+const BigChartContainer = styled.div`
+  background-color: ${SKEYE_WHITE};
+  position: relative;
+  width: 70vw;
+  margin: 1rem;
+`;
+
+const ChartVerticalFlexBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  align-content: stretch;
+`;
+
+const ChartHorizontalFlexBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: stretch;
+  align-content: stretch;
+`;
+
+// state & props
 interface StateProps {
+  intersection: intersectionState;
   intersectionId: string;
   intersectionName: string;
+  intersectionLat: string;
+  intersectionLng: string;
   error: string;
   user_id: number;
 }
 
 interface DispatchProps {
-  deleteExistingIntersection: (id: string) => any;
   getExistingIntersection: (id: string) => any;
-  getDistricts: () => any;
-  resetIntersection(): ResetIntersectionAction;
-  logClick: (
-    log_message: string,
-    user_id: number,
-  ) => any;
+  resetCurrentIntersection(): ResetIntersectionAction;
+  logClick: (log_message: string, user_id: number) => any;
 }
 
+// StreetView class
 class StreetView extends React.Component<StateProps & DispatchProps> {
+  // component mount will fetch existing intersection
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { intersectionId, getExistingIntersection } = this.props;
     getExistingIntersection(intersectionId);
   }
 
+  // component unmount resets the loaded data
   public componentWillUnmount(): void {
     // eslint-disable-next-line no-shadow
-    const { resetIntersection } = this.props;
-    resetIntersection();
+    const { resetCurrentIntersection } = this.props;
+    resetCurrentIntersection();
   }
 
   public render(): JSX.Element {
-    const { intersectionId, intersectionName } = this.props;
-
     const {
-      user_id,
+      intersectionId, intersectionName, intersectionLat, intersectionLng,
     } = this.props;
 
-    // eslint-disable-next-line consistent-return
-    const handleDelete = (id: string): any => {
-      // eslint-disable-next-line no-shadow
-      const { deleteExistingIntersection } = this.props;
-      const { logClick } = this.props;
-      deleteExistingIntersection(id);
-      logClick('Deleted Intersection', user_id);
-    };
-
+    // components render
     return (
       <div>
-        <Header />
-        <h1 className="header-text">{intersectionName}</h1>
-        <Head>
-          <Link to={`/intersection/edit/${intersectionId}`} className="header-text">
-            Edit
-          </Link>
-          <Link to="/" onClick={(): any => handleDelete(intersectionId)} className="header-text">
-            Delete
-          </Link>
-        </Head>
-        <Simulator />
-        <div className="charts-row">
-          <NorthChart />
-          <AvgWaitTimeChart />
-        </div>
+        <SideDrawer headerTitle={intersectionName} />
+        <Body>
+          <ChartHorizontalFlexBox>
+            <MapContainer>
+              {intersectionLat === '' ? (
+                <p>Loading...</p>
+              ) : (
+                <GoogleMiniMap
+                  intersectionId={intersectionId}
+                  intersectionLat={intersectionLat}
+                  intersectionLng={intersectionLng}
+                />
+              )}
+            </MapContainer>
+          </ChartHorizontalFlexBox>
+          <ChartHorizontalFlexBox>
+            <ChartVerticalFlexBox>
+              <SmallChartContainer>
+                <NorthChart />
+              </SmallChartContainer>
+              <SmallChartContainer>
+                <SouthChart />
+              </SmallChartContainer>
+            </ChartVerticalFlexBox>
+            <BigChartContainer>
+              <AvgWaitTimeChart />
+            </BigChartContainer>
+          </ChartHorizontalFlexBox>
+        </Body>
       </div>
     );
   }
 }
 
+// state mapping
 const mapStateToProps = (state: RootState): StateProps => ({
+  intersection: state.intersection,
   intersectionId: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
   ),
   intersectionName: state.intersection.intersection_name,
+  intersectionLat: state.intersection.latitude,
+  intersectionLng: state.intersection.longitude,
   error: state.intersection.error,
   user_id: state.authentication.user_id,
 });
 
+// props dispatching
 const mapDispatchToProps: DispatchProps = {
-  deleteExistingIntersection,
   getExistingIntersection,
-  getDistricts,
-  resetIntersection,
+  resetCurrentIntersection,
   logClick,
 };
 
