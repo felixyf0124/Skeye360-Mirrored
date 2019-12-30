@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -93,7 +92,7 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
               </TableRow>
             ) : (
               districts.districts[0].intersections.map((intersection) => (
-                <TableRow>
+                <TableRow key={intersection.id}>
                   <TableCell component="th" scope="row">
                     {intersection.intersection_name}
                   </TableCell>
@@ -110,7 +109,9 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <DeleteIcon />
+                    <Link to="/">
+                      <DeleteIcon />
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))
