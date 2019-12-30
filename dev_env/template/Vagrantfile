@@ -76,8 +76,8 @@ Vagrant.configure("2") do |config|
   # For debugging, uncomment the ansible.verbose line.
   config.vm.provision "ansible_local" do |ansible|
     ansible.compatibility_mode = "2.0"
-    ansible.version = "2.8.5"
-    ansible.install_mode = "pip3"
+    ansible.version = "2.7.6"
+    ansible.install_mode = "pip"
     ansible.config_file = "/template/ansible.cfg"
 	  ansible.playbook = "playbook.yml"
 	  ansible.verbose = "vvv"
