@@ -8,7 +8,10 @@
   Green:  #04a777
 
 */
-
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+a {
+  text-decoration: none!important;
+}
 .App {
   text-align: center;
 }

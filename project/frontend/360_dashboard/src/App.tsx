@@ -13,6 +13,7 @@ import StreetView from './containers/StreetView';
 import ChartsPrototype from './components/ChartsPrototype';
 import SessionRoutes from './SessionRoutes';
 import { authenticated } from './contexts/authentication';
+import IntersectionList from './components/IntersectionList';
 
 interface StateProps {
   authenticated: boolean;
@@ -25,7 +26,7 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
     <Route>
       <Switch>
         <SessionRoutes authenticated={authenticated}>
-          <Route exact path="/" component={SkeyeMap} />
+          <Route exact path="/" component={IntersectionList} />
           <Route exact path="/streetview/:intersectionId" component={StreetView} />
           <Route exact path="/intersection/add" component={AddIntersection} />
           <Route
@@ -34,6 +35,7 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
             render={(): JSX.Element => <EditIntersection />}
           />
           <Route exact path="/chartsprototype" component={ChartsPrototype} />
+          <Route exact path="/map" component={SkeyeMap} />
         </SessionRoutes>
       </Switch>
     </Route>
