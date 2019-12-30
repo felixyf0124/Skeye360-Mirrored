@@ -3,8 +3,9 @@ sudo pip install pymongo
 sudo apt-get install python-sklearn
 sudo pip install numpy
 
-(For ARIMA) Command to run if numpy, matplotlib and pandas are not installed:
+(For ARIMA) Command to run if numpy, matplotlib, pandas, statsmodels, pmdarima are not installed:
 sudo pip3 install numpy 
 sudo pip3 install pandas
 sudo pip3 install matplotlib
-sudo pip3 install statsmodel
+sudo pip3 install statsmodels
+sudo pip3 install pmdarima
