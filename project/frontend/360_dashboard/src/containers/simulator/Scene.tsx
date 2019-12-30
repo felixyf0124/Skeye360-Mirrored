@@ -217,6 +217,18 @@ class Scene extends Component {
     // this.getNumberOfCars();
 
 
+    this.app.stage.on('mouseup', onmouseup = (): void => {
+      // console.log("User events: mouseup");
+    });
+    this.app.stage.on('mousedown', onmousedown = (): void => {
+      // console.log("User events: mousedown");
+    });
+    this.app.stage.on('mouseover', onmouseover = (): void => {
+      // console.log("User events: mouseover");
+    });
+    this.app.stage.on('mouseout', onmouseout = (): void => {
+      // console.log("User events: mouseout");
+    });
     // h c car obj
 
     this.numberOfCars = 3;
@@ -275,38 +287,18 @@ class Scene extends Component {
     }
   }
 
-
-  // static async getRealTimeData(): Promise<void> {
-  //   const data = new DataFromCamera();
-  //   // console.log("Raw data:" + await data.getDataFromCamera());
-  // }
-
   async getNumberOfCars(): Promise<number> {
     const rawData = await DataFromCamera.getDataFromCamera() || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
-    console.log(`Number of cars : ${numberCars}`);
+    // console.log(`Number of cars : ${numberCars}`);
     this.numberOfCars = numberCars;
     return numberCars;
   }
 
 
   initialize = (): void => {
+    window.removeEventListener('resize', this.resize);
     window.addEventListener('resize', this.resize);
-    this.app.stage.on('click', onclick = (): void => {
-      // console.log("User events: click");
-    });
-    this.app.stage.on('mouseup', onmouseup = (): void => {
-      // console.log("User events: mouseup");
-    });
-    this.app.stage.on('mousedown', onmousedown = (): void => {
-      // console.log("User events: mousedown");
-    });
-    this.app.stage.on('mouseover', onmouseover = (): void => {
-      // console.log("User events: mouseover");
-    });
-    this.app.stage.on('mouseout', onmouseout = (): void => {
-      // console.log("User events: mouseout");
-    });
 
     this.initialButtons();
 
@@ -368,6 +360,7 @@ class Scene extends Component {
   drawRoad=(): void => {
     this.roadG.clear();
     this.roadG.removeChildren();
+
     const sections = this.roadIntersection.getRoadSections();
     const startBlinkTime = 10;
 
@@ -485,7 +478,13 @@ class Scene extends Component {
     }
     this.roadIntersection.updateVehiclePos();
     this.renderObjects();
-    this.displayPlaneContainer.removeChildren();
+    // this.displayPlaneContainer.removeChildren();
+    for (let i = this.displayPlaneContainer.children.length - 1; i >= 0; i -= 1) {
+      const child = this.displayPlaneContainer.children[i];
+      this.displayPlaneContainer
+        .removeChild(child);
+      child.destroy();
+    }
     const deltaTime = Date.now() - this.timeLastMoment;
     this.fpsCounter += 1;
     if (deltaTime > 1000) {
@@ -505,6 +504,11 @@ class Scene extends Component {
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
+
+    const url = window.location.href;
+    if (!url.includes('/streetview/')) {
+      this.unmountDestroy();
+    }
   }
 
   drawTriangle = (topVertex: Vec2, height: number, width: number,
@@ -539,6 +543,45 @@ class Scene extends Component {
     return triangle;
   }
 
+  // unmount content destroy
+  unmountDestroy(): void {
+    this.app.ticker.remove(this.animation);
+    this.app.ticker.stop();
+    this.app.destroy();
+    this.btnShowCP.destroy();
+    this.btnStop.destroy();
+    this.backGroundG.destroy();
+    this.mapContainer.destroy();
+    this.objectContainer.destroy();
+    this.controlPanelContainer.destroy();
+    this.displayPlaneContainer.destroy();
+    this.tlDisplayPanelContainer.destroy();
+    this.roadG.destroy();
+    this.trafficLightG.destroy();
+    this.controlPanelG.destroy();
+    delete this.windowW;
+    delete this.windowH;
+    delete this.windowMin;
+    delete this.windowScaleRatio;
+    delete this.roadIntersection;
+    delete this.roadData;
+    delete this.trafficLightData;
+    delete this.laneW;
+    delete this.trafficLightCounterOffset;
+    delete this.trafficLightCounter;
+    delete this.timeLastMoment;
+    delete this.fps;
+    delete this.fpsCounter;
+    delete this.textStyle;
+    delete this.coordinateOffset;
+    delete this.vehicles;
+    delete this.makeUpCar;
+    delete this.pixiContent;
+    delete this.context;
+    delete this.render;
+  }
+
+  // render
   render = (): JSX.Element => (
     <div>
       <table>
@@ -553,7 +596,7 @@ class Scene extends Component {
             <td>
               <img
                 style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://40.121.47.195/8000/cam"
+                src="http://40.121.47.195:8000/cam"
                 alt=""
               />
             </td>
@@ -565,7 +608,12 @@ class Scene extends Component {
   )
 
   updateTLCountDownDisplayPanel(): void {
-    this.tlDisplayPanelContainer.removeChildren();
+    for (let i = this.tlDisplayPanelContainer.children.length - 1; i >= 0; i -= 1) {
+      const child = this.tlDisplayPanelContainer.children[i];
+      this.tlDisplayPanelContainer
+        .removeChild(child);
+      child.destroy();
+    }
     const rowOffset = 26;
     const textStyle = {
       fontFamily: 'Courier',
@@ -613,6 +661,12 @@ class Scene extends Component {
 
   drawBackground(color: number, alpha: number): void {
     this.backGroundG.clear();
+    for (let i = this.backGroundG.children.length - 1; i >= 0; i -= 1) {
+      const child = this.backGroundG.children[i];
+      this.backGroundG
+        .removeChild(child);
+      child.destroy();
+    }
     this.backGroundG.beginFill(color, alpha);
     this.backGroundG
       .drawRect(-this.coordinateOffset.x, -this.coordinateOffset.y, this.windowW, this.windowH);
