@@ -25,7 +25,7 @@ vm:
     # - [ vm_port, host_port ]
 
 ssh:
-  dir: /Users/lisun/.ssh/
+  dir: C:/users/vince/.ssh/
 
 # ADVANCED USE ONLY.
 # home: The framework by default expects the VM folders
