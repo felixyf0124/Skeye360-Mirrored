@@ -73,7 +73,7 @@ class Scene extends Component {
 
   toggleGroup: Array<{name: string;state: boolean}>;
 
-  btnGroup: Array<Btn>;
+  btnGroup: Array<{text: PIXI.Text; btn: Btn}>;
 
   btnShowCP: Btn;
 
@@ -215,7 +215,7 @@ class Scene extends Component {
     this.btnStop = new Btn(160, 26, 'FORCE STOP', 0x51BCD8, 0.5);
     this.lastBlinkState = false;
 
-    this.btnGroup = new Array<Btn>();
+    this.btnGroup = new Array<{text: PIXI.Text; btn: Btn}>();
     this.toggleGroup = new Array<{name: string;state: boolean}>();
 
     // toggle group
@@ -226,12 +226,14 @@ class Scene extends Component {
 
     // btn group
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
+      const toggleTxt = new PIXI.Text(this.toggleGroup[i].name);
+
       if (this.toggleGroup[i].state) {
         const toggleBtn = new Btn(36, 26, 'ON', 0x51BCD8, 0.5);
-        this.btnGroup.push(toggleBtn);
+        this.btnGroup.push({ text: toggleTxt, btn: toggleBtn });
       } else {
         const toggleBtn = new Btn(36, 26, 'OFF', 0x51BCD8, 0.5);
-        this.btnGroup.push(toggleBtn);
+        this.btnGroup.push({ text: toggleTxt, btn: toggleBtn });
       }
     }
 
@@ -392,7 +394,6 @@ class Scene extends Component {
     this.drawRoad();
     this.initialButtons();
     this.roadIntersection.updateVehiclePos();
-
   }
 
   updateCar = (element: any): void => {
@@ -785,7 +786,9 @@ class Scene extends Component {
 
 
     this.btnShowCP.x = this.controlPanelG.width;
-    this.controlPanelContainer.addChild(this.btnShowCP);
+    if (this.btnShowCP.parent == null) {
+      this.controlPanelContainer.addChild(this.btnShowCP);
+    }
     this.updateControlPanelDisplayState(0);
     this.btnStop.setBackground(color, 0.1, 1, color);
     const textStyle2 = {
@@ -797,23 +800,28 @@ class Scene extends Component {
     this.btnStop.setTextStyle(textStyle2);
     this.btnStop.x = (this.controlPanelG.width - this.btnStop.width) / 2;
     this.btnStop.y = this.controlPanelG.height - 40;
-    this.controlPanelContainer.addChild(this.btnStop);
-
+    if (this.btnStop.parent == null) {
+      this.controlPanelContainer.addChild(this.btnStop);
+    }
     const textStyle3 = {
       fontSize: '11px',
       fill: '#FFFFFF',
     };
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
-      this.btnGroup[i].setBackground(color, 0.1, 1, color);
-      this.btnGroup[i].setTextStyle(textStyle3);
-      this.btnGroup[i].x = this.controlPanelG.width * 0.75;
-      this.btnGroup[i].y = this.controlPanelG.height / 2.0 + i * 26;
-      this.controlPanelContainer.addChild(this.btnGroup[i]);
+      this.btnGroup[i].btn.setBackground(color, 0.1, 1, color);
+      this.btnGroup[i].btn.setTextStyle(textStyle3);
+      this.btnGroup[i].btn.x = this.controlPanelG.width * 0.75;
+      this.btnGroup[i].btn.y = this.controlPanelG.height / 2.0 + i * 26;
+      if (this.btnGroup[i].btn.parent == null) {
+        this.controlPanelContainer.addChild(this.btnGroup[i].btn);
+      }
 
-      const toggleName = new PIXI.Text(this.toggleGroup[i].name, textStyle3);
-      toggleName.x = 8;
-      toggleName.y = this.controlPanelG.height / 2.0 + i * 26 + 6;
-      this.controlPanelContainer.addChild(toggleName);
+      this.btnGroup[i].text.style = textStyle3;
+      this.btnGroup[i].text.x = 8;
+      this.btnGroup[i].text.y = this.controlPanelG.height / 2.0 + i * 26 + 6;
+      if (this.btnGroup[i].text.parent == null) {
+        this.controlPanelContainer.addChild(this.btnGroup[i].text);
+      }
     }
   }
 
@@ -822,18 +830,18 @@ class Scene extends Component {
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
       if (i === 1) {
         if (this.toggleGroup[i - 1].state) {
-          this.btnGroup[i].interactive = true;
-          this.btnGroup[i].buttonMode = true;
-          this.btnGroup[i].setBoarder(1, color);
-          if (this.btnGroup[i].isPressed()) {
+          this.btnGroup[i].btn.interactive = true;
+          this.btnGroup[i].btn.buttonMode = true;
+          this.btnGroup[i].btn.setBoarder(1, color);
+          if (this.btnGroup[i].btn.isPressed()) {
             this.toggleGroup[i].state = !this.toggleGroup[i].state;
           }
         } else {
-          this.btnGroup[i].interactive = false;
-          this.btnGroup[i].buttonMode = false;
-          this.btnGroup[i].setBoarder(0, color);
+          this.btnGroup[i].btn.interactive = false;
+          this.btnGroup[i].btn.buttonMode = false;
+          this.btnGroup[i].btn.setBoarder(0, color);
         }
-      } else if (this.btnGroup[i].isPressed()) {
+      } else if (this.btnGroup[i].btn.isPressed()) {
         this.toggleGroup[i].state = !this.toggleGroup[i].state;
       }
       let tgState: string;
@@ -842,7 +850,7 @@ class Scene extends Component {
       } else {
         tgState = 'OFF';
       }
-      this.btnGroup[i].setName(tgState);
+      this.btnGroup[i].btn.setName(tgState);
     }
   }
 
@@ -909,7 +917,7 @@ class Scene extends Component {
    */
   vehicleUpdate(videoW: number, videoH: number): void {
     this.retrieveRawData();
-    //e.g. (1, [524, 127])(2, [290, 166])(3, [747, 221])
+    // e.g. (1, [524, 127])(2, [290, 166])(3, [747, 221])
     const formedData = new Array<{id: number;position: Vec2}>();
     let startIndex = -1;
     let endIndex = -1;
