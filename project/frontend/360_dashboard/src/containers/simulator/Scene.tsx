@@ -457,7 +457,13 @@ class Scene extends Component {
 
   renderObjects = (): void => {
     this.objectContainer.removeChildren();
-    const vehicles = this.roadIntersection.getSimpleVehicles();
+    var vehicles : Array<Vehicle>;
+    if(this.toggleGroup[0].state)
+    {
+      vehicles = this.roadIntersection.getSimpleVehicles();
+    }else {
+      vehicles = this.roadIntersection.getVehicles();
+    }
 
     for (let i = 0; i < vehicles.length; i += 1) {
       const position = vehicles[i].getPosition();
@@ -491,20 +497,24 @@ class Scene extends Component {
     //toggle btn
     this.updateToggleBtnState();
 
-    this.vehicleUpdate(852, 478);
+    if(this.toggleGroup[0].state) {
+      this.vehicleUpdate(852, 478);
+    }else{
+      this.roadIntersection.updateVehiclePos();
 
-    // make up car
-    if (this.atIndex < this.makeUpCar.length) {
-      this.deltaT = Date.now() - this.countDown;
-      let currentCD = 0;
+      // make up car
+      if (this.atIndex < this.makeUpCar.length) {
+        this.deltaT = Date.now() - this.countDown;
+        let currentCD = 0;
 
-      for (let i = 0; i < this.atIndex + 1; i += 1) {
-        currentCD = this.makeUpCar[this.atIndex].atTline;
-      }
+        for (let i = 0; i < this.atIndex + 1; i += 1) {
+          currentCD = this.makeUpCar[this.atIndex].atTline;
+        }
 
-      if (this.deltaT > currentCD) {
-        this.roadIntersection.addNewVehicle(0, 3, 0.06);
-        this.atIndex += 1;
+        if (this.deltaT > currentCD) {
+          this.roadIntersection.addNewVehicle(0, 3, 0.06);
+          this.atIndex += 1;
+        }
       }
     }
 
@@ -513,7 +523,6 @@ class Scene extends Component {
       this.roadIntersection.tlCountingDown();
       this.drawRoad();
     }
-    this.roadIntersection.updateVehiclePos();
     this.renderObjects();
     // this.displayPlaneContainer.removeChildren();
     for (let i = this.displayPlaneContainer.children.length - 1; i >= 0; i -= 1) {
@@ -581,20 +590,22 @@ class Scene extends Component {
   }
 
   async retrieveRawData(): Promise<void> {
-    const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
+    if(!this.toggleGroup[1].state) {
+      const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
 
-    /*
-    test
-    (1, [524, 127])
-    (2, [290, 166])
-    (3, [747, 221])
-    (4, [204, 192])(5, [537, 168])(6, [384, 203])
-    (7, [60, 160])(8, [792, 247])(9, [95, 178])
-    (10, [151, 185])(11, [528, 256])
-    */
-    this.objRawData = rawDataStr;
-    this.objRawData = '(1, [524, 127])(2, [290, 166])(3, [747, 221])(4, [204, 192])(5, [537, 168])(6, [384, 203])(7, [60, 160])(8, [792, 247])(9, [95, 178])(10, [151, 185])(11, [528, 256])';
-    // return rawDataStr;
+      /*
+      test
+      (1, [524, 127])
+      (2, [290, 166])
+      (3, [747, 221])
+      (4, [204, 192])(5, [537, 168])(6, [384, 203])
+      (7, [60, 160])(8, [792, 247])(9, [95, 178])
+      (10, [151, 185])(11, [528, 256])
+      */
+      this.objRawData = rawDataStr;
+    } else {
+      this.objRawData = '(1, [524, 127])(2, [290, 166])(3, [747, 221])(4, [204, 192])(5, [537, 168])(6, [384, 203])(7, [60, 160])(8, [792, 247])(9, [95, 178])(10, [151, 185])(11, [528, 256])';
+    }
   }
 
   // unmount content destroy
@@ -794,11 +805,33 @@ class Scene extends Component {
   }
 
   updateToggleBtnState():void{
+    const color = 0x51BCD8;
     for(let i =0;i<this.toggleGroup.length;i+=1)
     {
-      if(this.btnGroup[i].isPressed())
-      {
-        this.toggleGroup[i].state = !this.toggleGroup[i].state;
+      if (i===1) {
+        if(this.toggleGroup[i-1].state){
+          this.btnGroup[i].interactive = true;
+          this.btnGroup[i].buttonMode = true;
+          this.btnGroup[i].setBoarder(1, color);
+          if(this.btnGroup[i].isPressed())
+          {
+            this.toggleGroup[i].state = !this.toggleGroup[i].state;
+          }
+        }else{
+          this.btnGroup[i].interactive = false;
+          this.btnGroup[i].buttonMode = false;
+          this.btnGroup[i].setBoarder(0, color);
+          console.log(this.btnGroup[i].getBoarderSize());
+          if(this.btnGroup[i].isPressed())
+          {
+            console.log('this should never be called');
+          }
+        }
+      } else{
+        if(this.btnGroup[i].isPressed())
+          {
+            this.toggleGroup[i].state = !this.toggleGroup[i].state;
+          }
       }
       let tgState:string;
       if(this.toggleGroup[i].state)
@@ -864,6 +897,15 @@ class Scene extends Component {
       return true;
     }
     return false;
+  }
+
+  getToggleState(toggleName:string): boolean | null {
+    for(let i=0;i<this.toggleGroup.length;i+=1) {
+      if(this.toggleGroup[i].name === toggleName) {
+        return this.toggleGroup[i].state;
+      }
+    }
+    return null;
   }
 
   /**
