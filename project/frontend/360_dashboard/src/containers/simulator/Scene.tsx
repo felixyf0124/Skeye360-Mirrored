@@ -496,13 +496,15 @@ class Scene extends Component {
 
     //toggle btn
     this.updateToggleBtnState();
+    this.roadIntersection.updateVehiclePos();
 
     if(this.toggleGroup[0].state) {
       this.vehicleUpdate(852, 478);
-    }else{
-      this.roadIntersection.updateVehiclePos();
+      this.countDown = Date.now();
 
-      // make up car
+    }else{
+
+      // make up car loop
       if (this.atIndex < this.makeUpCar.length) {
         this.deltaT = Date.now() - this.countDown;
         let currentCD = 0;
@@ -511,11 +513,23 @@ class Scene extends Component {
           currentCD = this.makeUpCar[this.atIndex].atTline;
         }
 
-        if (this.deltaT > currentCD) {
+        if (this.deltaT> currentCD) {
+          this.roadIntersection.addNewVehicle(0, 0, 0.06);
+          this.roadIntersection.addNewVehicle(0, 1, 0.06);
+          this.roadIntersection.addNewVehicle(0, 2, 0.06);
           this.roadIntersection.addNewVehicle(0, 3, 0.06);
           this.atIndex += 1;
         }
+      }else{
+        if(!this.toggleGroup[0].state)
+        {
+          this.countDown = Date.now();
+          this.atIndex = 0;
+        }
       }
+
+      this.numberOfCars = this.roadIntersection.getVehiclesNum();
+
     }
 
 
