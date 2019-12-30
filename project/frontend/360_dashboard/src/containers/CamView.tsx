@@ -37,22 +37,21 @@ const InnerDiv = styled.div`
 `;
 
 const CamFeed = styled.div`
-  width: 30vw;
+  width: 25vw;
   margin: 1rem;
   background-color: #212121;
   display: flex;
   justify-content: center; 
-  height: 20vw;
+  height: 17vw;
   justify-content: center;
   align-items: center;
 `;
 
 const ChartContainer = styled.div`
   background-color: ${SKEYE_WHITE};
-  width: 30vw;
   margin: 1rem;
-  display: flex;
-  justify-content: center;
+  position: relative;
+  width: 30vw;
 `;
 
 const SimContainer = styled.div`
@@ -82,7 +81,6 @@ class CamView extends React.Component<StateProps & DispatchProps> {
 
   public render(): JSX.Element {
     const { intersectionName } = this.props;
-
 
     // eslint-disable-next-line consistent-return
     return (
