@@ -4,22 +4,22 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import SideDrawer from '../components/SideDrawer';
 import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
 import { logClick } from '../contexts/LogClicks';
+import SideDrawer from '../components/SideDrawer';
 
 interface StateProps {
-    path: string;
-    username: string;
+  path: string;
+  username: string;
 
-    latitude: string;
-    longitude: string;
-    intersection_name: string;
-    district_id: string;
+  latitude: string;
+  longitude: string;
+  intersection_name: string;
+  district_id: string;
 
-    error: string;
-    user_id: number;
+  error: string;
+  user_id: number;
 }
 
 interface DispatchProps {
@@ -30,10 +30,7 @@ interface DispatchProps {
     longitude: string,
     district_id: string,
   ) => any;
-  logClick: (
-    log_message: string,
-    user_id: number,
-  ) => any;
+  logClick: (log_message: string, user_id: number) => any;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -91,7 +88,6 @@ const useStyles = makeStyles((theme) => ({
   innerBox: {
     marginTop: '2rem',
   },
-
 }));
 
 const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
@@ -125,11 +121,8 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
 
   return (
     <div>
-      <SideDrawer
-        headerTitle={title}
-      />
+      <SideDrawer headerTitle={title} />
       <div className={classes.content}>
-
         {error !== '' ? (
           <div className="form-group">
             <div className={classes.invalid}>{error}</div>
@@ -137,11 +130,12 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
         ) : (
           <div />
         )}
-        <form onSubmit={(e): void => {
-          e.preventDefault();
-          handleSubmit();
-          history.push('/');
-        }}
+        <form
+          onSubmit={(e): void => {
+            e.preventDefault();
+            handleSubmit();
+            history.push('/');
+          }}
         >
           <div className={classes.innerBox}>
             <div className="form-group">
@@ -185,7 +179,9 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
               />
             </div>
             <div className={classes.centeredBox}>
-              <button className={classes.addButton} type="submit">Add</button>
+              <button className={classes.addButton} type="submit">
+                Add
+              </button>
             </div>
           </div>
         </form>
@@ -213,7 +209,4 @@ const mapDispatchToProps: DispatchProps = {
   logClick,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AddIntersection);
+export default connect(mapStateToProps, mapDispatchToProps)(AddIntersection);
