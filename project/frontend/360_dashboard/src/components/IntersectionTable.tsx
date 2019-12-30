@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -10,11 +12,11 @@ import Paper from '@material-ui/core/Paper';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import CallMadeIcon from '@material-ui/icons/CallMade';
 import { Link } from 'react-router-dom';
 
 import { STATE as districtState } from '../contexts/districts';
+import DeleteIntersectionButton from './DeleteIntersectionButton';
 
 const useStyles = makeStyles((theme) => ({
   addButton: {
@@ -66,6 +68,11 @@ const useStyles = makeStyles((theme) => ({
 
 const IntersectionTable = (districts: districtState): JSX.Element => {
   const classes = useStyles();
+  // const handleDelete = (id: string): void => {
+  //   console.log('handleDelete');
+  //   deleteExistingIntersection(id);
+  //   logClick('Deleted Intersection', user_id);
+  // };
   return (
     <main className={classes.content}>
       <TableContainer component={Paper}>
@@ -109,9 +116,7 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <Link to="/">
-                      <DeleteIcon />
-                    </Link>
+                    <DeleteIntersectionButton intersection_id={intersection.id} />
                   </TableCell>
                 </TableRow>
               ))
@@ -127,4 +132,5 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
     </main>
   );
 };
+
 export default IntersectionTable;
