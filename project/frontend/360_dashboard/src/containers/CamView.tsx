@@ -36,8 +36,8 @@ const InnerDiv = styled.div`
   color: white;
 `;
 
-//Empty camera feed container
-//To be modified when the camera feed is added
+// Empty camera feed container
+// To be modified when the camera feed is added
 const CamFeed = styled.div`
   width: 25vw;
   margin: 1rem;
@@ -49,7 +49,7 @@ const CamFeed = styled.div`
   align-items: center;
 `;
 
-//Container for chart
+// Container for chart
 const ChartContainer = styled.div`
   background-color: ${SKEYE_WHITE};
   margin: 1rem;
@@ -57,7 +57,7 @@ const ChartContainer = styled.div`
   width: 30vw;
 `;
 
-//Container for the simulator
+// Container for the simulator
 const SimContainer = styled.div`
   display: flex;
   justify-content: center;
