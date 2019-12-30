@@ -201,73 +201,44 @@ class YourTestClass(unittest.TestCase):
     #testing for detection class
 
     def test_detector_type(self):
-        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
-        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.weights'
-        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/coco.names'
-        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
-        detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
+        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/cfg/yolov3.cfg'
+        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/yolov3.weights'
+        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/data/coco.names'
+        yolo_meta = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/cfg/coco.data'
+        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/20191117_1600.mp4'
+        detector = Detector(yolo_config,yolo_weights,yolo_classes,yolo_meta,video_stream)
         self.assertEqual(type(detector), Detector)
         coordinates = detector.coord
         self.assertEqual(type(coordinates), Coordinate)
 
-    @patch('cv2.dnn.readNet')
-    def test_load(self, readNet):
-        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
-        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.weights'
-        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/coco.names'
-        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
-        detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
-        _,_ = detector.load()
-        self.assertTrue(readNet.called)
-
-    def test_get_outputs_names(self):
-        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
-        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.weights'
-        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/coco.names'
-        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
-        detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
-        _,net = detector.load()
-        outs = detector.get_outputs_names(net)
-        self.assertTrue(type(outs) is list)
-
-    def test_print_pred(self):
-        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
-        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.weights'
-        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/coco.names'
-        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
-        detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
-        classes,_= detector.load()      
-        output = io.StringIO()                  
-        sys.stdout = output        
-        detector.print_pred(0, 100, 100, 100, 100, classes)  
-        sys.stdout = sys.__stdout__             
-        self.assertEqual(output.getvalue(), "car 150 150\n")
-
     @patch('cv2.VideoCapture')
     def test_open_video(self,VideoCapture):
-        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
-        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.weights'
-        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/coco.names'
-        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
-        detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
+        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/cfg/yolov3.cfg'
+        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/yolov3.weights'
+        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/data/coco.names'
+        yolo_meta = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/cfg/coco.data'
+        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/20191117_1600.mp4'
+        detector = Detector(yolo_config,yolo_weights,yolo_classes,yolo_meta,video_stream)
         _ = detector.open_video()
         self.assertTrue(VideoCapture.called)
 
     def test_create_intersection(self):
-        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
-        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.weights'
-        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/coco.names'
-        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
-        detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
+        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/cfg/yolov3.cfg'
+        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/yolov3.weights'
+        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/data/coco.names'
+        yolo_meta = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/cfg/coco.data'
+        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/20191117_1600.mp4'
+        detector = Detector(yolo_config,yolo_weights,yolo_classes,yolo_meta,video_stream)
         intersection = detector.create_intersection("a@b")
         self.assertEqual(type(intersection), Intersection)
 
     def test_create_ROIs(self):
-        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.cfg'
-        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/yolov3.weights'
-        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/360_opencv/coco.names'
-        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/hwt.mp4'
-        detector = Detector(yolo_config,yolo_weights,yolo_classes,video_stream)
+        yolo_config = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/cfg/yolov3.cfg'
+        yolo_weights = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/yolov3.weights'
+        yolo_classes = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/data/coco.names'
+        yolo_meta = os.path.abspath(os.path.join(os.getcwd(),"../.."))+'/darknet/cfg/coco.data'
+        video_stream = os.path.abspath(os.path.join(os.getcwd(),".."))+'/camera/20191117_1600.mp4'
+        detector = Detector(yolo_config,yolo_weights,yolo_classes,yolo_meta,video_stream)
         roi_list = detector.create_ROIs()
         self.assertTrue(len(roi_list)>0)
 
