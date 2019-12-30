@@ -17,10 +17,10 @@ import { Link } from 'react-router-dom';
 import { STATE as districtState } from '../contexts/districts';
 import DeleteIntersectionButton from './DeleteIntersectionButton';
 
-/* Tables from Material-UI: 
+/* Tables from Material-UI:
   https://material-ui.com/components/tables/ */
 
-//CSS Styling
+// CSS Styling
 const useStyles = makeStyles((theme) => ({
   addButton: {
     backgroundColor: '#04A777',
@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const IntersectionTable = (districts: districtState): JSX.Element => {
-  //Intersection Table that retrieves all of the intersections of a district
-  //And displays their information in the table.
+  // Intersection Table that retrieves all of the intersections of a district
+  // And displays their information in the table.
   const classes = useStyles();
   return (
     <main className={classes.content}>
