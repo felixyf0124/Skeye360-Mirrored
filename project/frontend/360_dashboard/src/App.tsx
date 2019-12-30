@@ -14,6 +14,7 @@ import ChartsPrototype from './components/ChartsPrototype';
 import SessionRoutes from './SessionRoutes';
 import { authenticated } from './contexts/authentication';
 import IntersectionList from './components/IntersectionList';
+import CamView from './containers/CamView';
 
 interface StateProps {
   authenticated: boolean;
@@ -28,6 +29,7 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
         <SessionRoutes authenticated={authenticated}>
           <Route exact path="/" component={IntersectionList} />
           <Route exact path="/streetview/:intersectionId" component={StreetView} />
+          <Route exact path="/camview/:intersectionId" component={CamView} />
           <Route exact path="/intersection/add" component={AddIntersection} />
           <Route exact path="/camview/:intersectionId" />
           <Route

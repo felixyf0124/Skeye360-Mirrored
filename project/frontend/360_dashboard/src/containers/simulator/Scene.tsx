@@ -506,7 +506,7 @@ class Scene extends Component {
     this.displayPlaneContainer.addChild(numberCarsText);
 
     const url = window.location.href;
-    if (!url.includes('/streetview/')) {
+    if (!url.includes('/camview/')) {
       this.unmountDestroy();
     }
   }
