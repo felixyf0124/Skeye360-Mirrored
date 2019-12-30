@@ -61,6 +61,7 @@ const ChartContainer = styled.div`
 const SimContainer = styled.div`
   display: flex;
   justify-content: center;
+  paddingLeft: 10rem;
   margin: 1rem;
 `;
 
@@ -109,6 +110,7 @@ class CamView extends React.Component<StateProps & DispatchProps> {
             <InnerDiv>
               <h2>Simulation of Traffic</h2>
               <SimContainer>
+                <div style={{width:"10rem"}}></div>
                 <Simulator />
               </SimContainer>
             </InnerDiv>
