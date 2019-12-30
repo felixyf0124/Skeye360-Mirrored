@@ -374,6 +374,12 @@ class Scene extends Component {
     this.app.stage.x = this.windowW / 2;
     this.app.stage.y = this.windowH / 2;
 
+    this.controlPanelG.clear();
+    this.controlPanelG.beginFill(0x51BCD8, 0.3);
+    this.controlPanelG.lineStyle(1, 0x51BCD8, 0.5);
+    this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
+    this.controlPanelG.endFill();
+
     if (this.isControlPanelShown) {
       this.controlPanelContainer.x = -this.coordinateOffset.x;
       this.controlPanelContainer.y = -this.coordinateOffset.y;
@@ -384,6 +390,9 @@ class Scene extends Component {
 
     this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
     this.drawRoad();
+    this.initialButtons();
+    this.roadIntersection.updateVehiclePos();
+
   }
 
   updateCar = (element: any): void => {
@@ -649,6 +658,8 @@ class Scene extends Component {
     delete this.pixiContent;
     delete this.context;
     delete this.render;
+    delete this.toggleGroup;
+    delete this.btnGroup;
   }
 
   // render
@@ -666,7 +677,7 @@ class Scene extends Component {
             <td>
               <img
                 style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://40.121.47.195:8000/cam"
+                src="http://23.96.35.153:8000/cam"
                 alt=""
               />
             </td>
@@ -898,7 +909,7 @@ class Scene extends Component {
    */
   vehicleUpdate(videoW: number, videoH: number): void {
     this.retrieveRawData();
-    // (1, [524, 127])(2, [290, 166])(3, [747, 221])
+    //e.g. (1, [524, 127])(2, [290, 166])(3, [747, 221])
     const formedData = new Array<{id: number;position: Vec2}>();
     let startIndex = -1;
     let endIndex = -1;
