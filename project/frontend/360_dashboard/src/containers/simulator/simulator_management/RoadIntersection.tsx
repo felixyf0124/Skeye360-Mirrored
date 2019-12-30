@@ -24,6 +24,9 @@ export default class RoadIntersection {
 
     vehicles: Array<Vehicle>;
 
+    // this array is for simple mapping vehicles
+    simpleVehicles: Array<Vehicle>;
+
     vehicleCount: number;
 
     constructor(id: number, mapCoordinate: Vec2, TLManager?: TrafficLightManager) {
@@ -33,6 +36,7 @@ export default class RoadIntersection {
       this.TLManager = TLManager || new TrafficLightManager(id);
       this.laneWidth = 0;
       this.vehicles = new Array<Vehicle>();
+      this.simpleVehicles = new Array<Vehicle>();
       this.vehicleCount = 0;
     }
 
@@ -109,6 +113,10 @@ export default class RoadIntersection {
       return this.vehicles;
     }
 
+    getSimpleVehicles(): Array<Vehicle> {
+      return this.simpleVehicles;
+    }
+
     getVehiclesNum(): number {
       return this.vehicles.length;
     }
@@ -135,6 +143,15 @@ export default class RoadIntersection {
         .getTrafficLightQueue()[this.TLManager.getTrafficLightQueue().length - 1]);
     }
 
+    /**
+     * add new vehicle
+     * this is different from addNewSimpleVehicle
+     * @param laneId
+     * @param sectionId
+     * @param speed
+     * @param vehicleId
+     * @param position
+     */
     addNewVehicle(laneId: number, sectionId: number, speed: number,
       vehicleId?: number, position?: Vec2): void {
       let vId = vehicleId;
@@ -178,6 +195,67 @@ export default class RoadIntersection {
       this.vehicleCount += 1;
     }
 
+    /**
+     * add one new simpleVehicle
+     * @param vehicleId
+     * @param position
+     */
+    addNewSimpleVehicle(vehicleId: number, position: Vec2): void {
+      const objV = new Vehicle(vehicleId, NaN, NaN, NaN, position);
+      this.simpleVehicles.push(objV);
+    }
+
+    /**
+     * initialize simpleVehicles
+     */
+    initSimpleVehicles(): void {
+      this.simpleVehicles = new Array<Vehicle>();
+    }
+
+    /**
+     * try to add new simple vehicle, if exists then update position
+     * otherwise, add a new one
+     * @param vehicleId
+     * @param position
+     */
+    tryAddSimpleVehicle(vehicleId: number, position: Vec2): void {
+      if (this.isSimpleVehicleExist(vehicleId)) {
+        this.SimpleVehiclePosUpdate(vehicleId, position);
+      } else {
+        this.addNewSimpleVehicle(vehicleId, position);
+      }
+    }
+
+    /**
+     * check if vehicle at id @param id is already existed
+     * @param id
+     */
+    isSimpleVehicleExist(id: number): boolean {
+      for (let i = 0; i < this.simpleVehicles.length; i += 1) {
+        if (this.simpleVehicles[i].getId() === id) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * update simple vehicle position at @param id
+     * @param id
+     * @param pos
+     */
+    SimpleVehiclePosUpdate(id: number, pos: Vec2): void {
+      for (let i = 0; i < this.simpleVehicles.length; i += 1) {
+        if (this.simpleVehicles[i].getId() === id) {
+          this.simpleVehicles[i].setPosition(pos);
+        }
+      }
+    }
+
+    /**
+     * bind traffic light to associated road section and lanes
+     * @param trafficLight
+     */
     bindTrafficLight(trafficLight: TrafficLight): void {
       const toBeBound = trafficLight.getBoundLanes();
       for (let i = 0; i < toBeBound.length; i += 1) {
@@ -245,6 +323,9 @@ export default class RoadIntersection {
       return intersections;
     }
 
+    /**
+     * resort roadsection sequence based on the (degree of) slops
+     */
     resortRoadSections(): void {
       const resort = new Array<{index: number;angle: number}>();
 
@@ -279,6 +360,9 @@ export default class RoadIntersection {
       this.roadSections = roadSections;
     }
 
+    /**
+     * resort trafficlight queue based on the sequence
+     */
     resortTrafficLightQueue(): void {
       const resort = new Array<number>();
       for (let i = 0; i < this.roadSections.length; i += 1) {
@@ -302,15 +386,30 @@ export default class RoadIntersection {
       this.TLManager.initialUpdate();
     }
 
+    /**
+     * add new road section with tail coordinate
+     * @param tailVec2
+     */
     addNewRoadSection(tailVec2: Vec2): void {
       const roadSection = new RoadSection(this.roadSections.length, this.id, tailVec2);
       this.roadSections.push(roadSection);
     }
 
+    /**
+     * add new road section to the list with a Roadsection object
+     * @param roadSection
+     */
     addRoadSection(roadSection: RoadSection): void {
       this.roadSections.push(roadSection);
     }
 
+    /**
+     * add new Lane
+     * @param roadSectionId
+     * @param laneDirection
+     * @param laneType
+     * @param numOfLanes
+     */
     addNewLane(roadSectionId: number, laneDirection: number,
       laneType: string, numOfLanes: number): void {
       this.roadSections[roadSectionId].addNewLane(laneDirection, laneType, numOfLanes);
@@ -332,14 +431,26 @@ export default class RoadIntersection {
       return this.TLManager.initialUpdate();
     }
 
+    /**
+     * check if a traffic light is forced as some state
+     * @param tlId
+     */
     isForced(tlId: number): boolean {
       return this.TLManager.getTrafficLight(tlId).getIsForced();
     }
 
+    /**
+     * get traffic light on/off state based on @param ratio
+     * @param ratio
+     */
     isBlink(ratio?: number): boolean {
       return this.TLManager.isBlink(ratio);
     }
 
+    /**
+     * update vehicles' positions
+     * these vehicles are from the vehicles array not the simpleVehicles
+     */
     updateVehiclePos(): void {
       for (let i = 0; i < this.vehicles.length; i += 1) {
         const vId = this.vehicles[i].getId();
@@ -371,6 +482,11 @@ export default class RoadIntersection {
       while (this.checkLeavingVehicle());
     }
 
+    /**
+     * get the front vehicle before the vehicle at @param id
+     * in the same lane
+     * @param id
+     */
     getFrontVehicle(id: number): Vehicle|undefined {
       const vehicle = this.getVehicle(id);
 
@@ -383,6 +499,11 @@ export default class RoadIntersection {
       return frontV;
     }
 
+    /**
+     * safely delete the vehicle & refresh the array
+     * @param id
+     * @param isLaneIn
+     */
     vehicleGone(id: number, isLaneIn?: boolean): void {
       const vehicle = this.getVehicle(id);
       this.roadSections[this.getRoadSectionIndex(vehicle.getRoadSectionId())]
