@@ -71,6 +71,10 @@ class Scene extends Component {
 
   vehicles: Array<Vehicle>;
 
+  toggleGroup: Array<{name: string;state: boolean}>;
+
+  btnGroup: Array<{text: PIXI.Text; btn: Btn}>;
+
   btnShowCP: Btn;
 
   btnStop: Btn;
@@ -93,6 +97,8 @@ class Scene extends Component {
   makeUpCar: Array<{atTline: number; num: number}>;
 
   atIndex: number;
+
+  objRawData: string;
 
   constructor(props: any) {
     super(props);
@@ -199,7 +205,7 @@ class Scene extends Component {
     this.controlPanelContainer.y = -this.coordinateOffset.y;
     this.controlPanelG.beginFill(0x51BCD8, 0.3);
     this.controlPanelG.lineStyle(1, 0x51BCD8, 0.5);
-    this.controlPanelG.drawRect(0, 0, 200, this.windowH - 1);
+    this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
     this.controlPanelG.endFill();
 
     this.isControlPanelShown = true;
@@ -208,6 +214,28 @@ class Scene extends Component {
     this.btnShowCP = new Btn(26, 26, '<', 0x51BCD8);
     this.btnStop = new Btn(160, 26, 'FORCE STOP', 0x51BCD8, 0.5);
     this.lastBlinkState = false;
+
+    this.btnGroup = new Array<{text: PIXI.Text; btn: Btn}>();
+    this.toggleGroup = new Array<{name: string;state: boolean}>();
+
+    // toggle group
+    const videoFeed = { name: 'enable video feed', state: false };
+    const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
+    this.toggleGroup.push(videoFeed);
+    this.toggleGroup.push(samplingVideoFeed);
+
+    // btn group
+    for (let i = 0; i < this.toggleGroup.length; i += 1) {
+      const toggleTxt = new PIXI.Text(this.toggleGroup[i].name);
+
+      if (this.toggleGroup[i].state) {
+        const toggleBtn = new Btn(36, 26, 'ON', 0x51BCD8, 0.5);
+        this.btnGroup.push({ text: toggleTxt, btn: toggleBtn });
+      } else {
+        const toggleBtn = new Btn(36, 26, 'OFF', 0x51BCD8, 0.5);
+        this.btnGroup.push({ text: toggleTxt, btn: toggleBtn });
+      }
+    }
 
     // this.numberOfCars = 0;
 
@@ -236,6 +264,8 @@ class Scene extends Component {
       this.roadIntersection.addNewVehicle(0, 0, 0.06);
     }
 
+    this.objRawData = '';
+
     this.countDown = Date.now();
     this.deltaT = 0;
     this.makeUpCar = [
@@ -263,6 +293,7 @@ class Scene extends Component {
       { atTline: 29000, num: 1 },
       { atTline: 29900, num: 1 },
     ];
+
 
     this.atIndex = 0;
   }
@@ -295,6 +326,14 @@ class Scene extends Component {
     return numberCars;
   }
 
+  getToggleState(toggleName: string): boolean | null {
+    for (let i = 0; i < this.toggleGroup.length; i += 1) {
+      if (this.toggleGroup[i].name === toggleName) {
+        return this.toggleGroup[i].state;
+      }
+    }
+    return null;
+  }
 
   initialize = (): void => {
     window.removeEventListener('resize', this.resize);
@@ -337,6 +376,12 @@ class Scene extends Component {
     this.app.stage.x = this.windowW / 2;
     this.app.stage.y = this.windowH / 2;
 
+    this.controlPanelG.clear();
+    this.controlPanelG.beginFill(0x51BCD8, 0.3);
+    this.controlPanelG.lineStyle(1, 0x51BCD8, 0.5);
+    this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
+    this.controlPanelG.endFill();
+
     if (this.isControlPanelShown) {
       this.controlPanelContainer.x = -this.coordinateOffset.x;
       this.controlPanelContainer.y = -this.coordinateOffset.y;
@@ -347,6 +392,8 @@ class Scene extends Component {
 
     this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
     this.drawRoad();
+    this.initialButtons();
+    this.roadIntersection.updateVehiclePos();
   }
 
   updateCar = (element: any): void => {
@@ -427,7 +474,12 @@ class Scene extends Component {
 
   renderObjects = (): void => {
     this.objectContainer.removeChildren();
-    const vehicles = this.roadIntersection.getVehicles();
+    let vehicles: Array<Vehicle>;
+    if (this.toggleGroup[0].state) {
+      vehicles = this.roadIntersection.getSimpleVehicles();
+    } else {
+      vehicles = this.roadIntersection.getVehicles();
+    }
 
     for (let i = 0; i < vehicles.length; i += 1) {
       const position = vehicles[i].getPosition();
@@ -458,25 +510,43 @@ class Scene extends Component {
       }
     }
 
-    if (this.atIndex < this.makeUpCar.length) {
-      this.deltaT = Date.now() - this.countDown;
-      let currentCD = 0;
+    // toggle btn
+    this.updateToggleBtnState();
+    this.roadIntersection.updateVehiclePos();
 
-      for (let i = 0; i < this.atIndex + 1; i += 1) {
-        currentCD = this.makeUpCar[this.atIndex].atTline;
+    if (this.toggleGroup[0].state) {
+      this.vehicleUpdate(852, 478);
+      this.countDown = Date.now();
+    } else {
+      // make up car loop
+      if (this.atIndex < this.makeUpCar.length) {
+        this.deltaT = Date.now() - this.countDown;
+        let currentCD = 0;
+
+        for (let i = 0; i < this.atIndex + 1; i += 1) {
+          currentCD = this.makeUpCar[this.atIndex].atTline;
+        }
+
+        if (this.deltaT > currentCD) {
+          this.roadIntersection.addNewVehicle(0, 0, 0.06);
+          this.roadIntersection.addNewVehicle(0, 1, 0.06);
+          this.roadIntersection.addNewVehicle(0, 2, 0.06);
+          this.roadIntersection.addNewVehicle(0, 3, 0.06);
+          this.atIndex += 1;
+        }
+      } else if (!this.toggleGroup[0].state) {
+        this.countDown = Date.now();
+        this.atIndex = 0;
       }
 
-      if (this.deltaT > currentCD) {
-        this.roadIntersection.addNewVehicle(0, 3, 0.06);
-        this.atIndex += 1;
-      }
+      this.numberOfCars = this.roadIntersection.getVehiclesNum();
     }
+
 
     if (this.isUpdate()) {
       this.roadIntersection.tlCountingDown();
       this.drawRoad();
     }
-    this.roadIntersection.updateVehiclePos();
     this.renderObjects();
     // this.displayPlaneContainer.removeChildren();
     for (let i = this.displayPlaneContainer.children.length - 1; i >= 0; i -= 1) {
@@ -491,7 +561,7 @@ class Scene extends Component {
       this.fps = this.fpsCounter;
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
-      this.getNumberOfCars();
+      // this.getNumberOfCars();
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -543,6 +613,16 @@ class Scene extends Component {
     return triangle;
   }
 
+  async retrieveRawData(): Promise<void> {
+    if (!this.toggleGroup[1].state) {
+      const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
+
+      this.objRawData = rawDataStr;
+    } else {
+      this.objRawData = '(1, [524, 127])(2, [290, 166])(3, [747, 221])(4, [204, 192])(5, [537, 168])(6, [384, 203])(7, [60, 160])(8, [792, 247])(9, [95, 178])(10, [151, 185])(11, [528, 256])';
+    }
+  }
+
   // unmount content destroy
   unmountDestroy(): void {
     this.app.ticker.remove(this.animation);
@@ -579,6 +659,8 @@ class Scene extends Component {
     delete this.pixiContent;
     delete this.context;
     delete this.render;
+    delete this.toggleGroup;
+    delete this.btnGroup;
   }
 
   // render
@@ -596,7 +678,7 @@ class Scene extends Component {
             <td>
               <img
                 style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://40.121.47.195:8000/cam"
+                src="http://23.96.35.153:8000/cam"
                 alt=""
               />
             </td>
@@ -704,7 +786,9 @@ class Scene extends Component {
 
 
     this.btnShowCP.x = this.controlPanelG.width;
-    this.controlPanelContainer.addChild(this.btnShowCP);
+    if (this.btnShowCP.parent == null) {
+      this.controlPanelContainer.addChild(this.btnShowCP);
+    }
     this.updateControlPanelDisplayState(0);
     this.btnStop.setBackground(color, 0.1, 1, color);
     const textStyle2 = {
@@ -716,7 +800,58 @@ class Scene extends Component {
     this.btnStop.setTextStyle(textStyle2);
     this.btnStop.x = (this.controlPanelG.width - this.btnStop.width) / 2;
     this.btnStop.y = this.controlPanelG.height - 40;
-    this.controlPanelContainer.addChild(this.btnStop);
+    if (this.btnStop.parent == null) {
+      this.controlPanelContainer.addChild(this.btnStop);
+    }
+    const textStyle3 = {
+      fontSize: '11px',
+      fill: '#FFFFFF',
+    };
+    for (let i = 0; i < this.toggleGroup.length; i += 1) {
+      this.btnGroup[i].btn.setBackground(color, 0.1, 1, color);
+      this.btnGroup[i].btn.setTextStyle(textStyle3);
+      this.btnGroup[i].btn.x = this.controlPanelG.width * 0.75;
+      this.btnGroup[i].btn.y = this.controlPanelG.height / 2.0 + i * 26;
+      if (this.btnGroup[i].btn.parent == null) {
+        this.controlPanelContainer.addChild(this.btnGroup[i].btn);
+      }
+
+      this.btnGroup[i].text.style = textStyle3;
+      this.btnGroup[i].text.x = 8;
+      this.btnGroup[i].text.y = this.controlPanelG.height / 2.0 + i * 26 + 6;
+      if (this.btnGroup[i].text.parent == null) {
+        this.controlPanelContainer.addChild(this.btnGroup[i].text);
+      }
+    }
+  }
+
+  updateToggleBtnState(): void{
+    const color = 0x51BCD8;
+    for (let i = 0; i < this.toggleGroup.length; i += 1) {
+      if (i === 1) {
+        if (this.toggleGroup[i - 1].state) {
+          this.btnGroup[i].btn.interactive = true;
+          this.btnGroup[i].btn.buttonMode = true;
+          this.btnGroup[i].btn.setBoarder(1, color);
+          if (this.btnGroup[i].btn.isPressed()) {
+            this.toggleGroup[i].state = !this.toggleGroup[i].state;
+          }
+        } else {
+          this.btnGroup[i].btn.interactive = false;
+          this.btnGroup[i].btn.buttonMode = false;
+          this.btnGroup[i].btn.setBoarder(0, color);
+        }
+      } else if (this.btnGroup[i].btn.isPressed()) {
+        this.toggleGroup[i].state = !this.toggleGroup[i].state;
+      }
+      let tgState: string;
+      if (this.toggleGroup[i].state) {
+        tgState = 'ON';
+      } else {
+        tgState = 'OFF';
+      }
+      this.btnGroup[i].btn.setName(tgState);
+    }
   }
 
   updateControlPanelDisplayState(animationSpeed: number): void {
@@ -763,12 +898,57 @@ class Scene extends Component {
     }
   }
 
+  /**
+   * update traffic light blink state
+   */
   isUpdate(): boolean {
     if (this.lastBlinkState !== this.roadIntersection.isBlink()) {
       this.lastBlinkState = this.roadIntersection.isBlink();
       return true;
     }
     return false;
+  }
+
+
+  /**
+   * retrieve and update vehicle mapping
+   * @param videoW
+   * @param videoH
+   */
+  vehicleUpdate(videoW: number, videoH: number): void {
+    this.retrieveRawData();
+    // e.g. (1, [524, 127])(2, [290, 166])(3, [747, 221])
+    const formedData = new Array<{id: number;position: Vec2}>();
+    let startIndex = -1;
+    let endIndex = -1;
+    this.roadIntersection.initSimpleVehicles();
+
+    for (let i = 0; i < this.objRawData.length; i += 1) {
+      if (this.objRawData.charAt(i) === '(') {
+        startIndex = i;
+      } else if (this.objRawData.charAt(i) === ')' && startIndex > -1) {
+        endIndex = i;
+
+        const substr = this.objRawData.substring(startIndex + 1, endIndex);
+        const simpleVehicleFormat = /\d+(\.\d+)?/g;
+
+        const matchesArray = substr.match(simpleVehicleFormat);
+        if (matchesArray != null) {
+          const id = parseInt(matchesArray[0], 10);
+          const x = (parseInt(matchesArray[1], 10) / videoW)
+          * this.windowW - this.coordinateOffset.x;
+          const y = (parseInt(matchesArray[2], 10) / videoH)
+          * this.windowH - this.coordinateOffset.y;
+          const pos = ts.tsVec2(x, y);
+          const simpleVehicleData = { id, position: pos };
+          formedData.push(simpleVehicleData);
+
+          this.roadIntersection.tryAddSimpleVehicle(id, pos);
+        }
+      }
+    }
+
+    this.numberOfCars = this.roadIntersection.getSimpleVehicles().length;
   }
 }
 

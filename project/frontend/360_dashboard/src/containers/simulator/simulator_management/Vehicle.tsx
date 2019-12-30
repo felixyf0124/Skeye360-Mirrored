@@ -1,7 +1,7 @@
 // import React, {Component} from 'react'
 // pixi.js-legacy for VM
 // import * as PIXI from "pixi.js-legacy";
-import Object from './Object';
+import Object from './SObject';
 import * as ts from '../TSGeometry';
 import vec2 from './vec2';
 

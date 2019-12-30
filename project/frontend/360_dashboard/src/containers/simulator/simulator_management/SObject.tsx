@@ -4,7 +4,7 @@
 
 import Vec2 from './vec2';
 
-export default class Object {
+export default class SObject {
     id: number;
 
     laneId: number;
