@@ -31,7 +31,6 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
           <Route exact path="/streetview/:intersectionId" component={StreetView} />
           <Route exact path="/camview/:intersectionId" component={CamView} />
           <Route exact path="/intersection/add" component={AddIntersection} />
-          <Route exact path="/camview/:intersectionId" />
           <Route
             exact
             path="/intersection/edit/:intersectionId"
