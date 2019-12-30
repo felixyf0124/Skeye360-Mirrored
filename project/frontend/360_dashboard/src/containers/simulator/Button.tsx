@@ -102,12 +102,10 @@ export default class Button extends PIXI.Graphics {
 
     setBoarder(boarderSize?: number, boarderColor?: number): void {
       this.boarder.clear();
-      if(boarderSize !== undefined)
-      {
+      if (boarderSize !== undefined) {
         this.boarderSize = boarderSize;
       }
-      if(boarderColor !== undefined)
-      {
+      if (boarderColor !== undefined) {
         this.boarderColor = boarderColor;
       }
       this.boarder.lineStyle(this.boarderSize, this.boarderColor, 1);
@@ -134,7 +132,7 @@ export default class Button extends PIXI.Graphics {
       return false;
     }
 
-    getBoarderSize():number {
+    getBoarderSize(): number {
       return this.boarderSize;
     }
 }

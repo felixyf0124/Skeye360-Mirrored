@@ -146,11 +146,11 @@ export default class RoadIntersection {
     /**
      * add new vehicle
      * this is different from addNewSimpleVehicle
-     * @param laneId 
-     * @param sectionId 
-     * @param speed 
-     * @param vehicleId 
-     * @param position 
+     * @param laneId
+     * @param sectionId
+     * @param speed
+     * @param vehicleId
+     * @param position
      */
     addNewVehicle(laneId: number, sectionId: number, speed: number,
       vehicleId?: number, position?: Vec2): void {
@@ -197,8 +197,8 @@ export default class RoadIntersection {
 
     /**
      * add one new simpleVehicle
-     * @param vehicleId 
-     * @param position 
+     * @param vehicleId
+     * @param position
      */
     addNewSimpleVehicle(vehicleId: number, position: Vec2): void {
       const objV = new Vehicle(vehicleId, NaN, NaN, NaN, position);
@@ -254,7 +254,7 @@ export default class RoadIntersection {
 
     /**
      * bind traffic light to associated road section and lanes
-     * @param trafficLight 
+     * @param trafficLight
      */
     bindTrafficLight(trafficLight: TrafficLight): void {
       const toBeBound = trafficLight.getBoundLanes();
@@ -388,7 +388,7 @@ export default class RoadIntersection {
 
     /**
      * add new road section with tail coordinate
-     * @param tailVec2 
+     * @param tailVec2
      */
     addNewRoadSection(tailVec2: Vec2): void {
       const roadSection = new RoadSection(this.roadSections.length, this.id, tailVec2);
@@ -397,7 +397,7 @@ export default class RoadIntersection {
 
     /**
      * add new road section to the list with a Roadsection object
-     * @param roadSection 
+     * @param roadSection
      */
     addRoadSection(roadSection: RoadSection): void {
       this.roadSections.push(roadSection);
@@ -405,10 +405,10 @@ export default class RoadIntersection {
 
     /**
      * add new Lane
-     * @param roadSectionId 
-     * @param laneDirection 
-     * @param laneType 
-     * @param numOfLanes 
+     * @param roadSectionId
+     * @param laneDirection
+     * @param laneType
+     * @param numOfLanes
      */
     addNewLane(roadSectionId: number, laneDirection: number,
       laneType: string, numOfLanes: number): void {
@@ -433,7 +433,7 @@ export default class RoadIntersection {
 
     /**
      * check if a traffic light is forced as some state
-     * @param tlId 
+     * @param tlId
      */
     isForced(tlId: number): boolean {
       return this.TLManager.getTrafficLight(tlId).getIsForced();
@@ -441,14 +441,14 @@ export default class RoadIntersection {
 
     /**
      * get traffic light on/off state based on @param ratio
-     * @param ratio 
+     * @param ratio
      */
     isBlink(ratio?: number): boolean {
       return this.TLManager.isBlink(ratio);
     }
 
     /**
-     * update vehicles' positions 
+     * update vehicles' positions
      * these vehicles are from the vehicles array not the simpleVehicles
      */
     updateVehiclePos(): void {
@@ -485,7 +485,7 @@ export default class RoadIntersection {
     /**
      * get the front vehicle before the vehicle at @param id
      * in the same lane
-     * @param id 
+     * @param id
      */
     getFrontVehicle(id: number): Vehicle|undefined {
       const vehicle = this.getVehicle(id);
@@ -501,8 +501,8 @@ export default class RoadIntersection {
 
     /**
      * safely delete the vehicle & refresh the array
-     * @param id 
-     * @param isLaneIn 
+     * @param id
+     * @param isLaneIn
      */
     vehicleGone(id: number, isLaneIn?: boolean): void {
       const vehicle = this.getVehicle(id);
