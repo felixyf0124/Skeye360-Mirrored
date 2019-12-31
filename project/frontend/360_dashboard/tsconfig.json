@@ -19,7 +19,9 @@
     "noEmit": true,
     "jsx": "react"
   },
-  "files": ["custom.d.ts"],
+  "files": [
+    "custom.d.ts"
+  ],
   "include": [
     "src"
   ]

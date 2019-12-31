@@ -4,7 +4,10 @@ import time
 import threading
 import sys
 import logging
-import cv2 
+import cv2
+sys.path.append("..")
+from darknet import darknet 
+sys.path.append("")
 from .db import Db
 from .intersection import Intersection
 from .trackableobject import TrackableObject
@@ -28,24 +31,25 @@ logger = logging.getLogger("camera")
 
 
 class Detector:
-    def __init__(self, config, weights, class_names, video_stream):
+    def __init__(self, config, weights, class_names, meta, video_stream):
         self.config = config
         self.weights = weights
         self.class_names = class_names
+        self.meta = meta
         self.stream = video_stream
         self.coord = Coordinate()
         self.start_counting = False
         logger.info("Detector is created")
 
     # Load names classes
-    def load(self):
-        classes = None
-        with open(self.class_names, 'r') as f:
-            classes = [line.strip() for line in f.readlines()]
-        # Define network from configuration file and load the weights from the given weights file
-        net = cv2.dnn.readNet(self.weights,self.config)
-        logger.info("Loading deep learning net")        
-        return classes, net
+    # def load(self):
+        # classes = None
+        # with open(self.class_names, 'r') as f:
+            # classes = [line.strip() for line in f.readlines()]
+        # # Define network from configuration file and load the weights from the given weights file
+        # net = cv2.dnn.readNet(self.weights,self.config)
+        # logger.info("Loading deep learning net")        
+        # return classes, net
 
     # Get names of output layers, output for YOLOv3 is ['yolo_16', 'yolo_23']
     def get_outputs_names(self, net):
@@ -53,17 +57,17 @@ class Detector:
         return [layersNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
     # Darw a rectangle surrounding the object and its class name 
-    def draw_pred(self, img, class_id, confidence, x, y, x_plus_w, y_plus_h, classes):
-        #Generate color for each class randomly
-        COLORS = np.random.uniform(0, 255, size=(len(classes), 3))        
-        label = str(classes[class_id])
-        color = COLORS[class_id]
-        cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), color, 2)
-        cv2.putText(img, label, (x-10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+    def draw_pred(self, img, class_name, confidence, x, y, x_plus_w, y_plus_h):
+        # #Generate color for each class randomly
+        # COLORS = np.random.uniform(0, 255, size=(len(classes), 3))        
+        label = str(class_name)
+        # color = COLORS[class_id]
+        cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), [0, 0, 255], 2)
+        cv2.putText(img, label, (x-10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [0, 0, 255], 2)
 
     # print detection output 
-    def print_pred(self, class_id, x, y, w, h, classes):
-        label = str(classes[class_id])
+    def print_pred(self, class_id, x, y, w, h, class_name):
+        label = str(class_name)
         print(label, round(x+w/2), round(y+h/2))
 
     # count detection output at the same time detecting objects in the frame
@@ -151,12 +155,8 @@ class Detector:
         logger.info("Creating deepsort tracker")  
         return tracker
 
-    def create_encoder(self):
-        model_filename = os.path.abspath(os.path.join(os.getcwd(), ".."))+'/camera/recognition/model_data/market1501.pb'
-        return gdet.create_box_encoder(model_filename, batch_size=1)
-
     # Generate StreamingHttpResponse
-    def gen(self, classes, net):
+    def gen(self):
 		
         intersection = self.create_intersection("main@broadway")
         # connect db
@@ -173,99 +173,127 @@ class Detector:
 
         # create ROIs
         ROI_list = self.create_ROIs()
-             
+
+        # set up and load darknet framework
+        netMain = None
+        metaMain = None
+        altNames = None
+
+        if netMain is None:
+            netMain = darknet.load_net_custom(self.config.encode(
+                "ascii"), self.weights.encode("ascii"), 0, 1)  # batch size = 1
+        if metaMain is None:
+            metaMain = darknet.load_meta(self.meta.encode("ascii"))
+        if altNames is None:
+            try:
+                with open(self.meta) as metaFH:
+                    metaContents = metaFH.read()
+                    import re
+                    match = re.search("names *= *(.*)$", metaContents,
+                                      re.IGNORECASE | re.MULTILINE)
+                    if match:
+                        result = match.group(1)
+                    else:
+                        result = None
+                    try:
+                        if os.path.exists(result):
+                            with open(result) as namesFH:
+                                namesList = namesFH.read().strip().split("\n")
+                                altNames = [x.strip() for x in namesList]
+                    except TypeError:
+                        pass
+            except Exception:
+                pass
+        cap.set(3, 1280)
+        cap.set(4, 720)
+
+        # Create an image we reuse for each detect
+        darknet_image = darknet.make_image(darknet.network_width(netMain),
+                                    darknet.network_height(netMain),3)	
         # deep_sort Definition of the parameters
         nms_max_overlap = 0.3 
 
-        encoder = self.create_encoder()
         tracker = self.create_tracker()
         tracking_dict = {}
         coord_dict = Coordinate()
 		
-		# set the threshold for success detection 
+	# set the threshold for success detection 
         conf_threshold = 0.6
         nms_threshold = 0.5
-		
-		# now we start to read video frame by frame to detect and tracking the vehicles appear on the frames
+
+        # now we start to read video frame by frame to detect and tracking the vehicles appear on the frames
         while True:
-            hasframe, image = cap.read()
+            prev_time = time.time()
+            hasframe, image = cap.read()       
             if not hasframe:
                 logger.error("Video importing error")
-                return -1                
+                return -1     
+     
+            totalFrames += 1
+
+            # Skipping frames to increase the fps, will be used when there is more than one camera running on the same GPU
+            # if totalFrames%3!=1:  
+            #    continue
             # image=cv2.resize(image, (620, 480))
 
-            #get the size of the image
-            Width = image.shape[1]
-            Height = image.shape[0]                
-            
-            # convert the frame to a blob and detect through the network
-            blob = cv2.dnn.blobFromImage(image, 1.0/255.0, (416,416), [0,0,0], True, crop=False)
-            net.setInput(blob)
-            outs = net.forward(self.get_outputs_names(net))
-            
-			# setting the data structures needed to keep the result of detection
-            class_ids = []
+            # converting color and size for detection
+            frame_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            frame_resized = cv2.resize(frame_rgb,
+                                   (darknet.network_width(netMain),
+                                    darknet.network_height(netMain)),
+                                   interpolation=cv2.INTER_LINEAR)
+            darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
+            outs = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
+
+            # setting the data structures needed to keep the result of detection
+            class_names = []
             confidences = []
             boxes = []
             yolo_boxes = []
 			
-			# potential detection out of deep learning network
-            for out in outs: 
-                for detection in out:            
-                #each detection  has the form like this [center_x center_y width height obj_score class_1_score class_2_score ..]
-                    scores = detection[5:]#classes scores starts from index 5
-                    class_id = np.argmax(scores)
-                    confidence = scores[class_id]
-                    if confidence > 0.6:
-                        center_x = int(detection[0] * Width)
-                        center_y = int(detection[1] * Height)
-                        w = int(detection[2] * Width)
-                        h = int(detection[3] * Height)
-                        x = center_x - w / 2
-                        y = center_y - h / 2
-                        class_ids.append(class_id)
-                        confidences.append(float(confidence))
-                        boxes.append([x, y, w, h])
-            yolo_indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
-			
-			# we only care about the vehicles for now
-            for i in yolo_indices:
-                class_id = class_ids[i[0]]               
-                label = classes[class_id]
-                if label not in ["car","bus","truck"]:
+            # potential detection out of deep learning network 
+            for out in outs:            
+            #each detection  has the form like this [center_x center_y width height obj_score class_1_score class_2_score ..]
+                class_name = str(out[0])[2:-1]
+                # we only care about the vehicles for now
+                if class_name not in ["car","bus","truck"]:
                     continue
-                i = i[0]
-                box = boxes[i]
-                yolo_boxes.append(box)
-                x = box[0]
-                y = box[1]
-                w = box[2]
-                h = box[3]
-				
-				#output object detected on the frame
-                self.draw_pred(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h), classes)
+                confidence = out[1]
+                if confidence > 0.6:
+                    w = (float (out[2][2]))/415*852
+                    h = (float (out[2][3]))/415*478
+
+                    x = (float (out[2][0]))/415*852-0.5*w
+                    y = (float (out[2][1]))/415*478-0.5*h
+                    class_names.append(class_name)
+                    confidences.append(float(confidence))
+                    yolo_boxes.append([x, y, w, h])
+                    print([x, y, w, h])
+		
+                #output object detected on the frame
+                self.draw_pred(image, class_name, confidence, round(x), round(y), round(x+w), round(y+h))
+
                 # self.print_pred(class_ids[i], x, y, w, h, classes)
 			
-			# ready to use DeepSort algorithm to track the vehicles that are detected
+            # ready to use DeepSort algorithm to track the vehicles that are detected
+
             # apply non-maximum suppression algorithm on the bounding boxes
-            t, _ = net.getPerfProfile()
-
-            features = encoder(image,yolo_boxes)
-
-            # score to 1.0 here.
-            detections = [Detection(bbox, 1.0, feature) for bbox, feature in zip(yolo_boxes, features)]
+            # t, _ = net.getPerfProfile()
             
             # Run non-maxima suppression.
-            detection_boxes = np.array([d.tlwh for d in detections])
-            scores = np.array([d.confidence for d in detections])
+            detection_boxes = np.array(yolo_boxes)
+            scores = np.array(confidences)
             indices = preprocessing.non_max_suppression(detection_boxes, nms_max_overlap, scores)
-            detections = [detections[i] for i in indices]
+            detections = []
+            for i in indices:
+                detection = Detection(detection_boxes[i],confidences[i],[])
+                detections.append(detection)
 
             # Call the tracker
             tracker.predict()
             tracker.update(detections)
 			
-			# potential tracking out of DeepSort algorithm
+            # potential tracking out of DeepSort algorithm
             for track in tracker.tracks:
                 if not track.is_confirmed() or track.time_since_update > 1:
                     continue 
@@ -291,27 +319,29 @@ class Detector:
                         self.get_destination(current,x,ROI_list)
                         intersection.inc(x.start_from, x.go_to)
                 
-			# draw both the ID of the object and the centroid of the
-			# object on the output frame  COMMENTED OUT, NEEDED FOR FUTURE REFACTORY
-            # for x in tracking_dict.values():
-                # print("ID {}".format(x.objectID)+ ' start: ', end="")
-                # print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
-                # print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
-                # print(x.start_from)
-                # print(x.go_to)
+           # draw both the ID of the object and the centroid of the
+           # object on the output frame  COMMENTED OUT, NEEDED FOR FUTURE REFACTORY
+           # for x in tracking_dict.values():
+               # print("ID {}".format(x.objectID)+ ' start: ', end="")
+               # print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
+               # print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
+               # print(x.start_from)
+               # print(x.go_to)
             
             # save the coordinates for the tracked vehicles and get ready for front end to retrieve them
             self.coord= coord_dict
-            
-            totalFrames += 1
+
+            # diplay real time fps 
+            fps = "FPS: " + str(int (1/(time.time()-prev_time)))
+            cv2.putText(image, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
+
             self.start_counting = True
             self.draw_ROIs(image, ROI_list)
-            label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
-            cv2.putText(image, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
+
             frame = self.frame_to_bytes(image)
             intersection.print_counters()
             # yield the bytes of frame, and get ready for front end to retrieve them
             yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         
         

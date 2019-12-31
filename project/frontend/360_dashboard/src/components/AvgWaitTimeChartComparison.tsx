@@ -63,7 +63,7 @@ const AvgWaitTimeChart = (): JSX.Element => {
     ],
   };
   return (
-    <div className="bar-chart">
+    <div>
       <Chart options={state.options} series={state.series} type="line" width="500" height="" />
     </div>
   );

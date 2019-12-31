@@ -2,10 +2,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import Header from '../components/Header';
 import { RootState } from '../reducers/rootReducer';
-import { resetIntersection, ResetIntersectionAction } from '../contexts/intersection';
+import {
+  getExistingIntersection,
+  resetIntersection as resetCurrentIntersection,
+  ResetIntersectionAction,
+} from '../contexts/intersection';
 import EditIntersectionForm from '../components/EditIntersectionForm';
+import SideDrawer from '../components/SideDrawer';
 
 interface StateProps {
   username: string;
@@ -21,32 +25,41 @@ interface StateProps {
 }
 
 interface DispatchProps {
+  getExistingIntersection: (id: string) => any;
   historyPush: (url: string) => void;
-  resetIntersection(): ResetIntersectionAction;
+  resetCurrentIntersection(): ResetIntersectionAction;
 }
 
 class EditIntersection extends React.Component<StateProps & DispatchProps> {
+  // component mount will fetch existing intersection
+  public componentDidMount(): void {
+    // eslint-disable-next-line no-shadow
+    const { intersection_id, getExistingIntersection } = this.props;
+    getExistingIntersection(intersection_id);
+  }
+
   public componentWillUnmount(): void {
     // eslint-disable-next-line no-shadow
-    const { resetIntersection } = this.props;
-    resetIntersection();
+    const { resetCurrentIntersection } = this.props;
+    resetCurrentIntersection();
   }
 
   public render(): JSX.Element {
-    const { success } = this.props;
+    const { success, intersection_name } = this.props;
     // if (district_id === '') return <Redirect to="/" />;
+    const headerTitle = `Edit: ${intersection_name}`;
 
     if (success) {
       return (
         <div>
-          <Header />
-          <EditIntersectionForm />
+          <SideDrawer headerTitle={headerTitle} />
+          {intersection_name === '' ? <div /> : <EditIntersectionForm />}
         </div>
       );
     }
     return (
       <div>
-        <Header />
+        <SideDrawer headerTitle="Edit" />
       </div>
     );
   }
@@ -68,8 +81,9 @@ const mapStateToProps = (state: RootState): StateProps => ({
 });
 
 const mapDispatchToProps: DispatchProps = {
+  getExistingIntersection,
+  resetCurrentIntersection,
   historyPush: push,
-  resetIntersection,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditIntersection);

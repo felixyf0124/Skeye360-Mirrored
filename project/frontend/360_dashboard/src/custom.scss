@@ -2,151 +2,161 @@
 
 //Colours
 
-$SKEYE_BLACK:#2c2c2c;
+$SKEYE_BLACK: #2c2c2c;
 $SKEYE_BLUE: #51bcd8;
-$SKEYE_GREEN:#04a777;
+$SKEYE_GREEN: #04a777;
 $SKEYE_GREY: #808080;
-$SKEYE_WHITE:#FFFFFF;
+$SKEYE_WHITE: #ffffff;
 
 //Headings
-.login-heading{
-    color: $SKEYE_BLACK;
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 30px;
+.login-heading {
+  color: $SKEYE_BLACK;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
 }
 
-body{
-    font-family: "Segoe UI", "Roboto";
-    //for bg color use !important
-    background-color: $SKEYE_BLACK !important;
-    
+body {
+  font-family: 'Segoe UI', 'Roboto';
+  //for bg color use !important
+  background-color: $SKEYE_BLACK !important;
 }
 
-a{
-    text-decoration: none; 
+a {
+  text-decoration: none;
 }
 //Classes
-.navbar{
-    background-color: $SKEYE_GREEN;
-    height:90px;
-    text-decoration: none;    
+.navbar {
+  background-color: $SKEYE_GREEN;
+  height: 90px;
+  text-decoration: none;
 }
 
-.nav-links{
-    display: flex;
-    color: $SKEYE_WHITE;
+.nav-links {
+  display: flex;
+  color: $SKEYE_WHITE;
 }
-.nav-text{
-    font-size: 20px;
-    color: $SKEYE_WHITE;
-    margin-right: 10px; 
+.nav-text {
+  font-size: 20px;
+  color: $SKEYE_WHITE;
+  margin-right: 10px;
 }
-.header-text{
-    color: $SKEYE_WHITE;
-    font-size: 32px;
-}
-
-.form-container{
-    background-color: $SKEYE_WHITE;
-    border-radius: 25px;
-    border: 1px solid $SKEYE_GREEN;
-    box-shadow: 5px 5px $SKEYE_GREEN; 
-    margin-left: auto;
-    margin-right: auto; 
-    margin-top: 10%;
-    padding-bottom: 20px; 
-    padding-top: 20px;
-    text-align: center;
-    width: 300px;
+.header-text {
+  color: $SKEYE_WHITE;
+  font-size: 32px;
 }
 
-.form-btn{
-    background-color: $SKEYE_BLUE !important;
-    border-color: $SKEYE_BLUE !important;
+.form-container {
+  background-color: $SKEYE_WHITE;
+  border-radius: 25px;
+  border: 1px solid $SKEYE_GREEN;
+  box-shadow: 5px 5px $SKEYE_GREEN;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  text-align: center;
+  width: 300px;
 }
 
-.form-group{
-    align-content: center;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    text-align: center;
-    width: 50%;
+.form-btn {
+  background-color: $SKEYE_BLUE !important;
+  border-color: $SKEYE_BLUE !important;
 }
 
-.page-container{
-    position: relative;
-    min-height: 100vh;
-    overflow:scroll;
-}
-.content-wrap{
-    padding-bottom: 2.5rem;
-    overflow:scroll;
-    overflow: hidden;
-}
-
-.footer-container{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-     //footer height
-    background-color: $SKEYE_GREY;
+.form-group {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  text-align: center;
+  width: 50%;
 }
 
-.left-panel-container{
-    width: 225px;
-    background-color: $SKEYE_BLUE;
-    display: flex;
-    flex-direction: column; 
-    height: 700px;
-    left: 0;
-
+.page-container {
+  position: relative;
+  min-height: 100vh;
+  overflow: scroll;
+}
+.content-wrap {
+  padding-bottom: 2.5rem;
+  overflow: scroll;
+  overflow: hidden;
 }
 
-.panel-btn{
-    margin-top: 10px;
-    background-color: $SKEYE_GREY !important;
-    border-color: $SKEYE_GREY !important;
+.footer-container {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  //footer height
+  background-color: $SKEYE_GREY;
 }
 
-.content-container{
-    display: flex;
-    
+.left-panel-container {
+  width: 225px;
+  background-color: $SKEYE_BLUE;
+  display: flex;
+  flex-direction: column;
+  height: 700px;
+  left: 0;
 }
 
-.dashboard-content{
-    display: flex;
-    color: $SKEYE_WHITE;
-    font-size: 40px;
-    
+.panel-btn {
+  margin-top: 10px;
+  background-color: $SKEYE_GREY !important;
+  border-color: $SKEYE_GREY !important;
+}
+
+.content-container {
+  display: flex;
+}
+
+.dashboard-content {
+  display: flex;
+  color: $SKEYE_WHITE;
+  font-size: 40px;
 }
 
 //CHARTS CSS
-//TODO: Rename bar-chart to chart simply. 
-.bar-chart{
-    background-color: $SKEYE_WHITE;
-    width: fit-content;
-    margin: 20px; 
+//TODO: Rename bar-chart to chart simply.
+.bar-chart {
+  background-color: $SKEYE_WHITE;
+  width: fit-content;
+  margin: 20px;
 }
 
-.charts-prototype{
-    display: flex;
-    flex-direction: column; 
-    justify-content: center;
-    align-items: center;
+.charts-prototype {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.charts-row{
-    display: flex;
-    flex-direction: row;
-    text-align: center;
+.charts-row {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
 }
 
-.charts-header{
-    color: $SKEYE_WHITE;
-    text-align: center; 
+.charts-header {
+  color: $SKEYE_WHITE;
+  text-align: center;
 }
 //Import Bootstrap and its default variables 
 @import '~bootstrap/scss/bootstrap.scss'; 
+
+.background-style{
+    position:fixed;
+    margin-top: 4rem;
+    padding:0;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    
+    background-image: url("./images/skeye.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
