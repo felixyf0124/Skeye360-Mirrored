@@ -25,11 +25,22 @@ const Body = styled.div`
 
 const MapContainer = styled.div`
   position: relative;
-  height: 20vh;
-  width: 100vw;
+  height: 30vh;
+  width: 80vw;
   margin: 1rem;
 `;
 
+const AverageMetricChartsContainer = styled.div`
+  background-color: ${SKEYE_WHITE};
+  height: 13vh;
+  width: 20vw;
+  position: relative;
+  margin: 1rem;
+  vertical-align: middle;
+  text-align: center;
+`;
+
+// Smaller charts for the bottom left side charts.
 const SmallChartContainer = styled.div`
   background-color: ${SKEYE_WHITE};
   width: 30vw;
@@ -37,6 +48,7 @@ const SmallChartContainer = styled.div`
   margin: 1rem;
 `;
 
+// Bigger chart on the bottom right side chart.
 const BigChartContainer = styled.div`
   background-color: ${SKEYE_WHITE};
   position: relative;
@@ -44,6 +56,7 @@ const BigChartContainer = styled.div`
   margin: 1rem;
 `;
 
+// Generic flexboxes styling
 const ChartVerticalFlexBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -106,6 +119,16 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
         <SideDrawer headerTitle={intersectionName} />
         <Body>
           <ChartHorizontalFlexBox>
+            <ChartVerticalFlexBox>
+              <AverageMetricChartsContainer>
+                <h5>Average Cars</h5>
+                <h3>N/A</h3>
+              </AverageMetricChartsContainer>
+              <AverageMetricChartsContainer>
+                <h5>Average Gas Consumption</h5>
+                <h3>N/A L/100km</h3>
+              </AverageMetricChartsContainer>
+            </ChartVerticalFlexBox>
             <MapContainer>
               {intersectionLat === '' ? (
                 <p>Loading...</p>
