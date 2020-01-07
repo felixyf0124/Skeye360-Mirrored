@@ -526,7 +526,8 @@ class Scene extends Component {
 
     // toggle btn
     this.updateToggleBtnState();
-
+    //menu
+    this.updateMenuState();
     this.drawMenu();
 
     this.roadIntersection.updateVehiclePos();
@@ -841,9 +842,6 @@ class Scene extends Component {
       // }
     }
 
-    const menuTextStyle = {
-
-    };
 
     for(let i=0;i<this.menuBtns.length;i +=1)
     {
@@ -880,7 +878,15 @@ class Scene extends Component {
     {
       case 1:
         {
-          this.menuBtns[0].setBoarder(2, color);
+          for(let i=0;i<this.menuBtns.length;i +=1)
+          {
+            if(i ==this.menuPage-1)
+            {
+              this.menuBtns[i].setBoarder(2, color);
+            }else{
+              this.menuBtns[i].setBoarder(1, color);
+            }
+          }
 
           this.controlPanelContainer.addChild(this.tlDisplayPanelContainer);
           if (this.btnStop.parent == null) {
@@ -890,12 +896,28 @@ class Scene extends Component {
         }
       case 2:
         {
-          this.menuBtns[1].setBoarder(2, color);
+          for(let i=0;i<this.menuBtns.length;i +=1)
+          {
+            if(i ==this.menuPage-1)
+            {
+              this.menuBtns[i].setBoarder(2, color);
+            }else{
+              this.menuBtns[i].setBoarder(1, color);
+            }
+          }
           break;
         }
       case 3:
         {
-          this.menuBtns[3].setBoarder(2, color);
+          for(let i=0;i<this.menuBtns.length;i +=1)
+          {
+            if(i ==this.menuPage-1)
+            {
+              this.menuBtns[i].setBoarder(2, color);
+            }else{
+              this.menuBtns[i].setBoarder(1, color);
+            }
+          }
           for (let i = 0; i < this.toggleGroup.length; i += 1)
           {
             if (this.btnGroup[i].btn.parent == null) {
@@ -907,6 +929,14 @@ class Scene extends Component {
           }
           break;
         }
+    }
+  }
+
+  updateMenuState():void{
+    for (let i = 0; i < this.menuBtns.length; i += 1) {
+      if (this.menuBtns[i].isPressed()) {
+        this.menuPage = i+1;
+      }
     }
   }
 
