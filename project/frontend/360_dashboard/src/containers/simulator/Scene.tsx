@@ -79,6 +79,10 @@ class Scene extends Component {
 
   btnStop: Btn;
 
+  menuPage: number;
+
+  menuBtns: Array<Btn>;
+
   isControlPanelShown: boolean;
 
   isCPAnimating: boolean;
@@ -237,6 +241,16 @@ class Scene extends Component {
       }
     }
 
+    //menu
+    this.menuPage = 1;
+    this.menuBtns = new Array<Btn>();
+    const menuBtn1 =new Btn(49,26, "Traffic Light", 0x51BCD8);
+    const menuBtn2 =new Btn(49,26, "Lane Area", 0x51BCD8);
+    const menuBtn3 =new Btn(49,26, "Setting", 0x51BCD8);
+    this.menuBtns.push(menuBtn1);
+    this.menuBtns.push(menuBtn2);
+    this.menuBtns.push(menuBtn3);
+    
     // this.numberOfCars = 0;
 
     // To call method to get real time data from the camera feed
@@ -512,6 +526,9 @@ class Scene extends Component {
 
     // toggle btn
     this.updateToggleBtnState();
+
+    this.drawMenu();
+
     this.roadIntersection.updateVehiclePos();
 
     if (this.toggleGroup[0].state) {
@@ -577,7 +594,7 @@ class Scene extends Component {
 
     const url = window.location.href;
     if (!url.includes('/camview/')) {
-      this.unmountDestroy();
+      // this.unmountDestroy();
     }
   }
 
@@ -800,9 +817,9 @@ class Scene extends Component {
     this.btnStop.setTextStyle(textStyle2);
     this.btnStop.x = (this.controlPanelG.width - this.btnStop.width) / 2;
     this.btnStop.y = this.controlPanelG.height - 40;
-    if (this.btnStop.parent == null) {
-      this.controlPanelContainer.addChild(this.btnStop);
-    }
+    // if (this.btnStop.parent == null) {
+    //   this.controlPanelContainer.addChild(this.btnStop);
+    // }
     const textStyle3 = {
       fontSize: '11px',
       fill: '#FFFFFF',
@@ -812,16 +829,84 @@ class Scene extends Component {
       this.btnGroup[i].btn.setTextStyle(textStyle3);
       this.btnGroup[i].btn.x = this.controlPanelG.width * 0.75;
       this.btnGroup[i].btn.y = this.controlPanelG.height / 2.0 + i * 26;
-      if (this.btnGroup[i].btn.parent == null) {
-        this.controlPanelContainer.addChild(this.btnGroup[i].btn);
-      }
+      // if (this.btnGroup[i].btn.parent == null) {
+      //   this.controlPanelContainer.addChild(this.btnGroup[i].btn);
+      // }
 
       this.btnGroup[i].text.style = textStyle3;
       this.btnGroup[i].text.x = 8;
       this.btnGroup[i].text.y = this.controlPanelG.height / 2.0 + i * 26 + 6;
-      if (this.btnGroup[i].text.parent == null) {
-        this.controlPanelContainer.addChild(this.btnGroup[i].text);
-      }
+      // if (this.btnGroup[i].text.parent == null) {
+      //   this.controlPanelContainer.addChild(this.btnGroup[i].text);
+      // }
+    }
+
+    const menuTextStyle = {
+
+    };
+
+    for(let i=0;i<this.menuBtns.length;i +=1)
+    {
+      this.menuBtns[i].setTextStyle(textStyle);
+      this.menuBtns[i].setDemansion(this.menuBtns[i].text.width+12, 26);
+
+      this.menuBtns[i].setBackground(color, 0.1, 1, color);
+      this.menuBtns[i].setBoarder(1, color);
+
+      this.menuBtns[i].angle = 90;
+      this.menuBtns[i].x = this.controlPanelG.width
+        + this.menuBtns[i].height-1;
+        this.menuBtns[i].setTextStyle(textStyle);
+      
+      // this.menuBtns[i].text.x = (this.menuBtns[i].width - this.menuBtns[i].text.width) / 2 ;
+      // this.menuBtns[i].text.y = (this.menuBtns[i].height - this.menuBtns[i].text.height) / 2 ;
+    }
+    this.menuBtns[0].y = this.menuBtns[0].width/2 - 26;
+    this.menuBtns[1].y = this.menuBtns[0].y + this.menuBtns[0].width/2 +this.menuBtns[1].width/2 +12;
+    this.menuBtns[2].y = this.menuBtns[1].y + this.menuBtns[1].width/2 +this.menuBtns[2].width/2+6;
+  }
+
+  drawMenu():void {
+    const color = 0x51BCD8;
+    this.controlPanelContainer.removeChildren();
+    this.controlPanelContainer.addChild(this.controlPanelG);
+    this.controlPanelContainer.addChild(this.btnShowCP);
+    for(let i=0;i<this.menuBtns.length;i +=1)
+    {
+      this.controlPanelContainer.addChild(this.menuBtns[i]);
+    }
+
+    switch (this.menuPage)
+    {
+      case 1:
+        {
+          this.menuBtns[0].setBoarder(2, color);
+
+          this.controlPanelContainer.addChild(this.tlDisplayPanelContainer);
+          if (this.btnStop.parent == null) {
+            this.controlPanelContainer.addChild(this.btnStop);
+          }
+          break;
+        }
+      case 2:
+        {
+          this.menuBtns[1].setBoarder(2, color);
+          break;
+        }
+      case 3:
+        {
+          this.menuBtns[3].setBoarder(2, color);
+          for (let i = 0; i < this.toggleGroup.length; i += 1)
+          {
+            if (this.btnGroup[i].btn.parent == null) {
+              this.controlPanelContainer.addChild(this.btnGroup[i].btn);
+            }
+            if (this.btnGroup[i].text.parent == null) {
+              this.controlPanelContainer.addChild(this.btnGroup[i].text);
+            }
+          }
+          break;
+        }
     }
   }
 
