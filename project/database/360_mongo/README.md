@@ -1,6 +1,4 @@
-# How to start mongo container
-
-## Getting started
+## How to start mongo container manually?
 
 1.	**Build MongoDB Image**
 
@@ -40,3 +38,14 @@
     )   
     
     ```
+## How to test mongo container connection?
+
+1. **Access local mongoDB container though linux command?**
+
+  * ```mongo 127.0.0.1:8300/admin -u myUserAdmin -p abc123```
+  
+2.   **Access local mongoDB container though python script?**
+  
+   * ```pip install -r requirement.txt```
+   * ```python dbConnectionCheck.py```
+  
