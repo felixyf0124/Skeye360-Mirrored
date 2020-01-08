@@ -40,3 +40,6 @@
     )   
     
     ```
+5. **How to access local mongo DB though linux command?**
+
+  * ```mongo 127.0.0.1:8300/admin -u myUserAdmin -p abc123```
