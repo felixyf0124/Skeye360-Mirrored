@@ -16,7 +16,7 @@ const TempDiv = styled.div`
 `;
 
 // Conversion from Kelvin to Celsius
-const convertCelsius = (kelvinWeather: any): any => Number(kelvinWeather - 273).toFixed();
+const convertToCelsius = (tempKelvin: any): any => Number(tempKelvin - 273).toFixed();
 
 interface StateProps {
     error: any;
@@ -66,7 +66,7 @@ class Weather extends React.Component<{}, StateProps> {
     } = this.state;
 
     // Temperature retrieved by API is given in kelvin, so convert to celsius
-    const tempCelsius = convertCelsius(temperature);
+    const tempCelsius = convertToCelsius(temperature);
     const iconsrc = `http://openweathermap.org/img/w/${weatherIcon}.png`;
     if (error) {
       return (
