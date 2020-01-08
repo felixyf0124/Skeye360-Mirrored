@@ -25,6 +25,7 @@ import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
+import Weather from './Weather';
 /*
   Template for Material-UI Drawer found at:
   https://material-ui.com/components/drawers/
@@ -167,6 +168,11 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
           <Typography variant="h6" noWrap>
             {headerTitle}
           </Typography>
+          {
+            //Display Weather only on intersection list page.
+            headerTitle === 'Montreal' &&
+            <Weather />
+          }
         </Toolbar>
       </AppBar>
       <Drawer
