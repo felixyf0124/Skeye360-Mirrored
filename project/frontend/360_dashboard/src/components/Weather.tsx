@@ -10,20 +10,20 @@ const API_CALL = `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID
 // On how to make API calls in ReactJS
 
 const TempDiv = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 // Conversion from Kelvin to Celsius
 const convertToCelsius = (tempKelvin: any): any => Number(tempKelvin - 273).toFixed();
 
 interface StateProps {
-    error: any;
-    isLoaded: boolean;
-    weatherIcon: string;
-    temperature: string;
-    tempDescription: string;
+  error: any;
+  isLoaded: boolean;
+  weatherIcon: string;
+  temperature: string;
+  tempDescription: string;
 }
 // Weather Component
 class Weather extends React.Component<{}, StateProps> {
