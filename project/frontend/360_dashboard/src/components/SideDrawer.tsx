@@ -169,9 +169,9 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             {headerTitle}
           </Typography>
           {
-            //Display Weather only on intersection list page.
-            headerTitle === 'Montreal' &&
-            <Weather />
+            // Display Weather only on intersection list page.
+            headerTitle === 'Montreal'
+            && <Weather />
           }
         </Toolbar>
       </AppBar>
