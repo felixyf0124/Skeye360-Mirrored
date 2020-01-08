@@ -2,16 +2,12 @@ from dbConnection import client
 from pprint import pprint
 from random import randint
 
-
 class movingAverage:
-    # Link with server
-    db = client.admin
-    # Issue the serverStatus command and print the results
-    serverStatusResult = db.command("serverStatus")
-    pprint(serverStatusResult)
+    # Link with server and collection
+    #db = client.admin
 
     db = client.business
-    # # Step 2: Create sample data
+    # Step 2: Create sample data
     # names = ['Kitchen', 'Animal', 'State', 'Tastey', 'Big', 'City', 'Fish', 'Pizza', 'Goat', 'Salty', 'Sandwich',
     #          'Lazy', 'Fun']
     # company_type = ['LLC', 'Inc', 'Company', 'Corporation']
@@ -32,5 +28,5 @@ class movingAverage:
 
     fivestars = db.reviews.find_one({'rating': 5})
     print(fivestars)
-    print(db.reviews.count_documents({}))
-    db.reviews.delete_many({})
+    # print(db.reviews.count_documents({}))
+    # db.reviews.delete_many({})
