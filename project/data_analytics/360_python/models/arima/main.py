@@ -18,11 +18,15 @@ from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import r2_score
 from pmdarima.arima.utils import ndiffs, nsdiffs, ADFTest
 from pmdarima.model_selection import train_test_split
+from writeToDatabase import write, read
+from datetime import datetime, timedelta
 
 #Start of the code (main)
 
 # Read the csv file that was generated from the datasetGenerator.py
-dataframe = panda.read_csv("360_python\models\generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
+# For Windows
+# dataframe = panda.read_csv("360_python\models\generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
+dataframe = panda.read_csv("/home/lokevin/Desktop/Soen490/project/data_analytics/360_python/models/generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
 
 # Uncomment the following code to preview how the data looks like on a graph
 # To plot a graph, use only 2 columns
@@ -44,19 +48,24 @@ westDataRaw = dataframe.loc[dataframe['direction'] == "west"]
 # For comparison purposes, we will only use 1 specific time frame
 northData = northDataRaw[['8:00-9:00am']]
 southData = southDataRaw[['8:00-9:00am']]
-easData = eastDataRaw[['8:00-9:00am']]
+eastData = eastDataRaw[['8:00-9:00am']]
 westData = westDataRaw[['8:00-9:00am']]
 
 # The following time frame for train and test gave an accuracy of 0.20948551343752309
-train = northData.loc['1992-08-09':'2018-10-24']
-test = northData.loc['2018-10-25':'2019-12-25']
+# train = westData.loc['1992-08-09':'2018-10-24']
+# test = westData.loc['2018-10-25':'2019-12-25']
+# train = westData.loc['1992-08-09':'2019-12-17']
+# test = westData.loc['2019-12-18':'2019-12-25']
+startTestDate = '1999-06-20'
+train = westData.loc['1992-08-09':'1999-06-29']
+test = westData.loc[startTestDate:'1999-06-27']
 
 # Uncomment out the following code to view values to see if the data is stationary
 # printResults(northData['8:00-9:00am'])
 
 # Check if it is stationary
 adfTest = ADFTest(alpha=0.05)
-pValue, should_diff = adfTest.should_diff(northData) 
+pValue, should_diff = adfTest.should_diff(westData) 
 
 # The following prints out values for us to decide about the model
 # P-value is used to determine if the data is stationary, value less than 0.05 is stationary
@@ -70,11 +79,11 @@ print("Should apply differencing:", should_diff)
 # The else part will directly use the auto_arima function without apply any differencing
 if(should_diff == True):
     # Estimate the parameter d (lower case d or called differencing)
-    numDiff = ndiffs(northData, test='adf') 
+    numDiff = ndiffs(westData, test='adf') 
     print("Estimated d parameter:", numDiff)
 
     # Estimate the parameter D (capital d or called seasonal differencing)
-    numSDiff = nsdiffs(northData,
+    numSDiff = nsdiffs(westData,
                         m=10, 
                         max_D=7,
                         test='ch')
@@ -106,6 +115,14 @@ forecast = arimaModel.predict(n_periods=test.shape[0])
 accuracy = r2_score(test.values, forecast)
 print(accuracy)
 
+# print(test[["8:00-9:00am"]])
+
+
+print(test.shape[0])
+print("----------------------------------------")
+print(forecast)
+print("----------------------------------------")
+
 # Uncomment the following code to view the residual, which is the difference between the predicted value and the true value
 # arimaModel.plot_diagnostics(figsize=(7,5))
 
@@ -113,3 +130,11 @@ print(accuracy)
 future_forecast = panda.DataFrame(forecast,index = test.index,columns=['Prediction'])
 panda.concat([test,future_forecast],axis=1).plot()
 matplot.show()
+
+listOfDate = list()
+testStartDateObj = datetime.strptime(startTestDate, '%Y-%m-%d')
+for index in range(test.shape[0]):
+    listOfDate.append((testStartDateObj + timedelta(days=index)))
+    print(testStartDateObj + timedelta(days=index))
+write("EW", forecast, listOfDate, "arima")
+read("Prediction")
