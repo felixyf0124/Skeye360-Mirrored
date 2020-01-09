@@ -51,11 +51,7 @@ southData = southDataRaw[['8:00-9:00am']]
 eastData = eastDataRaw[['8:00-9:00am']]
 westData = westDataRaw[['8:00-9:00am']]
 
-# The following time frame for train and test gave an accuracy of 0.20948551343752309
-# train = westData.loc['1992-08-09':'2018-10-24']
-# test = westData.loc['2018-10-25':'2019-12-25']
-# train = westData.loc['1992-08-09':'2019-12-17']
-# test = westData.loc['2019-12-18':'2019-12-25']
+# Seperate the data as train set and test set
 startTestDate = '1999-06-20'
 train = westData.loc['1992-08-09':'1999-06-29']
 test = westData.loc[startTestDate:'1999-06-27']
@@ -115,14 +111,6 @@ forecast = arimaModel.predict(n_periods=test.shape[0])
 accuracy = r2_score(test.values, forecast)
 print(accuracy)
 
-# print(test[["8:00-9:00am"]])
-
-
-print(test.shape[0])
-print("----------------------------------------")
-print(forecast)
-print("----------------------------------------")
-
 # Uncomment the following code to view the residual, which is the difference between the predicted value and the true value
 # arimaModel.plot_diagnostics(figsize=(7,5))
 
@@ -131,10 +119,14 @@ future_forecast = panda.DataFrame(forecast,index = test.index,columns=['Predicti
 panda.concat([test,future_forecast],axis=1).plot()
 matplot.show()
 
+# Create a list of date for the prediction based on the date got from the test set
 listOfDate = list()
 testStartDateObj = datetime.strptime(startTestDate, '%Y-%m-%d')
 for index in range(test.shape[0]):
     listOfDate.append((testStartDateObj + timedelta(days=index)))
     print(testStartDateObj + timedelta(days=index))
+
+# The following command calls the write method in writeToDatabase.py to write to the mongodb
 write("EW", forecast, listOfDate, "arima")
+# The following command calls the read method in writeToDatabase.py to read from the mongodb
 read("Prediction")

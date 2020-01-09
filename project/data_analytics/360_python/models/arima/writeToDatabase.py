@@ -11,6 +11,7 @@ collection = db['Prediction']
 def write(direction, predictions, time, modelType):
     # If ran too many times and you want to delete all records (or the whole collection), uncomment the following code
     # collection.remove()
+
     # START of writing to MongoDB
     # For loop to insert into MongoDB
     for index in range(len(predictions)):
@@ -23,6 +24,7 @@ def read(collectionName):
     collectionData = db[collectionName]
     resultsRaw = collectionData.find({})
     print(resultsRaw.count())
+    # For loop to read in row
     for row in resultsRaw:
         resultDirection = str(row['directions'])
         resultCount = str(row['count'])
