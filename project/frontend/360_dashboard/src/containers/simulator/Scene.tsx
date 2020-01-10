@@ -10,6 +10,8 @@ import Btn from './Button';
 import DataFromCamera from './simulator_management/DataFromCamera';
 import Vehicle from './simulator_management/Vehicle';
 import LanePointer from './simulator_management/LanePointer';
+import DragablePoint from './DragablePoint';
+//import 'pixi-text-input.js';
 
 /**
  * @class Scene
@@ -26,6 +28,9 @@ class Scene extends Component {
 
   windowScaleRatio: number;
 
+  initResolution:Vec2;
+  lastResolution:Vec2;
+
   app: PIXI.Application;
 
   mapContainer: PIXI.Container;
@@ -37,6 +42,8 @@ class Scene extends Component {
   displayPlaneContainer: PIXI.Container;
 
   tlDisplayPanelContainer: PIXI.Container;
+
+  laneAreaContainer: PIXI.Container;
 
   backGroundG: PIXI.Graphics;
 
@@ -79,6 +86,8 @@ class Scene extends Component {
 
   btnStop: Btn;
 
+  dragablePoints: Array<DragablePoint>;
+
   menuPage: number;
 
   menuBtns: Array<Btn>;
@@ -110,6 +119,8 @@ class Scene extends Component {
     this.pixiContent = null;
     this.windowW = window.innerWidth * this.windowScaleRatio;
     this.windowH = window.innerHeight * this.windowScaleRatio;
+    this.initResolution = new Vec2(this.windowW, this.windowH);
+    this.lastResolution = new Vec2(this.windowW, this.windowH);
     this.windowMin = 100;
     const resolution = window.devicePixelRatio;
     const setting = { width: this.windowW, height: this.windowH, resolution };
@@ -119,6 +130,7 @@ class Scene extends Component {
     this.controlPanelContainer = new PIXI.Container(); // CONTROLPANEL
     this.displayPlaneContainer = new PIXI.Container();
     this.tlDisplayPanelContainer = new PIXI.Container();
+    this.laneAreaContainer = new PIXI.Container();
     this.app.stage.addChild(this.mapContainer);
     this.app.stage.addChild(this.objectContainer);
     this.app.stage.addChild(this.displayPlaneContainer);
@@ -130,6 +142,7 @@ class Scene extends Component {
     this.mapContainer.addChild(this.backGroundG);
     this.mapContainer.addChild(this.roadG);
     this.mapContainer.addChild(this.trafficLightG);
+    this.mapContainer.addChild(this.laneAreaContainer);
     this.controlPanelContainer.addChild(this.controlPanelG);
     this.controlPanelContainer.addChild(this.tlDisplayPanelContainer);
     this.coordinateOffset = { x: this.windowW / 2, y: this.windowH / 2 };
@@ -223,7 +236,7 @@ class Scene extends Component {
     this.toggleGroup = new Array<{name: string;state: boolean}>();
 
     // toggle group
-    const videoFeed = { name: 'enable video feed', state: false };
+    const videoFeed = { name: 'enable video feed', state: true };
     const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
     this.toggleGroup.push(videoFeed);
     this.toggleGroup.push(samplingVideoFeed);
@@ -241,8 +254,18 @@ class Scene extends Component {
       }
     }
 
+    this.laneAreaContainer.x = this.coordinateOffset.x;
+    this.laneAreaContainer.y = this.coordinateOffset.y;
+    
+    this.dragablePoints = new Array<DragablePoint>();
+    // const testP = new DragablePoint(new Vec2(0.2* this.windowW, 0.2 * this.windowH),5);
+    // this.dragablePoints.push(testP);
+    for(let i =0;i< 4;i+=1) {
+      const testP = new DragablePoint(new Vec2(0.2* this.windowW, 0.2 * this.windowH),5);
+      this.dragablePoints.push(testP);
+    }
     //menu
-    this.menuPage = 1;
+    this.menuPage = 2;
     this.menuBtns = new Array<Btn>();
     const menuBtn1 =new Btn(49,26, "Traffic Light", 0x51BCD8);
     const menuBtn2 =new Btn(49,26, "Lane Area", 0x51BCD8);
@@ -352,7 +375,7 @@ class Scene extends Component {
   initialize = (): void => {
     window.removeEventListener('resize', this.resize);
     window.addEventListener('resize', this.resize);
-
+    
     this.initialButtons();
 
     // the following two sequence matters, will affect the listeners;
@@ -362,7 +385,7 @@ class Scene extends Component {
     this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
     this.drawRoad();
     this.renderObjects();
-
+    this.drawLaneArea();
     this.app.ticker.add(this.animation);
   };
 
@@ -408,6 +431,24 @@ class Scene extends Component {
     this.drawRoad();
     this.initialButtons();
     this.roadIntersection.updateVehiclePos();
+    
+    for(let i=0;i<this.dragablePoints.length;i+=1) {
+      
+        const pos = this.dragablePoints[i].absolutPos;
+        pos.x = (pos.x-this.lastResolution.x/2) * this.windowW/this.lastResolution.x +this.windowW/2;
+        pos.y *= this.windowH/this.lastResolution.y;
+        this.dragablePoints[i].offsetRatio.x *= this.windowW/this.lastResolution.x;
+        this.dragablePoints[i].offsetRatio.y *= this.windowH/this.lastResolution.y;
+        this.dragablePoints[i].x = (pos.x-this.windowW*0.7) *this.windowW/this.lastResolution.x;
+        this.dragablePoints[i].y = (pos.y -this.windowH*0.7)* this.windowH/this.lastResolution.y;
+        this.dragablePoints[i].absolutPos = pos;
+        console.log(pos.x + " | " + this.dragablePoints[0].x + " | " +this.windowW*0.7* this.windowH/this.lastResolution.y );
+    // console.log(pos.y + " | " + this.dragablePoints[0].y);
+    // console.log(this.windowW/this.lastResolution.x + " | " + this.windowH/this.lastResolution.y);
+    }
+    // this.drawLaneArea();
+    this.lastResolution = new Vec2(this.windowW, this.windowH);
+
   }
 
   updateCar = (element: any): void => {
@@ -523,6 +564,8 @@ class Scene extends Component {
         }
       }
     }
+
+    this.updateLaneArea();
 
     // toggle btn
     this.updateToggleBtnState();
@@ -864,6 +907,9 @@ class Scene extends Component {
     this.menuBtns[2].y = this.menuBtns[1].y + this.menuBtns[1].width/2 +this.menuBtns[2].width/2+6;
   }
 
+  /**
+   * draw menu
+   */
   drawMenu():void {
     const color = 0x51BCD8;
     this.controlPanelContainer.removeChildren();
@@ -880,7 +926,7 @@ class Scene extends Component {
         {
           for(let i=0;i<this.menuBtns.length;i +=1)
           {
-            if(i ==this.menuPage-1)
+            if(i ===this.menuPage-1)
             {
               this.menuBtns[i].setBoarder(2, color);
             }else{
@@ -896,9 +942,13 @@ class Scene extends Component {
         }
       case 2:
         {
+          if(this.laneAreaContainer.parent ==null)
+          {
+            this.mapContainer.addChild(this.laneAreaContainer);
+          }
           for(let i=0;i<this.menuBtns.length;i +=1)
           {
-            if(i ==this.menuPage-1)
+            if(i === this.menuPage-1)
             {
               this.menuBtns[i].setBoarder(2, color);
             }else{
@@ -911,7 +961,7 @@ class Scene extends Component {
         {
           for(let i=0;i<this.menuBtns.length;i +=1)
           {
-            if(i ==this.menuPage-1)
+            if(i === this.menuPage-1)
             {
               this.menuBtns[i].setBoarder(2, color);
             }else{
@@ -932,6 +982,9 @@ class Scene extends Component {
     }
   }
 
+  /**
+   * change current menu page when the related button is pressed
+   */
   updateMenuState():void{
     for (let i = 0; i < this.menuBtns.length; i += 1) {
       if (this.menuBtns[i].isPressed()) {
@@ -940,6 +993,9 @@ class Scene extends Component {
     }
   }
 
+  /**
+   * update toggle btn state when the btn is pressed
+   */
   updateToggleBtnState(): void{
     const color = 0x51BCD8;
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
@@ -1065,6 +1121,47 @@ class Scene extends Component {
 
     this.numberOfCars = this.roadIntersection.getSimpleVehicles().length;
   }
+
+
+  drawLaneArea():void{
+    this.laneAreaContainer.removeChildren();
+   
+    // console.log(testP.x);
+    // console.log(testP.y);
+    for(let i=0;i<this.dragablePoints.length;i+=1) {
+    this.laneAreaContainer.addChild(this.dragablePoints[i]);
+    }
+  }
+
+  updateLaneArea():void{
+    const pos = this.app.renderer.plugins.interaction.mouse.global;
+    //if(this.laneAreaContainer.getChildAt(0).)
+    // this.laneAreaContainer.getChildAt(0).x = pos.x-window.innerWidth * this.windowScaleRatio/2;
+    // this.laneAreaContainer.getChildAt(0).y = pos.y-window.innerHeight * this.windowScaleRatio/2;
+    
+    // this.dragablePoints[0].x = pos.x -window.innerWidth*0.25 +this.coordinateOffset.x*this.windowScaleRatio;
+    // this.dragablePoints[0].y = pos.y -window.innerHeight*0.25 +this.coordinateOffset.y* this.windowScaleRatio ;
+    // this.dragablePoints[0].x = (pos.x-window.innerWidth*0.35 );
+    // this.dragablePoints[0].y = (pos.y -window.innerHeight*0.35);
+    
+
+    for(let i=0;i<this.dragablePoints.length;i+=1) {
+      if(this.dragablePoints[i].isDown) {
+        this.dragablePoints[i].absolutPos = new Vec2(pos.x,pos.y);
+        
+        
+        console.log(pos.x + " | " + this.dragablePoints[0].x);
+    console.log(pos.y + " | " + this.dragablePoints[0].y);
+      }
+      const absPos = this.dragablePoints[i].absolutPos;
+      this.dragablePoints[i].x = (absPos.x-this.windowW*1.2) ;
+      this.dragablePoints[i].y = (absPos.y -this.windowH*1.2);
+    }
+
+    
+  }
+
+
 }
 
 
