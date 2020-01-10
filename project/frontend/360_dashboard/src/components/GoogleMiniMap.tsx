@@ -25,7 +25,12 @@ const GoogleMiniMap = (props: Props): JSX.Element => {
   const [zoom] = useState(15);
   // loads map with 1 marker.
   return (
-    <GoogleMapReact bootstrapURLKeys={{ key: API_KEY }} defaultCenter={center} defaultZoom={zoom}>
+    <GoogleMapReact
+      bootstrapURLKeys={{ key: API_KEY }}
+      defaultCenter={center}
+      defaultZoom={zoom}
+      layerTypes={['TrafficLayer', 'TransitLayer']}
+    >
       <Marker
         key={state.intersectionId}
         lat={state.intersectionLat}
