@@ -1,12 +1,12 @@
-from dbConnection import client
+from dbConnection import dbConnection
 from pprint import pprint
 from random import randint
 
 class movingAverage:
-    # Link with server and collection
-    #db = client.admin
 
-    db = client.business
+    # Link with server and database
+    db = dbConnection("360backend")
+    db = db.connection()
     # Step 2: Create sample data
     # names = ['Kitchen', 'Animal', 'State', 'Tastey', 'Big', 'City', 'Fish', 'Pizza', 'Goat', 'Salty', 'Sandwich',
     #          'Lazy', 'Fun']
@@ -26,7 +26,7 @@ class movingAverage:
     # # Step 5: Tell us that you are done
     # print('finished creating 500 business reviews')
 
-    fivestars = db.reviews.find_one({'rating': 5})
+    fivestars = db.djangosite_api_intersection.find_one()
     print(fivestars)
     # print(db.reviews.count_documents({}))
     # db.reviews.delete_many({})

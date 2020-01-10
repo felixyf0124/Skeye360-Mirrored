@@ -48,4 +48,8 @@
   
    * ```pip install -r requirement.txt```
    * ```python dbConnectionCheck.py```
+   
+## More References:
+
+https://docs.google.com/document/d/14FUxzs3lFJFjCWdgBlBoZr-zRnH0Xz0L2c_v3M_xxf4/edit
   
