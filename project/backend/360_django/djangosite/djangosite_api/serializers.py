@@ -46,7 +46,7 @@ class TrafficLightSerializer(DjongoModelSerializer):
 class CountSerializer(DjongoModelSerializer):
     class Meta:
         model = Count
-        fields = ['c_direction', 'count_type']
+        fields = ['count_type', 'count', 'intersection_id']
 
 
 class TimeSerializer(DjongoModelSerializer):

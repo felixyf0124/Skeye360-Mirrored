@@ -105,6 +105,7 @@ class TrafficLightViewSet(viewsets.ModelViewSet):
 class CountViewSet(viewsets.ModelViewSet):
     queryset = Count.objects.all()
     serializer_class = CountSerializer
+    filter_fields = ('count_type',)
 
 
 class TimeViewSet(viewsets.ModelViewSet):
