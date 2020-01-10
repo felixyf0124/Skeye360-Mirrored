@@ -13,20 +13,41 @@ import React from 'react';
 
 //http://www.mapquestapi.com/traffic/v2/incidents?key=KEY&boundingBox=39.95,-105.25,39.52,-104.71&filters=construction,incidents
 
-//
+//<bounding><westbc>-73.97290173</westbc><eastbc>-73.47429525</eastbc><northbc>45.7047897</northbc><southbc>45.41007553</southbc></bounding>
 
 //[[[-73.97290173,45.41007553],[-73.47429525,45.41007553],[-73.47429525,45.7047897],[-73.97290173,45.7047897],[-73.97290173,45.41007553]]]
 //westlimit=-73.972902; southlimit=45.410076; eastlimit=-73.474295; northlimit=45.70479 //I GUESS USE THIS???
 
+//Bounding Box: Top right and bottom left areas corners of an area
+/* Incident Types:
+    1 = Construction
+    2 = Event
+    3 = Congestion/Flow
+    4 = Incident/accident
+*/
+
 const API_KEY = '24jtUJNMCXQg4pLgMchaC7p6Flihs7wO';
-const cons_secret = 'IKnCkAPaPSMWJ40Z';
-const API_CALL = '';
+
+const BOUNDING_BOX = '45.7047897,-73.47429525,45.41007553,-73.97290173';
+const EXAMPLE = '39.95,-105.25,39.52,-104.71';
+const FILTERS = 'congestion';
+const API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${BOUNDING_BOX}`;
 
 interface StateProps {
     error: any;
     isLoaded: boolean;
-    trafficNews: [];
+    incidents: any;
 }
+
+interface IncidentProps {
+    id: number;
+    type: number;
+    severity: number;
+    startTime: string;
+    endTime: string;
+    shortDesc: string;
+    fullDesc: string;
+} 
 
 class TrafficNews extends React.Component<{}, StateProps>{
     constructor(props: any){
@@ -34,7 +55,7 @@ class TrafficNews extends React.Component<{}, StateProps>{
         this.state = {
             error: null,
             isLoaded: false,
-            trafficNews: []
+            incidents: []
         };
     }
 
@@ -44,7 +65,7 @@ class TrafficNews extends React.Component<{}, StateProps>{
         .then((results) => results.json()).then((data) => {
         this.setState({
             isLoaded: true,
-            trafficNews: []
+            incidents: data.incidents
         });
         },
         (error) => {
@@ -53,6 +74,21 @@ class TrafficNews extends React.Component<{}, StateProps>{
             error,
             });
         });
+    }
+
+    render(): JSX.Element {
+        const { error, isLoaded, incidents } = this.state; 
+        console.log(incidents);
+
+        return(
+            <div>
+            {incidents.map((incident: { id: string | number | undefined; type: React.ReactNode; }) => (
+              <li key={incident.id}>
+                {incident.type}
+              </li>
+            ))}
+            </div>
+        )
     }
 }
 
