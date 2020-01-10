@@ -2,8 +2,8 @@
 # The email address is used for git configuration.  Make sure you
 # use the same email as in gerrit.
 user:
-  name: batoul
-  email: batoul.yehia@gmail.com
+  name: lisun
+  email: vincent.sun870530gmail.com
 
 # gui: Whether to show the VM's console at VM startup.
 # cpus: number of CPUs for the VM
@@ -25,7 +25,7 @@ vm:
     # - [ vm_port, host_port ]
 
 ssh:
-  dir: C:/users/batou/.ssh/
+  dir: C:/users/vince/.ssh/
 
 # ADVANCED USE ONLY.
 # home: The framework by default expects the VM folders

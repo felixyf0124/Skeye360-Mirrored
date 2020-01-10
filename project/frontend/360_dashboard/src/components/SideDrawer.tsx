@@ -168,11 +168,7 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
           <Typography variant="h6" noWrap>
             {headerTitle}
           </Typography>
-          {
-            // Display Weather only on intersection list page.
-            headerTitle === 'Montreal'
-            && <Weather />
-          }
+          <Weather />
         </Toolbar>
       </AppBar>
       <Drawer
