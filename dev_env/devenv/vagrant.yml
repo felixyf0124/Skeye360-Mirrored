@@ -3,7 +3,7 @@
 # use the same email as in gerrit.
 user:
   name: Chen
-  email: davidseechangmail.com
+  email: davidseechan@gmail.com
 
 # gui: Whether to show the VM's console at VM startup.
 # cpus: number of CPUs for the VM
