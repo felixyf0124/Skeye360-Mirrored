@@ -700,7 +700,7 @@ class Scene extends Component {
 
     const url = window.location.href;
     if (!url.includes('/camview/')) {
-      // this.unmountDestroy();
+      this.unmountDestroy();
     }
   }
 
@@ -790,6 +790,13 @@ class Scene extends Component {
     delete this.render;
     delete this.toggleGroup;
     delete this.btnGroup;
+    delete this.labelGroup;
+    delete this.dragablePoints;
+    delete this.menuPage;
+    delete this.menuBtns;
+    delete this.objRawData;
+    delete this.laneAreaContainer;
+    delete this.mappingBGContainer;
   }
 
   // render
