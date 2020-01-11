@@ -84,6 +84,12 @@ export default class RoadSection {
       this.laneIn[laneInId].bindTrafficLightId(trafficLightId);
     }
 
+    /**
+     * add new lane
+     * @param laneDirection
+     * @param laneType
+     * @param numOfLanes
+     */
     addNewLane(laneDirection: number, laneType: string, numOfLanes: number): void {
       let id = 0;
       for (let i = 0; i < numOfLanes; i += 1) {
@@ -105,6 +111,10 @@ export default class RoadSection {
       }
     }
 
+    /**
+     * update lane position based on given lane width
+     * @param laneWidth
+     */
     updateLanePosition(laneWidth: number): void {
       for (let i = 0; i < this.laneIn.length; i += 1) {
         const laneDirection = ts.tsNormalize(this.head.minus(this.tail));
@@ -127,6 +137,11 @@ export default class RoadSection {
       }
     }
 
+    /**
+     * update lanes with offset
+     * @param leftOffset
+     * @param rightOffset
+     */
     updateLaneWithOffset(leftOffset: Vec2, rightOffset: Vec2): void {
       const offsetLine = ts.line(leftOffset, rightOffset);
       for (let i = 0; i < this.laneIn.length; i += 1) {
@@ -142,6 +157,10 @@ export default class RoadSection {
       }
     }
 
+    /**
+     * adjust offset
+     * @param offset
+     */
     offsetLanes(offset: Vec2): void {
       for (let i = 0; i < this.laneIn.length; i += 1) {
         this.laneIn[i].setHead(this.laneIn[i].getHead().plus(offset));
@@ -153,6 +172,12 @@ export default class RoadSection {
       }
     }
 
+    /**
+     * remove obj when obj is leaving
+     * @param laneId
+     * @param objId
+     * @param isLaneIn
+     */
     objGone(laneId: number, objId: number, isLaneIn?: boolean): void {
       if (isLaneIn === true || isLaneIn === undefined) {
         this.laneIn[laneId].objGone(objId);

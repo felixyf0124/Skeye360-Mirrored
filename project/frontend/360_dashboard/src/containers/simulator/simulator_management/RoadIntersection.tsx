@@ -267,14 +267,27 @@ export default class RoadIntersection {
       }
     }
 
+    /**
+     * force tl at @param id to given @param state
+     * @param id
+     * @param state
+     */
     forceTLState(id: number, state: string): void {
       this.TLManager.forceState(id, state);
     }
 
+    /**
+     * deforce tl at @param id back to normal state
+     * @param id
+     */
     deForceTLState(id: number): void {
       this.TLManager.deForceState(id);
     }
 
+    /**
+     * update lane
+     * this will resort roadSections based on the clock angles of their direction
+     */
     updateLane(): Array<Array<Vec2>> {
       this.resortRoadSections();
 

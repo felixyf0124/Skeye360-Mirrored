@@ -32,6 +32,14 @@ describe('TS Geometry', () => {
     assert.equal(ts.tsLength(B), BLength, '[message]');
   });
 
+  it('triangle area', ()=>{
+    const p1 = new Vec2(0,0);
+    const p2 = new Vec2(0,5);
+    const p3 = new Vec2(5,5);
+    const area = ts.triangleArea(p1,p2,p3);
+    assert.equal(area,12.5);
+  });
+
   it('inside', ()=>{
     // const poly = new Array<Vec2>();
     const poly = [new Vec2(0,0), new Vec2(0,5), new Vec2(5,5), new Vec2(5,0)];
