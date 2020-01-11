@@ -11,6 +11,7 @@ import DataFromCamera from './simulator_management/DataFromCamera';
 import Vehicle from './simulator_management/Vehicle';
 import LanePointer from './simulator_management/LanePointer';
 import DragablePoint from './DragablePoint';
+// import * as tsData from './TSLocalData';
 //import 'pixi-text-input.js';
 
 /**
@@ -240,7 +241,7 @@ class Scene extends Component {
 
     // toggle group
     const videoFeed = { name: 'enable video feed', state: true };
-    const samplingVideoFeed = { name: 'enable sampling video feed', state: false };
+    const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
     const uiV7 = { name: 'enable new UI v2.2', state: false };
     this.toggleGroup.push(videoFeed);
     this.toggleGroup.push(samplingVideoFeed);
@@ -261,18 +262,18 @@ class Scene extends Component {
     }
 
 
-    this.laneAreaContainer.x = this.coordinateOffset.x;
-    this.laneAreaContainer.y = this.coordinateOffset.y;
+    this.laneAreaContainer.x = -this.coordinateOffset.x;
+    this.laneAreaContainer.y = -this.coordinateOffset.y;
     
     this.dragablePoints = new Array<DragablePoint>();
     // const testP = new DragablePoint(new Vec2(0.2* this.windowW, 0.2 * this.windowH),5);
     // this.dragablePoints.push(testP);
     for(let i =0;i< 4;i+=1) {
-      const testP = new DragablePoint(new Vec2(0.2* this.windowW, 0.2 * this.windowH),5);
+      const testP = new DragablePoint(new Vec2(0.2, 0.2 ),5);
       this.dragablePoints.push(testP);
     }
     //menu
-    this.menuPage = 1;
+    this.menuPage = 2;
     this.menuBtns = new Array<Btn>();
     const menuBtn1 =new Btn(49,26, "Traffic Light", 0x51BCD8);
     const menuBtn2 =new Btn(49,26, "Lane Area", 0x51BCD8);
@@ -281,6 +282,9 @@ class Scene extends Component {
     this.menuBtns.push(menuBtn2);
     this.menuBtns.push(menuBtn3);
     
+
+    // tsData.saveSectionAreas();
+
     // this.numberOfCars = 0;
 
     // To call method to get real time data from the camera feed
@@ -439,16 +443,17 @@ class Scene extends Component {
     this.initialButtons();
     this.roadIntersection.updateVehiclePos();
     
+    this.laneAreaContainer.x = -this.coordinateOffset.x;
+    this.laneAreaContainer.y = -this.coordinateOffset.y;
     for(let i=0;i<this.dragablePoints.length;i+=1) {
       
         const pos = this.dragablePoints[i].absolutPos;
-        pos.x = (pos.x-this.lastResolution.x/2) * this.windowW/this.lastResolution.x +this.windowW/2;
-        pos.y *= this.windowH/this.lastResolution.y;
-        this.dragablePoints[i].offsetRatio.x *= this.windowW/this.lastResolution.x;
-        this.dragablePoints[i].offsetRatio.y *= this.windowH/this.lastResolution.y;
-        this.dragablePoints[i].x = (pos.x-this.windowW*0.7) *this.windowW/this.lastResolution.x;
-        this.dragablePoints[i].y = (pos.y -this.windowH*0.7)* this.windowH/this.lastResolution.y;
-        this.dragablePoints[i].absolutPos = pos;
+        
+        this.dragablePoints[i].x = pos.x*this.windowW;
+        this.dragablePoints[i].y = pos.y*this.windowH;
+        // this.dragablePoints[i].x = (pos.x-this.windowW*0.7) *this.windowW/this.lastResolution.x;
+        // this.dragablePoints[i].y = (pos.y -this.windowH*0.7)* this.windowH/this.lastResolution.y;
+        // this.dragablePoints[i].absolutPos = pos;
         console.log(pos.x + " | " + this.dragablePoints[0].x + " | " +this.windowW*0.7* this.windowH/this.lastResolution.y );
     // console.log(pos.y + " | " + this.dragablePoints[0].y);
     // console.log(this.windowW/this.lastResolution.x + " | " + this.windowH/this.lastResolution.y);
@@ -1172,16 +1177,24 @@ class Scene extends Component {
 
   updateLaneArea():void{
     const pos = this.app.renderer.plugins.interaction.mouse.global;
-  
+    
     for(let i=0;i<this.dragablePoints.length;i+=1) {
       if(this.dragablePoints[i].isDown) {
-        this.dragablePoints[i].absolutPos = new Vec2(pos.x,pos.y);
-        
+        this.dragablePoints[i].absolutPos = new Vec2(pos.x/this.windowW,pos.y/this.windowH);
+        console.log(pos);
+        console.log(this.windowW);
       }
       const absPos = this.dragablePoints[i].absolutPos;
-      this.dragablePoints[i].x = (absPos.x-this.windowW*1.2) ;
-      this.dragablePoints[i].y = (absPos.y -this.windowH*1.2);
+      // this.dragablePoints[i].x = (absPos.x-this.windowW*1.2) ;
+      // this.dragablePoints[i].y = (absPos.y -this.windowH*1.2);
+      this.dragablePoints[i].x = (absPos.x*this.windowW) ;
+      this.dragablePoints[i].y = (absPos.y*this.windowH);
     }
+    console.log(this.dragablePoints[0].absolutPos);
+    console.log(pos);
+    console.log(this.dragablePoints[0].x);
+    console.log(this.dragablePoints[0].y);
+
 
     
   }

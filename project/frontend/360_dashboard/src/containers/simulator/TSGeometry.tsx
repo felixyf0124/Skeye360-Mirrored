@@ -125,6 +125,8 @@ export function getAngleOfVec(vec: Vec2): number {
 
 /**
  * check if a point is inside convex polygon
+ * algorithm idea from 
+ * https://stackoverflow.com/questions/5922027/how-to-determine-if-a-point-is-within-a-quadrilateral
  * @param point 
  * @param poly 
  */

@@ -29,6 +29,8 @@ export default class RoadIntersection {
 
     vehicleCount: number;
 
+    sectionAreas: Array<Array<Vec2>>;
+
     constructor(id: number, mapCoordinate: Vec2, TLManager?: TrafficLightManager) {
       this.id = id;
       this.mapCoordinate = mapCoordinate;
@@ -38,6 +40,7 @@ export default class RoadIntersection {
       this.vehicles = new Array<Vehicle>();
       this.simpleVehicles = new Array<Vehicle>();
       this.vehicleCount = 0;
+      this.sectionAreas = new Array<Array<Vec2>>();
     }
 
     // Getters
