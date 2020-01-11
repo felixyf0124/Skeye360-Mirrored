@@ -19,7 +19,7 @@ export function loadSectionAreas() {
   sectionArea1.push(new Vec2(0.22430939226519336, 1.0));
 
   //west
-  sectionArea2.push(new Vec2(0.2828729281767956, 0.4093113482056256));
+  sectionArea2.push(new Vec2(0.2883977900552486, 0.4073714839961203));
   sectionArea2.push(new Vec2(0.2165745856353591, 0.49078564500484967));
   sectionArea2.push(new Vec2(0.0, 0.41125121241513096));
   sectionArea2.push(new Vec2(0.0, 0.3375363724539282));
@@ -33,7 +33,7 @@ export function loadSectionAreas() {
 
   //east
   sectionArea4.push(new Vec2(0.8121546961325967, 0.5295829291949563));
-  sectionArea4.push(new Vec2(0.8154696132596685, 0.4325897187196896));
+  sectionArea4.push(new Vec2(0.8154696132596685, 0.4190106692531523));
   sectionArea4.push(new Vec2(1.0, 0.469447138700291));
   sectionArea4.push(new Vec2(1.0, 0.5722599418040737));
 
