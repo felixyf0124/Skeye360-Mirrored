@@ -26,6 +26,7 @@ import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
+import Weather from './Weather';
 
 /*
   Template for Material-UI Drawer found at:
@@ -175,6 +176,7 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
           <Typography variant="h6" noWrap>
             {headerTitle}
           </Typography>
+          <Weather />
         </Toolbar>
       </AppBar>
       <Drawer
