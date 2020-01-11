@@ -44,7 +44,7 @@ class Scene extends Component {
 
   laneAreaContainer: PIXI.Container;
 
-  mappingBGContainer:PIXI.Container;
+  mappingBGContainer: PIXI.Container;
 
   backGroundG: PIXI.Graphics;
 
@@ -276,8 +276,7 @@ class Scene extends Component {
     // this.dragablePoints.push(testP);
     for (let i = 0; i < sectionAreas.length; i += 1) {
       const sectionP = new Array<DragablePoint>();
-      for(let j=0;j<sectionAreas[i].length;j+=1){
-        
+      for (let j = 0; j < sectionAreas[i].length; j += 1) {
         const testP = new DragablePoint(sectionAreas[i][j], 5);
         sectionP.push(testP);
       }
@@ -292,16 +291,6 @@ class Scene extends Component {
     this.menuBtns.push(menuBtn1);
     this.menuBtns.push(menuBtn2);
     this.menuBtns.push(menuBtn3);
-
-
-    // tsData.saveSectionAreas();
-
-    // this.numberOfCars = 0;
-
-    // To call method to get real time data from the camera feed
-    // this.getRealTimeData();
-    // To get the number of cars currently in the camera feed
-    // this.getNumberOfCars();
 
 
     this.app.stage.on('mouseup', onmouseup = (): void => {
@@ -356,9 +345,13 @@ class Scene extends Component {
 
     this.atIndex = 0;
 
-    this.app.loader.add("./intersection1.png");
+    this.app.loader.add('./intersection1.png');
   }
 
+  /**
+   * get color
+   * @param lightState
+   */
   static getColor(lightState: string): string {
     const green = '0x00ff00';
     const yellow = '0xf5c842';
@@ -379,6 +372,9 @@ class Scene extends Component {
     }
   }
 
+  /**
+   * old function for only retrieve total car number from video feed directly
+   */
   async getNumberOfCars(): Promise<number> {
     const rawData = await DataFromCamera.getDataFromCamera() || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
@@ -387,6 +383,10 @@ class Scene extends Component {
     return numberCars;
   }
 
+  /**
+   * get certain toggle state by @param toggleName:string
+   * @param toggleName
+   */
   getToggleState(toggleName: string): boolean | null {
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
       if (this.toggleGroup[i].name === toggleName) {
@@ -396,6 +396,9 @@ class Scene extends Component {
     return null;
   }
 
+  /**
+   * initial
+   */
   initialize = (): void => {
     window.removeEventListener('resize', this.resize);
     window.addEventListener('resize', this.resize);
@@ -403,13 +406,13 @@ class Scene extends Component {
     this.initialButtons();
 
     this.mappingBGContainer.removeChildren();
-    const texture = this.app.loader.resources['mappingBGTexture'].texture;
+    const { texture } = this.app.loader.resources.mappingBGTexture;
     const mappingBG = new PIXI.Sprite(texture);
-    mappingBG.scale.x= this.windowW/texture.width;
-    mappingBG.scale.y= this.windowH/texture.height;
+    mappingBG.scale.x = this.windowW / texture.width;
+    mappingBG.scale.y = this.windowH / texture.height;
     mappingBG.x = -this.coordinateOffset.x;
     mappingBG.y = -this.coordinateOffset.y;
-    mappingBG.alpha =0.6;
+    mappingBG.alpha = 0.6;
     this.mappingBGContainer.addChild(mappingBG);
 
     // the following two sequence matters, will affect the listeners;
@@ -423,15 +426,18 @@ class Scene extends Component {
     this.app.ticker.add(this.animation);
   };
 
+  /**
+   * setup for loader
+   */
   setup = (): void => {
-    // const mappingBGTexture = new PIXI.Texture();
     this.app.loader
-      .add('mappingBGTexture',mappingBGTexture)
+      .add('mappingBGTexture', mappingBGTexture)
       .load(this.initialize);
-      // const mappingBG = new PIXI.Sprite(mappingBGTexture);
-      //   this.app.stage.addChild(mappingBG);
   };
 
+  /**
+   * resize
+   */
   resize = (): void => {
     if (window.innerWidth < this.windowMin) {
       this.windowW = this.windowMin;
@@ -473,16 +479,18 @@ class Scene extends Component {
     this.laneAreaContainer.x = -this.coordinateOffset.x;
     this.laneAreaContainer.y = -this.coordinateOffset.y;
     for (let i = 0; i < this.dragablePoints.length; i += 1) {
-      for(let j=0;j<this.dragablePoints[i].length;j+=1){
+      for (let j = 0; j < this.dragablePoints[i].length; j += 1) {
         const pos = this.dragablePoints[i][j].absolutPos;
 
         this.dragablePoints[i][j].x = pos.x * this.windowW;
         this.dragablePoints[i][j].y = pos.y * this.windowH;
       }
     }
-    // this.drawLaneArea();
   }
 
+  /**
+   * bind & update html element
+   */
   updateCar = (element: any): void => {
     this.pixiContent = element;
     if (this.pixiContent && this.pixiContent.children.length <= 0) {
@@ -491,6 +499,9 @@ class Scene extends Component {
     }
   };
 
+  /**
+   * draw road
+   */
   drawRoad=(): void => {
     this.roadG.clear();
     this.roadG.removeChildren();
@@ -558,40 +569,42 @@ class Scene extends Component {
     }
   }
 
-
+  /**
+   * render objects
+   */
   renderObjects = (): void => {
     this.objectContainer.removeChildren();
     let vehicles: Array<Vehicle>;
-      if (this.toggleGroup[0].state) {
-        vehicles = this.roadIntersection.getSimpleVehicles();
-        if (this.toggleGroup[2].state) {
-          for (let i = 0; i < this.labelGroup.length; i += 1) {
-            this.objectContainer.addChild(this.labelGroup[i]);
-          }
-        }
-      } else {
-        vehicles = this.roadIntersection.getVehicles();
-      }
-      if(!(this.toggleGroup[0].state &&
-        this.toggleGroup[2].state && 
-        !this.toggleGroup[4].state)) { 
-        for (let i = 0; i < vehicles.length; i += 1) {
-          const position = vehicles[i].getPosition();
-          if(isNaN(vehicles[i].getRoadSectionId()))
-          {
-            const spot = this.drawVehicleSpot(position);
-            this.objectContainer.addChild(spot);
-  
-          }else{
-            const spot = this.drawVehicleSpot(position,0xFFFFCC);
-            this.objectContainer.addChild(spot);
-          }
+    if (this.toggleGroup[0].state) {
+      vehicles = this.roadIntersection.getSimpleVehicles();
+      if (this.toggleGroup[2].state) {
+        for (let i = 0; i < this.labelGroup.length; i += 1) {
+          this.objectContainer.addChild(this.labelGroup[i]);
         }
       }
-      
-    
+    } else {
+      vehicles = this.roadIntersection.getVehicles();
+    }
+    if (!(this.toggleGroup[0].state
+        && this.toggleGroup[2].state
+        && !this.toggleGroup[4].state)) {
+      for (let i = 0; i < vehicles.length; i += 1) {
+        const position = vehicles[i].getPosition();
+        if (Number.isNaN(vehicles[i].getRoadSectionId())) {
+          const spot = this.drawVehicleSpot(position);
+          this.objectContainer.addChild(spot);
+        } else {
+          const spot = this.drawVehicleSpot(position, 0xFFFFCC);
+          this.objectContainer.addChild(spot);
+        }
+      }
+    }
   }
 
+  /**
+   * animation
+   * must bind with ticker
+   */
   animation = (): void => {
     if (this.btnShowCP.isPressed()) {
       if (!this.isCPAnimating) {
@@ -680,8 +693,6 @@ class Scene extends Component {
     fpsText.x = this.windowW / 2 - 80;
     fpsText.y = -this.windowH / 2;
     this.displayPlaneContainer.addChild(fpsText);
-    // const numOfCar = this.roadIntersection.getVehiclesNum();
-    // const numberCarsText = new PIXI.Text(`Cars: ${numOfCar}`, this.textStyle);
     const numberCarsText = new PIXI.Text(`Cars:${this.numberOfCars}`, this.textStyle);
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
@@ -693,6 +704,9 @@ class Scene extends Component {
     }
   }
 
+  /**
+   * drawTriangl
+   */
   drawTriangle = (topVertex: Vec2, height: number, width: number,
     direction: Vec2, color: number, isHollow?: boolean): PIXI.Graphics => {
     const triangle = new PIXI.Graphics();
@@ -725,6 +739,9 @@ class Scene extends Component {
     return triangle;
   }
 
+  /**
+   * retrieve raw data from video feed
+   */
   async retrieveRawData(): Promise<void> {
     if (!this.toggleGroup[1].state) {
       const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
@@ -801,6 +818,9 @@ class Scene extends Component {
     </div>
   )
 
+  /**
+   * update TL CountDown in control panel
+   */
   updateTLCountDownDisplayPanel(): void {
     for (let i = this.tlDisplayPanelContainer.children.length - 1; i >= 0; i -= 1) {
       const child = this.tlDisplayPanelContainer.children[i];
@@ -853,6 +873,11 @@ class Scene extends Component {
     this.tlDisplayPanelContainer.y = 20;
   }
 
+  /**
+   * draw background
+   * @param color
+   * @param alpha
+   */
   drawBackground(color: number, alpha: number): void {
     this.backGroundG.clear();
     for (let i = this.backGroundG.children.length - 1; i >= 0; i -= 1) {
@@ -873,10 +898,10 @@ class Scene extends Component {
    * So car will become more transparent based on delta T from last sycr
    * @param vertex
    */
-  drawVehicleSpot(vertex: Vec2, col?:number): PIXI.Graphics {
+  drawVehicleSpot(vertex: Vec2, col?: number): PIXI.Graphics {
     const spot = new PIXI.Graphics();
     let color = 0xc658fc;
-    if(col != undefined){
+    if (col !== undefined) {
       color = col;
     }
     spot.beginFill(color, 1);
@@ -885,6 +910,9 @@ class Scene extends Component {
     return spot;
   }
 
+  /**
+   * button initial
+   */
   initialButtons(): void {
     const color = 0x51BCD8;
 
@@ -915,7 +943,7 @@ class Scene extends Component {
     this.btnStop.setTextStyle(textStyle2);
     this.btnStop.x = (this.controlPanelG.width - this.btnStop.width) / 2;
     this.btnStop.y = this.controlPanelG.height - 40;
-    
+
     const textStyle3 = {
       fontSize: '11px',
       fill: '#FFFFFF',
@@ -925,12 +953,11 @@ class Scene extends Component {
       this.btnGroup[i].btn.setTextStyle(textStyle3);
       this.btnGroup[i].btn.x = this.controlPanelG.width * 0.75;
       this.btnGroup[i].btn.y = 20 + i * 26;
-      
+
 
       this.btnGroup[i].text.style = textStyle3;
       this.btnGroup[i].text.x = 8;
-      this.btnGroup[i].text.y = 20+ i * 26 + 6;
-      
+      this.btnGroup[i].text.y = 20 + i * 26 + 6;
     }
 
 
@@ -945,7 +972,6 @@ class Scene extends Component {
       this.menuBtns[i].x = this.controlPanelG.width
         + this.menuBtns[i].height - 1;
       this.menuBtns[i].setTextStyle(textStyle);
-
     }
     this.menuBtns[0].y = this.menuBtns[0].width / 2 - 26;
     this.menuBtns[1].y = this.menuBtns[0].y
@@ -982,12 +1008,12 @@ class Scene extends Component {
     for (let i = 0; i < this.menuBtns.length; i += 1) {
       this.controlPanelContainer.addChild(this.menuBtns[i]);
     }
-    if (this.toggleGroup[5].state){
+    if (this.toggleGroup[5].state) {
       this.mappingBGContainer.alpha = 1;
-    }else{
+    } else {
       this.mappingBGContainer.alpha = 0;
     }
-    
+
     switch (this.menuPage) {
       case 1:
       {
@@ -1020,20 +1046,20 @@ class Scene extends Component {
             this.menuBtns[i].setBoarder(1, color);
           }
         }
-        
+
         break;
       }
       case 3:
       {
-        if (this.laneAreaContainer.parent !== null 
+        if (this.laneAreaContainer.parent !== null
           && !this.toggleGroup[3].state) {
           this.mapContainer.removeChild(this.laneAreaContainer);
         }
-        if (this.laneAreaContainer.parent == null  
+        if (this.laneAreaContainer.parent == null
           && this.toggleGroup[3].state) {
           this.mapContainer.addChild(this.laneAreaContainer);
         }
-        
+
 
         for (let i = 0; i < this.menuBtns.length; i += 1) {
           if (i === this.menuPage - 1) {
@@ -1086,7 +1112,7 @@ class Scene extends Component {
           this.btnGroup[i].btn.buttonMode = false;
           this.btnGroup[i].btn.setBoarder(0, color);
         }
-      } else if( i===4) {
+      } else if (i === 4) {
         if (this.toggleGroup[i - 2].state) {
           this.btnGroup[i].btn.interactive = true;
           this.btnGroup[i].btn.buttonMode = true;
@@ -1099,8 +1125,7 @@ class Scene extends Component {
           this.btnGroup[i].btn.buttonMode = false;
           this.btnGroup[i].btn.setBoarder(0, color);
         }
-      }
-      else if (this.btnGroup[i].btn.isPressed()) {
+      } else if (this.btnGroup[i].btn.isPressed()) {
         this.toggleGroup[i].state = !this.toggleGroup[i].state;
       }
       let tgState: string;
@@ -1113,6 +1138,10 @@ class Scene extends Component {
     }
   }
 
+  /**
+   * update control panel display state
+   * @param animationSpeed
+   */
   updateControlPanelDisplayState(animationSpeed: number): void {
     if (this.isControlPanelShown) {
       if (this.btnShowCP.name === '>') {
@@ -1124,6 +1153,10 @@ class Scene extends Component {
     }
   }
 
+  /**
+   * hide animation for control panel in time @param animationSpeed
+   * @param animationSpeed
+   */
   hideControlPanel(animationSpeed: number): void {
     if (animationSpeed !== 0) {
       if (this.controlPanelContainer.x >= -this.controlPanelG.width - this.coordinateOffset.x) {
@@ -1141,6 +1174,10 @@ class Scene extends Component {
     }
   }
 
+  /**
+   * show animation for control panel in time @param animationSpeed
+   * @param animationSpeed
+   */
   showControlPanel(animationSpeed: number): void {
     if (animationSpeed !== 0) {
       if (this.controlPanelContainer.x <= -this.coordinateOffset.x) {
@@ -1218,7 +1255,7 @@ class Scene extends Component {
     this.laneAreaContainer.removeChildren();
 
     for (let i = 0; i < this.dragablePoints.length; i += 1) {
-      for(let j=0;j<this.dragablePoints[i].length; j += 1) {
+      for (let j = 0; j < this.dragablePoints[i].length; j += 1) {
         this.laneAreaContainer.addChild(this.dragablePoints[i][j]);
       }
     }
@@ -1232,65 +1269,60 @@ class Scene extends Component {
     this.laneAreaContainer.removeChildren();
 
     for (let i = 0; i < this.dragablePoints.length; i += 1) {
-      for(let j=0;j<this.dragablePoints[i].length; j += 1) {
+      for (let j = 0; j < this.dragablePoints[i].length; j += 1) {
         if (this.dragablePoints[i][j].isDown) {
-          this.dragablePoints[i][j].absolutPos = new Vec2(pos.x / this.windowW, pos.y / this.windowH);
-          console.log(this.dragablePoints[i][j].absolutPos);
+          const x = pos.x / this.windowW;
+          const y = pos.y / this.windowH;
+          this.dragablePoints[i][j].absolutPos = new Vec2(x, y);
         }
         const absPos = this.dragablePoints[i][j].absolutPos;
         this.dragablePoints[i][j].x = (absPos.x * this.windowW);
         this.dragablePoints[i][j].y = (absPos.y * this.windowH);
         this.laneAreaContainer.addChild(this.dragablePoints[i][j]);
       }
-
     }
 
     for (let i = 0; i < this.dragablePoints.length; i += 1) {
       const laneAreaEdge = new PIXI.Graphics();
 
       laneAreaEdge.lineStyle(1, 0xc658fc, 1);
-      laneAreaEdge.moveTo(this.dragablePoints[i][this.dragablePoints[i].length-1].x,
-        this.dragablePoints[i][this.dragablePoints[i].length-1].y);
+      laneAreaEdge.moveTo(this.dragablePoints[i][this.dragablePoints[i].length - 1].x,
+        this.dragablePoints[i][this.dragablePoints[i].length - 1].y);
 
-      for(let j=0;j<this.dragablePoints[i].length; j += 1) {
-        
-        laneAreaEdge.lineTo(this.dragablePoints[i][j].x,this.dragablePoints[i][j].y);
-    
+      for (let j = 0; j < this.dragablePoints[i].length; j += 1) {
+        laneAreaEdge.lineTo(this.dragablePoints[i][j].x, this.dragablePoints[i][j].y);
       }
       this.laneAreaContainer.addChild(laneAreaEdge);
-      
     }
   }
 
-
-  sectionAreaCounter():void {
-    if(this.toggleGroup[0].state ){
-      const resoIntSec1 = new Vec2(852, 478);
+  /**
+ * count num of objects in each section area
+ * based on video feed
+ */
+  sectionAreaCounter(): void {
+    if (this.toggleGroup[0].state) {
+      // const resoIntSec1 = new Vec2(852, 478);
       for (let i = 0; i < this.dragablePoints.length; i += 1) {
         const vObj = this.roadIntersection.getSimpleVehicles();
         const poly = new Array<Vec2>();
-        for(let j=0;j<this.dragablePoints[i].length; j += 1) {
+        for (let j = 0; j < this.dragablePoints[i].length; j += 1) {
           const absPos = this.dragablePoints[i][j].absolutPos;
-          poly.push(new Vec2(absPos.x*this.windowW, absPos.y*this.windowH));
-          // console.log(absPos);
+          poly.push(new Vec2(absPos.x * this.windowW, absPos.y * this.windowH));
         }
         let secCarNum = 0;
-        for(let j=0;j<vObj.length;j+=1){
+        for (let j = 0; j < vObj.length; j += 1) {
           const pos = vObj[j].getPosition();
-          const absPos = new Vec2(pos.x+this.coordinateOffset.x,pos.y+ this.coordinateOffset.y);
-          const isInside = ts.inside(absPos,poly);
-          // console.log(absPos);
-          if(isInside !=null && isInside){
-            secCarNum +=1;
+          const absPos = new Vec2(pos.x + this.coordinateOffset.x, pos.y + this.coordinateOffset.y);
+          const isInside = ts.inside(absPos, poly);
+          if (isInside != null && isInside) {
+            secCarNum += 1;
             this.roadIntersection.simpleVehicles[j].setRoadSectionId(j);
           }
         }
-        // console.log(carNum);
         this.labelGroup[i].setName(secCarNum.toString());
-
       }
     }
-
   }
 }
 

@@ -31,12 +31,19 @@ export function tsRotateByOrigin(point: Vec2, angInRad: number): Vec2 {
   return tsRotate(point, angInRad, tsVec2(0, 0));
 }
 
-
+/**
+ * get geometric vector length
+ * @param vec2
+ */
 export function tsLength(vec2: Vec2): number {
   const length = Math.sqrt(vec2.x * vec2.x + vec2.y * vec2.y);
   return length;
 }
 
+/**
+ * find normal value
+ * @param vec2
+ */
 export function tsNormalize(vec2: Vec2): Vec2 {
   const length: number = tsLength(vec2);
   const vector = new Vec2(
@@ -46,16 +53,31 @@ export function tsNormalize(vec2: Vec2): Vec2 {
   return vector;
 }
 
+/**
+ * dot product of two vectors
+ * @param vec2A
+ * @param vec2B
+ */
 export function tsDotVec2(vec2A: Vec2, vec2B: Vec2): number {
   const product = vec2A.x * vec2B.x + vec2A.y * vec2B.y;
   return product;
 }
 
+/**
+ * cross product of two vectors
+ * @param vec2A
+ * @param vec2B
+ */
 export function tsCrossVec2(vec2A: Vec2, vec2B: Vec2): number {
   const product = vec2A.x * vec2B.y - vec2A.y * vec2B.y;
   return product;
 }
 
+/**
+ * find intersection of two lines
+ * @param line1
+ * @param line2
+ */
 export function lineIntersection(line1: {a: number;b: number;x: number},
   line2: {a: number;b: number;x: number}): Vec2 {
   let insterectionPoint: Vec2 = new Vec2();
@@ -81,6 +103,11 @@ export function lineIntersection(line1: {a: number;b: number;x: number},
   return insterectionPoint;
 }
 
+/**
+ * get an object that can describe a line by two points
+ * @param p1
+ * @param p2
+ */
 export function line(p1: Vec2, p2: Vec2): {a: number; b: number; x: number} {
   let a: number; let b: number; let x: number;
 
@@ -99,6 +126,11 @@ export function line(p1: Vec2, p2: Vec2): {a: number; b: number; x: number} {
   return lineObj;
 }
 
+/**
+ * shift a line via a vector
+ * @param lineObj
+ * @param vector
+ */
 export function lineShift(lineObj: {a: number; b: number; x: number},
   vector: Vec2): {a: number; b: number; x: number} {
   // shift with a point ( 0, b )
@@ -118,6 +150,10 @@ export function lineShift(lineObj: {a: number; b: number; x: number},
   return lineTemp;
 }
 
+/**
+ * get angle of a vector
+ * @param vec
+ */
 export function getAngleOfVec(vec: Vec2): number {
   const ang = Math.atan(vec.y / vec.x);
   return ang;
@@ -132,7 +168,7 @@ export function getAngleOfVec(vec: Vec2): number {
  * @param p2
  * @param p3
  */
-export function triangleArea(p1: Vec2, p2: Vec2, p3: Vec2) {
+export function triangleArea(p1: Vec2, p2: Vec2, p3: Vec2): number {
   const area = (1 / 2)
     * Math.abs((p1.x * (p3.y - p2.y)
     + p2.x * (p1.y - p3.y)
@@ -148,8 +184,8 @@ export function triangleArea(p1: Vec2, p2: Vec2, p3: Vec2) {
  * @param poly
  */
 export function inside(point: Vec2, poly: Array<Vec2>): boolean | null{
-  var area1 = 0; 
-  var area2 = 0;
+  let area1 = 0;
+  let area2 = 0;
   if (poly.length > 3) {
     for (let i = 0; i < poly.length; i += 1) {
       area1 += triangleArea(point, poly[i], poly[(i + 1) % poly.length]);
@@ -158,8 +194,8 @@ export function inside(point: Vec2, poly: Array<Vec2>): boolean | null{
     for (let i = 0; i < poly.length - 2; i += 1) {
       area2 += triangleArea(poly[0], poly[i + 1], poly[i + 2]);
     }
-    area1 = Math.round(area1*10000)/10000;
-    area2 = Math.round(area2*10000)/10000;
+    area1 = Math.round(area1 * 10000) / 10000;
+    area2 = Math.round(area2 * 10000) / 10000;
     if (area1 === area2) {
       return true;
     }
