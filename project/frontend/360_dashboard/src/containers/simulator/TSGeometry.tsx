@@ -158,6 +158,8 @@ export function inside(point: Vec2, poly: Array<Vec2>): boolean | null{
     for (let i = 0; i < poly.length - 2; i += 1) {
       area2 += triangleArea(poly[0], poly[i + 1], poly[i + 2]);
     }
+    area1 = Math.round(area1*10000)/10000;
+    area2 = Math.round(area2*10000)/10000;
     if (area1 === area2) {
       return true;
     }

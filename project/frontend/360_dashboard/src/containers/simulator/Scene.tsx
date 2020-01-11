@@ -554,16 +554,15 @@ class Scene extends Component {
 
       for (let i = 0; i < vehicles.length; i += 1) {
         const position = vehicles[i].getPosition();
-        const spot = this.drawVehicleSpot(position);
-        if(vehicles[i].laneId ===-2)
+        if(isNaN(vehicles[i].getRoadSectionId()))
         {
-          spot.clear();
-          const color = 0xFFFFfc;
-          spot.beginFill(color, 1);
-          spot.drawCircle(position.x, position.y, this.laneW * 0.3);
-          spot.endFill()
+          const spot = this.drawVehicleSpot(position);
+          this.objectContainer.addChild(spot);
+
+        }else{
+          const spot = this.drawVehicleSpot(position,0xFFFFCC);
+          this.objectContainer.addChild(spot);
         }
-        this.objectContainer.addChild(spot);
       }
     } else {
       for (let i = 0; i < this.labelGroup.length; i += 1) {
@@ -853,9 +852,12 @@ class Scene extends Component {
    * So car will become more transparent based on delta T from last sycr
    * @param vertex
    */
-  drawVehicleSpot(vertex: Vec2): PIXI.Graphics {
+  drawVehicleSpot(vertex: Vec2, col?:number): PIXI.Graphics {
     const spot = new PIXI.Graphics();
-    const color = 0xc658fc;
+    let color = 0xc658fc;
+    if(col != undefined){
+      color = col;
+    }
     spot.beginFill(color, 1);
     spot.drawCircle(vertex.x, vertex.y, this.laneW * 0.3);
     spot.endFill();
@@ -1258,10 +1260,7 @@ class Scene extends Component {
           // console.log(absPos);
           if(isInside !=null && isInside){
             secCarNum +=1;
-            this.roadIntersection.simpleVehicles[j].laneId = -2;
-          }else{
-            this.roadIntersection.simpleVehicles[j].laneId = -1;
-
+            this.roadIntersection.simpleVehicles[j].setRoadSectionId(j);
           }
         }
         // console.log(carNum);
