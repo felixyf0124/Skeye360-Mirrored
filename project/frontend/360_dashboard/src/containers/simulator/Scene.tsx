@@ -11,7 +11,8 @@ import DataFromCamera from './simulator_management/DataFromCamera';
 import Vehicle from './simulator_management/Vehicle';
 import LanePointer from './simulator_management/LanePointer';
 import DragablePoint from './DragablePoint';
-// import * as tsData from './TSLocalData';
+import mappingBGTexture from './intersection1.png';
+import * as tsData from './TSLocalData';
 // import 'pixi-text-input.js';
 
 /**
@@ -42,6 +43,8 @@ class Scene extends Component {
   tlDisplayPanelContainer: PIXI.Container;
 
   laneAreaContainer: PIXI.Container;
+
+  mappingBGContainer:PIXI.Container;
 
   backGroundG: PIXI.Graphics;
 
@@ -86,7 +89,7 @@ class Scene extends Component {
 
   btnStop: Btn;
 
-  dragablePoints: Array<DragablePoint>;
+  dragablePoints: Array<Array<DragablePoint>>;
 
   menuPage: number;
 
@@ -129,6 +132,7 @@ class Scene extends Component {
     this.displayPlaneContainer = new PIXI.Container();
     this.tlDisplayPanelContainer = new PIXI.Container();
     this.laneAreaContainer = new PIXI.Container();
+    this.mappingBGContainer = new PIXI.Container();
     this.app.stage.addChild(this.mapContainer);
     this.app.stage.addChild(this.objectContainer);
     this.app.stage.addChild(this.displayPlaneContainer);
@@ -260,12 +264,17 @@ class Scene extends Component {
     this.laneAreaContainer.x = -this.coordinateOffset.x;
     this.laneAreaContainer.y = -this.coordinateOffset.y;
 
-    this.dragablePoints = new Array<DragablePoint>();
-    // const testP = new DragablePoint(new Vec2(0.2* this.windowW, 0.2 * this.windowH),5);
+    this.dragablePoints = new Array<Array<DragablePoint>>();
+    const sectionAreas = tsData.loadSectionAreas();
     // this.dragablePoints.push(testP);
-    for (let i = 0; i < 4; i += 1) {
-      const testP = new DragablePoint(new Vec2(0.2, 0.2), 5);
-      this.dragablePoints.push(testP);
+    for (let i = 0; i < sectionAreas.length; i += 1) {
+      const sectionP = new Array<DragablePoint>();
+      for(let j=0;j<sectionAreas[i].length;j+=1){
+        
+        const testP = new DragablePoint(sectionAreas[i][j], 5);
+        sectionP.push(testP);
+      }
+      this.dragablePoints.push(sectionP);
     }
     // menu
     this.menuPage = 2;
@@ -339,6 +348,8 @@ class Scene extends Component {
 
 
     this.atIndex = 0;
+
+    this.app.loader.add("./intersection1.png");
   }
 
   static getColor(lightState: string): string {
@@ -396,8 +407,12 @@ class Scene extends Component {
   };
 
   setup = (): void => {
+    // const mappingBGTexture = new PIXI.Texture();
     this.app.loader
+      .add('mappingBGTexture',mappingBGTexture)
       .load(this.initialize);
+      // const mappingBG = new PIXI.Sprite(mappingBGTexture);
+      //   this.app.stage.addChild(mappingBG);
   };
 
   resize = (): void => {
@@ -441,10 +456,12 @@ class Scene extends Component {
     this.laneAreaContainer.x = -this.coordinateOffset.x;
     this.laneAreaContainer.y = -this.coordinateOffset.y;
     for (let i = 0; i < this.dragablePoints.length; i += 1) {
-      const pos = this.dragablePoints[i].absolutPos;
+      for(let j=0;j<this.dragablePoints[i].length;j+=1){
+        const pos = this.dragablePoints[i][j].absolutPos;
 
-      this.dragablePoints[i].x = pos.x * this.windowW;
-      this.dragablePoints[i].y = pos.y * this.windowH;
+        this.dragablePoints[i][j].x = pos.x * this.windowW;
+        this.dragablePoints[i][j].y = pos.y * this.windowH;
+      }
     }
     // this.drawLaneArea();
   }
@@ -963,6 +980,9 @@ class Scene extends Component {
       }
       case 2:
       {
+        if (this.mappingBGContainer.parent == null) {
+          this.mapContainer.addChild(this.mappingBGContainer);
+        }
         if (this.laneAreaContainer.parent == null) {
           this.mapContainer.addChild(this.laneAreaContainer);
         }
@@ -973,6 +993,21 @@ class Scene extends Component {
             this.menuBtns[i].setBoarder(1, color);
           }
         }
+
+        
+        this.mappingBGContainer.removeChildren();
+        // const loader = PIXI.loader;
+        // const texture = PIXI.Texture.from("./intersection1.png");
+        const texture = this.app.loader.resources['mappingBGTexture'].texture;
+        // console.log(texture);
+        const mappingBG = new PIXI.Sprite(texture);
+        mappingBG.scale.x= this.windowW/texture.width;
+        mappingBG.scale.y= this.windowH/texture.height;
+        mappingBG.x = -this.coordinateOffset.x;
+        mappingBG.y = -this.coordinateOffset.y;
+        mappingBG.alpha =0.6;
+        this.mappingBGContainer.addChild(mappingBG);
+        
         break;
       }
       case 3:
@@ -1149,20 +1184,47 @@ class Scene extends Component {
     this.laneAreaContainer.removeChildren();
 
     for (let i = 0; i < this.dragablePoints.length; i += 1) {
-      this.laneAreaContainer.addChild(this.dragablePoints[i]);
+      for(let j=0;j<this.dragablePoints[i].length; j += 1) {
+        this.laneAreaContainer.addChild(this.dragablePoints[i][j]);
+      }
     }
   }
 
+  /**
+   * update lane area if there is any change
+   */
   updateLaneArea(): void{
     const pos = this.app.renderer.plugins.interaction.mouse.global;
+    this.laneAreaContainer.removeChildren();
 
     for (let i = 0; i < this.dragablePoints.length; i += 1) {
-      if (this.dragablePoints[i].isDown) {
-        this.dragablePoints[i].absolutPos = new Vec2(pos.x / this.windowW, pos.y / this.windowH);
+      for(let j=0;j<this.dragablePoints[i].length; j += 1) {
+        if (this.dragablePoints[i][j].isDown) {
+          this.dragablePoints[i][j].absolutPos = new Vec2(pos.x / this.windowW, pos.y / this.windowH);
+          console.log(this.dragablePoints[i][j].absolutPos);
+        }
+        const absPos = this.dragablePoints[i][j].absolutPos;
+        this.dragablePoints[i][j].x = (absPos.x * this.windowW);
+        this.dragablePoints[i][j].y = (absPos.y * this.windowH);
+        this.laneAreaContainer.addChild(this.dragablePoints[i][j]);
       }
-      const absPos = this.dragablePoints[i].absolutPos;
-      this.dragablePoints[i].x = (absPos.x * this.windowW);
-      this.dragablePoints[i].y = (absPos.y * this.windowH);
+
+    }
+
+    for (let i = 0; i < this.dragablePoints.length; i += 1) {
+      const laneAreaEdge = new PIXI.Graphics();
+
+      laneAreaEdge.lineStyle(1, 0xc658fc, 1);
+      laneAreaEdge.moveTo(this.dragablePoints[i][this.dragablePoints[i].length-1].x,
+        this.dragablePoints[i][this.dragablePoints[i].length-1].y);
+
+      for(let j=0;j<this.dragablePoints[i].length; j += 1) {
+        
+        laneAreaEdge.lineTo(this.dragablePoints[i][j].x,this.dragablePoints[i][j].y);
+    
+      }
+      this.laneAreaContainer.addChild(laneAreaEdge);
+      
     }
   }
 }
