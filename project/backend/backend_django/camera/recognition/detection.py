@@ -154,6 +154,10 @@ class Detector:
         tracker = Tracker(metric)
         logger.info("Creating deepsort tracker")  
         return tracker
+    
+    # save the coordinates to the object for front en
+    def save_coordinate(self, coord_dict):
+        self.coord= coord_dict
 
     # Generate StreamingHttpResponse
     def gen(self):
@@ -312,7 +316,7 @@ class Detector:
                         current = (x.centroids[-1][0], x.centroids[-1][1])
                         self.get_destination(current,x,ROI_list)
                         intersection.inc(x.start_from, x.go_to)
-            self.coord= coord_dict
+
 			# draw both the ID of the object and the centroid of the
 			# object on the output frame  COMMENTED OUT, NEEDED FOR FUTURE REFACTORY
             # for x in tracking_dict.values():
@@ -323,6 +327,7 @@ class Detector:
                 # print(x.go_to)
             
             # save the coordinates for the tracked vehicles and get ready for front end to retrieve them
+            self.save_coordinate(coord_dict)
             
             fps = "FPS: " + str(int (1/(time.time()-prev_time)))
             cv2.putText(image, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
