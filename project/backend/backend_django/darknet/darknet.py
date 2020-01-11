@@ -122,7 +122,7 @@ if os.name == "nt":
             print("Environment variables indicated a CPU run, but we didn't find `"+winNoGPUdll+"`. Trying a GPU run anyway.")
 else:
     lib = CDLL(os.path.join(os.getcwd(), "libdarknet.so"), RTLD_GLOBAL)
-    # lib = CDLL("/Soen490/project/backend/backend_django/camera/libdarknet.so", RTLD_GLOBAL)
+    # lib = CDLL("/home/chen/Soen490/project/backend/darknet/libdarknet.so", RTLD_GLOBAL)
 lib.network_width.argtypes = [c_void_p]
 lib.network_width.restype = c_int
 lib.network_height.argtypes = [c_void_p]
