@@ -12,7 +12,7 @@ import Vehicle from './simulator_management/Vehicle';
 import LanePointer from './simulator_management/LanePointer';
 import DragablePoint from './DragablePoint';
 // import * as tsData from './TSLocalData';
-//import 'pixi-text-input.js';
+// import 'pixi-text-input.js';
 
 /**
  * @class Scene
@@ -28,9 +28,6 @@ class Scene extends Component {
   windowMin: number;
 
   windowScaleRatio: number;
-
-  initResolution:Vec2;
-  lastResolution:Vec2;
 
   app: PIXI.Application;
 
@@ -122,8 +119,6 @@ class Scene extends Component {
     this.pixiContent = null;
     this.windowW = window.innerWidth * this.windowScaleRatio;
     this.windowH = window.innerHeight * this.windowScaleRatio;
-    this.initResolution = new Vec2(this.windowW, this.windowH);
-    this.lastResolution = new Vec2(this.windowW, this.windowH);
     this.windowMin = 100;
     const resolution = window.devicePixelRatio;
     const setting = { width: this.windowW, height: this.windowH, resolution };
@@ -264,24 +259,24 @@ class Scene extends Component {
 
     this.laneAreaContainer.x = -this.coordinateOffset.x;
     this.laneAreaContainer.y = -this.coordinateOffset.y;
-    
+
     this.dragablePoints = new Array<DragablePoint>();
     // const testP = new DragablePoint(new Vec2(0.2* this.windowW, 0.2 * this.windowH),5);
     // this.dragablePoints.push(testP);
-    for(let i =0;i< 4;i+=1) {
-      const testP = new DragablePoint(new Vec2(0.2, 0.2 ),5);
+    for (let i = 0; i < 4; i += 1) {
+      const testP = new DragablePoint(new Vec2(0.2, 0.2), 5);
       this.dragablePoints.push(testP);
     }
-    //menu
+    // menu
     this.menuPage = 2;
     this.menuBtns = new Array<Btn>();
-    const menuBtn1 =new Btn(49,26, "Traffic Light", 0x51BCD8);
-    const menuBtn2 =new Btn(49,26, "Lane Area", 0x51BCD8);
-    const menuBtn3 =new Btn(49,26, "Setting", 0x51BCD8);
+    const menuBtn1 = new Btn(49, 26, 'Traffic Light', 0x51BCD8);
+    const menuBtn2 = new Btn(49, 26, 'Lane Area', 0x51BCD8);
+    const menuBtn3 = new Btn(49, 26, 'Setting', 0x51BCD8);
     this.menuBtns.push(menuBtn1);
     this.menuBtns.push(menuBtn2);
     this.menuBtns.push(menuBtn3);
-    
+
 
     // tsData.saveSectionAreas();
 
@@ -386,7 +381,7 @@ class Scene extends Component {
   initialize = (): void => {
     window.removeEventListener('resize', this.resize);
     window.addEventListener('resize', this.resize);
-    
+
     this.initialButtons();
 
     // the following two sequence matters, will affect the listeners;
@@ -442,25 +437,16 @@ class Scene extends Component {
     this.drawRoad();
     this.initialButtons();
     this.roadIntersection.updateVehiclePos();
-    
+
     this.laneAreaContainer.x = -this.coordinateOffset.x;
     this.laneAreaContainer.y = -this.coordinateOffset.y;
-    for(let i=0;i<this.dragablePoints.length;i+=1) {
-      
-        const pos = this.dragablePoints[i].absolutPos;
-        
-        this.dragablePoints[i].x = pos.x*this.windowW;
-        this.dragablePoints[i].y = pos.y*this.windowH;
-        // this.dragablePoints[i].x = (pos.x-this.windowW*0.7) *this.windowW/this.lastResolution.x;
-        // this.dragablePoints[i].y = (pos.y -this.windowH*0.7)* this.windowH/this.lastResolution.y;
-        // this.dragablePoints[i].absolutPos = pos;
-        console.log(pos.x + " | " + this.dragablePoints[0].x + " | " +this.windowW*0.7* this.windowH/this.lastResolution.y );
-    // console.log(pos.y + " | " + this.dragablePoints[0].y);
-    // console.log(this.windowW/this.lastResolution.x + " | " + this.windowH/this.lastResolution.y);
+    for (let i = 0; i < this.dragablePoints.length; i += 1) {
+      const pos = this.dragablePoints[i].absolutPos;
+
+      this.dragablePoints[i].x = pos.x * this.windowW;
+      this.dragablePoints[i].y = pos.y * this.windowH;
     }
     // this.drawLaneArea();
-    this.lastResolution = new Vec2(this.windowW, this.windowH);
-
   }
 
   updateCar = (element: any): void => {
@@ -542,7 +528,7 @@ class Scene extends Component {
   renderObjects = (): void => {
     this.objectContainer.removeChildren();
     let vehicles: Array<Vehicle>;
-    if(!this.toggleGroup[2].state) {
+    if (!this.toggleGroup[2].state) {
       if (this.toggleGroup[0].state) {
         vehicles = this.roadIntersection.getSimpleVehicles();
       } else {
@@ -553,7 +539,7 @@ class Scene extends Component {
         const position = vehicles[i].getPosition();
         this.objectContainer.addChild(this.drawVehicleSpot(position));
       }
-    }else{
+    } else {
       for (let i = 0; i < this.labelGroup.length; i += 1) {
         this.objectContainer.addChild(this.labelGroup[i]);
       }
@@ -587,7 +573,7 @@ class Scene extends Component {
 
     // toggle btn
     this.updateToggleBtnState();
-    //menu
+    // menu
     this.updateMenuState();
     this.drawMenu();
 
@@ -904,38 +890,41 @@ class Scene extends Component {
     }
 
 
-    for(let i=0;i<this.menuBtns.length;i +=1)
-    {
+    for (let i = 0; i < this.menuBtns.length; i += 1) {
       this.menuBtns[i].setTextStyle(textStyle);
-      this.menuBtns[i].setDemansion(this.menuBtns[i].text.width+12, 26);
+      this.menuBtns[i].setDemansion(this.menuBtns[i].text.width + 12, 26);
 
       this.menuBtns[i].setBackground(color, 0.1, 1, color);
       this.menuBtns[i].setBoarder(1, color);
 
       this.menuBtns[i].angle = 90;
       this.menuBtns[i].x = this.controlPanelG.width
-        + this.menuBtns[i].height-1;
-        this.menuBtns[i].setTextStyle(textStyle);
-      
+        + this.menuBtns[i].height - 1;
+      this.menuBtns[i].setTextStyle(textStyle);
+
       // this.menuBtns[i].text.x = (this.menuBtns[i].width - this.menuBtns[i].text.width) / 2 ;
       // this.menuBtns[i].text.y = (this.menuBtns[i].height - this.menuBtns[i].text.height) / 2 ;
     }
-    this.menuBtns[0].y = this.menuBtns[0].width/2 - 26;
-    this.menuBtns[1].y = this.menuBtns[0].y + this.menuBtns[0].width/2 +this.menuBtns[1].width/2 +12;
-    this.menuBtns[2].y = this.menuBtns[1].y + this.menuBtns[1].width/2 +this.menuBtns[2].width/2+6;
+    this.menuBtns[0].y = this.menuBtns[0].width / 2 - 26;
+    this.menuBtns[1].y = this.menuBtns[0].y
+      + this.menuBtns[0].width / 2
+      + this.menuBtns[1].width / 2 + 12;
+    this.menuBtns[2].y = this.menuBtns[1].y
+      + this.menuBtns[1].width / 2
+      + this.menuBtns[2].width / 2 + 6;
 
 
     const rSections = this.roadIntersection.getRoadSections();
     for (let i = 0; i < rSections.length; i += 1) {
-      const lane =rSections[i].getLaneAt(0);
+      const lane = rSections[i].getLaneAt(0);
       const pos = (rSections[i].getTail().multiply(0.3)
         .plus(lane.getHead()));
-      const labelG = new Btn(36,36, "car#",0xc658fc);
+      const labelG = new Btn(36, 36, 'car#', 0xc658fc);
       labelG.setTextStyle(textStyle3);
       labelG.interactive = false;
       labelG.buttonMode = false;
-      labelG.x = pos.x-labelG.btnWidth/2;
-      labelG.y = pos.y-labelG.height/2;
+      labelG.x = pos.x - labelG.btnWidth / 2;
+      labelG.y = pos.y - labelG.height / 2;
       this.labelGroup.push(labelG);
     }
   }
@@ -943,93 +932,82 @@ class Scene extends Component {
   /**
    * draw menu
    */
-  drawMenu():void {
+  drawMenu(): void {
     const color = 0x51BCD8;
     this.controlPanelContainer.removeChildren();
     this.controlPanelContainer.addChild(this.controlPanelG);
     this.controlPanelContainer.addChild(this.btnShowCP);
-    for(let i=0;i<this.menuBtns.length;i +=1)
-    {
+    for (let i = 0; i < this.menuBtns.length; i += 1) {
       this.controlPanelContainer.addChild(this.menuBtns[i]);
     }
 
-    switch (this.menuPage)
-    {
+    switch (this.menuPage) {
       case 1:
-        {
-          if(this.laneAreaContainer.parent !==null)
-          {
-            this.mapContainer.removeChild(this.laneAreaContainer);
+      {
+        if (this.laneAreaContainer.parent !== null) {
+          this.mapContainer.removeChild(this.laneAreaContainer);
+        }
+        for (let i = 0; i < this.menuBtns.length; i += 1) {
+          if (i === this.menuPage - 1) {
+            this.menuBtns[i].setBoarder(2, color);
+          } else {
+            this.menuBtns[i].setBoarder(1, color);
           }
-          for(let i=0;i<this.menuBtns.length;i +=1)
-          {
-            if(i ===this.menuPage-1)
-            {
-              this.menuBtns[i].setBoarder(2, color);
-            }else{
-              this.menuBtns[i].setBoarder(1, color);
-            }
-          }
+        }
 
-          this.controlPanelContainer.addChild(this.tlDisplayPanelContainer);
-          if (this.btnStop.parent == null) {
-            this.controlPanelContainer.addChild(this.btnStop);
-          }
-          break;
+        this.controlPanelContainer.addChild(this.tlDisplayPanelContainer);
+        if (this.btnStop.parent == null) {
+          this.controlPanelContainer.addChild(this.btnStop);
         }
+        break;
+      }
       case 2:
-        {
-          if(this.laneAreaContainer.parent ==null)
-          {
-            this.mapContainer.addChild(this.laneAreaContainer);
-          }
-          for(let i=0;i<this.menuBtns.length;i +=1)
-          {
-            if(i === this.menuPage-1)
-            {
-              this.menuBtns[i].setBoarder(2, color);
-            }else{
-              this.menuBtns[i].setBoarder(1, color);
-            }
-          }
-          break;
+      {
+        if (this.laneAreaContainer.parent == null) {
+          this.mapContainer.addChild(this.laneAreaContainer);
         }
+        for (let i = 0; i < this.menuBtns.length; i += 1) {
+          if (i === this.menuPage - 1) {
+            this.menuBtns[i].setBoarder(2, color);
+          } else {
+            this.menuBtns[i].setBoarder(1, color);
+          }
+        }
+        break;
+      }
       case 3:
-        {
-          if(this.laneAreaContainer.parent !==null)
-          {
-            this.mapContainer.removeChild(this.laneAreaContainer);
-          }
-          for(let i=0;i<this.menuBtns.length;i +=1)
-          {
-            if(i === this.menuPage-1)
-            {
-              this.menuBtns[i].setBoarder(2, color);
-            }else{
-              this.menuBtns[i].setBoarder(1, color);
-            }
-          }
-          for (let i = 0; i < this.toggleGroup.length; i += 1)
-          {
-            if (this.btnGroup[i].btn.parent == null) {
-              this.controlPanelContainer.addChild(this.btnGroup[i].btn);
-            }
-            if (this.btnGroup[i].text.parent == null) {
-              this.controlPanelContainer.addChild(this.btnGroup[i].text);
-            }
-          }
-          break;
+      {
+        if (this.laneAreaContainer.parent !== null) {
+          this.mapContainer.removeChild(this.laneAreaContainer);
         }
+        for (let i = 0; i < this.menuBtns.length; i += 1) {
+          if (i === this.menuPage - 1) {
+            this.menuBtns[i].setBoarder(2, color);
+          } else {
+            this.menuBtns[i].setBoarder(1, color);
+          }
+        }
+        for (let i = 0; i < this.toggleGroup.length; i += 1) {
+          if (this.btnGroup[i].btn.parent == null) {
+            this.controlPanelContainer.addChild(this.btnGroup[i].btn);
+          }
+          if (this.btnGroup[i].text.parent == null) {
+            this.controlPanelContainer.addChild(this.btnGroup[i].text);
+          }
+        }
+        break;
+      }
+      default:
     }
   }
 
   /**
    * change current menu page when the related button is pressed
    */
-  updateMenuState():void{
+  updateMenuState(): void{
     for (let i = 0; i < this.menuBtns.length; i += 1) {
       if (this.menuBtns[i].isPressed()) {
-        this.menuPage = i+1;
+        this.menuPage = i + 1;
       }
     }
   }
@@ -1163,43 +1141,30 @@ class Scene extends Component {
     this.numberOfCars = this.roadIntersection.getSimpleVehicles().length;
   }
 
-/**
+  /**
  * draw lane area
  * TODO draw the poly area for video feed
  */
-  drawLaneArea():void{
+  drawLaneArea(): void{
     this.laneAreaContainer.removeChildren();
-   
-    for(let i=0;i<this.dragablePoints.length;i+=1) {
-    this.laneAreaContainer.addChild(this.dragablePoints[i]);
+
+    for (let i = 0; i < this.dragablePoints.length; i += 1) {
+      this.laneAreaContainer.addChild(this.dragablePoints[i]);
     }
   }
 
-  updateLaneArea():void{
+  updateLaneArea(): void{
     const pos = this.app.renderer.plugins.interaction.mouse.global;
-    
-    for(let i=0;i<this.dragablePoints.length;i+=1) {
-      if(this.dragablePoints[i].isDown) {
-        this.dragablePoints[i].absolutPos = new Vec2(pos.x/this.windowW,pos.y/this.windowH);
-        console.log(pos);
-        console.log(this.windowW);
+
+    for (let i = 0; i < this.dragablePoints.length; i += 1) {
+      if (this.dragablePoints[i].isDown) {
+        this.dragablePoints[i].absolutPos = new Vec2(pos.x / this.windowW, pos.y / this.windowH);
       }
       const absPos = this.dragablePoints[i].absolutPos;
-      // this.dragablePoints[i].x = (absPos.x-this.windowW*1.2) ;
-      // this.dragablePoints[i].y = (absPos.y -this.windowH*1.2);
-      this.dragablePoints[i].x = (absPos.x*this.windowW) ;
-      this.dragablePoints[i].y = (absPos.y*this.windowH);
+      this.dragablePoints[i].x = (absPos.x * this.windowW);
+      this.dragablePoints[i].y = (absPos.y * this.windowH);
     }
-    console.log(this.dragablePoints[0].absolutPos);
-    console.log(pos);
-    console.log(this.dragablePoints[0].x);
-    console.log(this.dragablePoints[0].y);
-
-
-    
   }
-
-
 }
 
 
