@@ -173,10 +173,10 @@ class Scene extends Component {
     };
 
     // #### hard code to initial road intersection data for first loading
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW / 2, this.windowH * 0.2));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(-this.windowW / 2, 0.0));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(0.0, this.windowH / 2));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(-30.0, -this.windowH / 2));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW / 2, this.windowH * 0.11));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(-this.windowW / 2, this.windowH * -0.12));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW * -0.16, this.windowH / 2));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW * 0.16, -this.windowH / 2));
 
     for (let i = 0; i < this.roadIntersection.getRoadSections().length; i += 1) {
       this.roadIntersection.addNewLane(i, 1, 'straight', 1);
@@ -240,8 +240,8 @@ class Scene extends Component {
 
     // toggle group
     const videoFeed = { name: 'enable video feed', state: true };
-    const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
-    const uiV7 = { name: 'enable new UI v2.2', state: true };
+    const samplingVideoFeed = { name: 'enable sampling video feed', state: false };
+    const uiV7 = { name: 'enable new UI v2.2', state: false };
     this.toggleGroup.push(videoFeed);
     this.toggleGroup.push(samplingVideoFeed);
     this.toggleGroup.push(uiV7);
@@ -752,7 +752,7 @@ class Scene extends Component {
             <td>
               <img
                 style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://23.96.35.153:8000/cam"
+                src="http://127.0.0.1:8000/cam"
                 alt=""
               />
             </td>
