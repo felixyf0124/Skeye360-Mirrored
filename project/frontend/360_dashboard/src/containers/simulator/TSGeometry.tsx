@@ -122,3 +122,46 @@ export function getAngleOfVec(vec: Vec2): number {
   const ang = Math.atan(vec.y / vec.x);
   return ang;
 }
+
+/**
+ * check if a point is inside convex polygon
+ * @param point 
+ * @param poly 
+ */
+export function inside(point:Vec2,poly:Array<Vec2>): boolean | null{
+  let area1 = 0, area2 = 0;
+  if(poly.length>3) {
+    for(let i=0;i<poly.length;i+=1){
+      area1 += triangleArea(point,poly[i],poly[i+1%poly.length]);
+    }
+
+    for(let i=0;i<poly.length-2;i+=1) {
+      area2 += triangleArea(poly[0],poly[i+1],poly[i+2]);
+    }
+
+    if(area1 === area2){
+      return true;
+    }else{
+      return false;
+    }
+  }else{
+    return null
+  }
+}
+
+/**
+ * get triangle area
+ * fomula from 
+ * https://www.khanacademy.org/math/in-in-grade-10-ncert/in-in-chapter-7-coordinate-geometry/area-of-a-triangle-using-coordinates/v/area-of-triangle-formula-derivation
+ * 1/2*[x1(y3-y2)+x2(y1-y3)+x3(y2-y1)]
+ * @param p1 
+ * @param p2 
+ * @param p3 
+ */
+export function triangleArea(p1:Vec2,p2:Vec2,p3:Vec2){
+  const area = 1/2 *
+    (p1.x*(p3.y-p2.y) + 
+    p2.x*(p1.y-p3.y) +
+    p3.x*(p2.y-p1.y));
+  return area;
+}
