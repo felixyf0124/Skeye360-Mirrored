@@ -8,9 +8,8 @@
 import numpy as np
 import pandas as panda
 import pmdarima as pmd
-from adfullerResults import printResults
-from transformIntoStationary import makeStationarySubstract, makeStationaryDecay, makeStationaryShift
 from matplotlib import pyplot as matplot
+from adfullerResults import adfullerResults
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 from statsmodels.tsa.seasonal import seasonal_decompose
@@ -59,7 +58,8 @@ class main:
     test = westData.loc[startTestDate:'1999-06-27']
 
     # Uncomment out the following code to view values to see if the data is stationary
-    # printResults(northData['8:00-9:00am'])
+    # adfullerResultsObj = adfullerResults()
+    # adfullerResultsObj.printResults(northData['8:00-9:00am'])
 
     # Check if it is stationary
     adfTest = ADFTest(alpha=0.05)
