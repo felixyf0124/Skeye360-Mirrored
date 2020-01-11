@@ -1,9 +1,11 @@
+import pandas as pd
 from dbConnection import dbConnection
 from pprint import pprint
 from random import randint
+import matplotlib.pyplot as plt
+
 
 class movingAverage:
-
     # Link with server and database
     db = dbConnection("360backend")
     db = db.connection()
@@ -26,7 +28,14 @@ class movingAverage:
     # # Step 5: Tell us that you are done
     # print('finished creating 500 business reviews')
 
-    fivestars = db.djangosite_api_intersection.find_one()
+    fivestars = db.djangosite_api_count.find_one()
     print(fivestars)
     # print(db.reviews.count_documents({}))
     # db.reviews.delete_many({})
+
+    df = pd.read_csv('test.csv', index_col='date', parse_dates=True)
+    print(df.head())
+    df.info()
+
+    plt.plot(df['value'])
+    plt.show()
