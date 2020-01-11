@@ -22,9 +22,11 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
+
 /*
   Template for Material-UI Drawer found at:
   https://material-ui.com/components/drawers/
@@ -122,6 +124,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Logo = styled.img`
+  height: 5rem;
+  width: 5rem;
+  position: relative;
+`;
+
 const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Element => {
   const classes = useStyles();
   const theme = useTheme();
@@ -183,7 +191,9 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
         }}
       >
         <div className={classes.toolbar} style={{ justifyContent: 'space-between' }}>
-          <h6 style={{ paddingLeft: '65px' }}>SkeYe 360</h6>
+          <h6 style={{ paddingLeft: '65px' }}>
+            <Logo src="/emblem.png" alt="LOGO" />
+          </h6>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon className={classes.iconStyle} />
