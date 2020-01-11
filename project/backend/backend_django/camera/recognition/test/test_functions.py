@@ -22,8 +22,8 @@ sys.modules['sklearn.utils'] = MagicMock()
 sys.modules['sklearn.utils.linear_assignment_'] = MagicMock()
 sys.modules['tensorflow'] = MagicMock()
 sys.modules['Db'] = MagicMock()
-from ..detection import Detector
-from ..views import cam,send_json
+# from ..detection import Detector
+# from ..views import cam,send_json
 from django.http import StreamingHttpResponse, HttpResponse
 # Create your tests here.
 
