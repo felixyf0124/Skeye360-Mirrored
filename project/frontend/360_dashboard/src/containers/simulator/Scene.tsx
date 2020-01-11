@@ -554,7 +554,16 @@ class Scene extends Component {
 
       for (let i = 0; i < vehicles.length; i += 1) {
         const position = vehicles[i].getPosition();
-        this.objectContainer.addChild(this.drawVehicleSpot(position));
+        const spot = this.drawVehicleSpot(position);
+        if(vehicles[i].laneId ===-2)
+        {
+          spot.clear();
+          const color = 0xFFFFfc;
+          spot.beginFill(color, 1);
+          spot.drawCircle(position.x, position.y, this.laneW * 0.3);
+          spot.endFill()
+        }
+        this.objectContainer.addChild(spot);
       }
     } else {
       for (let i = 0; i < this.labelGroup.length; i += 1) {
@@ -598,6 +607,7 @@ class Scene extends Component {
 
     if (this.toggleGroup[0].state) {
       this.vehicleUpdate(852, 478);
+      this.sectionAreaCounter();
       this.countDown = Date.now();
     } else {
       // make up car loop
@@ -1201,7 +1211,7 @@ class Scene extends Component {
       for(let j=0;j<this.dragablePoints[i].length; j += 1) {
         if (this.dragablePoints[i][j].isDown) {
           this.dragablePoints[i][j].absolutPos = new Vec2(pos.x / this.windowW, pos.y / this.windowH);
-          console.log(this.dragablePoints[i][j].absolutPos);
+          // console.log(this.dragablePoints[i][j].absolutPos);
         }
         const absPos = this.dragablePoints[i][j].absolutPos;
         this.dragablePoints[i][j].x = (absPos.x * this.windowW);
@@ -1226,6 +1236,40 @@ class Scene extends Component {
       this.laneAreaContainer.addChild(laneAreaEdge);
       
     }
+  }
+
+
+  sectionAreaCounter():void {
+    if(this.toggleGroup[0].state ){
+      const resoIntSec1 = new Vec2(852, 478);
+      for (let i = 0; i < this.dragablePoints.length; i += 1) {
+        const vObj = this.roadIntersection.getSimpleVehicles();
+        const poly = new Array<Vec2>();
+        for(let j=0;j<this.dragablePoints[i].length; j += 1) {
+          const absPos = this.dragablePoints[i][j].absolutPos;
+          poly.push(new Vec2(absPos.x*this.windowW, absPos.y*this.windowH));
+          // console.log(absPos);
+        }
+        let secCarNum = 0;
+        for(let j=0;j<vObj.length;j+=1){
+          const pos = vObj[j].getPosition();
+          const absPos = new Vec2(pos.x+this.coordinateOffset.x,pos.y+ this.coordinateOffset.y);
+          const isInside = ts.inside(absPos,poly);
+          // console.log(absPos);
+          if(isInside !=null && isInside){
+            secCarNum +=1;
+            this.roadIntersection.simpleVehicles[j].laneId = -2;
+          }else{
+            this.roadIntersection.simpleVehicles[j].laneId = -1;
+
+          }
+        }
+        // console.log(carNum);
+        this.labelGroup[i].setName(secCarNum.toString());
+
+      }
+    }
+
   }
 }
 

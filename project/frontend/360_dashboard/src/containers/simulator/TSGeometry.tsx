@@ -134,9 +134,9 @@ export function getAngleOfVec(vec: Vec2): number {
  */
 export function triangleArea(p1: Vec2, p2: Vec2, p3: Vec2) {
   const area = (1 / 2)
-    * (p1.x * (p3.y - p2.y)
+    * Math.abs((p1.x * (p3.y - p2.y)
     + p2.x * (p1.y - p3.y)
-    + p3.x * (p2.y - p1.y));
+    + p3.x * (p2.y - p1.y)));
   return area;
 }
 
@@ -148,8 +148,8 @@ export function triangleArea(p1: Vec2, p2: Vec2, p3: Vec2) {
  * @param poly
  */
 export function inside(point: Vec2, poly: Array<Vec2>): boolean | null{
-  let area1 = 0; let
-    area2 = 0;
+  var area1 = 0; 
+  var area2 = 0;
   if (poly.length > 3) {
     for (let i = 0; i < poly.length; i += 1) {
       area1 += triangleArea(point, poly[i], poly[(i + 1) % poly.length]);
@@ -158,7 +158,6 @@ export function inside(point: Vec2, poly: Array<Vec2>): boolean | null{
     for (let i = 0; i < poly.length - 2; i += 1) {
       area2 += triangleArea(poly[0], poly[i + 1], poly[i + 2]);
     }
-
     if (area1 === area2) {
       return true;
     }
