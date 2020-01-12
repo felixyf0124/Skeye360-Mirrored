@@ -31,7 +31,8 @@ class Trafficlight(models.Model):
 
 
 class Count(models.Model):
-    count_type = models.CharField(max_length=2, null=True)
+    count_type = models.CharField(max_length=5, null=True)
+    count_direction = models.CharField(max_length=2, null=True)
     count = models.IntegerField(null=True)
     time = models.DateTimeField(auto_now_add=True, null=True)
     intersection_id = models.ForeignKey(Intersection, related_name='counts', on_delete=models.CASCADE, null=True)

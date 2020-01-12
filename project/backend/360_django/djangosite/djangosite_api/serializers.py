@@ -18,13 +18,19 @@ class CameraSerializer(DjongoModelSerializer):
         model = Camera
         fields = ['id', 'camera_url', 'intersection_id']
 
+class CountSerializer(DjongoModelSerializer):
+    class Meta:
+        model = Count
+        fields = ['count_type', 'count_direction','count', 'time', 'intersection_id']
+
 
 class IntersectionSerializer(DjongoModelSerializer):
     cameras = CameraSerializer(many=True, read_only=True)
+    counts = CountSerializer(many=True, read_only=True)
 
     class Meta:
         model = Intersection
-        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'longitude', 'district_id']
+        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'counts', 'longitude', 'district_id']
 
 
 class DistrictSerializer(DjongoModelSerializer):
@@ -41,13 +47,6 @@ class TrafficLightSerializer(DjongoModelSerializer):
     class Meta:
         model = Trafficlight
         fields = ['green_time', 'yellow_time', 'red_time']
-
-
-class CountSerializer(DjongoModelSerializer):
-    class Meta:
-        model = Count
-        fields = ['count_type', 'count', 'time', 'intersection_id']
-
 
 class TimeSerializer(DjongoModelSerializer):
     class Meta:
