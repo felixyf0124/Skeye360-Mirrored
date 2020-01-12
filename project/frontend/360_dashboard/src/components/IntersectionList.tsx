@@ -17,7 +17,7 @@ import { deleteExistingIntersection, DeleteIntersectionAction } from '../context
 import { logClick, LogAction } from '../contexts/LogClicks';
 import TrafficNews from './TrafficNews';
 
-const title = 'Intersection List';
+const title = 'Montreal';
 interface StateProps {
   user_id: number;
   districts: districtState;

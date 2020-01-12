@@ -5,6 +5,7 @@ import { Redirect, useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import PersonIcon from '@material-ui/icons/Person';
+import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import { authenticate, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 
   loginHeader: {
     backgroundColor: '#212121',
-    height: '4rem',
+    height: '6rem',
     fontSize: '1.5rem',
     display: 'flex',
     alignItems: 'center',
@@ -91,8 +92,13 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'grey',
     color: '#FFFFFF',
   },
-
 }));
+
+const Logo = styled.img`
+  height: 5rem;
+  width: 5rem;
+  position: relative;
+`;
 
 const Login = (props: StateProps & DispatchProps): JSX.Element => {
   // state
@@ -132,7 +138,9 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 
   return (
     <div>
-      <header className={classes.loginHeader}> Skeye 360 </header>
+      <header className={classes.loginHeader}>
+        <Logo src="/emblem.png" alt="LOGO" />
+      </header>
       <div className="background-style">
         <div className={classes.loginBox}>
           <div className={classes.textInput}>
@@ -153,13 +161,29 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               <div />
             )}
             <div className="form-group">
-              <input type="text" name="username" className={classes.loginTextfield} placeholder="Username" value={username} onChange={handleChange} />
+              <input
+                type="text"
+                name="username"
+                className={classes.loginTextfield}
+                placeholder="Username"
+                value={username}
+                onChange={handleChange}
+              />
             </div>
             <div className="form-group">
-              <input type="password" name="password" className={classes.loginTextfield} placeholder="Password" value={password} onChange={handleChange} />
+              <input
+                type="password"
+                name="password"
+                className={classes.loginTextfield}
+                placeholder="Password"
+                value={password}
+                onChange={handleChange}
+              />
             </div>
             <div className="form-group">
-              <button className={classes.loginButton} type="submit">Login</button>
+              <button className={classes.loginButton} type="submit">
+                Login
+              </button>
             </div>
           </form>
         </div>
