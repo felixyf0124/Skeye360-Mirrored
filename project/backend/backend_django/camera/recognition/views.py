@@ -5,6 +5,8 @@ from .detection import Detector
 from .coordinate import Coordinate
 import os
 import logging
+import threading
+import queue
 
 logger = logging.getLogger("camera")
 #reference: http://javabin.cn/2018/django_steam.html
@@ -18,13 +20,21 @@ video_stream = './20191117_1600.mp4'
 
 # initialize a detector object
 detector = Detector(yolo_config,yolo_weights,yolo_classes,yolo_meta,video_stream)
+
 # sending streaming to frontend
-def cam(request): 
-    logger.info("Camera is running now")
-    output=detector.gen()
+def cam_gen(detector):
+    logger.info("Camera is running now")    
+    detector.gen()
+
+threading.Thread(target=cam_gen, args=(detector,)).start()
+
+def cam(request):
+    logger.info("Getting frames now")
+    output = detector.yield_frame()
     return StreamingHttpResponse(output,content_type="multipart/x-mixed-replace;boundary=frame")
 
 def send_json(request):
     logger.info("sending coordinates")
     j = detector.coord.dict.items()
     return HttpResponse(j,content_type="application/json")
+
