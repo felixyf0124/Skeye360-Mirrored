@@ -154,6 +154,10 @@ class Detector:
         tracker = Tracker(metric)
         logger.info("Creating deepsort tracker")  
         return tracker
+    
+    # save the coordinates to the object for front en
+    def save_coordinate(self, coord_dict):
+        self.coord= coord_dict
 
     # Generate StreamingHttpResponse
     def gen(self):
@@ -174,7 +178,6 @@ class Detector:
         # create ROIs
         ROI_list = self.create_ROIs()
 
-        # set up and load darknet framework
         netMain = None
         metaMain = None
         altNames = None
@@ -204,9 +207,9 @@ class Detector:
                         pass
             except Exception:
                 pass
-        cap.set(3, 1280)
-        cap.set(4, 720)
 
+        cap.set(3, 1280)
+        cap.set(4, 720) 
         # Create an image we reuse for each detect
         darknet_image = darknet.make_image(darknet.network_width(netMain),
                                     darknet.network_height(netMain),3)	
@@ -215,7 +218,6 @@ class Detector:
 
         tracker = self.create_tracker()
         tracking_dict = {}
-        coord_dict = Coordinate()
 		
 	# set the threshold for success detection 
         conf_threshold = 0.6
@@ -230,27 +232,26 @@ class Detector:
                 return -1     
      
             totalFrames += 1
-
-            # Skipping frames to increase the fps, will be used when there is more than one camera running on the same GPU
-            # if totalFrames%3!=1:  
+            #if totalFrames%3!=1:
             #    continue
             # image=cv2.resize(image, (620, 480))
 
-            # converting color and size for detection
+            #get the size of the image
+              
             frame_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             frame_resized = cv2.resize(frame_rgb,
                                    (darknet.network_width(netMain),
                                     darknet.network_height(netMain)),
                                    interpolation=cv2.INTER_LINEAR)
             darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
+            # convert the frame to a blob and detect through the network
             outs = darknet.detect_image(netMain, metaMain, darknet_image, thresh=0.25)
-
             # setting the data structures needed to keep the result of detection
             class_names = []
             confidences = []
             boxes = []
             yolo_boxes = []
-			
+            coord_dict = Coordinate()
             # potential detection out of deep learning network 
             for out in outs:            
             #each detection  has the form like this [center_x center_y width height obj_score class_1_score class_2_score ..]
@@ -268,15 +269,14 @@ class Detector:
                     class_names.append(class_name)
                     confidences.append(float(confidence))
                     yolo_boxes.append([x, y, w, h])
-                    print([x, y, w, h])
+                    
+                # yolo_indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
 		
                 #output object detected on the frame
                 self.draw_pred(image, class_name, confidence, round(x), round(y), round(x+w), round(y+h))
-
                 # self.print_pred(class_ids[i], x, y, w, h, classes)
 			
-            # ready to use DeepSort algorithm to track the vehicles that are detected
-
+			# ready to use DeepSort algorithm to track the vehicles that are detected
             # apply non-maximum suppression algorithm on the bounding boxes
             # t, _ = net.getPerfProfile()
             
@@ -288,12 +288,11 @@ class Detector:
             for i in indices:
                 detection = Detection(detection_boxes[i],confidences[i],[])
                 detections.append(detection)
-
             # Call the tracker
             tracker.predict()
             tracker.update(detections)
-			
-            # potential tracking out of DeepSort algorithm
+            	
+			# potential tracking out of DeepSort algorithm
             for track in tracker.tracks:
                 if not track.is_confirmed() or track.time_since_update > 1:
                     continue 
@@ -301,14 +300,13 @@ class Detector:
                 cv2.rectangle(image, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,255,255), 2)
                 cv2.putText(image, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 200, (0,255,0),2)
                 centroid = [int((bbox[0]+ bbox[2]) / 2.0), int((bbox[1] + bbox[3]) / 2.0)]
-				
-				# for those eligible vehicles, we start to track them and put them in the tracking list
+
+                # for those eligible vehicles, we start to track them and put them in the tracking list
                 if track.track_id not in tracking_dict:
                     to = TrackableObject(track.track_id)
                     to.add_centroid(centroid)
                     tracking_dict[track.track_id] = to
                     start_point = (centroid[0], centroid[1])
-                    coord_dict.dict[track.track_id] = centroid
                     self.get_origin(start_point, to, ROI_list)
                 else:
                     tracking_dict[track.track_id].add_centroid(centroid)
@@ -318,28 +316,29 @@ class Detector:
                         current = (x.centroids[-1][0], x.centroids[-1][1])
                         self.get_destination(current,x,ROI_list)
                         intersection.inc(x.start_from, x.go_to)
-                
-           # draw both the ID of the object and the centroid of the
-           # object on the output frame  COMMENTED OUT, NEEDED FOR FUTURE REFACTORY
-           # for x in tracking_dict.values():
-               # print("ID {}".format(x.objectID)+ ' start: ', end="")
-               # print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
-               # print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
-               # print(x.start_from)
-               # print(x.go_to)
+
+			# draw both the ID of the object and the centroid of the
+			# object on the output frame  COMMENTED OUT, NEEDED FOR FUTURE REFACTORY
+            # for x in tracking_dict.values():
+                # print("ID {}".format(x.objectID)+ ' start: ', end="")
+                # print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
+                # print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
+                # print(x.start_from)
+                # print(x.go_to)
             
             # save the coordinates for the tracked vehicles and get ready for front end to retrieve them
-            self.coord= coord_dict
-
-            # diplay real time fps 
+            self.save_coordinate(coord_dict)
+            
             fps = "FPS: " + str(int (1/(time.time()-prev_time)))
             cv2.putText(image, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
-
             self.start_counting = True
             self.draw_ROIs(image, ROI_list)
-
+            # label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
+            # cv2.putText(image, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
             frame = self.frame_to_bytes(image)
-            intersection.print_counters()
+            intersection.print_counters()            
+            # cv2.imshow("Display window", image)
+            # cv2.waitKey(1)
             # yield the bytes of frame, and get ready for front end to retrieve them
             yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
