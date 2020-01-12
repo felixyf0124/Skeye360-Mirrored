@@ -814,7 +814,7 @@ class Scene extends Component {
             <td>
               <img
                 style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://127.0.0.1:8000/cam"
+                src="http://127.0.0.1:8001/cam"
                 alt=""
               />
             </td>
@@ -990,17 +990,19 @@ class Scene extends Component {
 
 
     const rSections = this.roadIntersection.getRoadSections();
-    for (let i = 0; i < rSections.length; i += 1) {
-      const lane = rSections[i].getLaneAt(0);
-      const pos = (rSections[i].getTail().multiply(0.3)
-        .plus(lane.getHead()));
-      const labelG = new Btn(36, 36, 'car#', 0xc658fc);
-      labelG.setTextStyle(textStyle3);
-      labelG.interactive = false;
-      labelG.buttonMode = false;
-      labelG.x = pos.x - labelG.btnWidth / 2;
-      labelG.y = pos.y - labelG.height / 2;
-      this.labelGroup.push(labelG);
+    if (this.labelGroup.length === 0) {
+      for (let i = 0; i < rSections.length; i += 1) {
+        const lane = rSections[i].getLaneAt(0);
+        const pos = (rSections[i].getTail().multiply(0.3)
+          .plus(lane.getHead()));
+        const labelG = new Btn(36, 36, 'car#', 0xc658fc);
+        labelG.setTextStyle(textStyle3);
+        labelG.interactive = false;
+        labelG.buttonMode = false;
+        labelG.x = pos.x - labelG.btnWidth / 2;
+        labelG.y = pos.y - labelG.height / 2;
+        this.labelGroup.push(labelG);
+      }
     }
   }
 
