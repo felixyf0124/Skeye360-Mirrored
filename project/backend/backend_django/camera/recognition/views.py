@@ -38,3 +38,7 @@ def send_json(request):
     j = detector.coord.dict.items()
     return HttpResponse(j,content_type="application/json")
 
+def get_level_of_service(request):
+    logger.info("get_level_of_service")
+    l = detector.level_of_service
+    return HttpResponse(l,content_type="application/json")
