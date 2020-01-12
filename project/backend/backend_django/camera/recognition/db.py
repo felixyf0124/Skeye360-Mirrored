@@ -4,6 +4,7 @@ import pymongo
 import datetime
 from .counter import Counter
 import logging
+import threading
 
 logger = logging.getLogger("camera")
 
@@ -21,6 +22,8 @@ class Db:
 
     def insert_count(self,collection,counters):
         insersions = 0
+        lock = threading.Semaphore(1)
+        lock.acquire()
         for c in counters:
             new_count = { "direction": c.direction.get_direction(), 
                 "count": c.count, 
@@ -29,6 +32,7 @@ class Db:
             insersions = insersions + 1
             collection.insert_one(new_count)        
             logger.info("Sending data to db")
+        lock.release()
         return insersions
         
 
