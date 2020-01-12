@@ -1,4 +1,6 @@
 import pandas as pd
+import json
+import datetime
 from dbConnection import dbConnection
 from pprint import pprint
 from random import randint
@@ -8,13 +10,15 @@ import matplotlib.pyplot as plt
 def dropNa(df):
     return df.dropna(inplace=True)
 
+
 def moving_average(self):
     print('MA')
 
-# Link with server and database
-db = dbConnection("360backend")
-db = db.connection()
-# Step 2: Create sample data
+
+# Step 1: Link with MA server and database
+db = dbConnection('360backend', 'myUserAdmin', 'abc123', 'localhost', '27017')
+
+# #Step 2: Create sample data
 # names = ['Kitchen', 'Animal', 'State', 'Tastey', 'Big', 'City', 'Fish', 'Pizza', 'Goat', 'Salty', 'Sandwich',
 #          'Lazy', 'Fun']
 # company_type = ['LLC', 'Inc', 'Company', 'Corporation']
@@ -33,19 +37,33 @@ db = db.connection()
 # # Step 5: Tell us that you are done
 # print('finished creating 500 business reviews')
 
+# Read recent
+# fivestars = db['reviews'].find()
+# array = pd.DataFrame(list(fivestars))
+# print(array)
 
-fivestars = db.djangosite_api_count.find_one()
-print(fivestars)
+array2 = db.read_mongo('reviews', {"rating": 1.0})
+print(array2)
 
-# read csv file
-df = pd.read_csv('test.csv', index_col='date', parse_dates=True)
-
-# drop no value row
-df.dropna(inplace=True)
-print(df.head())
-print(df.index)
-df['4-hrs-SMA'] = df['value'].rolling(window=4).mean()
-print(df['4-hrs-SMA'])
-# plt.plot(df['value'])
-# plt.figure(figsize=(3, 4))
-# plt.show()
+# for x in array:
+#     y = x['name']
+#     print(y)
+# # read csv file
+# df = pd.read_csv('test.csv', index_col='date', parse_dates=True)
+#
+# # drop no value row
+# df.dropna(inplace=True)
+# print(df.head())
+# print(df.index)
+# df['4-hrs-SMA'] = df['value'].rolling(window=4).mean()
+# print(df['4-hrs-SMA'])
+# # plt.plot(df['value'])
+# # plt.figure(figsize=(3, 4))
+# # plt.show()
+# df2 = pd.DataFrame.from_dict({'A': {1: datetime.datetime.now()}})
+# print(df2.head())
+# records = json.loads(df2.T.to_json()).values()
+# print(records)
+# db.reviews.insert(records)
+# df3 = db.reviews.find_one()
+# print(df3.head())
