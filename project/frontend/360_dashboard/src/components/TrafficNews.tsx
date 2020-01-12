@@ -3,6 +3,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import Paper from '@material-ui/core/Paper'
+import EventIcon from '@material-ui/icons/Event';
+import ReportProblemIcon from '@material-ui/icons/ReportProblem';
+import TimeToLeaveIcon from '@material-ui/icons/TimeToLeave'; 
+import TrafficIcon from '@material-ui/icons/Traffic';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import { SKEYE_BLUE, SKEYE_GREEN, SKEYE_GREY, SKEYE_WHITE } from '../css/custom';
 
 //MapQuest API is used to retrieve traffic news
 //https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -33,15 +40,15 @@ interface StateProps {
 }
 
 const OuterContainer = styled.div`
-    background-color: white;
-    width: 55rem;
+    width: 50rem;
     overflow: scroll;
     padding: 1rem;
-    height: 30rem;
+    height: 40rem;
+    overflow-x: hidden;
 `;
 
 const OuterDiv = styled.div`
-    color: white; 
+    color: ${SKEYE_WHITE};
     margin: 5rem;
     display: flex;
     flex-direction: column; 
@@ -92,31 +99,33 @@ class TrafficNews extends React.Component<{}, StateProps>{
         else{
             return(
                 <OuterDiv>
-                <Typography variant="h4">
-                    Traffic News
-                </Typography>
                 <OuterContainer>
                     {incidents.map((incident: { id: string | number | undefined; type: any; shortDesc: string; fullDesc: string; severity: any; startTime: any; endTime: any;}) => (
-                        <Paper elevation={3} key={incident.id} style={{marginBottom: '2rem', padding:'1rem'}}>
-                            <Typography variant="h6">
-                                {(() => {
-                                    switch(incident.type){
-                                        case 1: return "Construction";
-                                        case 2: return "Event";
-                                        case 3: return "Congestion/Flow";
-                                        case 4: return "Incident/Accident";
-                                    }
-                                })()}
-                            </Typography>
-                            <Typography variant="subtitle1">
-                                {incident.shortDesc}
-                            </Typography>
-                            {incident.fullDesc}
-                            <br/><br/>
-                            <b>Severity:</b> {incident.severity} <br />
-                            <b>Start Time:</b> {incident.startTime} <br />
-                            <b>End Time:</b> {incident.endTime}
-                        </Paper>
+                        <Card style={{margin:'1rem'}}>
+                            <CardContent>
+                                <Typography variant="h5">
+                                    Traffic Type: &nbsp;
+                                    {(() => {
+                                        switch(incident.type){
+                                            case 1: return "Construction";
+                                            case 2: return "Event";
+                                            case 3: return "Congestion/Flow";
+                                            case 4: return "Incident/Accident";
+                                        }
+                                    })()}
+                                </Typography>
+                                <Typography variant="h6">
+                                    {incident.shortDesc}
+                                </Typography>
+                                <Typography variant="subtitle1">
+                                    {incident.fullDesc}
+                                    <br/><br/>
+                                    <b>Severity:</b> {incident.severity} <br />
+                                    <b>Start Time:</b> {incident.startTime} <br />
+                                    <b>End Time:</b> {incident.endTime}
+                                </Typography>
+                                </CardContent>
+                        </Card>
                     ))}
                 </OuterContainer>
                 </OuterDiv>
