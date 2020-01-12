@@ -17,8 +17,6 @@ from .deep_sort import preprocessing
 from .deep_sort import nn_matching
 from .deep_sort.detection import Detection
 from .deep_sort.tracker import Tracker
-from .tools import generate_detections as gdet
-from .deep_sort.detection import Detection as ddet
 
 # set up for logging
 logger = logging.getLogger("camera")
@@ -39,6 +37,7 @@ class Detector:
         self.stream = video_stream
         self.coord = Coordinate()
         self.start_counting = False
+        self.frame = bytes("", 'utf-8')
         logger.info("Detector is created")
 
     # Load names classes
@@ -154,14 +153,17 @@ class Detector:
         tracker = Tracker(metric)
         logger.info("Creating deepsort tracker")  
         return tracker
-    
     # save the coordinates to the object for front en
     def save_coordinate(self, coord_dict):
         self.coord= coord_dict
 
+    def yield_frame(self):
+        while True:
+            time.sleep(.03)
+            yield self.frame
+
     # Generate StreamingHttpResponse
     def gen(self):
-		
         intersection = self.create_intersection("main@broadway")
         # connect db
         database = Db()
@@ -211,20 +213,16 @@ class Detector:
         cap.set(3, 1280)
         cap.set(4, 720) 
         # Create an image we reuse for each detect
-        darknet_image = darknet.make_image(darknet.network_width(netMain),
-                                    darknet.network_height(netMain),3)	
+        darknet_image = darknet.make_image(darknet.network_width(netMain), darknet.network_height(netMain),3)	
         # deep_sort Definition of the parameters
         nms_max_overlap = 0.3 
 
         tracker = self.create_tracker()
         tracking_dict = {}
-		
-	# set the threshold for success detection 
-        conf_threshold = 0.6
-        nms_threshold = 0.5
-
+        
         # now we start to read video frame by frame to detect and tracking the vehicles appear on the frames
         while True:
+            time.sleep(.03)
             prev_time = time.time()
             hasframe, image = cap.read()       
             if not hasframe:
@@ -232,8 +230,8 @@ class Detector:
                 return -1     
      
             totalFrames += 1
-            #if totalFrames%3!=1:
-            #    continue
+            if totalFrames%3!=1:
+               continue
             # image=cv2.resize(image, (620, 480))
 
             #get the size of the image
@@ -249,11 +247,10 @@ class Detector:
             # setting the data structures needed to keep the result of detection
             class_names = []
             confidences = []
-            boxes = []
             yolo_boxes = []
             coord_dict = Coordinate()
             # potential detection out of deep learning network 
-            for out in outs:            
+            for out in outs:
             #each detection  has the form like this [center_x center_y width height obj_score class_1_score class_2_score ..]
                 class_name = str(out[0])[2:-1]
                 # we only care about the vehicles for now
@@ -276,10 +273,6 @@ class Detector:
                 self.draw_pred(image, class_name, confidence, round(x), round(y), round(x+w), round(y+h))
                 # self.print_pred(class_ids[i], x, y, w, h, classes)
 			
-			# ready to use DeepSort algorithm to track the vehicles that are detected
-            # apply non-maximum suppression algorithm on the bounding boxes
-            # t, _ = net.getPerfProfile()
-            
             # Run non-maxima suppression.
             detection_boxes = np.array(yolo_boxes)
             scores = np.array(confidences)
@@ -288,6 +281,7 @@ class Detector:
             for i in indices:
                 detection = Detection(detection_boxes[i],confidences[i],[])
                 detections.append(detection)
+
             # Call the tracker
             tracker.predict()
             tracker.update(detections)
@@ -320,27 +314,28 @@ class Detector:
 			# draw both the ID of the object and the centroid of the
 			# object on the output frame  COMMENTED OUT, NEEDED FOR FUTURE REFACTORY
             # for x in tracking_dict.values():
-                # print("ID {}".format(x.objectID)+ ' start: ', end="")
-                # print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
-                # print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
-                # print(x.start_from)
-                # print(x.go_to)
+            #     print("ID {}".format(x.objectID)+ ' start: ', end="")
+            #     print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
+            #     print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
+            #     print(x.start_from)
+            #     print(x.go_to)
             
             # save the coordinates for the tracked vehicles and get ready for front end to retrieve them
             self.save_coordinate(coord_dict)
-            
+
             fps = "FPS: " + str(int (1/(time.time()-prev_time)))
             cv2.putText(image, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
             self.start_counting = True
             self.draw_ROIs(image, ROI_list)
-            # label = 'Inference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
-            # cv2.putText(image, label, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
             frame = self.frame_to_bytes(image)
-            intersection.print_counters()            
+            intersection.print_counters()      
+                  
             # cv2.imshow("Display window", image)
             # cv2.waitKey(1)
             # yield the bytes of frame, and get ready for front end to retrieve them
-            yield (b'--frame\r\n'
+            # yield (b'--frame\r\n'
+            #    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+            self.frame = (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-        
+            
         
