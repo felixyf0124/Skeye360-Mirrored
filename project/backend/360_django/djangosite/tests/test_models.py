@@ -93,5 +93,5 @@ class YourTestClass(TestCase):
         # Two intersection should return 2
         response = self.client.get('/api/count/')
         self.assertEqual(len(response.data), 2)
-        self.assertEqual(response.data[1].get('count'), 6)
-        self.assertNotEqual(response.data[1].get('count'), 9)
+        self.assertEqual(response.data[1].get('count'), 9)
+        self.assertNotEqual(response.data[1].get('count'), 6)
