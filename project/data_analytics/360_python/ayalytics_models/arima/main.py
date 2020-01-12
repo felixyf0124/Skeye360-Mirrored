@@ -26,7 +26,7 @@ dataframe = panda.read_csv("360_python\models\generatedDataset.csv", index_col =
 
 # Uncomment the following code to preview how the data looks like on a graph
 # To plot a graph, use only 2 columns
-# dataframe = panda.read_csv("360_python\models\generatedDataset.csv", index_col = ['date'], usecols=['8:00-9:00am', 'date'], parse_dates = ['date'])
+# dataframe = panda.read_csv("360_python\ayalytics_models\generatedDataset.csv", index_col = ['date'], usecols=['8:00-9:00am', 'date'], parse_dates = ['date'])
 # lessData is used to display less data on the graph, it is actually set at 5000 and the size of the data is 10000
 # lessData = dataframe.head(5000)
 # matplot.xlabel('Date')

@@ -42,9 +42,23 @@ db = dbConnection('360backend', 'myUserAdmin', 'abc123', 'localhost', '27017')
 # array = pd.DataFrame(list(fivestars))
 # print(array)
 
-array2 = db.read_mongo('reviews', {"rating": 1.0})
+# Example format
+# newCount = {
+#     "id" : 1
+#     "direction": 'WE',
+#     "count": 14,
+#     "time": datetime.datetime.now(),
+#     "count_type": 'MA',
+#     "intersection_id_id": 1}
+
+db.insert_one('djangosite_api_count', 'WE', 14, datetime.datetime.now(), 'MA', 1)
+
+# Read mongoDB get CSV file
+array2 = db.read_mongo('djangosite_api_count')
+
 print(array2)
 
+# For CSV file
 # for x in array:
 #     y = x['name']
 #     print(y)
