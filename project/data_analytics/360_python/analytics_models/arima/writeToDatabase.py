@@ -8,10 +8,6 @@ class writeToDatabase:
         dbConnect = dbConnection()
         client = dbConnect.connect()
         db = client['360backend']
-        if db is None:
-            print("db connection failed")
-        else:
-            print("db is connected")
         # Collection are table in SQL
         collection = db['djangosite_api_count']
         return collection
