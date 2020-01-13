@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.utils.linear_assignment_ import linear_assignment
 from . import kalman_filter
 
+import time
 
 INFTY_COST = 1e+5
 
@@ -51,12 +52,14 @@ def min_cost_matching(
 
     if len(detection_indices) == 0 or len(track_indices) == 0:
         return [], track_indices, detection_indices  # Nothing to match.
-
+    prev_time = time.time()
     cost_matrix = distance_metric(
         tracks, detections, track_indices, detection_indices)
+    fps = "FPS: " + str(((time.time()-prev_time)))
+    print(fps)    
     cost_matrix[cost_matrix > max_distance] = max_distance + 1e-5
     indices = linear_assignment(cost_matrix)
-
+    
     matches, unmatched_tracks, unmatched_detections = [], [], []
     for col, detection_idx in enumerate(detection_indices):
         if col not in indices[:, 1]:
@@ -121,6 +124,7 @@ def matching_cascade(
 
     unmatched_detections = detection_indices
     matches = []
+    
     for level in range(cascade_depth):
         if len(unmatched_detections) == 0:  # No detections left
             break
@@ -138,6 +142,7 @@ def matching_cascade(
                 track_indices_l, unmatched_detections)
         matches += matches_l
     unmatched_tracks = list(set(track_indices) - set(k for k, _ in matches))
+    
     return matches, unmatched_tracks, unmatched_detections
 
 

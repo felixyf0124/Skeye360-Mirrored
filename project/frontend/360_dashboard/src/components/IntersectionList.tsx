@@ -15,8 +15,9 @@ import {
 } from '../contexts/districts';
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
 import { logClick, LogAction } from '../contexts/LogClicks';
+import TrafficNews from './TrafficNews';
 
-const title = 'Intersection List';
+const title = 'Montreal';
 interface StateProps {
   user_id: number;
   districts: districtState;
@@ -58,6 +59,7 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
       <div style={{ display: 'flex' }}>
         <SideDrawer headerTitle={title} />
         {districts[0] === undefined ? <div /> : <IntersectionTable districts={districts} />}
+        <TrafficNews />
       </div>
     );
   }

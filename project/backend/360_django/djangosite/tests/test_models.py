@@ -76,3 +76,22 @@ class YourTestClass(TestCase):
         self.assertEqual(len(response.data), 2)
         self.assertEqual(response.data[1].get('camera_url'), '192.168.0.2')
         self.assertNotEqual(response.data[1].get('camera_url'), '192.168.0.1')
+
+    def test_count(self): 
+        logging.info('test_count')
+        # Create distinct
+        district = mixer.blend('djangosite_api.District', district_name='Montreal_East', id=1)
+        # Create intersection
+        intersection = mixer.blend('djangosite_api.Intersection', intersection_name='Guy', district_id=district, id=1)
+        # Test post request
+        count1 = mixer.blend('djangosite_api.Count', count_type='MA', count_direction='NW',count=6, intersection_id=intersection, id=1)
+        count2 = mixer.blend('djangosite_api.Count', count_type='MA', count_direction='SE',count=9, intersection_id=intersection, id=2)
+        self.assertEqual(count1.count, 6)
+        # Test get request
+        response = self.client.get('/api/intersection/?count_type=MA')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Two intersection should return 2
+        response = self.client.get('/api/count/')
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[1].get('count'), 9)
+        self.assertNotEqual(response.data[1].get('count'), 6)
