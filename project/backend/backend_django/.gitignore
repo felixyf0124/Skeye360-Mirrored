@@ -1,10 +1,22 @@
+# Created by https://www.gitignore.io/api/django
+# Edit at https://www.gitignore.io/?templates=django
 
-# Created by https://www.gitignore.io/api/python
-# Edit at https://www.gitignore.io/?templates=python
-
-### Python ###
-# Byte-compiled / optimized / DLL files
+### Django ###
+*.log
+*.pot
+*.pyc
 __pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media
+
+# If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
+# in your Git repository. Update and uncomment the following line accordingly.
+# <django-project-name>/staticfiles/
+
+### Django.Python Stack ###
+# Byte-compiled / optimized / DLL files
 *.py[cod]
 *$py.class
 
@@ -57,7 +69,6 @@ coverage.xml
 
 # Translations
 *.mo
-*.pot
 
 # Scrapy stuff:
 .scrapy
@@ -107,7 +118,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# ipynb_checkpoints
-.ipynb_checkpoints/
-
-# End of https://www.gitignore.io/api/python
+# End of https://www.gitignore.io/api/django
