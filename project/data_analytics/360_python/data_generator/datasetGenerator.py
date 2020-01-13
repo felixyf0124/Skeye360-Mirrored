@@ -69,7 +69,7 @@ am78 = numberGenerator(90, 110)
 am89 = numberGenerator(60, 90)
 
 # For Mac OS, uncomment the "with open" command below and comment out the second "with open"
-# with open('./data_analytics/360_python/models/generatedDataset.csv', mode='w') as csvFile:
+# with open('./data_analytics/360_python/ayalytics_models/generatedDataset.csv', mode='w') as csvFile:
 # The following code creates the generatedDataset.csv file and writes into it
 with open('360_python\models\generatedDataset.csv', mode='w') as csvFile:
     fieldNames = ['id', 'direction', 'from', 'to', 'date', "4:00-5:00am", "5:00-6:00am", "6:00-7:00am", "7:00-8:00am", "8:00-9:00am"]
@@ -95,7 +95,7 @@ with open('360_python\models\generatedDataset.csv', mode='w') as csvFile:
             csvWriter.writerow(rowData)
 
 # For Mac OS, uncomment the "read_csv" command below and comment out the second "read_csv"
-# df = pandas.read_csv('./data_analytics/360_python/models/generatedDataset.csv', index_col='id')
+# df = pandas.read_csv('./data_analytics/360_python/ayalytics_models/generatedDataset.csv', index_col='id')
 # The following code reads the data that was just generated and prints it
 df = pandas.read_csv('360_python\models\generatedDataset.csv', index_col='id')
 print(df)
