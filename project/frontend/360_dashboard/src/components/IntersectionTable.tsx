@@ -16,6 +16,7 @@ import CallMadeIcon from '@material-ui/icons/CallMade';
 import { Link } from 'react-router-dom';
 import { STATE as districtState } from '../contexts/districts';
 import DeleteIntersectionButton from './DeleteIntersectionButton';
+import TrafficIntensity from './TrafficIntensity';
 
 /* Tables from Material-UI:
   https://material-ui.com/components/tables/ */
@@ -84,7 +85,9 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                     {intersection.intersection_name}
                   </TableCell>
                   <TableCell>{districts.districts[0].district_name}</TableCell>
-                  <TableCell>Undefined</TableCell>
+                  <TableCell>
+                    <TrafficIntensity intersection_id={intersection.id} />
+                  </TableCell>
                   <TableCell>
                     <Link to={`/streetview/${intersection.id}`}>
                       <CallMadeIcon />
