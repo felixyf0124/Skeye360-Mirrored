@@ -84,8 +84,8 @@ class YourTestClass(TestCase):
         # Create intersection
         intersection = mixer.blend('djangosite_api.Intersection', intersection_name='Guy', district_id=district, id=1)
         # Test post request
-        count1 = mixer.blend('djangosite_api.Count', count_type='MA', count=6, intersection_id=intersection, id=1)
-        count2 = mixer.blend('djangosite_api.Count', count_type='MA', count=9, intersection_id=intersection, id=2)
+        count1 = mixer.blend('djangosite_api.Count', count_type='MA', count_direction='NW',count=6, intersection_id=intersection, id=1)
+        count2 = mixer.blend('djangosite_api.Count', count_type='MA', count_direction='SE',count=9, intersection_id=intersection, id=2)
         self.assertEqual(count1.count, 6)
         # Test get request
         response = self.client.get('/api/intersection/?count_type=MA')
