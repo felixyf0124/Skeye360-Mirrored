@@ -5,20 +5,45 @@ from dbConnection import dbConnection
 from pprint import pprint
 from random import randint
 import matplotlib.pyplot as plt
+import logging
+
+logger = logging.getLogger('movingAverage.py')
 
 
 def dropNa(df):
+    logger.info("drop NA")
     return df.dropna(inplace=True)
 
 
-def moving_average(self):
-    print('MA')
+def moving_average(df):
+    logger.info("calculate moving average")
+    countAverage = df['count'].mean()
+    return countAverage
+
+
+def rounder(t):
+    logger.info("Round time to hr")
+    if (t.hour == 23):
+        return t.replace(second=0, microsecond=0, minute=0, hour=0, day=t.day + 1)
+    else:
+        return t.replace(second=0, microsecond=0, minute=0, hour=t.hour + 1)
 
 
 # Step 1: Link with MA server and database
 db = dbConnection('360backend', 'myUserAdmin', 'abc123', 'localhost', '27017')
 
-# #Step 2: Create sample data
+## Only calculate WE direction for now
+# Step 2: Get latest four AI documents(dataframe)
+df = db.find_latest_4_documents('djangosite_api_count', 'AI', 'WE')
+# print(df)
+
+# Step 3: Calculate Moving average
+countAverage = moving_average(df)
+
+# Step 4: Save back to MongoDB
+db.insert_one('djangosite_api_count', 'WE', countAverage, rounder(datetime.datetime.now()), 'MA', 1)
+
+# Step 2: Create sample data
 # names = ['Kitchen', 'Animal', 'State', 'Tastey', 'Big', 'City', 'Fish', 'Pizza', 'Goat', 'Salty', 'Sandwich',
 #          'Lazy', 'Fun']
 # company_type = ['LLC', 'Inc', 'Company', 'Corporation']
@@ -51,18 +76,17 @@ db = dbConnection('360backend', 'myUserAdmin', 'abc123', 'localhost', '27017')
 #     "count_type": 'MA',
 #     "intersection_id_id": 1}
 
-db.insert_one('djangosite_api_count', 'WE', 14, datetime.datetime.now(), 'MA', 1)
+# For insert data purpose
+# db.insert_one('djangosite_api_count', 'WE', 57, datetime.datetime.now(), 'AI', 1)
 
-# Read mongoDB get CSV file
-array2 = db.read_mongo('djangosite_api_count')
+# Read mongoDB get pandas file
+# array2 = db.read_mongo('djangosite_api_count')
+# # Drop Na Value
+# dropNa(array2)
+# print(array2)
 
-print(array2)
-
-# For CSV file
-# for x in array:
-#     y = x['name']
-#     print(y)
-# # read csv file
+# ==================CSV ============================
+# Read csv file
 # df = pd.read_csv('test.csv', index_col='date', parse_dates=True)
 #
 # # drop no value row

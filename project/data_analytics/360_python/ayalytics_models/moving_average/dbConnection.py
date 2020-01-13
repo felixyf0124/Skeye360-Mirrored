@@ -39,7 +39,7 @@ class dbConnection:
         # Make a query
         newCount = {
             "id": (self._find_latest_id(collection) + 1),
-            "direction": direction,
+            "count_direction": direction,
             "count": count,
             "time": date_time,
             "count_type": count_type,
@@ -47,17 +47,7 @@ class dbConnection:
         }
         myDb = self._connect_mongo()
         myDb[collection].insert_one(newCount)
-
-    def insert_mongo(self, collection, counters):
-        insersions = 0
-        for c in counters:
-            newCount = {"direction": c.direction.get_direction(),
-                        "count": c.count,
-                        "time": c.datetime,
-                        "category": "vehicle"}
-            insersions = insersions + 1
-            collection.insert_one(newCount)
-            logger.info("Sending data to db")
+        logger.info("Sending one count to db")
 
     def read_mongo(self, collection, query={}):
         # Make a query to the specific DB and Collection
@@ -66,10 +56,20 @@ class dbConnection:
 
         # Expand the cursor and construct the DataFrame
         df = pd.DataFrame(list(cursor))
+        logger.info("Read all count from db")
         return df
 
     def _find_latest_id(self, collection):
         # Make a query to the specific DB and Collection
         mydb = self._connect_mongo()
         id = mydb[collection].find().count()
+        logger.info("find latest id from db")
         return id
+
+    def find_latest_4_documents(self, collection, count_type, count_direction):
+        mydb = self._connect_mongo()
+        cursor = mydb[collection].find({"count_type": count_type, "count_direction": count_direction}).sort([("time", -1)]).limit(
+            4)
+        df = pd.DataFrame(list(cursor))
+        logger.info("find latest 4 documents")
+        return df
