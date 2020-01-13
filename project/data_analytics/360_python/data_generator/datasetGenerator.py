@@ -91,8 +91,8 @@ with open('360_python\models\generatedDataset.csv', mode='w') as csvFile:
                 rowData = rowPreparator(indexID, 'east', 'west', 'east', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
             elif(secondIndex == 4):
                 rowData = rowPreparator(indexID, 'west', 'east', 'west', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
+                indexID += 1
             csvWriter.writerow(rowData)
-            indexID += 1
 
 # For Mac OS, uncomment the "read_csv" command below and comment out the second "read_csv"
 # df = pandas.read_csv('./data_analytics/360_python/ayalytics_models/generatedDataset.csv', index_col='id')
