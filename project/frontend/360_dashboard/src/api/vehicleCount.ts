@@ -3,13 +3,10 @@ export interface Response {
   los: number;
 }
 
-const APIDomain = '0.0.0.0:8000';
-
 // Getting the count information from backend
-export const getCount = async (): Promise<Response> => {
-
+export const getCount = async (cameraUrl: string): Promise<Response> => {
   // Eurl endpoint with id??
-  const url = `//${APIDomain}/los/`;
+  const url = `//${cameraUrl}/los/`;
   const settings = {
     method: 'GET',
     headers: {},

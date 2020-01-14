@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { Action } from 'redux';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import {
-  Response as countResponse,
-  getCount,
-} from '../api/vehicleCount';
+import { Response as countResponse, getCount } from '../api/vehicleCount';
 
 export interface STATE {
   intersection_id: number;
-  count: number;
   los: number;
   error: string;
   success: boolean;
@@ -17,8 +13,7 @@ export interface STATE {
 // initState
 const initState: STATE = {
   intersection_id: 0,
-  count: 0,
-  los: 0,
+  los: -1,
   error: '',
   success: false,
 };
@@ -28,17 +23,16 @@ export const GET_COUNT = 'GET_COUNT';
 export const GET_COUNT_SUCCESS = 'GET_COUNT_SUCCESS';
 export const GET_COUNT_FAIL = 'GET_COUNT_FAIL';
 
-
 // READ
 export interface GetCountAction extends Action {
   type: string;
-  id: string;
+  cameraUrl: string;
 }
 
 // base case
-export const getCurrentCount = (id: string): GetCountAction => ({
+export const getCurrentCount = (cameraUrl: string): GetCountAction => ({
   type: GET_COUNT,
-  id,
+  cameraUrl,
 });
 
 export interface GetCountSuccessAction {
@@ -47,9 +41,7 @@ export interface GetCountSuccessAction {
 }
 
 // success case
-export const getCountSuccess = (
-  data: countResponse,
-): GetCountSuccessAction => ({
+export const getCountSuccess = (data: countResponse): GetCountSuccessAction => ({
   type: GET_COUNT_SUCCESS,
   data,
 });
@@ -65,9 +57,9 @@ export const getCountFail = (): GetCountFail => ({
 
 // SAGA
 // read
-export function* handleGetCount({ id }: GetCountAction): Iterator<any> {
+export function* handleGetCount(cameraUrl: any): Iterator<any> {
   try {
-    const data = yield call(getCount);
+    const data = yield call(getCount, cameraUrl);
     if (data !== undefined) {
       yield put(getCountSuccess(data));
     }
@@ -89,8 +81,8 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       const { data } = action as GetCountSuccessAction;
       return {
         ...state,
-        los: data.los,
         intersection_id: data.intersection_id,
+        los: data.los,
         error: '',
         success: true,
       };

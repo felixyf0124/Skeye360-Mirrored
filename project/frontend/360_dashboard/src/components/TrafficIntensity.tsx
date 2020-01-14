@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
-import { logClick, LogAction } from '../contexts/LogClicks';
+import { getCurrentCount, GetCountAction } from '../contexts/vehicleCounts';
 
 const TrafficIntensityContainer = styled.div``;
 
@@ -12,20 +12,23 @@ interface Props {
 }
 
 interface StateProps {
-  traffic: number;
+  los: number;
 }
 
 interface DispatchProps {
-  logClick: (log_message: string, user_id: number) => LogAction;
+  getCurrentCount: (cameraUrl: string) => GetCountAction;
 }
 
 const TrafficIntensity = (props: Props & StateProps & DispatchProps): JSX.Element => {
-  const { intersection_id, traffic } = props;
+  const { los } = props;
   const displayIntensity = (): string => {
-    if (traffic <= 20) {
+    if (los === -1) {
+      return 'Loading...';
+    }
+    if (los <= 20) {
       return 'Low';
     }
-    if (traffic > 55) {
+    if (los > 55) {
       return 'High';
     }
     return 'Medium';
@@ -35,11 +38,11 @@ const TrafficIntensity = (props: Props & StateProps & DispatchProps): JSX.Elemen
 
 const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
-  traffic: 0,
+  los: state.count.los,
 });
 
 const mapDispatchToProps: DispatchProps = {
-  logClick,
+  getCurrentCount,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrafficIntensity);

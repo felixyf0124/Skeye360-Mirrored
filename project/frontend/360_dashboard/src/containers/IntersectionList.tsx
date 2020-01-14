@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import SideDrawer from './SideDrawer';
-import IntersectionTable from './IntersectionTable';
+import SideDrawer from '../components/SideDrawer';
+import IntersectionTable from '../components/IntersectionTable';
 import { RootState } from '../reducers/rootReducer';
 
 import {
@@ -15,7 +15,7 @@ import {
 } from '../contexts/districts';
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
 import { logClick, LogAction } from '../contexts/LogClicks';
-import TrafficNews from './TrafficNews';
+import TrafficNews from '../components/TrafficNews';
 
 const title = 'Montreal';
 interface StateProps {
