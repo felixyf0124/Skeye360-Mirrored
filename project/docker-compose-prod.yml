@@ -39,7 +39,7 @@ services:
   360_dashboard:
     build: 
       context: ./frontend/360_dashboard
-      dockerfile: Dockerfile
+      dockerfile: DockerfileProd
     container_name: 'my-dashboard'
     ports:
       - '3000:3000'

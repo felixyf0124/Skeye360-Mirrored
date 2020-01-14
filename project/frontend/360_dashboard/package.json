@@ -9,6 +9,7 @@
     "@material-ui/icons": "^4.5.1",
     "@types/google-map-react": "^1.1.0",
     "@types/jquery": "^3.3.31",
+    "@types/node": "^13.1.6",
     "@types/react-router-dom": "^5.1.0",
     "@types/redux-saga": "^0.10.5",
     "@types/styled-components": "^4.1.19",
@@ -48,10 +49,11 @@
     "sinon": "^7.5.0",
     "styled-components": "^4.4.0",
     "ts-node": "^8.4.1",
-    "typescript": "^3.6.3"
+    "typescript": "^3.7.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_API_URL=0.0.0.0:8000 react-scripts start",
+    "prod": "REACT_APP_API_URL=40.121.23.48:8000 react-scripts start",
     "build": "react-scripts build",
     "test": "nyc mocha --require ts-node/register 'src/**/*.spec.js' --exclude '**/node_modules/**'",
     "eject": "react-scripts eject",
