@@ -2,13 +2,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { CircularProgress } from '@material-ui/core/';
 import { RootState } from '../reducers/rootReducer';
 import Simulator from './simulator/Scene';
 import AvgWaitTimeChartComparison from '../components/AvgWaitTimeChartComparison';
-import {
-  getExistingIntersection,
-} from '../contexts/intersection';
-import { getDistricts } from '../contexts/districts';
+import { getExistingCamera } from '../contexts/camera';
 import SideDrawer from '../components/SideDrawer';
 import { SKEYE_WHITE } from '../css/custom';
 
@@ -23,7 +21,7 @@ const DivRow = styled.div`
 // Outer Container
 const OuterDiv = styled.div`
   margin-left: 5rem;
-  margin-top: 5rem; 
+  margin-top: 5rem;
   display: flex;
   flex-direction: column;
 `;
@@ -43,7 +41,7 @@ const CamFeed = styled.div`
   margin: 1rem;
   background-color: #212121;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   height: 17vw;
   justify-content: center;
   align-items: center;
@@ -61,27 +59,26 @@ const ChartContainer = styled.div`
 const SimContainer = styled.div`
   display: flex;
   justify-content: center;
-  paddingLeft: 10rem;
+  paddingleft: 10rem;
   margin: 1rem;
 `;
 
 interface StateProps {
-  intersectionId: string;
+  camera_id: string;
   intersectionName: string;
   error: string;
   user_id: number;
 }
 
 interface DispatchProps {
-  getExistingIntersection: (id: string) => any;
-  getDistricts: () => any;
+  getExistingCamera: (id: string) => any;
 }
 
 class CamView extends React.Component<StateProps & DispatchProps> {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
-    const { intersectionId, getExistingIntersection } = this.props;
-    getExistingIntersection(intersectionId);
+    const { camera_id, getExistingCamera } = this.props;
+    getExistingCamera(camera_id);
   }
 
   public render(): JSX.Element {
@@ -96,7 +93,7 @@ class CamView extends React.Component<StateProps & DispatchProps> {
             <InnerDiv>
               <h2>Live Camera Feed</h2>
               <CamFeed>
-                <h3>Camera Feed Coming Soon</h3>
+                <CircularProgress />
               </CamFeed>
             </InnerDiv>
             <InnerDiv>
@@ -122,7 +119,7 @@ class CamView extends React.Component<StateProps & DispatchProps> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  intersectionId: state.router.location.pathname.substring(
+  camera_id: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
   ),
   intersectionName: state.intersection.intersection_name,
@@ -131,8 +128,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 });
 
 const mapDispatchToProps: DispatchProps = {
-  getExistingIntersection,
-  getDistricts,
+  getExistingCamera,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CamView);
