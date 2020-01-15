@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import { STATE as districtState } from '../contexts/districts';
 import DeleteIntersectionButton from './DeleteIntersectionButton';
 import TrafficIntensity from './TrafficIntensity';
+import { Response as cameraResponse } from '../api/camera';
 
 /* Tables from Material-UI:
   https://material-ui.com/components/tables/ */
@@ -63,7 +64,7 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
               <TableCell>District</TableCell>
               <TableCell>Traffic Intensity</TableCell>
               <TableCell>Streetview</TableCell>
-              <TableCell>Simulator</TableCell>
+              <TableCell>Cameras</TableCell>
               <TableCell>Edit</TableCell>
               <TableCell>Delete</TableCell>
             </TableRow>
@@ -94,9 +95,11 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <Link to={`/camview/${intersection.id}`}>
-                      <CallMadeIcon />
-                    </Link>
+                    {intersection.cameras.map((camera: cameraResponse) => (
+                      <Link key={camera.id} to={`/camview/${camera.id}`}>
+                        <CallMadeIcon />
+                      </Link>
+                    ))}
                   </TableCell>
                   <TableCell>
                     <Link to={`/intersection/edit/${intersection.id}`}>
