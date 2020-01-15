@@ -55,7 +55,7 @@ export const editCamera = async (
   intersection_id: string,
 ): Promise<Response> => {
   // ENDPOINT, PARAMS
-  const url = `//${APIDomain}/api/camera/${intersection_id}/`;
+  const url = `//${APIDomain}/api/camera/${id}/`;
   const params = {
     id,
     camera_url,
