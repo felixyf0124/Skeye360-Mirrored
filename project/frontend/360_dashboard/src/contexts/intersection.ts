@@ -8,6 +8,7 @@ import {
   deleteIntersection,
   getIntersection,
 } from '../api/intersection';
+import { Response as cameraResponse } from '../api/camera';
 
 export interface STATE {
   intersection_id: string;
@@ -15,6 +16,7 @@ export interface STATE {
   longitude: string;
   intersection_name: string;
   district_id: string;
+  cameras: [cameraResponse] | [];
   error: string;
   success: boolean;
 }
@@ -26,6 +28,7 @@ const initState: STATE = {
   longitude: '',
   intersection_name: '',
   district_id: '',
+  cameras: [],
   error: '',
   success: false,
 };
@@ -317,6 +320,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         longitude: String(data.longitude),
         district_id: String(data.district_id),
         intersection_id: String(data.id),
+        cameras: data.cameras,
         error: '',
         success: true,
       };

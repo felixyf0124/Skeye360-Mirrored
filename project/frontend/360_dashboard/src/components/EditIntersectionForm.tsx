@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     backgroundColor: '#212121',
     margin: 'auto',
-    marginTop: '20rem',
+    marginBottom: '2rem',
     width: '25rem',
     height: '30rem',
     border: '1px solid grey',
@@ -84,7 +84,6 @@ const useStyles = makeStyles((theme) => ({
   innerBox: {
     marginTop: '2rem',
   },
-
 }));
 
 const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element => {
@@ -115,9 +114,7 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
 
   return (
     <div>
-      <SideDrawer
-        headerTitle={title}
-      />
+      <SideDrawer headerTitle={title} />
       <div className={classes.content}>
         {state.error !== '' ? (
           <div className="form-group">
@@ -136,7 +133,13 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
           <div className={classes.innerBox}>
             <div className="form-group">
               <div className={classes.textEntry}>District ID</div>
-              <input type="text" className={classes.textField} name="district_id" value={state.district_id} disabled />
+              <input
+                type="text"
+                className={classes.textField}
+                name="district_id"
+                value={state.district_id}
+                disabled
+              />
             </div>
             <div className="form-group">
               <div className={classes.textEntry}>Intersection Name</div>
@@ -150,14 +153,28 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
             </div>
             <div className="form-group">
               <div className={classes.textEntry}>Latitude</div>
-              <input type="text" name="latitude" className={classes.textField} value={state.latitude} onChange={handleChange} />
+              <input
+                type="text"
+                name="latitude"
+                className={classes.textField}
+                value={state.latitude}
+                onChange={handleChange}
+              />
             </div>
             <div className="form-group">
               <div className={classes.textEntry}>Longitude</div>
-              <input type="text" name="longitude" className={classes.textField} value={state.longitude} onChange={handleChange} />
+              <input
+                type="text"
+                name="longitude"
+                className={classes.textField}
+                value={state.longitude}
+                onChange={handleChange}
+              />
             </div>
             <div className={classes.centeredBox}>
-              <button className={classes.addButton} type="submit">Edit</button>
+              <button className={classes.addButton} type="submit">
+                Edit
+              </button>
             </div>
           </div>
         </form>

@@ -100,7 +100,7 @@ export interface GetCameraAction extends Action {
 }
 
 // base case
-export const getExistingIntersection = (id: string): GetCameraAction => ({
+export const getExistingCamera = (id: string): GetCameraAction => ({
   type: GET_CAMERA,
   id,
 });
@@ -133,7 +133,7 @@ export interface EditCameraAction extends Action {
 }
 
 // base case
-export const editCameraIntersection = (
+export const editExistingCamera = (
   id: string,
   camera_url: string,
   intersection_id: string,
@@ -170,7 +170,7 @@ export interface DeleteCameraAction extends Action {
 }
 
 // base case
-export const deleteExistingIntersection = (id: string): DeleteCameraAction => ({
+export const deleteExistingCamera = (id: string): DeleteCameraAction => ({
   type: DELETE_CAMERA,
   id,
 });
