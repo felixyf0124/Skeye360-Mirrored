@@ -62,9 +62,9 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
             <TableRow>
               <TableCell>Intersection Name</TableCell>
               <TableCell>District</TableCell>
-              <TableCell>Traffic Intensity</TableCell>
               <TableCell>Streetview</TableCell>
               <TableCell>Cameras</TableCell>
+              <TableCell>Traffic Intensity</TableCell>
               <TableCell>Edit</TableCell>
               <TableCell>Delete</TableCell>
             </TableRow>
@@ -87,9 +87,6 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                   </TableCell>
                   <TableCell>{districts.districts[0].district_name}</TableCell>
                   <TableCell>
-                    <TrafficIntensity intersection_id={intersection.id} />
-                  </TableCell>
-                  <TableCell>
                     <Link to={`/streetview/${intersection.id}`}>
                       <CallMadeIcon />
                     </Link>
@@ -100,6 +97,9 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                         <CallMadeIcon />
                       </Link>
                     ))}
+                  </TableCell>
+                  <TableCell>
+                    <TrafficIntensity intersection_id={intersection.id} />
                   </TableCell>
                   <TableCell>
                     <Link to={`/intersection/edit/${intersection.id}`}>
