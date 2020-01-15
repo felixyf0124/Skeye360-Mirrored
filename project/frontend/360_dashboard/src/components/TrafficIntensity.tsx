@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { CircularProgress } from '@material-ui/core/';
 import { RootState } from '../reducers/rootReducer';
 import { getCurrentCount, GetCountAction } from '../contexts/vehicleCounts';
 
@@ -21,9 +22,9 @@ interface DispatchProps {
 
 const TrafficIntensity = (props: Props & StateProps & DispatchProps): JSX.Element => {
   const { los } = props;
-  const displayIntensity = (): string => {
+  const displayIntensity = (): any => {
     if (los === -1) {
-      return 'Loading...';
+      return <CircularProgress />;
     }
     if (los <= 20) {
       return 'Low';
