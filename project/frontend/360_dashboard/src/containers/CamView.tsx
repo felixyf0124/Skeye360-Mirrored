@@ -2,7 +2,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { CircularProgress } from '@material-ui/core/';
 import { RootState } from '../reducers/rootReducer';
 import Simulator from './simulator/Scene';
 import AvgWaitTimeChartComparison from '../components/AvgWaitTimeChartComparison';
@@ -65,6 +64,7 @@ const SimContainer = styled.div`
 
 interface StateProps {
   camera_id: string;
+  camera_url: string;
   intersectionName: string;
   error: string;
   user_id: number;
@@ -82,7 +82,7 @@ class CamView extends React.Component<StateProps & DispatchProps> {
   }
 
   public render(): JSX.Element {
-    const { intersectionName } = this.props;
+    const { intersectionName, camera_url } = this.props;
 
     // eslint-disable-next-line consistent-return
     return (
@@ -93,7 +93,7 @@ class CamView extends React.Component<StateProps & DispatchProps> {
             <InnerDiv>
               <h2>Live Camera Feed</h2>
               <CamFeed>
-                <CircularProgress />
+                <img src={`http://${camera_url}/cam`} alt="" />
               </CamFeed>
             </InnerDiv>
             <InnerDiv>
@@ -122,6 +122,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   camera_id: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
   ),
+  camera_url: state.camera.camera_url,
   intersectionName: state.intersection.intersection_name,
   error: state.intersection.error,
   user_id: state.authentication.user_id,

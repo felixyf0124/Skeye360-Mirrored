@@ -9,7 +9,7 @@ import { getCurrentCount, GetCountAction } from '../contexts/vehicleCounts';
 const TrafficIntensityContainer = styled.div``;
 
 interface Props {
-  intersection_id: number;
+  camera_url: string;
 }
 
 interface StateProps {
@@ -22,6 +22,7 @@ interface DispatchProps {
 
 const TrafficIntensity = (props: Props & StateProps & DispatchProps): JSX.Element => {
   const { los } = props;
+  // props.getCurrentCount(camera_url);
   const displayIntensity = (): any => {
     if (los === -1) {
       return <CircularProgress />;

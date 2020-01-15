@@ -138,7 +138,7 @@ const EditCameraForm = (props: Props & StateProps & DispatchProps): JSX.Element 
               </div>
             </div>
             <div className="form-group">
-              <div className={classes.textEntry}>Cameral URL</div>
+              <div className={classes.textEntry}>Camera URL</div>
               <input
                 type="text"
                 name="camera_url"

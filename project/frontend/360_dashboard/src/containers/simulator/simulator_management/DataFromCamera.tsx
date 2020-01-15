@@ -2,9 +2,9 @@
  * @class DataFromCamera
  */
 export default class DataFromCamera {
-  static async getDataFromCamera(): Promise<string> {
+  static async getDataFromCamera(cameraUrl: string): Promise<string> {
     try {
-      const response = await fetch('http://127.0.0.1:8001/coord/');
+      const response = await fetch(`http://${cameraUrl}/coord/`);
       // console.log("TEXT:" + await response.text());
       return await response.text();
     } catch (e) {

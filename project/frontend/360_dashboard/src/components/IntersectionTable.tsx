@@ -12,12 +12,23 @@ import Paper from '@material-ui/core/Paper';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
-import CallMadeIcon from '@material-ui/icons/CallMade';
+import LaunchIcon from '@material-ui/icons/Launch';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { STATE as districtState } from '../contexts/districts';
 import DeleteIntersectionButton from './DeleteIntersectionButton';
 import TrafficIntensity from './TrafficIntensity';
 import { Response as cameraResponse } from '../api/camera';
+
+// Generic flexboxes styling
+const VerticalFlexBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  align-content: stretch;
+`;
 
 /* Tables from Material-UI:
   https://material-ui.com/components/tables/ */
@@ -88,18 +99,24 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                   <TableCell>{districts.districts[0].district_name}</TableCell>
                   <TableCell>
                     <Link to={`/streetview/${intersection.id}`}>
-                      <CallMadeIcon />
+                      <LaunchIcon />
                     </Link>
+                  </TableCell>
+                  <TableCell>
+                    <VerticalFlexBox>
+                      {intersection.cameras.map((camera: cameraResponse) => (
+                        <Link key={camera.id} to={`/camview/${camera.id}`}>
+                          <LaunchIcon />
+                        </Link>
+                      ))}
+                    </VerticalFlexBox>
                   </TableCell>
                   <TableCell>
                     {intersection.cameras.map((camera: cameraResponse) => (
                       <Link key={camera.id} to={`/camview/${camera.id}`}>
-                        <CallMadeIcon />
+                        <TrafficIntensity camera_url={camera.camera_url} />
                       </Link>
                     ))}
-                  </TableCell>
-                  <TableCell>
-                    <TrafficIntensity intersection_id={intersection.id} />
                   </TableCell>
                   <TableCell>
                     <Link to={`/intersection/edit/${intersection.id}`}>
