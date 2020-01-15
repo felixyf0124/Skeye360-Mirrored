@@ -6,3 +6,7 @@ markdown
 django-filter
 pygments # for highlighting
 django-cors-headers
+numpy
+opencv-contrib-python
+scipy
+scikit-learn
