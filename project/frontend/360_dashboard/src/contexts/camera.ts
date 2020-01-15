@@ -56,19 +56,13 @@ export const resetCamera = (): ResetCameraAction => ({
 
 // ADD
 export interface AddCameraAction extends Action {
-  id: string;
   camera_url: string;
   intersection_id: string;
 }
 
 // base case
-export const addNewCamera = (
-  id: string,
-  camera_url: string,
-  intersection_id: string,
-): AddCameraAction => ({
+export const addNewCamera = (camera_url: string, intersection_id: string): AddCameraAction => ({
   type: ADD_CAMERA,
-  id,
   camera_url,
   intersection_id,
 });
@@ -198,11 +192,7 @@ export const deleteCameraFail = (): DeleteCameraFail => ({
 // SAGA
 
 // create
-export function* handleAddCamera({
-  id,
-  camera_url,
-  intersection_id,
-}: AddCameraAction): Iterator<any> {
+export function* handleAddCamera({ camera_url, intersection_id }: AddCameraAction): Iterator<any> {
   try {
     const data = yield call(addCamera, camera_url, intersection_id);
     if (data !== undefined) {

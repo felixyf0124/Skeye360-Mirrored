@@ -13,6 +13,7 @@ import EditIntersectionForm from '../components/EditIntersectionForm';
 import { Response as cameraResponse } from '../api/camera';
 import SideDrawer from '../components/SideDrawer';
 import EditCameraForm from '../components/EditCameraForm';
+import AddCameraForm from '../components/AddCameraForm';
 
 const Content = styled.div`
   margin-top: 8rem;
@@ -73,7 +74,9 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
   }
 
   public render(): JSX.Element {
-    const { success, intersection_name, cameras } = this.props;
+    const {
+      success, intersection_name, cameras, intersection_id,
+    } = this.props;
     // if (district_id === '') return <Redirect to="/" />;
     const headerTitle = `Edit: ${intersection_name}`;
 
@@ -96,6 +99,7 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
                   />
                 ))
               )}
+              <AddCameraForm intersection_id={Number(intersection_id)} />
             </VerticalFlexBox>
           </HorizontalFlexBox>
         </Content>
