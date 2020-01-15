@@ -33,7 +33,7 @@ interface DispatchProps {
   logClick: (log_message: string, user_id: number) => any;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& > *': {
       width: 200,
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     backgroundColor: '#212121',
     margin: 'auto',
-    marginTop: '20rem',
+    marginTop: '10rem',
     width: '25rem',
     height: '30rem',
     border: '1px solid grey',
@@ -154,6 +154,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                 type="text"
                 name="intersection_name"
                 value={intersection_name}
+                placeholder="e.g. Guy/St-Catherine"
                 className={classes.textField}
                 onChange={handleChange}
               />
@@ -164,6 +165,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                 type="text"
                 name="latitude"
                 value={latitude}
+                placeholder="e.g. 12.3456"
                 className={classes.textField}
                 onChange={handleChange}
               />
@@ -174,6 +176,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                 type="text"
                 name="longitude"
                 value={longitude}
+                placeholder="e.g. 12.3456"
                 className={classes.textField}
                 onChange={handleChange}
               />
@@ -194,10 +197,10 @@ const mapStateToProps = (state: RootState): StateProps => ({
   path: '/intersection/add',
   username: state.authentication.username,
 
-  latitude: '45.5017',
-  longitude: '-73.5673',
+  latitude: '',
+  longitude: '',
   district_id: '1',
-  intersection_name: 'Guy St/St-Cath',
+  intersection_name: '',
 
   error: state.intersection.error,
   user_id: state.authentication.user_id,
