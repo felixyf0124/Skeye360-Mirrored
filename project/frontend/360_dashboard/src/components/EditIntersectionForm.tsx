@@ -3,7 +3,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import SideDrawer from './SideDrawer';
 import { editExistingIntersection, EditIntersectionAction } from '../contexts/intersection';
 import { RootState } from '../reducers/rootReducer';
 import { logClick } from '../contexts/LogClicks';
@@ -109,12 +108,10 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
     props.logClick('Edited Intersection', user_id);
   };
 
-  const title = 'Edit Intersection';
   const classes = useStyles();
 
   return (
     <div>
-      <SideDrawer headerTitle={title} />
       <div className={classes.content}>
         {state.error !== '' ? (
           <div className="form-group">

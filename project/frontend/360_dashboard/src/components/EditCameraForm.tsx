@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import SideDrawer from './SideDrawer';
 import { editExistingCamera, EditCameraAction } from '../contexts/camera';
 import { RootState } from '../reducers/rootReducer';
 import { logClick } from '../contexts/LogClicks';
@@ -110,12 +109,10 @@ const EditCameraForm = (props: Props & StateProps & DispatchProps): JSX.Element 
     props.logClick('Edited Camera', user_id);
   };
 
-  const title = 'Edit Camera';
   const classes = useStyles();
 
   return (
     <div>
-      <SideDrawer headerTitle={title} />
       <div className={classes.content}>
         {error !== '' ? (
           <div className="form-group">

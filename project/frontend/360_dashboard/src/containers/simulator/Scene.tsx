@@ -1330,9 +1330,6 @@ class Scene extends React.Component<StateProps & DispatchProps> {
 
   // render
   public render(): JSX.Element {
-    const {
-      camera_url,
-    } = this.props;
     return (
       <div>
         <table>
@@ -1349,7 +1346,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
                 />
               </td>
               <td>
-                <img
+                {/* <img
                   style={{
                     width: this.windowW,
                     minWidth: this.windowMin,
@@ -1357,7 +1354,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
                   }}
                   src={`http://${camera_url}/cam`}
                   alt=""
-                />
+                /> */}
               </td>
             </tr>
           </tbody>

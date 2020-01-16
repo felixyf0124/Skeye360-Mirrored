@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import Simulator from './simulator/Scene';
-import AvgWaitTimeChartComparison from '../components/AvgWaitTimeChartComparison';
+// import AvgWaitTimeChartComparison from '../components/AvgWaitTimeChartComparison';
 import { getExistingCamera } from '../contexts/camera';
 import SideDrawer from '../components/SideDrawer';
-import { SKEYE_WHITE } from '../css/custom';
+// import { SKEYE_WHITE } from '../css/custom';
 
 // Container Row
 const DivRow = styled.div`
@@ -47,12 +47,12 @@ const CamFeed = styled.div`
 `;
 
 // Container for chart
-const ChartContainer = styled.div`
-  background-color: ${SKEYE_WHITE};
-  margin: 1rem;
-  position: relative;
-  width: 30vw;
-`;
+// const ChartContainer = styled.div`
+//   background-color: ${SKEYE_WHITE};
+//   margin: 1rem;
+//   position: relative;
+//   width: 30vw;
+// `;
 
 // Container for the simulator
 const SimContainer = styled.div`
@@ -93,15 +93,15 @@ class CamView extends React.Component<StateProps & DispatchProps> {
             <InnerDiv>
               <h2>Live Camera Feed</h2>
               <CamFeed>
-                <img src={`http://${camera_url}/cam`} alt="" />
+                <img src={`http://${camera_url}/cam`} alt="Loading..." />
               </CamFeed>
             </InnerDiv>
-            <InnerDiv>
+            {/* <InnerDiv>
               <h2>Data Analytics</h2>
               <ChartContainer>
                 <AvgWaitTimeChartComparison />
               </ChartContainer>
-            </InnerDiv>
+            </InnerDiv> */}
           </DivRow>
           <DivRow>
             <InnerDiv>

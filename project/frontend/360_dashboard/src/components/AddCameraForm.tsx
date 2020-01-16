@@ -7,7 +7,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { RootState } from '../reducers/rootReducer';
 import { addNewCamera } from '../contexts/camera';
 import { logClick } from '../contexts/LogClicks';
-import SideDrawer from './SideDrawer';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -100,12 +99,10 @@ const AddCameraForm = (props: State & StateProps & DispatchProps): JSX.Element =
     logClick('Added Intersection', user_id);
   };
 
-  const title = 'Add Intersection';
   const classes = useStyles();
 
   return (
     <div>
-      <SideDrawer headerTitle={title} />
       <div className={classes.content}>
         {error !== '' ? (
           <div className="form-group">
