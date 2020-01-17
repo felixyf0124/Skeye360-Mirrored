@@ -147,12 +147,6 @@ const EditCameraForm = (props: Props & StateProps & DispatchProps): JSX.Element 
             </div>
             <HorizontalFlexBox>
               <div className={classes.centeredBox}>
-                <DeleteCameraButton
-                  id={Number(state.id)}
-                  intersection_id={Number(state.intersection_id)}
-                />
-              </div>
-              <div className={classes.centeredBox}>
                 <button className={classes.addButton} type="submit">
                   Edit
                 </button>
@@ -163,6 +157,12 @@ const EditCameraForm = (props: Props & StateProps & DispatchProps): JSX.Element 
                     View
                   </button>
                 </Link>
+              </div>
+              <div className={classes.centeredBox}>
+                <DeleteCameraButton
+                  id={Number(state.id)}
+                  intersection_id={Number(state.intersection_id)}
+                />
               </div>
             </HorizontalFlexBox>
           </div>

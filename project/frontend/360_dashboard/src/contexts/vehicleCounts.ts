@@ -89,7 +89,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     }
     case GET_COUNT_FAIL: {
       return {
-        ...initState,
+        ...state,
         error: 'Error while getting existing count.',
         success: false,
       };

@@ -93,18 +93,14 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
           <HorizontalFlexBox>
             {intersection_name === '' ? <div /> : <EditIntersectionForm />}
             <VerticalFlexBox>
-              {cameras[0] === undefined ? (
-                <div />
-              ) : (
-                cameras.map((camera: cameraResponse) => (
-                  <EditCameraForm
-                    key={camera.id}
-                    id={String(camera.id)}
-                    camera_url={camera.camera_url}
-                    intersection_id={String(camera.intersection_id)}
-                  />
-                ))
-              )}
+              {cameras.map((camera: cameraResponse) => (
+                <EditCameraForm
+                  key={camera.id}
+                  id={String(camera.id)}
+                  camera_url={camera.camera_url}
+                  intersection_id={String(camera.intersection_id)}
+                />
+              ))}
               <AddCameraForm intersection_id={Number(intersection_id)} />
             </VerticalFlexBox>
           </HorizontalFlexBox>

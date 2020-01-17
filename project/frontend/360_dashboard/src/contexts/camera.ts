@@ -258,8 +258,12 @@ export default function reducer(state: STATE = initState, action: any): STATE {
   switch (action.type) {
     case RESET_CAMERA: {
       return {
-        ...initState,
-        success: true,
+        ...state,
+        id: 0,
+        camera_url: '',
+        intersection_id: 0,
+        error: '',
+        success: false,
       };
     }
     case ADD_CAMERA_SUCCESS: {
@@ -303,7 +307,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     }
     case GET_CAMERA_FAIL: {
       return {
-        ...initState,
+        ...state,
         error: 'Error while getting existing camera.',
         success: false,
       };

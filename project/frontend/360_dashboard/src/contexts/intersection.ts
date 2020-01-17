@@ -233,7 +233,6 @@ export function* handleAddIntersection({
     }
   } catch (e) {
     yield put(addIntersectionFail());
-    throw e;
   }
 }
 
@@ -246,7 +245,6 @@ export function* handleGetIntersection({ id }: GetIntersectionAction): Iterator<
     }
   } catch (e) {
     yield put(getIntersectionFail());
-    throw e;
   }
 }
 
@@ -272,7 +270,6 @@ export function* handleEditIntersection({
     }
   } catch (e) {
     yield put(editIntersectionFail());
-    throw e;
   }
 }
 
@@ -283,7 +280,6 @@ export function* handleDeleteIntersection({ id }: DeleteIntersectionAction): Ite
     yield put({ type: DELETE_INTERSECTION_SUCCESS });
   } catch (e) {
     yield put(deleteIntersectionFail());
-    throw e;
   }
 }
 
@@ -300,8 +296,15 @@ export default function reducer(state: STATE = initState, action: any): STATE {
   switch (action.type) {
     case RESET_INTERSECTION: {
       return {
-        ...initState,
-        success: true,
+        ...state,
+        intersection_id: '',
+        latitude: '',
+        longitude: '',
+        intersection_name: '',
+        district_id: '',
+        cameras: [],
+        error: '',
+        success: false,
       };
     }
     case ADD_INTERSECTION_SUCCESS: {
@@ -348,7 +351,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     }
     case GET_INTERSECTION_FAIL: {
       return {
-        ...initState,
+        ...state,
         error: 'Error while getting existing intersection.',
         success: false,
       };
