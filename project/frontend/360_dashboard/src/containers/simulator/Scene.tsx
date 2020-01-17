@@ -256,9 +256,9 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     // toggle group
     const videoFeed = { name: 'enable video feed', state: true };
     const samplingVideoFeed = { name: 'enable sampling video feed', state: false };
-    const uiV7 = { name: 'enable new UI v2.2', state: false };
-    const showSectionAreas = { name: 'Show Section Areas', state: false };
-    const showDirectVideoFeedMapping = { name: 'Show video feed mapping', state: false };
+    const uiV7 = { name: 'enable new UI v2.2', state: true };
+    const showSectionAreas = { name: 'Show Section Areas', state: true };
+    const showDirectVideoFeedMapping = { name: 'Show video feed mapping', state: true };
     const showVideoFeedBG = { name: 'Show video feed background', state: false };
     this.toggleGroup.push(videoFeed);
     this.toggleGroup.push(samplingVideoFeed);
