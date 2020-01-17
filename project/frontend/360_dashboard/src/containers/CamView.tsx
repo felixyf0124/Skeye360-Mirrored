@@ -9,6 +9,16 @@ import { getExistingCamera } from '../contexts/camera';
 import SideDrawer from '../components/SideDrawer';
 // import { SKEYE_WHITE } from '../css/custom';
 
+// Generic flexboxes styling
+const HorizontalFlexBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: space-around;
+  align-content: stretch;
+`;
+
 // DIV inside the sideDrawer
 const Body = styled.div`
   margin-left: 10rem;
@@ -24,12 +34,12 @@ const Body = styled.div`
 // `;
 
 // Outer Container
-const OuterDiv = styled.div`
-  margin-left: 5rem;
-  margin-top: 5rem;
-  display: flex;
-  flex-direction: column;
-`;
+// const OuterDiv = styled.div`
+//   margin-left: 5rem;
+//   margin-top: 5rem;
+//   display: flex;
+//   flex-direction: column;
+// `;
 
 // Single Container
 const InnerDiv = styled.div`
@@ -41,13 +51,13 @@ const InnerDiv = styled.div`
 
 // Empty camera feed container
 // To be modified when the camera feed is added
-const CamFeed = styled.div`
-  width: 80vw;
+const CamFeed = styled.img`
+  width: 40vw;
+  height: 20vw;
   margin: 1rem;
   background-color: #212121;
   display: flex;
   justify-content: center;
-  height: 25vw;
   justify-content: center;
   align-items: center;
 `;
@@ -62,11 +72,11 @@ const CamFeed = styled.div`
 
 // Container for the simulator
 const SimContainer = styled.div`
-  width: 80vw;
+  width: 70vw;
   height: 25vw;
+  margin-left: 20rem;
   display: flex;
   justify-content: center;
-  paddingleft: 10rem;
   margin: 1rem;
 `;
 
@@ -97,12 +107,10 @@ class CamView extends React.Component<StateProps & DispatchProps> {
       <div>
         <SideDrawer headerTitle={intersectionName} />
         <Body>
-          <OuterDiv>
+          <HorizontalFlexBox>
             <InnerDiv>
               <h2>Live Camera Feed</h2>
-              <CamFeed>
-                <img src={`http://${camera_url}/cam`} alt="Loading..." />
-              </CamFeed>
+              <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
             </InnerDiv>
             {/* <InnerDiv>
               <h2>Data Analytics</h2>
@@ -112,12 +120,11 @@ class CamView extends React.Component<StateProps & DispatchProps> {
             </InnerDiv> */}
             <InnerDiv>
               <h2>Simulation of Traffic</h2>
+              <SimContainer>
+                <Simulator />
+              </SimContainer>
             </InnerDiv>
-            <SimContainer>
-              <div style={{ width: '10rem' }} />
-              <Simulator />
-            </SimContainer>
-          </OuterDiv>
+          </HorizontalFlexBox>
         </Body>
       </div>
     );
