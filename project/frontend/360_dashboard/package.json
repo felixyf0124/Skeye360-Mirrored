@@ -53,6 +53,7 @@
   },
   "scripts": {
     "start": "REACT_APP_API_URL=0.0.0.0:8000 react-scripts start",
+    "start:windows": "start:windows": "react-scripts start",
     "prod": "REACT_APP_API_URL=40.121.23.48:8000 react-scripts start",
     "build": "react-scripts build",
     "test": "nyc mocha --require ts-node/register 'src/**/*.spec.js' --exclude '**/node_modules/**'",
