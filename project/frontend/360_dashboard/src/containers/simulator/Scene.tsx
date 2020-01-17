@@ -1331,35 +1331,9 @@ class Scene extends React.Component<StateProps & DispatchProps> {
   // render
   public render(): JSX.Element {
     return (
-      <div>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <div
-                  style={{
-                    width: this.windowW,
-                    minWidth: this.windowMin,
-                    minHeight: this.windowMin,
-                  }}
-                  ref={(element): void => { this.updateCar(element); }}
-                />
-              </td>
-              <td>
-                {/* <img
-                  style={{
-                    width: this.windowW,
-                    minWidth: this.windowMin,
-                    minHeight: this.windowMin,
-                  }}
-                  src={`http://${camera_url}/cam`}
-                  alt=""
-                /> */}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <div
+        ref={(element): void => { this.updateCar(element); }}
+      />
     );
   }
 }

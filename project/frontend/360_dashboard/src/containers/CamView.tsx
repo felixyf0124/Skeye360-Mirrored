@@ -9,13 +9,19 @@ import { getExistingCamera } from '../contexts/camera';
 import SideDrawer from '../components/SideDrawer';
 // import { SKEYE_WHITE } from '../css/custom';
 
-// Container Row
-const DivRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  margin-top: 2rem;
+// DIV inside the sideDrawer
+const Body = styled.div`
+  margin-left: 10rem;
+  margin-top: 5rem;
 `;
+
+// Container Row
+// const DivRow = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-around;
+//   margin-top: 2rem;
+// `;
 
 // Outer Container
 const OuterDiv = styled.div`
@@ -36,12 +42,12 @@ const InnerDiv = styled.div`
 // Empty camera feed container
 // To be modified when the camera feed is added
 const CamFeed = styled.div`
-  width: 25vw;
+  width: 80vw;
   margin: 1rem;
   background-color: #212121;
   display: flex;
   justify-content: center;
-  height: 17vw;
+  height: 25vw;
   justify-content: center;
   align-items: center;
 `;
@@ -56,6 +62,8 @@ const CamFeed = styled.div`
 
 // Container for the simulator
 const SimContainer = styled.div`
+  width: 80vw;
+  height: 25vw;
   display: flex;
   justify-content: center;
   paddingleft: 10rem;
@@ -88,8 +96,8 @@ class CamView extends React.Component<StateProps & DispatchProps> {
     return (
       <div>
         <SideDrawer headerTitle={intersectionName} />
-        <OuterDiv>
-          <DivRow>
+        <Body>
+          <OuterDiv>
             <InnerDiv>
               <h2>Live Camera Feed</h2>
               <CamFeed>
@@ -102,17 +110,15 @@ class CamView extends React.Component<StateProps & DispatchProps> {
                 <AvgWaitTimeChartComparison />
               </ChartContainer>
             </InnerDiv> */}
-          </DivRow>
-          <DivRow>
             <InnerDiv>
               <h2>Simulation of Traffic</h2>
-              <SimContainer>
-                <div style={{ width: '10rem' }} />
-                <Simulator />
-              </SimContainer>
             </InnerDiv>
-          </DivRow>
-        </OuterDiv>
+            <SimContainer>
+              <div style={{ width: '10rem' }} />
+              <Simulator />
+            </SimContainer>
+          </OuterDiv>
+        </Body>
       </div>
     );
   }

@@ -67,6 +67,12 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
     getExistingIntersection(intersection_id);
   }
 
+  public componentDidUpdate(): void {
+    // eslint-disable-next-line no-shadow
+    const { intersection_id, getExistingIntersection } = this.props;
+    getExistingIntersection(intersection_id);
+  }
+
   public componentWillUnmount(): void {
     // eslint-disable-next-line no-shadow
     const { resetCurrentIntersection } = this.props;
