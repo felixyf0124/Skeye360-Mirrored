@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import SideDrawer from '../components/SideDrawer';
 import IntersectionTable from '../components/IntersectionTable';
 import { RootState } from '../reducers/rootReducer';
@@ -16,6 +17,16 @@ import {
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
 import { logClick, LogAction } from '../contexts/LogClicks';
 import TrafficNews from '../components/TrafficNews';
+
+// Generic flexboxes styling
+const HorizontalFlexBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: space-around;
+  align-content: stretch;
+`;
 
 const title = 'Montreal';
 interface StateProps {
@@ -56,11 +67,11 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
     //   districts: districts,
     // };
     return (
-      <div style={{ display: 'flex' }}>
+      <HorizontalFlexBox>
         <SideDrawer headerTitle={title} />
         {districts[0] === undefined ? <div /> : <IntersectionTable districts={districts} />}
         <TrafficNews />
-      </div>
+      </HorizontalFlexBox>
     );
   }
 }

@@ -10,7 +10,7 @@ import SideDrawer from '../components/SideDrawer';
 // import { SKEYE_WHITE } from '../css/custom';
 
 // Generic flexboxes styling
-const HorizontalFlexBox = styled.div`
+const VerticalFlexBox = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -107,7 +107,7 @@ class CamView extends React.Component<StateProps & DispatchProps> {
       <div>
         <SideDrawer headerTitle={intersectionName} />
         <Body>
-          <HorizontalFlexBox>
+          <VerticalFlexBox>
             <InnerDiv>
               <h2>Live Camera Feed</h2>
               <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
@@ -124,7 +124,7 @@ class CamView extends React.Component<StateProps & DispatchProps> {
                 <Simulator />
               </SimContainer>
             </InnerDiv>
-          </HorizontalFlexBox>
+          </VerticalFlexBox>
         </Body>
       </div>
     );
