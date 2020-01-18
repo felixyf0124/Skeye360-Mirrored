@@ -329,7 +329,7 @@ class Detector:
             self.draw_ROIs(image, ROI_list)
             frame = self.frame_to_bytes(image)
             intersection.print_counters()      
-                  
+
             # cv2.imshow("Display window", image)
             # cv2.waitKey(1)
             # yield the bytes of frame, and get ready for front end to retrieve them
