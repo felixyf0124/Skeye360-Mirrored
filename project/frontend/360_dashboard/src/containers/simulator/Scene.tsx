@@ -180,8 +180,19 @@ class Scene extends Component {
     this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW * 0.16, -this.windowH / 2));
 
     for (let i = 0; i < this.roadIntersection.getRoadSections().length; i += 1) {
+      if(i===3) {
+      this.roadIntersection.addNewLane(i, 1, 'left', 1);
       this.roadIntersection.addNewLane(i, 1, 'straight', 1);
-      this.roadIntersection.addNewLane(i, -1, 'straight', 1);
+      this.roadIntersection.addNewLane(i, 1, 'right', 1);
+      this.roadIntersection.addNewLane(i, -1, 'straight', 3);
+      }else{
+        this.roadIntersection.addNewLane(i, 1, 'back', 1);
+        this.roadIntersection.addNewLane(i, 1, 'left', 1);
+        this.roadIntersection.addNewLane(i, 1, 'straight', 1);
+        this.roadIntersection.addNewLane(i, 1, 'right', 1);
+        this.roadIntersection.addNewLane(i, -1, 'straight', 3);
+      }
+      console.log(" _ "+this.roadIntersection.getRoadSections()[i].getLaneIn().length);
     }
 
     this.roadIntersection.setLaneWidth(this.laneW);
@@ -192,17 +203,47 @@ class Scene extends Component {
     const lPointer4 = new LanePointer(3, 0);
 
 
-    this.roadIntersection.linkLanes(lPointer1, lPointer2);
-    this.roadIntersection.linkLanes(lPointer2, lPointer1);
-    this.roadIntersection.linkLanes(lPointer3, lPointer4);
-    this.roadIntersection.linkLanes(lPointer4, lPointer3);
+    // this.roadIntersection.linkLanes(lPointer1, lPointer2);
+    // this.roadIntersection.linkLanes(lPointer2, lPointer1);
+    // this.roadIntersection.linkLanes(lPointer3, lPointer4);
+    // this.roadIntersection.linkLanes(lPointer4, lPointer3);
+    //turn back lane
+    this.roadIntersection.linkLanes4i(0,0, 0,0);
+    this.roadIntersection.linkLanes4i(1,0, 1,0);
+    this.roadIntersection.linkLanes4i(2,0, 2,0);
+
+
+    //to left lane linking
+    this.roadIntersection.linkLanes4i(0,1, 2,0);
+    this.roadIntersection.linkLanes4i(1,1, 3,0);
+    this.roadIntersection.linkLanes4i(2,1, 1,0);
+    this.roadIntersection.linkLanes4i(3,0, 0,0);
+
+    //straight lane linking
+    this.roadIntersection.linkLanes4i(0,2, 1,1);
+    this.roadIntersection.linkLanes4i(1,2, 0,1);
+    this.roadIntersection.linkLanes4i(2,2, 3,1);
+    this.roadIntersection.linkLanes4i(3,1, 2,1);
+
+    //to right lane linking
+    this.roadIntersection.linkLanes4i(0,3, 3,2);
+    this.roadIntersection.linkLanes4i(1,3, 2,2);
+    this.roadIntersection.linkLanes4i(2,3, 0,2);
+    this.roadIntersection.linkLanes4i(3,2, 1,2);
+
+
 
     let trafficLightBindingData = new Array<Array<{section: number;id: number}>>();
     trafficLightBindingData = [
       [
         { section: 0, id: 0 },
+        { section: 0, id: 1 },
         { section: 1, id: 0 },
       ],
+      // [
+      //   { section: 0, id: 1 },
+      //   { section: 1, id: 1 },
+      // ],
       [
         { section: 2, id: 0 },
         { section: 3, id: 0 },
@@ -240,7 +281,7 @@ class Scene extends Component {
     this.labelGroup = new Array<Btn>();
 
     // toggle group
-    const videoFeed = { name: 'enable video feed', state: true };
+    const videoFeed = { name: 'enable video feed', state: false };
     const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
     const uiV7 = { name: 'enable new UI v2.2', state: false };
     const showSectionAreas = { name: 'Show Section Areas', state: false };
@@ -700,7 +741,7 @@ class Scene extends Component {
 
     const url = window.location.href;
     if (!url.includes('/camview/')) {
-      this.unmountDestroy();
+      // this.unmountDestroy();
     }
   }
 

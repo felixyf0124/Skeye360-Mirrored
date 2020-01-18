@@ -431,6 +431,11 @@ export default class RoadIntersection {
       this.roadSections[roadSectionId].addNewLane(laneDirection, laneType, numOfLanes);
     }
 
+    /**
+     * link two lanes incoming(as a tail) -> outgoing(as a head)
+     * @param tail 
+     * @param head 
+     */
     linkLanes(tail: LanePointer, head: LanePointer): void {
       this.roadSections[tail.getSectionId()].laneIn[tail.getLaneId()].addHeadLink(head);
       this.roadSections[head.getSectionId()].laneOut[head.getLaneId()].addTailLink(tail);
@@ -438,6 +443,17 @@ export default class RoadIntersection {
       // TODO
       // should we menually set road direction like straight turn left or right,
       // or make it auto adjusted when the lanes are linked to each other?
+    }
+
+    /**
+     * link two lanes by 4 inputs
+     * @param s1 
+     * @param l1 
+     * @param s2 
+     * @param l2 
+     */
+    linkLanes4i(s1: number, l1: number,s2:number,l2:number): void {
+      this.linkLanes(new LanePointer(s1,l1), new LanePointer(s2,l2));
     }
 
     /**
