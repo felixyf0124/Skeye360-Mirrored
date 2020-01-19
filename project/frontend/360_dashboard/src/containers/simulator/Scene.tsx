@@ -235,22 +235,34 @@ class Scene extends Component {
 
     let trafficLightBindingData = new Array<Array<{section: number;id: number}>>();
     trafficLightBindingData = [
-      [
+      [//turn left 
         { section: 0, id: 0 },
         { section: 0, id: 1 },
         { section: 1, id: 0 },
+        { section: 1, id: 1 },
       ],
-      // [
-      //   { section: 0, id: 1 },
-      //   { section: 1, id: 1 },
-      // ],
-      [
+      [// straight & right
+        { section: 0, id: 2 },
+        { section: 1, id: 2 },
+        { section: 0, id: 3 },
+        { section: 1, id: 3 },
+      ],
+      [// left / back
         { section: 2, id: 0 },
         { section: 3, id: 0 },
+        { section: 2, id: 1 },
+      ],
+      [// straight & right
+        { section: 2, id: 2 },
+        { section: 3, id: 1 },
+        { section: 2, id: 3 },
+        { section: 3, id: 2 },
       ],
     ];
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 20);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 20);
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 30);
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], 20);
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 30);
 
     this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();
@@ -348,10 +360,10 @@ class Scene extends Component {
     });
     // h c car obj
 
-    this.numberOfCars = 3;
-    for (let i = 0; i < 3; i += 1) {
-      this.roadIntersection.addNewVehicle(0, 0, 0.06);
-    }
+    this.numberOfCars = 0;
+    // for (let i = 0; i < 3; i += 1) {
+    //   this.roadIntersection.addNewVehicle(0, 0, 0.06);
+    // }
 
     this.objRawData = '';
 
@@ -515,7 +527,7 @@ class Scene extends Component {
     this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
     this.drawRoad();
     this.initialButtons();
-    this.roadIntersection.updateVehiclePos();
+    this.roadIntersection.updateVehiclePosV2();
 
     this.laneAreaContainer.x = -this.coordinateOffset.x;
     this.laneAreaContainer.y = -this.coordinateOffset.y;
@@ -677,7 +689,7 @@ class Scene extends Component {
     this.updateMenuState();
     this.drawMenu();
 
-    this.roadIntersection.updateVehiclePos();
+    this.roadIntersection.updateVehiclePosV2();
 
     if (this.toggleGroup[0].state) {
       this.vehicleUpdate(852, 478);
@@ -692,12 +704,12 @@ class Scene extends Component {
         for (let i = 0; i < this.atIndex + 1; i += 1) {
           currentCD = this.makeUpCar[this.atIndex].atTline;
         }
-
+        const maxVSpeed = 0.8;
         if (this.deltaT > currentCD) {
-          this.roadIntersection.addNewVehicle(0, 0, 0.06);
-          this.roadIntersection.addNewVehicle(0, 1, 0.06);
-          this.roadIntersection.addNewVehicle(0, 2, 0.06);
-          this.roadIntersection.addNewVehicle(0, 3, 0.06);
+          this.roadIntersection.addNewVehicle(0, 0, maxVSpeed);
+          this.roadIntersection.addNewVehicle(0, 1, maxVSpeed);
+          this.roadIntersection.addNewVehicle(0, 2, maxVSpeed);
+          this.roadIntersection.addNewVehicle(0, 3, maxVSpeed);
           this.atIndex += 1;
         }
       } else if (!this.toggleGroup[0].state) {

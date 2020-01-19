@@ -179,7 +179,7 @@ export default class RoadIntersection {
       objV.path.push([laneTo.getTail(), laneTo.getHead()]);
 
       const dir = ts.tsNormalize(laneFrom.getHead().minus(laneFrom.getTail()));
-
+      objV.setDirection(dir);
       if (laneFrom.getObjIndex(objV.getId()) > 0) {
         const id = laneFrom.getObjects()[laneFrom.getObjIndex(objV.getId()) - 1];
         const frontV = this.getVehicle(id);
@@ -480,6 +480,7 @@ export default class RoadIntersection {
     }
 
     /**
+     * old function
      * update vehicles' positions
      * these vehicles are from the vehicles array not the simpleVehicles
      */
@@ -510,6 +511,59 @@ export default class RoadIntersection {
         }
         this.vehicles[i].updatePosition(this.vehicles[i].getSpeed() * this.vehicles[i].getDeltaT());
       }
+      this.checkTransitionVehicle();
+      while (this.checkLeavingVehicle());
+    }
+
+    /**
+     * R2 new function
+     * update vehicle posiiton with different algorithem
+     * @param deltaT 
+     */
+    updateVehiclePosV2(deltaT?:number):void{
+      const safetyDis = 25;
+      const vWidth = 3;
+      for (let i = 0; i < this.vehicles.length; i += 1) {
+        let go = true;
+        for(let j=0; j<this.vehicles.length;j +=1){
+          if(i!==j){
+            if(this.vehicles[i].checkFrontObsticle(
+              this.vehicles[j].getPosition(),safetyDis,vWidth)){
+                go = false;
+              }
+          }
+        }
+
+        if(go === true){
+          const sectionId = this.vehicles[i].getRoadSectionId();
+          const laneId = this.vehicles[i].getLaneId();
+          if(sectionId !== -1 && laneId !== -1){
+            const tlId = this.roadSections[this.getRoadSectionIndex(sectionId)]
+              .getLaneAt(laneId).getTrafficLightId();
+            const tlState = this.getTrafficLightState(tlId);
+            const tlCD = this.getTrafficLightCD(tlId);
+            if (tlState === 'red' || (tlState === 'yellow' && tlCD < 3)) {
+              const stopLine = this.getLane(laneId, sectionId).getHead();
+
+              if(this.vehicles[i]
+                .checkFrontObsticle(stopLine,safetyDis,vWidth)){
+                go = false;
+              }
+            }
+          }else{
+            console.log("unidefined section or lane id");
+          }
+        }
+
+        if(go){
+          this.vehicles[i].move();
+        }else{
+          this.vehicles[i].stop();
+        }
+
+        this.vehicles[i].update(deltaT);
+      }
+      //the following two function calls are very important
       this.checkTransitionVehicle();
       while (this.checkLeavingVehicle());
     }
