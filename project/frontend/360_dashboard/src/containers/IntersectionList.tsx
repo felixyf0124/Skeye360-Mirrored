@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
-import SideDrawer from './SideDrawer';
-import IntersectionTable from './IntersectionTable';
+import styled from 'styled-components';
+import SideDrawer from '../components/SideDrawer';
+import IntersectionTable from '../components/IntersectionTable';
 import { RootState } from '../reducers/rootReducer';
-import DisplayCount from './DisplayMovAVG';
+import DisplayCount from '../components/DisplayMovAVG';
 
 import {
   STATE as districtState,
@@ -16,12 +17,22 @@ import {
 } from '../contexts/districts';
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
 import { logClick, LogAction } from '../contexts/LogClicks';
-import TrafficNews from './TrafficNews';
 import {
   STATE as countState,
   GetCountAction,
   getCount,
 } from '../contexts/countTime';
+import TrafficNews from '../components/TrafficNews';
+
+// Generic flexboxes styling
+const HorizontalFlexBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: space-around;
+  align-content: stretch;
+`;
 
 const title = 'Montreal';
 interface StateProps {
@@ -67,12 +78,12 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
     //   districts: districts,
     // };
     return (
-      <div style={{ display: 'flex' }}>
+      <HorizontalFlexBox>
         <SideDrawer headerTitle={title} />
         {districts[0] === undefined ? <div /> : <IntersectionTable districts={districts} />}
         <TrafficNews />
         <DisplayCount count={count}/>
-      </div>
+      </HorizontalFlexBox>
     );
   }
 }

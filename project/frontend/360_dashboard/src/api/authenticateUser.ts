@@ -1,9 +1,11 @@
+const { REACT_APP_API_URL } = process.env;
+
 export interface Response {
   username: string;
   user_id: number;
 }
 
-const APIDomain = '0.0.0.0:8000';
+const APIDomain = REACT_APP_API_URL;
 
 const authenticateUser = async (username: string, password: string): Promise<Response> => {
   // ENDPOINT, PARAMS

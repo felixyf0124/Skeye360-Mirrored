@@ -38,7 +38,6 @@ interface StateProps {
 const OuterContainer = styled.div`
   width: 50rem;
   overflow: scroll;
-  padding: 1rem;
   height: 40rem;
   overflow-x: hidden;
 `;
@@ -48,6 +47,13 @@ const OuterDiv = styled.div`
   margin: 5rem;
   display: flex;
   flex-direction: column; 
+`;
+
+const CardStyle = styled.div`
+  margin: 1rem;
+  :first-child{
+    margin-top: 0;
+  }
 `;
 
 class TrafficNews extends React.Component<{}, StateProps> {
@@ -97,43 +103,45 @@ class TrafficNews extends React.Component<{}, StateProps> {
       <OuterDiv>
         <OuterContainer>
           {incidents.map((incident: { id: string | number | undefined; type: any; shortDesc: string; fullDesc: string; severity: any; startTime: any; endTime: any}) => (
-            <Card style={{ margin: '1rem' }} key={incident.id}>
-              <CardContent>
-                <Typography variant="h5">
-                                    Traffic Type: &nbsp;
-                  {(() => {
-                    switch (incident.type) {
-                      case 1: return 'Construction';
-                      case 2: return 'Event';
-                      case 3: return 'Congestion/Flow';
-                      case 4: return 'Incident/Accident';
-                      default: return 'Traffic';
-                    }
-                  })()}
-                </Typography>
-                <Typography variant="h6">
-                  {incident.shortDesc}
-                </Typography>
-                <Typography variant="subtitle1">
-                  {incident.fullDesc}
-                  <br />
-                  <br />
-                  <b>Severity:</b>
-                  {' '}
-                  {incident.severity}
-                  {' '}
-                  <br />
-                  <b>Start Time:</b>
-                  {' '}
-                  {incident.startTime}
-                  {' '}
-                  <br />
-                  <b>End Time:</b>
-                  {' '}
-                  {incident.endTime}
-                </Typography>
-              </CardContent>
-            </Card>
+            <CardStyle key={incident.id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5">
+                                      Traffic Type: &nbsp;
+                    {(() => {
+                      switch (incident.type) {
+                        case 1: return 'Construction';
+                        case 2: return 'Event';
+                        case 3: return 'Congestion/Flow';
+                        case 4: return 'Incident/Accident';
+                        default: return 'Traffic';
+                      }
+                    })()}
+                  </Typography>
+                  <Typography variant="h6">
+                    {incident.shortDesc}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    {incident.fullDesc}
+                    <br />
+                    <br />
+                    <b>Severity:</b>
+                    {' '}
+                    {incident.severity}
+                    {' '}
+                    <br />
+                    <b>Start Time:</b>
+                    {' '}
+                    {incident.startTime}
+                    {' '}
+                    <br />
+                    <b>End Time:</b>
+                    {' '}
+                    {incident.endTime}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </CardStyle>
           ))}
         </OuterContainer>
       </OuterDiv>

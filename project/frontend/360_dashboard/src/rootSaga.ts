@@ -5,6 +5,8 @@ import { saga as districts } from './contexts/districts';
 import { saga as intersection } from './contexts/intersection';
 import { saga as logging } from './contexts/LogClicks';
 import { saga as countTime } from './contexts/countTime'
+import { saga as count } from './contexts/vehicleCounts';
+import { saga as camera } from './contexts/camera';
 
 export default function* rootSaga(): IterableIterator<any> {
   yield fork(authentication);
@@ -12,4 +14,6 @@ export default function* rootSaga(): IterableIterator<any> {
   yield fork(intersection);
   yield fork(logging);
   yield fork(countTime);
+  yield fork(count);
+  yield fork(camera);
 }

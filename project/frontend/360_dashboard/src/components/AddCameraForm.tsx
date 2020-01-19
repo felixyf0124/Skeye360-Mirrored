@@ -5,33 +5,8 @@ import { useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import { RootState } from '../reducers/rootReducer';
-import { addNewIntersection } from '../contexts/intersection';
+import { addNewCamera } from '../contexts/camera';
 import { logClick } from '../contexts/LogClicks';
-import SideDrawer from '../components/SideDrawer';
-
-interface StateProps {
-  path: string;
-  username: string;
-
-  latitude: string;
-  longitude: string;
-  intersection_name: string;
-  district_id: string;
-
-  error: string;
-  user_id: number;
-}
-
-interface DispatchProps {
-  historyPush: (url: string) => void;
-  addNewIntersection: (
-    intersection_name: string,
-    latitude: string,
-    longitude: string,
-    district_id: string,
-  ) => any;
-  logClick: (log_message: string, user_id: number) => any;
-}
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -63,9 +38,8 @@ const useStyles = makeStyles(() => ({
   content: {
     backgroundColor: '#212121',
     margin: 'auto',
-    marginTop: '10rem',
     width: '25rem',
-    height: '30rem',
+    height: '12rem',
     border: '1px solid grey',
     borderRadius: '15px',
     zIndex: 1,
@@ -90,13 +64,27 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
-  const [state, setState] = React.useState(props);
-  const {
-    latitude, longitude, intersection_name, district_id, error,
-  } = state;
+interface State {
+  intersection_id: number;
+}
 
-  const { user_id } = props;
+interface StateProps {
+  camera_url: string;
+  error: string;
+  user_id: number;
+}
+
+interface DispatchProps {
+  historyPush: (url: string) => void;
+  addNewCamera: (camera_url: string, intersection_id: string) => any;
+  logClick: (log_message: string, user_id: number) => any;
+}
+
+const AddCameraForm = (props: State & StateProps & DispatchProps): JSX.Element => {
+  const [state, setState] = React.useState(props);
+  const { camera_url, intersection_id } = state;
+
+  const { user_id, error } = props;
 
   const history = useHistory();
 
@@ -107,21 +95,14 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
   // eslint-disable-next-line consistent-return
   const handleSubmit = (): any => {
     const { logClick } = props;
-    props.addNewIntersection(
-      state.intersection_name,
-      state.latitude,
-      state.longitude,
-      state.district_id,
-    );
+    props.addNewCamera(state.camera_url, String(state.intersection_id));
     logClick('Added Intersection', user_id);
   };
 
-  const title = 'Add Intersection';
   const classes = useStyles();
 
   return (
     <div>
-      <SideDrawer headerTitle={title} />
       <div className={classes.content}>
         {error !== '' ? (
           <div className="form-group">
@@ -134,50 +115,20 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
           onSubmit={(e): void => {
             e.preventDefault();
             handleSubmit();
-            history.push('/');
+            history.push(`/intersection/edit/${intersection_id}`);
           }}
         >
           <div className={classes.innerBox}>
             <div className="form-group">
-              <div className={classes.textEntry}>District ID</div>
+              <div className={classes.textEntry}>
+                <h6>Add New Camera URL</h6>
+              </div>
               <input
                 type="text"
-                name="district_id"
-                value={district_id}
+                name="camera_url"
+                value={camera_url}
                 className={classes.textField}
-                disabled
-              />
-            </div>
-            <div className="form-group">
-              <div className={classes.textEntry}>Intersection Name</div>
-              <input
-                type="text"
-                name="intersection_name"
-                value={intersection_name}
-                placeholder="e.g. Guy/St-Catherine"
-                className={classes.textField}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <div className={classes.textEntry}>Latitude</div>
-              <input
-                type="text"
-                name="latitude"
-                value={latitude}
-                placeholder="e.g. 12.3456"
-                className={classes.textField}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <div className={classes.textEntry}>Longitude</div>
-              <input
-                type="text"
-                name="longitude"
-                value={longitude}
-                placeholder="e.g. 12.3456"
-                className={classes.textField}
+                placeholder="e.g. 111.222.333.444:5555"
                 onChange={handleChange}
               />
             </div>
@@ -194,22 +145,15 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  path: '/intersection/add',
-  username: state.authentication.username,
-
-  latitude: '',
-  longitude: '',
-  district_id: '1',
-  intersection_name: '',
-
+  camera_url: '',
   error: state.intersection.error,
   user_id: state.authentication.user_id,
 });
 
 const mapDispatchToProps: DispatchProps = {
   historyPush: push,
-  addNewIntersection,
+  addNewCamera,
   logClick,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddIntersection);
+export default connect(mapStateToProps, mapDispatchToProps)(AddCameraForm);
