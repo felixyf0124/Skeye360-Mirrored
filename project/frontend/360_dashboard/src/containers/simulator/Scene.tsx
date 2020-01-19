@@ -180,89 +180,96 @@ class Scene extends Component {
     this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW * 0.16, -this.windowH / 2));
 
     for (let i = 0; i < this.roadIntersection.getRoadSections().length; i += 1) {
-      if(i===3) {
-      this.roadIntersection.addNewLane(i, 1, 'left', 1);
-      this.roadIntersection.addNewLane(i, 1, 'straight', 1);
-      this.roadIntersection.addNewLane(i, 1, 'right', 1);
-      this.roadIntersection.addNewLane(i, -1, 'straight', 3);
-      }else{
+      if (i === 3) {
+        this.roadIntersection.addNewLane(i, 1, 'left', 1);
+        this.roadIntersection.addNewLane(i, 1, 'straight', 1);
+        this.roadIntersection.addNewLane(i, 1, 'right', 1);
+        this.roadIntersection.addNewLane(i, -1, 'straight', 3);
+      } else {
         this.roadIntersection.addNewLane(i, 1, 'back', 1);
         this.roadIntersection.addNewLane(i, 1, 'left', 1);
         this.roadIntersection.addNewLane(i, 1, 'straight', 1);
         this.roadIntersection.addNewLane(i, 1, 'right', 1);
         this.roadIntersection.addNewLane(i, -1, 'straight', 3);
       }
-      console.log(" _ "+this.roadIntersection.getRoadSections()[i].getLaneIn().length);
+      // console.log(` _ ${this.roadIntersection.getRoadSections()[i].getLaneIn().length}`);
     }
 
     this.roadIntersection.setLaneWidth(this.laneW);
 
-    const lPointer1 = new LanePointer(0, 0);
-    const lPointer2 = new LanePointer(1, 0);
-    const lPointer3 = new LanePointer(2, 0);
-    const lPointer4 = new LanePointer(3, 0);
+    // const lPointer1 = new LanePointer(0, 0);
+    // const lPointer2 = new LanePointer(1, 0);
+    // const lPointer3 = new LanePointer(2, 0);
+    // const lPointer4 = new LanePointer(3, 0);
 
 
     // this.roadIntersection.linkLanes(lPointer1, lPointer2);
     // this.roadIntersection.linkLanes(lPointer2, lPointer1);
     // this.roadIntersection.linkLanes(lPointer3, lPointer4);
     // this.roadIntersection.linkLanes(lPointer4, lPointer3);
-    //turn back lane
-    this.roadIntersection.linkLanes4i(0,0, 0,0);
-    this.roadIntersection.linkLanes4i(1,0, 1,0);
-    this.roadIntersection.linkLanes4i(2,0, 2,0);
+    // turn back lane
+    this.roadIntersection.linkLanes4i(0, 0, 0, 0);
+    this.roadIntersection.linkLanes4i(1, 0, 1, 0);
+    this.roadIntersection.linkLanes4i(2, 0, 2, 0);
 
 
-    //to left lane linking
-    this.roadIntersection.linkLanes4i(0,1, 2,0);
-    this.roadIntersection.linkLanes4i(1,1, 3,0);
-    this.roadIntersection.linkLanes4i(2,1, 1,0);
-    this.roadIntersection.linkLanes4i(3,0, 0,0);
+    // to left lane linking
+    this.roadIntersection.linkLanes4i(0, 1, 2, 0);
+    this.roadIntersection.linkLanes4i(1, 1, 3, 0);
+    this.roadIntersection.linkLanes4i(2, 1, 1, 0);
+    this.roadIntersection.linkLanes4i(3, 0, 0, 0);
 
-    //straight lane linking
-    this.roadIntersection.linkLanes4i(0,2, 1,1);
-    this.roadIntersection.linkLanes4i(1,2, 0,1);
-    this.roadIntersection.linkLanes4i(2,2, 3,1);
-    this.roadIntersection.linkLanes4i(3,1, 2,1);
+    // straight lane linking
+    this.roadIntersection.linkLanes4i(0, 2, 1, 1);
+    this.roadIntersection.linkLanes4i(1, 2, 0, 1);
+    this.roadIntersection.linkLanes4i(2, 2, 3, 1);
+    this.roadIntersection.linkLanes4i(3, 1, 2, 1);
 
-    //to right lane linking
-    this.roadIntersection.linkLanes4i(0,3, 3,2);
-    this.roadIntersection.linkLanes4i(1,3, 2,2);
-    this.roadIntersection.linkLanes4i(2,3, 0,2);
-    this.roadIntersection.linkLanes4i(3,2, 1,2);
-
+    // to right lane linking
+    this.roadIntersection.linkLanes4i(0, 3, 3, 2);
+    this.roadIntersection.linkLanes4i(1, 3, 2, 2);
+    this.roadIntersection.linkLanes4i(2, 3, 0, 2);
+    this.roadIntersection.linkLanes4i(3, 2, 1, 2);
 
 
     let trafficLightBindingData = new Array<Array<{section: number;id: number}>>();
     trafficLightBindingData = [
-      [//turn left 
+      [// turn left
         { section: 0, id: 0 },
         { section: 0, id: 1 },
         { section: 1, id: 0 },
         { section: 1, id: 1 },
-      ],
-      [// straight & right
         { section: 0, id: 2 },
         { section: 1, id: 2 },
         { section: 0, id: 3 },
         { section: 1, id: 3 },
       ],
+      // [// straight & right
+      //   { section: 0, id: 2 },
+      //   { section: 1, id: 2 },
+      //   { section: 0, id: 3 },
+      //   { section: 1, id: 3 },
+      // ],
       [// left / back
         { section: 2, id: 0 },
         { section: 3, id: 0 },
         { section: 2, id: 1 },
-      ],
-      [// straight & right
         { section: 2, id: 2 },
         { section: 3, id: 1 },
         { section: 2, id: 3 },
         { section: 3, id: 2 },
       ],
+      // [// straight & right
+      //   { section: 2, id: 2 },
+      //   { section: 3, id: 1 },
+      //   { section: 2, id: 3 },
+      //   { section: 3, id: 2 },
+      // ],
     ];
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 20);
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 30);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], 20);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 30);
+    // this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], 20);
+    // this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 30);
 
     this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();
@@ -707,9 +714,17 @@ class Scene extends Component {
         const maxVSpeed = this.laneW * 0.028;
         if (this.deltaT > currentCD) {
           this.roadIntersection.addNewVehicle(0, 0, maxVSpeed);
+          // this.roadIntersection.addNewVehicle(1, 0, maxVSpeed);
+          // this.roadIntersection.addNewVehicle(2, 0, maxVSpeed);
           this.roadIntersection.addNewVehicle(0, 1, maxVSpeed);
+          // this.roadIntersection.addNewVehicle(1, 1, maxVSpeed);
+          // this.roadIntersection.addNewVehicle(2, 1, maxVSpeed);
           this.roadIntersection.addNewVehicle(0, 2, maxVSpeed);
+          this.roadIntersection.addNewVehicle(1, 2, maxVSpeed);
+          this.roadIntersection.addNewVehicle(2, 2, maxVSpeed);
           this.roadIntersection.addNewVehicle(0, 3, maxVSpeed);
+          this.roadIntersection.addNewVehicle(1, 3, maxVSpeed);
+          this.roadIntersection.addNewVehicle(2, 3, maxVSpeed);
           this.atIndex += 1;
         }
       } else if (!this.toggleGroup[0].state) {

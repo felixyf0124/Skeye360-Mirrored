@@ -433,8 +433,8 @@ export default class RoadIntersection {
 
     /**
      * link two lanes incoming(as a tail) -> outgoing(as a head)
-     * @param tail 
-     * @param head 
+     * @param tail
+     * @param head
      */
     linkLanes(tail: LanePointer, head: LanePointer): void {
       this.roadSections[tail.getSectionId()].laneIn[tail.getLaneId()].addHeadLink(head);
@@ -447,13 +447,13 @@ export default class RoadIntersection {
 
     /**
      * link two lanes by 4 inputs
-     * @param s1 
-     * @param l1 
-     * @param s2 
-     * @param l2 
+     * @param s1
+     * @param l1
+     * @param s2
+     * @param l2
      */
-    linkLanes4i(s1: number, l1: number,s2:number,l2:number): void {
-      this.linkLanes(new LanePointer(s1,l1), new LanePointer(s2,l2));
+    linkLanes4i(s1: number, l1: number, s2: number, l2: number): void {
+      this.linkLanes(new LanePointer(s1, l1), new LanePointer(s2, l2));
     }
 
     /**
@@ -518,68 +518,66 @@ export default class RoadIntersection {
     /**
      * R2 new function
      * update vehicle posiiton with different algorithem
-     * @param deltaT 
+     * @param deltaT
      */
-    updateVehiclePosV2(deltaT?:number):void{
-      const safetyDis = this.laneWidth *1.1;
+    updateVehiclePosV2(deltaT?: number): void{
+      const safetyDis = this.laneWidth * 1.1;
       const vWidth = 3;
       for (let i = 0; i < this.vehicles.length; i += 1) {
         let go = true;
         // let tSpeed = this.vehicles[i].maxSpeed;
-        for(let j=0; j<this.vehicles.length;j +=1){
-          if(i!==j){
-            if(this.vehicles[i].checkFrontObsticle(
-              this.vehicles[j].getPosition(),safetyDis,vWidth)){
-                const targetSpeed = this.vehicles[j].getSpeed()
-                const dis = ts.tsLength(this.vehicles[i].getPosition()
+        for (let j = 0; j < this.vehicles.length; j += 1) {
+          if (i !== j) {
+            if (this.vehicles[i].checkFrontObsticle(
+              this.vehicles[j].getPosition(), safetyDis, vWidth,
+            )) {
+              const targetSpeed = this.vehicles[j].getSpeed();
+              const dis = ts.tsLength(this.vehicles[i].getPosition()
                 .minus(this.vehicles[j].getPosition()));
-                const mSpeed = targetSpeed * dis / safetyDis;
-                  const mSpeed2 = this.vehicles[i].getTargetSpeed();
-                if(mSpeed2!== undefined){
-                  console.log("here");
-                  this.vehicles[i].targetSpeed = Math.
-                  min(mSpeed,mSpeed2);
-                } else{
-                  this.vehicles[i].targetSpeed = mSpeed;
-                }
-                go = false;
+              const mSpeed = targetSpeed * (dis / safetyDis);
+              const mSpeed2 = this.vehicles[i].getTargetSpeed();
+              if (mSpeed2 !== undefined) {
+                this.vehicles[i].targetSpeed = Math
+                  .min(mSpeed, mSpeed2);
+              } else {
+                this.vehicles[i].targetSpeed = mSpeed;
               }
+              go = false;
+            }
           }
         }
 
         // if(go === true){
-          const sectionId = this.vehicles[i].getRoadSectionId();
-          const laneId = this.vehicles[i].getLaneId();
-          if(sectionId !== -1 && laneId !== -1){
-            const tlId = this.roadSections[this.getRoadSectionIndex(sectionId)]
-              .getLaneAt(laneId).getTrafficLightId();
-            const tlState = this.getTrafficLightState(tlId);
-            const tlCD = this.getTrafficLightCD(tlId);
-            if (tlState === 'red' || (tlState === 'yellow' && tlCD < 3)) {
-              const stopLine = this.getLane(laneId, sectionId).getHead();
+        const sectionId = this.vehicles[i].getRoadSectionId();
+        const laneId = this.vehicles[i].getLaneId();
+        if (sectionId !== -1 && laneId !== -1) {
+          const tlId = this.roadSections[this.getRoadSectionIndex(sectionId)]
+            .getLaneAt(laneId).getTrafficLightId();
+          const tlState = this.getTrafficLightState(tlId);
+          const tlCD = this.getTrafficLightCD(tlId);
+          if (tlState === 'red' || (tlState === 'yellow' && tlCD < 3)) {
+            const stopLine = this.getLane(laneId, sectionId).getHead();
 
-              if(this.vehicles[i]
-                .checkFrontObsticle(stopLine,safetyDis,vWidth)){
-                
-                  go = false;
-                this.vehicles[i].targetSpeed = undefined;
-
-              }
+            if (this.vehicles[i]
+              .checkFrontObsticle(stopLine, safetyDis, vWidth)) {
+              go = false;
+              this.vehicles[i].targetSpeed = undefined;
             }
-          }else{
-            console.log("unidefined section or lane id");
           }
+        } else {
+          // console.log("unidefined section or lane id");
+        }
         // }
 
-        if(go){
+        if (go) {
           this.vehicles[i].move();
-        }else{
+        } else {
           this.vehicles[i].stop();
         }
 
         this.vehicles[i].update(deltaT);
       }
-      //the following two function calls are very important
+      // the following two function calls are very important
       this.checkTransitionVehicle();
       while (this.checkLeavingVehicle());
     }

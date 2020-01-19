@@ -22,15 +22,15 @@ export default class Vehicle extends Object {
 
     maxSpeed: number;
 
-    speed:number;
+    speed: number;
 
-    accel:number;
+    accel: number;
 
-    decel:number;
+    decel: number;
 
-    direction:vec2|undefined;
+    direction: vec2|undefined;
 
-    targetSpeed:number|undefined;
+    targetSpeed: number|undefined;
 
     constructor(id: number, laneId: number, roadSectionId: number,
       speed: number, position?: vec2) {
@@ -44,8 +44,8 @@ export default class Vehicle extends Object {
       this.lastTime = Date.now();
       this.maxSpeed = speed;
       this.speed = 0;
-      this.accel = 0.8*this.maxSpeed;
-      this.decel = 2.1 *this.maxSpeed;
+      this.accel = 0.8 * this.maxSpeed;
+      this.decel = 2.6 * this.maxSpeed;
       this.direction = undefined;
       this.targetSpeed = undefined;
     }
@@ -53,9 +53,9 @@ export default class Vehicle extends Object {
     /**
      * old function
      * check the front car
-     * @param frontPostion 
-     * @param safetyDistance 
-     * @param targetSpeed 
+     * @param frontPostion
+     * @param safetyDistance
+     * @param targetSpeed
      */
     checkFront(frontPostion: vec2, safetyDistance: number, targetSpeed?: number): void {
       const distance = ts.tsLength(frontPostion.minus(this.position));
@@ -72,8 +72,8 @@ export default class Vehicle extends Object {
 
     /**
      * old function to update speed
-     * @param targetSpeed 
-     * @param acceleration 
+     * @param targetSpeed
+     * @param acceleration
      */
     updateSpeed(targetSpeed?: number, acceleration?: number): void {
       let acce = acceleration;
@@ -133,7 +133,7 @@ export default class Vehicle extends Object {
       return this.isInTransition;
     }
 
-    getTargetSpeed(): number|undefined{
+    getTargetSpeed(): number|undefined {
       return this.targetSpeed;
     }
 
@@ -142,8 +142,8 @@ export default class Vehicle extends Object {
     }
 
     /**
-     * update position by speed disToTravel 
-     * @param disToTravel 
+     * update position by speed disToTravel
+     * @param disToTravel
      */
     updatePosition(disToTravel: number): void {
       const unitVec = ts.tsNormalize(
@@ -205,41 +205,42 @@ export default class Vehicle extends Object {
 
     /**
      * set direction
-     * @param dir 
+     * @param dir
      */
-    setDirection(dir:vec2|undefined):void{
+    setDirection(dir: vec2|undefined): void{
       this.direction = dir;
     }
 
     /**
      * update position v2
-     * @param deltaTime 
+     * @param deltaTime
      */
-    update(deltaTime?:number){
-      let deltaT = 1/60;
-      if(deltaTime !== undefined){
+    update(deltaTime?: number): void {
+      let deltaT = this.getDeltaT();
+      // let deltaT = 1 / 60;
+      if (deltaTime !== undefined) {
         deltaT = deltaTime;
       }
-      //acceleration
-      if(this.state === 1) {
+      // acceleration
+      if (this.state === 1) {
         let mSpeed = this.maxSpeed;
-        if(this.targetSpeed !== undefined){
+        if (this.targetSpeed !== undefined) {
           mSpeed = this.targetSpeed;
         }
-        if(this.speed <mSpeed){
+        if (this.speed < mSpeed) {
           this.speed += this.accel * deltaT;
-          if(this.speed > mSpeed){
+          if (this.speed > mSpeed) {
             this.speed = mSpeed;
           }
         }
-      }else{
+      } else {
         let mSpeed = 0;
-        if(this.targetSpeed !== undefined){
+        if (this.targetSpeed !== undefined) {
           mSpeed = this.targetSpeed;
         }
-        if(this.speed>mSpeed){//deceleration
+        if (this.speed > mSpeed) { // deceleration
           this.speed -= this.decel * deltaT;
-          if(this.speed<mSpeed){
+          if (this.speed < mSpeed) {
             this.speed = mSpeed;
           }
         }
@@ -253,7 +254,7 @@ export default class Vehicle extends Object {
      * signal move
      * @param targetSpeed
      */
-    move(targetSpeed?:number){
+    move(targetSpeed?: number): void {
       this.state = 1;
       this.targetSpeed = targetSpeed;
     }
@@ -262,39 +263,39 @@ export default class Vehicle extends Object {
      * signal stop
      * @param targetSpeed
      */
-    stop(targetSpeed?:number){
+    stop(targetSpeed?: number): void {
       this.state = -1;
       this.targetSpeed = targetSpeed;
     }
 
     /**
      * R2 new function
-     * check front obsticle 
+     * check front obsticle
      * if it is obsticle then return true
      * else return false
-     * @param pos 
-     * @param safetyDistance 
+     * @param pos
+     * @param safetyDistance
      */
-    checkFrontObsticle(pos:vec2, safetyDistance:number, width:number):boolean{
+    checkFrontObsticle(pos: vec2, safetyDistance: number, width: number): boolean {
       const distance = ts.tsLength(pos.minus(this.position));
-      if(distance<safetyDistance){
-        if(this.direction!==undefined) {
+      if (distance < safetyDistance) {
+        if (this.direction !== undefined) {
           const front = ts.tsNormalize(this.direction);
-          const right = ts.tsRotateByOrigin(this.direction,-Math.PI/2);
+          const right = ts.tsRotateByOrigin(this.direction, -Math.PI / 2);
           const poly = new Array<vec2>();
           poly.push(this.position
             .plus(front.multiply(safetyDistance)));
           poly.push(this.position
-            .plus(front.multiply(0.8*safetyDistance))
-            .plus(right.multiply(0.5*width)));
+            .plus(front.multiply(0.8 * safetyDistance))
+            .plus(right.multiply(0.5 * width)));
           poly.push(this.position
-            .plus(right.multiply(0.5*width)));
+            .plus(right.multiply(0.5 * width)));
           poly.push(this.position
-            .plus(right.multiply(-0.5*width)));
+            .plus(right.multiply(-0.5 * width)));
           poly.push(this.position
-            .plus(front.multiply(0.8*safetyDistance))
-            .plus(right.multiply(-0.5*width)));
-          if(ts.inside(pos,poly)){
+            .plus(front.multiply(0.8 * safetyDistance))
+            .plus(right.multiply(-0.5 * width)));
+          if (ts.inside(pos, poly)) {
             return true;
           }
         }
