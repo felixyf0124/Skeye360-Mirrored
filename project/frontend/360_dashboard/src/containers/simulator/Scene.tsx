@@ -740,18 +740,18 @@ class Scene extends Component {
         }
         const maxVSpeed = this.laneW * 0.028;
         if (this.deltaT > currentCD) {
-          this.roadIntersection.addNewVehicle(0, 0, maxVSpeed);
+          this.roadIntersection.addNewVehicleV2(0, 0, maxVSpeed);
           // this.roadIntersection.addNewVehicle(1, 0, maxVSpeed);
           // this.roadIntersection.addNewVehicle(2, 0, maxVSpeed);
-          this.roadIntersection.addNewVehicle(0, 1, maxVSpeed);
+          this.roadIntersection.addNewVehicleV2(0, 1, maxVSpeed);
           // this.roadIntersection.addNewVehicle(1, 1, maxVSpeed);
           // this.roadIntersection.addNewVehicle(2, 1, maxVSpeed);
-          this.roadIntersection.addNewVehicle(0, 2, maxVSpeed);
-          this.roadIntersection.addNewVehicle(1, 2, maxVSpeed);
-          this.roadIntersection.addNewVehicle(2, 2, maxVSpeed);
-          this.roadIntersection.addNewVehicle(0, 3, maxVSpeed);
-          this.roadIntersection.addNewVehicle(1, 3, maxVSpeed);
-          this.roadIntersection.addNewVehicle(2, 3, maxVSpeed);
+          this.roadIntersection.addNewVehicleV2(0, 2, maxVSpeed);
+          this.roadIntersection.addNewVehicleV2(1, 2, maxVSpeed);
+          this.roadIntersection.addNewVehicleV2(2, 2, maxVSpeed);
+          this.roadIntersection.addNewVehicleV2(0, 3, maxVSpeed);
+          this.roadIntersection.addNewVehicleV2(1, 3, maxVSpeed);
+          this.roadIntersection.addNewVehicleV2(2, 3, maxVSpeed);
           this.atIndex += 1;
         }
       } else if (!this.toggleGroup[0].state) {

@@ -153,7 +153,7 @@ export default class Vehicle extends Object {
       const lengthOfCurrentPath = this.getPathLength(this.atPathSection, this.atPath + 1);
       if (this.atPathSection === 0) {
         const disToTravelOfCurrentPath = ts.tsLength(this.position.minus(
-          this.path[this.atPathSection][this.atPath + 1],
+          this.path[this.atPathSection][this.atPath + 1]
         ));
         if (disToTravelOfCurrentPath > lengthOfCurrentPath) {
           this.traveled = lengthOfCurrentPath - disToTravelOfCurrentPath;
@@ -246,6 +246,11 @@ export default class Vehicle extends Object {
         }
       }
 
+      //check if it is off the path or not
+      if(!this.checkOnLine())
+      {
+        // console.log(this);
+      }
       // translate
       this.updatePosition(this.speed);
     }
@@ -301,5 +306,69 @@ export default class Vehicle extends Object {
         }
       }
       return false;
+    }
+
+    /**
+     * R2 new function
+     * check front & back obsticle
+     * if it is obsticle then return true
+     * else return false
+     * @param pos
+     * @param safetyDistance
+     */
+    checkFrontNBackObsticle(pos: vec2, safetyDistance: number, width: number): boolean {
+      const distance = ts.tsLength(pos.minus(this.position));
+      if (distance < safetyDistance) {
+        if (this.direction !== undefined) {
+          const front = ts.tsNormalize(this.direction);
+          const right = ts.tsRotateByOrigin(this.direction, -Math.PI / 2);
+          const poly = new Array<vec2>();
+          poly.push(this.position
+            .plus(front.multiply(safetyDistance)));
+          poly.push(this.position
+            .plus(front.multiply(0.8 * safetyDistance))
+            .plus(right.multiply(0.5 * width)));
+          poly.push(this.position
+            .plus(front.multiply(-0.8 * safetyDistance))
+            .plus(right.multiply(0.5 * width)));
+          poly.push(this.position
+            .plus(front.multiply(-safetyDistance)));
+          poly.push(this.position
+            .plus(front.multiply(-0.8 * safetyDistance))
+            .plus(right.multiply(-0.5 * width)));
+          poly.push(this.position
+            .plus(front.multiply(0.8 * safetyDistance))
+            .plus(right.multiply(-0.5 * width)));
+          if (ts.inside(pos, poly)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+
+    checkOnLine():boolean{
+      
+      let dir = ts
+      .getAngleOfVec(this.path[this.atPathSection][0].minus(this.position));
+      let dir2 = ts
+      .getAngleOfVec(this.path[this.atPathSection][1].minus(this.path[this.atPathSection][0]));
+      // dir.x = Math.round(dir.x * 10000)/10000;
+      // dir.y = Math.round(dir.y * 10000)/10000;
+      // dir2.x = Math.round(dir2.x * 10000)/10000;
+      // dir2.y = Math.round(dir2.y * 10000)/10000;
+      // const prod = ts.tsCrossVec2(dir,dir2);
+      dir = Math.round(dir * 10000)/10000;
+      dir2 = Math.round(dir2 * 10000)/10000;
+      
+      // console.log(dir +"| "+dir2);
+      if(dir === dir2){
+        // console.log(this);
+        return true;
+      }else{
+        // console.log(this);
+        return false;
+      }
     }
 }

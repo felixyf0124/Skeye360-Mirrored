@@ -147,6 +147,9 @@ export default class RoadIntersection {
     }
 
     /**
+     * old bug function 
+     * has been replaced by addNewVehicleV2
+     * To be removed
      * add new vehicle
      * this is different from addNewSimpleVehicle
      * @param laneId
@@ -167,8 +170,8 @@ export default class RoadIntersection {
 
       this.roadSections[this.getRoadSectionIndex(objV.getRoadSectionId())]
         .laneIn[objV.getLaneId()].addObjId(objV.getId());
-      const laneFrom = this.getLane(laneId, this.getRoadSectionIndex(sectionId));
-      // const laneFrom = this.getLane(laneId, sectionId);
+      // const laneFrom = this.getLane(laneId, this.getRoadSectionIndex(sectionId));
+      const laneFrom = this.getLane(laneId, sectionId);
       const lanePointer = laneFrom.getHeadLink();
       const laneTo = this.getLane(lanePointer[0].getLaneId(),
         lanePointer[0].getSectionId(), false);
@@ -183,19 +186,83 @@ export default class RoadIntersection {
       objV.setDirection(dir);
       if (laneFrom.getObjIndex(objV.getId()) > 0) {
         const id = laneFrom.getObjects()[laneFrom.getObjIndex(objV.getId()) - 1];
+        // console.log(id);
         const frontV = this.getVehicle(id);
-        const frontPos = frontV.getPosition().minus(dir.multiply(safetyDis));
+        // const frontPos = frontV.getPosition().minus(dir.multiply(safetyDis));
+        const frontPos = frontV.getPosition();
+        const frontToTravel = ts.tsLength(frontPos.minus(
+          frontV.path[frontV.atPathSection][frontV.atPath + 1]));
+
+
+        
+          
         const dis1 = ts.tsLength(frontPos.minus(laneFrom.getHead()));
         const dis2 = ts.tsLength(laneFrom.getTail().minus(laneFrom.getHead()));
-        if (dis1 < dis2) {
+        if (frontToTravel + safetyDis < dis2) {
           objV.setPosition(laneFrom.getTail());
         } else {
-          objV.setPosition(frontPos);
+          objV.setPosition(laneFrom.getTail());
+          // objV.setPosition(frontPos.minus(dir.multiply(safetyDis)));
         }
       } else {
         objV.setPosition(laneFrom.getTail());
       }
       // console.log(objV.getPosition());
+      this.vehicles.push(objV);
+      this.vehicleCount += 1;
+    }
+
+    /**
+     * R2 new funciton
+     * add new vehicle
+     * this is different from addNewSimpleVehicle
+     * @param laneId
+     * @param sectionId
+     * @param speed
+     * @param vehicleId
+     * @param position
+     */
+    addNewVehicleV2(laneId: number, sectionId: number, speed: number,
+      vehicleId?: number, position?: Vec2): void {
+      let vId = vehicleId;
+      if (vId === undefined) {
+        const str1 = Date.now().toString();
+        const str2 = Math.round(Math.random() * 1000);
+        vId = parseInt(`${str1}${str2}`, 10);
+      }
+      const objV = new Vehicle(vId, laneId, sectionId, speed, position);
+
+      this.roadSections[this.getRoadSectionIndex(objV.getRoadSectionId())]
+        .laneIn[objV.getLaneId()].addObjId(objV.getId());
+      // const laneFrom = this.getLane(laneId, this.getRoadSectionIndex(sectionId));
+      const laneFrom = this.getLane(laneId, sectionId);
+      const lanePointer = laneFrom.getHeadLink();
+      const laneTo = this.getLane(lanePointer[0].getLaneId(),
+        lanePointer[0].getSectionId(), false);
+      // safety dis
+      const safetyDis = this.laneWidth * 1.1;
+      const vWidth = this.laneWidth *0.16;
+      objV.path.push([laneFrom.getTail(), laneFrom.getHead()]);
+      objV.path.push([laneFrom.getHead(), laneTo.getTail()]);
+      objV.path.push([laneTo.getTail(), laneTo.getHead()]);
+
+      const dir = ts.tsNormalize(laneFrom.getHead().minus(laneFrom.getTail()));
+      objV.setDirection(dir);
+      objV.setPosition(laneFrom.getTail());
+      for (let j = 0; j < this.vehicles.length; j += 1) {
+        if (objV.getId() !== this.vehicles[j].getId()) {
+          if (objV.checkFrontNBackObsticle(
+            this.vehicles[j].getPosition(), safetyDis, vWidth)) {
+              
+            if (objV.checkFrontNBackObsticle(
+              this.vehicles[j].getPosition(), safetyDis*0.8, vWidth)){
+                
+              const currentPos = objV.getPosition();
+              objV.setPosition(currentPos.minus(dir.multiply(0.9* safetyDis)));
+            }
+          } 
+        }
+      }
       this.vehicles.push(objV);
       this.vehicleCount += 1;
     }
@@ -430,7 +497,15 @@ export default class RoadIntersection {
      */
     addNewLane(roadSectionId: number, laneDirection: number,
       laneType: string, numOfLanes: number): void {
-      this.roadSections[roadSectionId].addNewLane(laneDirection, laneType, numOfLanes);
+        /**
+         * since this function is called before road resort
+         * the road section id is same as the index
+         * this.roadSections[(roadSectionId)]
+         * .addNewLane(laneDirection, laneType, numOfLanes);
+         */
+      
+      this.roadSections[this.getRoadSectionIndex(roadSectionId)]
+        .addNewLane(laneDirection, laneType, numOfLanes);
     }
 
     /**
@@ -439,8 +514,12 @@ export default class RoadIntersection {
      * @param head
      */
     linkLanes(tail: LanePointer, head: LanePointer): void {
-      this.roadSections[tail.getSectionId()].laneIn[tail.getLaneId()].addHeadLink(head);
-      this.roadSections[head.getSectionId()].laneOut[head.getLaneId()].addTailLink(tail);
+      // this.roadSections[tail.getSectionId()].laneIn[tail.getLaneId()].addHeadLink(head);
+      // this.roadSections[head.getSectionId()].laneOut[head.getLaneId()].addTailLink(tail);
+      this.roadSections[this.getRoadSectionIndex(tail.getSectionId())]
+        .laneIn[tail.getLaneId()].addHeadLink(head);
+      this.roadSections[this.getRoadSectionIndex(head.getSectionId())]
+        .laneOut[head.getLaneId()].addTailLink(tail);
 
       // TODO
       // should we menually set road direction like straight turn left or right,
@@ -524,7 +603,7 @@ export default class RoadIntersection {
      */
     updateVehiclePosV2(deltaT?: number): void{
       const safetyDis = this.laneWidth * 1.1;
-      const vWidth = 3;
+      const vWidth = this.laneWidth *0.16;
       for (let i = 0; i < this.vehicles.length; i += 1) {
         let go = true;
         // let tSpeed = this.vehicles[i].maxSpeed;
