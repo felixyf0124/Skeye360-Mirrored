@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 // pixi.js-legacy for VM
-import * as PIXI from 'pixi.js-legacy';
+import * as PIXI from 'pixi.js';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry';
 import Vec2 from './simulator_management/vec2';
@@ -267,7 +267,7 @@ class Scene extends Component {
       // ],
     ];
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 20);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 30);
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 20);
     // this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], 20);
     // this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 30);
 
@@ -656,6 +656,33 @@ class Scene extends Component {
         } else {
           const spot = this.drawVehicleSpot(position, 0xFFFFCC);
           this.objectContainer.addChild(spot);
+          //test
+          if(!this.toggleGroup[0].state){
+            const path = vehicles[i].getPath();
+            const pathG = new PIXI.Graphics();
+            // for(let j=0;j<path.length;j+=1){
+            //   if(j===0){
+            //     pathG.lineStyle(1,0xFF0FFF);
+            //     pathG.moveTo(path[j][0].x,path[j][0].y);
+            //   }else{
+
+            //   }
+            //   pathG.lineTo(path[j][1].x,path[j][1].y);
+
+            // }
+            const dir = vehicles[i].direction;
+                pathG.lineStyle(1,0xFF0FFF);
+                // pathG.moveTo(position.x,position.y);
+                if(dir !== undefined)
+                {
+                pathG.moveTo(position.x+dir.x*20,position.y+dir.y*20);
+                pathG.lineTo(position.x,position.y);
+                const nextp = path[vehicles[i].getAtPathSection()]
+                [vehicles[i].getAtPath()];
+                pathG.lineTo(nextp.x,nextp.y);}
+
+            this.objectContainer.addChild(pathG);
+          }
         }
       }
     }

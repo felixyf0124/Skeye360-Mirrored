@@ -167,7 +167,8 @@ export default class RoadIntersection {
 
       this.roadSections[this.getRoadSectionIndex(objV.getRoadSectionId())]
         .laneIn[objV.getLaneId()].addObjId(objV.getId());
-      const laneFrom = this.getLane(laneId, sectionId);
+      const laneFrom = this.getLane(laneId, this.getRoadSectionIndex(sectionId));
+      // const laneFrom = this.getLane(laneId, sectionId);
       const lanePointer = laneFrom.getHeadLink();
       const laneTo = this.getLane(lanePointer[0].getLaneId(),
         lanePointer[0].getSectionId(), false);
@@ -194,6 +195,7 @@ export default class RoadIntersection {
       } else {
         objV.setPosition(laneFrom.getTail());
       }
+      // console.log(objV.getPosition());
       this.vehicles.push(objV);
       this.vehicleCount += 1;
     }
