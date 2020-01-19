@@ -30,6 +30,8 @@ export default class Vehicle extends Object {
 
     direction:vec2|undefined;
 
+    targetSpeed:number|undefined;
+
     constructor(id: number, laneId: number, roadSectionId: number,
       speed: number, position?: vec2) {
       super(id, laneId, roadSectionId, speed, position);
@@ -43,8 +45,9 @@ export default class Vehicle extends Object {
       this.maxSpeed = speed;
       this.speed = 0;
       this.accel = 0.8*this.maxSpeed;
-      this.decel = 2.6*this.maxSpeed;
+      this.decel = 2.1 *this.maxSpeed;
       this.direction = undefined;
+      this.targetSpeed = undefined;
     }
 
     /**
@@ -128,6 +131,10 @@ export default class Vehicle extends Object {
 
     getIsInTransition(): boolean {
       return this.isInTransition;
+    }
+
+    getTargetSpeed(): number|undefined{
+      return this.targetSpeed;
     }
 
     resetIsInTransition(): void {
@@ -215,16 +222,26 @@ export default class Vehicle extends Object {
       }
       //acceleration
       if(this.state === 1) {
-        if(this.speed <this.maxSpeed){
+        let mSpeed = this.maxSpeed;
+        if(this.targetSpeed !== undefined){
+          mSpeed = this.targetSpeed;
+        }
+        if(this.speed <mSpeed){
           this.speed += this.accel * deltaT;
-          if(this.speed > this.maxSpeed){
-            this.speed = this.maxSpeed;
+          if(this.speed > mSpeed){
+            this.speed = mSpeed;
           }
         }
-      }else if(this.speed>0){//deceleration
-        this.speed -= this.accel * deltaT;
-        if(this.speed<0){
-          this.speed = 0;
+      }else{
+        let mSpeed = 0;
+        if(this.targetSpeed !== undefined){
+          mSpeed = this.targetSpeed;
+        }
+        if(this.speed>mSpeed){//deceleration
+          this.speed -= this.decel * deltaT;
+          if(this.speed<mSpeed){
+            this.speed = mSpeed;
+          }
         }
       }
 
@@ -234,16 +251,20 @@ export default class Vehicle extends Object {
 
     /**
      * signal move
+     * @param targetSpeed
      */
-    move(){
+    move(targetSpeed?:number){
       this.state = 1;
+      this.targetSpeed = targetSpeed;
     }
 
     /**
      * signal stop
+     * @param targetSpeed
      */
-    stop(){
+    stop(targetSpeed?:number){
       this.state = -1;
+      this.targetSpeed = targetSpeed;
     }
 
     /**

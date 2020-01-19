@@ -521,20 +521,33 @@ export default class RoadIntersection {
      * @param deltaT 
      */
     updateVehiclePosV2(deltaT?:number):void{
-      const safetyDis = 25;
+      const safetyDis = this.laneWidth *1.1;
       const vWidth = 3;
       for (let i = 0; i < this.vehicles.length; i += 1) {
         let go = true;
+        // let tSpeed = this.vehicles[i].maxSpeed;
         for(let j=0; j<this.vehicles.length;j +=1){
           if(i!==j){
             if(this.vehicles[i].checkFrontObsticle(
               this.vehicles[j].getPosition(),safetyDis,vWidth)){
+                const targetSpeed = this.vehicles[j].getSpeed()
+                const dis = ts.tsLength(this.vehicles[i].getPosition()
+                .minus(this.vehicles[j].getPosition()));
+                const mSpeed = targetSpeed * dis / safetyDis;
+                  const mSpeed2 = this.vehicles[i].getTargetSpeed();
+                if(mSpeed2!== undefined){
+                  console.log("here");
+                  this.vehicles[i].targetSpeed = Math.
+                  min(mSpeed,mSpeed2);
+                } else{
+                  this.vehicles[i].targetSpeed = mSpeed;
+                }
                 go = false;
               }
           }
         }
 
-        if(go === true){
+        // if(go === true){
           const sectionId = this.vehicles[i].getRoadSectionId();
           const laneId = this.vehicles[i].getLaneId();
           if(sectionId !== -1 && laneId !== -1){
@@ -547,13 +560,16 @@ export default class RoadIntersection {
 
               if(this.vehicles[i]
                 .checkFrontObsticle(stopLine,safetyDis,vWidth)){
-                go = false;
+                
+                  go = false;
+                this.vehicles[i].targetSpeed = undefined;
+
               }
             }
           }else{
             console.log("unidefined section or lane id");
           }
-        }
+        // }
 
         if(go){
           this.vehicles[i].move();

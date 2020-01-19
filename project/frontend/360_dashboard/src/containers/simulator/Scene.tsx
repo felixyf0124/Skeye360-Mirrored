@@ -704,7 +704,7 @@ class Scene extends Component {
         for (let i = 0; i < this.atIndex + 1; i += 1) {
           currentCD = this.makeUpCar[this.atIndex].atTline;
         }
-        const maxVSpeed = 0.8;
+        const maxVSpeed = this.laneW * 0.028;
         if (this.deltaT > currentCD) {
           this.roadIntersection.addNewVehicle(0, 0, maxVSpeed);
           this.roadIntersection.addNewVehicle(0, 1, maxVSpeed);
