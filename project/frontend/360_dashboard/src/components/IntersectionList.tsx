@@ -79,7 +79,7 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
 const mapStateToProps = (state: RootState): StateProps => ({
   user_id: state.authentication.user_id,
   districts: state.districts,
-  count: state.count,
+  count: state.countTime,
 });
 
 const mapDispatchToProps: DispatchProps = {

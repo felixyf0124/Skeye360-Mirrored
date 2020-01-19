@@ -1,4 +1,4 @@
-const { REACT_APP_API_URL } = process.env;
+
 export interface Response {
     count: {
         count_type: string;
@@ -9,7 +9,7 @@ export interface Response {
     };
 }
 
-const APIDomain = REACT_APP_API_URL;
+const APIDomain = '0.0.0.0:8000';
 
 const countTime = async (): Promise<Response> => {
     const url = `\\${APIDomain}/api/count`;
