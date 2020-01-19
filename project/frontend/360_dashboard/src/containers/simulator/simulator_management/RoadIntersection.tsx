@@ -562,6 +562,8 @@ export default class RoadIntersection {
 
     /**
      * old function
+     * to be removed
+     * replaced by new improved function V2
      * update vehicles' positions
      * these vehicles are from the vehicles array not the simpleVehicles
      */
@@ -603,10 +605,9 @@ export default class RoadIntersection {
      */
     updateVehiclePosV2(deltaT?: number): void{
       const safetyDis = this.laneWidth * 1.1;
-      const vWidth = this.laneWidth *0.16;
+      const vWidth = this.laneWidth *0.3;
       for (let i = 0; i < this.vehicles.length; i += 1) {
         let go = true;
-        // let tSpeed = this.vehicles[i].maxSpeed;
         for (let j = 0; j < this.vehicles.length; j += 1) {
           if (i !== j) {
             if (this.vehicles[i].checkFrontObsticle(
