@@ -13,6 +13,7 @@ import LanePointer from './simulator_management/LanePointer';
 import DragablePoint from './DragablePoint';
 import mappingBGTexture from './intersection1.png';
 import * as tsData from './TSLocalData';
+import data1 from './traffic_normal_case.csv';
 // import 'pixi-text-input.js';
 
 /**
@@ -406,6 +407,7 @@ class Scene extends Component {
     this.atIndex = 0;
 
     this.app.loader.add('./intersection1.png');
+    tsData.loadCarGenData(data1);
   }
 
   /**
