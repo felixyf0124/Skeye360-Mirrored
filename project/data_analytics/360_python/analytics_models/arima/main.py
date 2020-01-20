@@ -114,9 +114,6 @@ class main:
     accuracy = r2_score(test.values, forecast)
     print(accuracy)
 
-    print(type(forecast))
-    print(forecast)
-
     # Uncomment the following code to view the residual, which is the difference between the predicted value and the true value
     # arimaModel.plot_diagnostics(figsize=(7,5))
 
@@ -134,11 +131,11 @@ class main:
 
 
     # To connect to the database
-    # dbConnect = dbConnection()
-    # client = dbConnect.connect()
-    # wtd = writeToDatabase()
-    # collection = wtd.connection('360backend', 'djangosite_api_count', client)
-    # # The following command calls the write method in writeToDatabase.py to write to the mongodb
-    # wtd.write("EW", forecast, listOfDate, "arima", collection)
-    # # The following command calls the read method in writeToDatabase.py to read from the mongodb
-    # wtd.read(collection)
+    dbConnect = dbConnection()
+    client = dbConnect.connect()
+    wtd = writeToDatabase()
+    collection = wtd.connection('360backend', 'djangosite_api_count', client)
+    # The following command calls the write method in writeToDatabase.py to write to the mongodb
+    wtd.write("EW", forecast, listOfDate, "arima", collection)
+    # The following command calls the read method in writeToDatabase.py to read from the mongodb
+    wtd.read(collection)
