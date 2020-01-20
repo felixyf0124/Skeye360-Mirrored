@@ -117,6 +117,11 @@ class Scene extends Component {
 
   objRawData: string;
 
+  normData:Array<Array<any>>;
+
+  dataReady: Array<{norm:boolean,normSorted:boolean,
+    edge:boolean,edgeSorted:boolean}>;
+
   constructor(props: any) {
     super(props);
     this.windowScaleRatio = 0.5;
@@ -406,9 +411,16 @@ class Scene extends Component {
 
     this.atIndex = 0;
 
+    this.normData = new Array<Array<any>>();
+    this.dataReady = new Array<{norm:boolean,normSorted:boolean,
+      edge:boolean,edgeSorted:boolean}>();
+
     this.app.loader.add('./intersection1.png');
-    const dataObj1 = tsData.loadCarGenData(data1);
-    const test = tsData.sortDataByTime(dataObj1);
+    this.normData.push(tsData.loadCarGenData(data1));
+
+    this.dataReady.push({norm:false,normSorted:false,
+      edge:false,edgeSorted:false});
+    // const test = tsData.sortDataByTime(dataObj1);
     // console.log(test.length);
   }
 
@@ -734,28 +746,49 @@ class Scene extends Component {
       this.sectionAreaCounter();
       this.countDown = Date.now();
     } else {
+
+      //wait
+      if(this.normData[0].length!==0 && !this.dataReady[0].norm
+        && !this.dataReady[0].normSorted){
+        console.log(this.normData[0]);
+        
+        // this.normData[0] = 
+        tsData.sortDataByTime(this.normData[0]);
+        this.dataReady[0].norm = true;
+      }
+
+      //sort
+      if(this.normData[0].length!==0 && this.dataReady[0].norm
+        && !this.dataReady[0].normSorted) {
+        console.log("loop sorted");
+        console.log(this.normData[0]);
+        
+        this.dataReady[0].normSorted = true;
+      }
+
       // make up car loop
-      if (this.atIndex < this.makeUpCar.length) {
+      if (this.atIndex < this.normData[0].length) {
         this.deltaT = Date.now() - this.countDown;
         let currentCD = 0;
 
         for (let i = 0; i < this.atIndex + 1; i += 1) {
-          currentCD = this.makeUpCar[this.atIndex].atTline;
+          currentCD = this.normData[0][this.atIndex].tLine
+            -this.normData[0][0].tLine;
         }
         const maxVSpeed = this.laneW * 0.028;
         if (this.deltaT > currentCD) {
-          this.roadIntersection.addNewVehicleV2(0, 0, maxVSpeed);
+          // this.roadIntersection.addNewVehicleV2(0, 0, maxVSpeed);
           // this.roadIntersection.addNewVehicle(1, 0, maxVSpeed);
           // this.roadIntersection.addNewVehicle(2, 0, maxVSpeed);
-          this.roadIntersection.addNewVehicleV2(0, 1, maxVSpeed);
+          // this.roadIntersection.addNewVehicleV2(0, 1, maxVSpeed);
           // this.roadIntersection.addNewVehicle(1, 1, maxVSpeed);
           // this.roadIntersection.addNewVehicle(2, 1, maxVSpeed);
-          this.roadIntersection.addNewVehicleV2(0, 2, maxVSpeed);
-          this.roadIntersection.addNewVehicleV2(1, 2, maxVSpeed);
-          this.roadIntersection.addNewVehicleV2(2, 2, maxVSpeed);
-          this.roadIntersection.addNewVehicleV2(0, 3, maxVSpeed);
-          this.roadIntersection.addNewVehicleV2(1, 3, maxVSpeed);
-          this.roadIntersection.addNewVehicleV2(2, 3, maxVSpeed);
+          // this.roadIntersection.addNewVehicleV2(0, 2, maxVSpeed);
+          // this.roadIntersection.addNewVehicleV2(1, 2, maxVSpeed);
+          // this.roadIntersection.addNewVehicleV2(2, 2, maxVSpeed);
+          // this.roadIntersection.addNewVehicleV2(0, 3, maxVSpeed);
+          // this.roadIntersection.addNewVehicleV2(1, 3, maxVSpeed);
+          // this.roadIntersection.addNewVehicleV2(2, 3, maxVSpeed);
           this.atIndex += 1;
         }
       } else if (!this.toggleGroup[0].state) {

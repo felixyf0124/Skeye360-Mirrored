@@ -71,7 +71,11 @@ export function saveSectionAreas(): void {
  */
 export function loadCarGenData(path: any): Array<any> {
   
-  const array = new Array<any>();
+    const array = new Array<{
+      id: number,
+      tLine:number,
+      from: string,
+      to:string}>();
 
   d3.csv(path, (d:any)=>{
     //  console.log(d);
@@ -95,90 +99,27 @@ export function loadCarGenData(path: any): Array<any> {
       from: d.from,
       to:d.to
     };
-    // array.push(row);
-    // console.log(array.length);
+    array.push(row);
+    
     return row;
-  }).then((data)=>{
-    data.forEach((ele)=>{
-      const row = ele;
-      array.push(row);
-
-    });
   });
-  // console.log(array[0]);
-  
 
   const obj = array;
-   //sort
-  //  const sortedObj = obj.sort((a:any,b:any)=>{
-  //    console.log("called");
-  //   // console.log(a);
-  //   const v1 = a.tLine, v2 = b.tLine;
-  //   console.log(v1);
-  //   // if(v1 <v2){
-  //   //   return -1
-  //   // }
-  //   // if (v1 > v2) {
-  //   //   return 1;
-  //   // }
-  //   // return 0;
-  //   return a.tLine - b.tLine;
-  // });
-  // // console.log(obj.length);
-  // // console.log(obj);
-  // obj.forEach(element => {
-  // console.log(element);
-    
-  // });
-
-  // const test = new Array<any>();
-  // for(let i = 0;i<50;i++){
-  // console.log(sortedObj.length);
-  // const temp = sortedObj[i];
-  //   test.push(temp);
-  // }
-  // console.log('test');
-  // console.log(test);
-  // test.sort((a,b)=>{
-  //   // console.log('called');
-  //   return a.tLine - b.tLine;
-  // })
-  console.log(array);
-  console.log(array.length);
 
   return obj;
   
 }
 
 
-export function sortDataByTime(unsorted:Array<any>):Array<any>{
+export function sortDataByTime(unsorted:Array<any>):void{
 
-  // const sorted = unsorted.sort((a:any,b:any)=>{
-  //   console.log("called");
-  //  // console.log(a);
-  // //  const v1 = a.tLine, v2 = b.tLine;
-  // //  console.log(v1);
-  //  // if(v1 <v2){
-  //  //   return -1
-  //  // }
-  //  // if (v1 > v2) {
-  //  //   return 1;
-  //  // }
-  //  // return 0;
-  //  return a.tLine - b.tLine;
-  // });
-  const sorted = new Array<any>();
-
-  // while(true){
-  //   if(unsorted.length){
-  //     for(let i = 0;i<unsorted.length;i+=1){
-  //       console.log(i);
-  //     }
-  //     break;
-  //   }
-    
-  // }
-  console.log(sorted);
+  const sorted = unsorted.sort((a:any,b:any)=>{
+    console.log("called");
+   
+   return a.tLine - b.tLine;
+  });
   
-  return sorted;
+  console.log(unsorted);
+  
+  // return sorted;
 }
