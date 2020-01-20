@@ -147,7 +147,7 @@ export default class RoadIntersection {
     }
 
     /**
-     * old bug function 
+     * old bug function
      * has been replaced by addNewVehicleV2
      * To be removed
      * add new vehicle
@@ -191,12 +191,11 @@ export default class RoadIntersection {
         // const frontPos = frontV.getPosition().minus(dir.multiply(safetyDis));
         const frontPos = frontV.getPosition();
         const frontToTravel = ts.tsLength(frontPos.minus(
-          frontV.path[frontV.atPathSection][frontV.atPath + 1]));
+          frontV.path[frontV.atPathSection][frontV.atPath + 1],
+        ));
 
 
-        
-          
-        const dis1 = ts.tsLength(frontPos.minus(laneFrom.getHead()));
+        // const dis1 = ts.tsLength(frontPos.minus(laneFrom.getHead()));
         const dis2 = ts.tsLength(laneFrom.getTail().minus(laneFrom.getHead()));
         if (frontToTravel + safetyDis < dis2) {
           objV.setPosition(laneFrom.getTail());
@@ -241,7 +240,7 @@ export default class RoadIntersection {
         lanePointer[0].getSectionId(), false);
       // safety dis
       const safetyDis = this.laneWidth * 1.1;
-      const vWidth = this.laneWidth *0.16;
+      const vWidth = this.laneWidth * 0.16;
       objV.path.push([laneFrom.getTail(), laneFrom.getHead()]);
       objV.path.push([laneFrom.getHead(), laneTo.getTail()]);
       objV.path.push([laneTo.getTail(), laneTo.getHead()]);
@@ -252,15 +251,15 @@ export default class RoadIntersection {
       for (let j = 0; j < this.vehicles.length; j += 1) {
         if (objV.getId() !== this.vehicles[j].getId()) {
           if (objV.checkFrontNBackObsticle(
-            this.vehicles[j].getPosition(), safetyDis, vWidth)) {
-              
+            this.vehicles[j].getPosition(), safetyDis, vWidth,
+          )) {
             if (objV.checkFrontNBackObsticle(
-              this.vehicles[j].getPosition(), safetyDis*0.8, vWidth)){
-                
+              this.vehicles[j].getPosition(), safetyDis * 0.8, vWidth,
+            )) {
               const currentPos = objV.getPosition();
-              objV.setPosition(currentPos.minus(dir.multiply(0.9* safetyDis)));
+              objV.setPosition(currentPos.minus(dir.multiply(0.9 * safetyDis)));
             }
-          } 
+          }
         }
       }
       this.vehicles.push(objV);
@@ -497,13 +496,13 @@ export default class RoadIntersection {
      */
     addNewLane(roadSectionId: number, laneDirection: number,
       laneType: string, numOfLanes: number): void {
-        /**
+      /**
          * since this function is called before road resort
          * the road section id is same as the index
          * this.roadSections[(roadSectionId)]
          * .addNewLane(laneDirection, laneType, numOfLanes);
          */
-      
+
       this.roadSections[this.getRoadSectionIndex(roadSectionId)]
         .addNewLane(laneDirection, laneType, numOfLanes);
     }
@@ -605,7 +604,7 @@ export default class RoadIntersection {
      */
     updateVehiclePosV2(deltaT?: number): void{
       const safetyDis = this.laneWidth * 1.1;
-      const vWidth = this.laneWidth *0.3;
+      const vWidth = this.laneWidth * 0.3;
       for (let i = 0; i < this.vehicles.length; i += 1) {
         let go = true;
         for (let j = 0; j < this.vehicles.length; j += 1) {

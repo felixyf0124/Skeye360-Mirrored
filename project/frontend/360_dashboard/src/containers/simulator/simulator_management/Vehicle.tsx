@@ -153,7 +153,7 @@ export default class Vehicle extends Object {
       const lengthOfCurrentPath = this.getPathLength(this.atPathSection, this.atPath + 1);
       if (this.atPathSection === 0) {
         const disToTravelOfCurrentPath = ts.tsLength(this.position.minus(
-          this.path[this.atPathSection][this.atPath + 1]
+          this.path[this.atPathSection][this.atPath + 1],
         ));
         if (disToTravelOfCurrentPath > lengthOfCurrentPath) {
           this.traveled = lengthOfCurrentPath - disToTravelOfCurrentPath;
@@ -246,9 +246,8 @@ export default class Vehicle extends Object {
         }
       }
 
-      //check if it is off the path or not
-      if(!this.checkOnLine())
-      {
+      // check if it is off the path or not
+      if (!this.checkOnLine()) {
         // console.log(this);
       }
       // translate
@@ -348,27 +347,25 @@ export default class Vehicle extends Object {
     }
 
 
-    checkOnLine():boolean{
-      
+    checkOnLine(): boolean {
       let dir = ts
-      .getAngleOfVec(this.path[this.atPathSection][0].minus(this.position));
+        .getAngleOfVec(this.path[this.atPathSection][0].minus(this.position));
       let dir2 = ts
-      .getAngleOfVec(this.path[this.atPathSection][1].minus(this.path[this.atPathSection][0]));
+        .getAngleOfVec(this.path[this.atPathSection][1].minus(this.path[this.atPathSection][0]));
       // dir.x = Math.round(dir.x * 10000)/10000;
       // dir.y = Math.round(dir.y * 10000)/10000;
       // dir2.x = Math.round(dir2.x * 10000)/10000;
       // dir2.y = Math.round(dir2.y * 10000)/10000;
       // const prod = ts.tsCrossVec2(dir,dir2);
-      dir = Math.round(dir * 10000)/10000;
-      dir2 = Math.round(dir2 * 10000)/10000;
-      
+      dir = Math.round(dir * 10000) / 10000;
+      dir2 = Math.round(dir2 * 10000) / 10000;
+
       // console.log(dir +"| "+dir2);
-      if(dir === dir2){
+      if (dir === dir2) {
         // console.log(this);
         return true;
-      }else{
-        // console.log(this);
-        return false;
       }
+      // console.log(this);
+      return false;
     }
 }

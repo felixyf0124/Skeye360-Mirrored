@@ -117,10 +117,10 @@ class Scene extends Component {
 
   objRawData: string;
 
-  normData:Array<Array<any>>;
+  normData: Array<Array<any>>;
 
-  dataReady: Array<{norm:boolean,normSorted:boolean,
-    edge:boolean,edgeSorted:boolean}>;
+  dataReady: Array<{norm: boolean;normSorted: boolean;
+    edge: boolean;edgeSorted: boolean;}>;
 
   constructor(props: any) {
     super(props);
@@ -412,14 +412,18 @@ class Scene extends Component {
     this.atIndex = 0;
 
     this.normData = new Array<Array<any>>();
-    this.dataReady = new Array<{norm:boolean,normSorted:boolean,
-      edge:boolean,edgeSorted:boolean}>();
+    this.dataReady = new Array<{norm: boolean;normSorted: boolean;
+      edge: boolean;edgeSorted: boolean;}>();
 
     this.app.loader.add('./intersection1.png');
     this.normData.push(tsData.loadCarGenData(data1));
 
-    this.dataReady.push({norm:false,normSorted:false,
-      edge:false,edgeSorted:false});
+    this.dataReady.push({
+      norm: false,
+      normSorted: false,
+      edge: false,
+      edgeSorted: false,
+    });
     // const test = tsData.sortDataByTime(dataObj1);
     // console.log(test.length);
   }
@@ -672,17 +676,16 @@ class Scene extends Component {
         } else {
           const spot = this.drawVehicleSpot(position, 0xFFFFCC);
           this.objectContainer.addChild(spot);
-          //test
-          if(!this.toggleGroup[0].state){
+          // test
+          if (!this.toggleGroup[0].state) {
             const path = vehicles[i].getPath();
             const pathG = new PIXI.Graphics();
-            
+
             const dir = vehicles[i].direction;
-            pathG.lineStyle(1,0xFF0FFF);
-            if(dir !== undefined)
-            {
-              pathG.moveTo(position.x+dir.x*20,position.y+dir.y*20);
-              pathG.lineTo(position.x,position.y);
+            pathG.lineStyle(1, 0xFF0FFF);
+            if (dir !== undefined) {
+              pathG.moveTo(position.x + dir.x * 20, position.y + dir.y * 20);
+              pathG.lineTo(position.x, position.y);
               // const nextp = path[vehicles[i].getAtPathSection()]
               // [vehicles[i].getAtPath()];
               // pathG.lineTo(nextp.x,nextp.y);
@@ -737,23 +740,22 @@ class Scene extends Component {
       this.sectionAreaCounter();
       this.countDown = Date.now();
     } else {
-
-      //wait
-      if(this.normData[0].length!==0 && !this.dataReady[0].norm
-        && !this.dataReady[0].normSorted){
+      // wait
+      if (this.normData[0].length !== 0 && !this.dataReady[0].norm
+        && !this.dataReady[0].normSorted) {
         console.log(this.normData[0]);
-        
-        // this.normData[0] = 
+
+        // this.normData[0] =
         tsData.sortDataByTime(this.normData[0]);
         this.dataReady[0].norm = true;
       }
 
-      //sort
-      if(this.normData[0].length!==0 && this.dataReady[0].norm
+      // sort
+      if (this.normData[0].length !== 0 && this.dataReady[0].norm
         && !this.dataReady[0].normSorted) {
-        console.log("loop sorted");
+        console.log('loop sorted');
         console.log(this.normData[0]);
-        
+
         this.dataReady[0].normSorted = true;
       }
 
@@ -765,22 +767,21 @@ class Scene extends Component {
         const interSec = 0;
         for (let i = 0; i < this.atIndex + 1; i += 1) {
           currentCD = this.normData[interSec][this.atIndex].tLine
-            -this.normData[interSec][0].tLine;
+            - this.normData[interSec][0].tLine;
         }
         const maxVSpeed = this.laneW * 0.028;
         if (this.deltaT > currentCD) {
-          
           const dirct = {
-            from:this.normData[interSec][this.atIndex].from,
-            to:this.normData[interSec][this.atIndex].to,
+            from: this.normData[interSec][this.atIndex].from,
+            to: this.normData[interSec][this.atIndex].to,
           };
-          
-          const laneP = tsData.dirAdapter(dirct.from,dirct.to);
-          //east
+
+          const laneP = tsData.dirAdapter(dirct.from, dirct.to);
+          // east
           this.roadIntersection
-            .addNewVehicleV2(laneP.getLaneId(), 
-            laneP.getSectionId(), maxVSpeed);
-          
+            .addNewVehicleV2(laneP.getLaneId(),
+              laneP.getSectionId(), maxVSpeed);
+
           this.atIndex += 1;
         }
       } else if (!this.toggleGroup[0].state) {
