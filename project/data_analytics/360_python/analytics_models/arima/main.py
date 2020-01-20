@@ -18,6 +18,7 @@ from sklearn.metrics import r2_score
 from pmdarima.arima.utils import ndiffs, nsdiffs, ADFTest
 from pmdarima.model_selection import train_test_split
 from writeToDatabase import writeToDatabase
+from dbConnection import dbConnection
 from datetime import datetime, timedelta
 
 class main:
@@ -25,9 +26,9 @@ class main:
 
     # Read the csv file that was generated from the datasetGenerator.py
     # For Windows
-    # dataframe = panda.read_csv("360_python\data_generator\generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
+    dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
     # For Linux, the path depends on where the Github project is cloned
-    dataframe = panda.read_csv("~/Soen490/project/data_analytics/360_python/data_generator/generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
+    # dataframe = panda.read_csv("~/Soen490/project/data_analytics/360_python/data_generator/generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
 
     # Uncomment the following code to preview how the data looks like on a graph
     # To plot a graph, use only 2 columns
@@ -113,6 +114,9 @@ class main:
     accuracy = r2_score(test.values, forecast)
     print(accuracy)
 
+    print(type(forecast))
+    print(forecast)
+
     # Uncomment the following code to view the residual, which is the difference between the predicted value and the true value
     # arimaModel.plot_diagnostics(figsize=(7,5))
 
@@ -128,8 +132,13 @@ class main:
         listOfDate.append((testStartDateObj + timedelta(days=index)))
         print(testStartDateObj + timedelta(days=index))
 
-    wtd = writeToDatabase()
-    # The following command calls the write method in writeToDatabase.py to write to the mongodb
-    wtd.write("EW", forecast, listOfDate, "arima")
-    # The following command calls the read method in writeToDatabase.py to read from the mongodb
-    wtd.read()
+
+    # To connect to the database
+    # dbConnect = dbConnection()
+    # client = dbConnect.connect()
+    # wtd = writeToDatabase()
+    # collection = wtd.connection('360backend', 'djangosite_api_count', client)
+    # # The following command calls the write method in writeToDatabase.py to write to the mongodb
+    # wtd.write("EW", forecast, listOfDate, "arima", collection)
+    # # The following command calls the read method in writeToDatabase.py to read from the mongodb
+    # wtd.read(collection)
