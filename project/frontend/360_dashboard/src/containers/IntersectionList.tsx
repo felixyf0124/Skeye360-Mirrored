@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import SideDrawer from '../components/SideDrawer';
 import IntersectionTable from '../components/IntersectionTable';
 import { RootState } from '../reducers/rootReducer';
-
 import {
   STATE as districtState,
   GetDistrictsAction,
@@ -17,15 +16,51 @@ import {
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
 import { logClick, LogAction } from '../contexts/LogClicks';
 import TrafficNews from '../components/TrafficNews';
+import { LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 
 // Generic flexboxes styling
-const HorizontalFlexBox = styled.div`
+const ContentFlexBox = styled.div`
+  margin-left: 5rem;
+  margin-right: 0rem;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: space-around;
   align-content: stretch;
+
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+  }
+  @media only screen and (max-width: ${MOBILE_DEVICE_MAX_WIDTH}px) {
+    & {
+      margin-left: 2.5rem;
+    }
+  }
+`;
+
+const TableDiv = styled.div`
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      width: 90vw;
+    }
+  }
+`;
+
+const TrafficDiv = styled.div`
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      width: 93vw;
+    }
+  }
+  @media only screen and (max-width: ${MOBILE_DEVICE_MAX_WIDTH}px) {
+    & {
+      width: 100vw;
+    }
+  }
 `;
 
 const title = 'Montreal';
@@ -67,11 +102,17 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
     //   districts: districts,
     // };
     return (
-      <HorizontalFlexBox>
+      <div>
         <SideDrawer headerTitle={title} />
-        {districts[0] === undefined ? <div /> : <IntersectionTable districts={districts} />}
-        <TrafficNews />
-      </HorizontalFlexBox>
+        <ContentFlexBox>
+          <TableDiv>
+            {districts[0] === undefined ? <div /> : <IntersectionTable districts={districts} />}
+          </TableDiv>
+          <TrafficDiv>
+            <TrafficNews />
+          </TrafficDiv>
+        </ContentFlexBox>
+      </div>
     );
   }
 }

@@ -14,9 +14,15 @@ import { Response as cameraResponse } from '../api/camera';
 import SideDrawer from '../components/SideDrawer';
 import EditCameraForm from '../components/EditCameraForm';
 import AddCameraForm from '../components/AddCameraForm';
+import { LOW_RES } from '../css/custom';
 
 const Content = styled.div`
   margin-top: 8rem;
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      overflow-x: hidden;
+    }
+  }
 `;
 
 // Generic flexboxes styling
@@ -36,6 +42,12 @@ const HorizontalFlexBox = styled.div`
   justify-content: space-around;
   align-items: stretch;
   align-content: stretch;
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
 `;
 
 interface StateProps {
@@ -84,7 +96,7 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
       success, intersection_name, cameras, intersection_id,
     } = this.props;
     // if (district_id === '') return <Redirect to="/" />;
-    const headerTitle = `Edit: ${intersection_name}`;
+    const headerTitle = `${intersection_name}`;
 
     if (success) {
       return (
