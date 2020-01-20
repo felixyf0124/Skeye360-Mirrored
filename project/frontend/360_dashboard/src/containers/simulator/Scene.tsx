@@ -407,7 +407,9 @@ class Scene extends Component {
     this.atIndex = 0;
 
     this.app.loader.add('./intersection1.png');
-    tsData.loadCarGenData(data1);
+    const dataObj1 = tsData.loadCarGenData(data1);
+    const test = tsData.sortDataByTime(dataObj1);
+    // console.log(test.length);
   }
 
   /**

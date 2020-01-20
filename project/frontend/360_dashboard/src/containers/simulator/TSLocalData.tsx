@@ -1,4 +1,6 @@
 import Vec2 from './simulator_management/vec2';
+import * as d3 from "d3";
+
 
 /**
  * get lane areas in form of Array<Array<Vec2>>
@@ -61,4 +63,122 @@ export function saveSectionAreas(): void {
   //     // In case of a error throw err.
   //     if (err) throw err;
   // })
+}
+
+/**
+ * load csv  data
+ * @param path 
+ */
+export function loadCarGenData(path: any): Array<any> {
+  
+  const array = new Array<any>();
+
+  d3.csv(path, (d:any)=>{
+    //  console.log(d);
+    const strTime = d.time;
+
+    const tLineFormat = /\d+(\.\d+)?/g;
+    const matchesArray = strTime.match(tLineFormat);
+    let tt=0;
+    if (matchesArray != null) {
+      const m = parseInt(matchesArray[0], 10);
+      const s = parseInt(matchesArray[1], 10);
+      //centi-second
+      const cs = parseInt(matchesArray[2], 10);
+      // console.log(m+"|"+s+"|"+ms);
+      tt = (((m*60)+s)*100 + cs);
+    }
+    const tLine = tt*10;
+    const row = {
+      id: d.id,
+      tLine:tLine,
+      from: d.from,
+      to:d.to
+    };
+    // array.push(row);
+    // console.log(array.length);
+    return row;
+  }).then((data)=>{
+    data.forEach((ele)=>{
+      const row = ele;
+      array.push(row);
+
+    });
+  });
+  // console.log(array[0]);
+  
+
+  const obj = array;
+   //sort
+  //  const sortedObj = obj.sort((a:any,b:any)=>{
+  //    console.log("called");
+  //   // console.log(a);
+  //   const v1 = a.tLine, v2 = b.tLine;
+  //   console.log(v1);
+  //   // if(v1 <v2){
+  //   //   return -1
+  //   // }
+  //   // if (v1 > v2) {
+  //   //   return 1;
+  //   // }
+  //   // return 0;
+  //   return a.tLine - b.tLine;
+  // });
+  // // console.log(obj.length);
+  // // console.log(obj);
+  // obj.forEach(element => {
+  // console.log(element);
+    
+  // });
+
+  // const test = new Array<any>();
+  // for(let i = 0;i<50;i++){
+  // console.log(sortedObj.length);
+  // const temp = sortedObj[i];
+  //   test.push(temp);
+  // }
+  // console.log('test');
+  // console.log(test);
+  // test.sort((a,b)=>{
+  //   // console.log('called');
+  //   return a.tLine - b.tLine;
+  // })
+  console.log(array);
+  console.log(array.length);
+
+  return obj;
+  
+}
+
+
+export function sortDataByTime(unsorted:Array<any>):Array<any>{
+
+  // const sorted = unsorted.sort((a:any,b:any)=>{
+  //   console.log("called");
+  //  // console.log(a);
+  // //  const v1 = a.tLine, v2 = b.tLine;
+  // //  console.log(v1);
+  //  // if(v1 <v2){
+  //  //   return -1
+  //  // }
+  //  // if (v1 > v2) {
+  //  //   return 1;
+  //  // }
+  //  // return 0;
+  //  return a.tLine - b.tLine;
+  // });
+  const sorted = new Array<any>();
+
+  // while(true){
+  //   if(unsorted.length){
+  //     for(let i = 0;i<unsorted.length;i+=1){
+  //       console.log(i);
+  //     }
+  //     break;
+  //   }
+    
+  // }
+  console.log(sorted);
+  
+  return sorted;
 }
