@@ -85,14 +85,14 @@ export function loadCarGenData(path: any): Array<any> {
     const matchesArray = strTime.match(tLineFormat);
     let tt=0;
     if (matchesArray != null) {
-      const m = parseInt(matchesArray[0], 10);
-      const s = parseInt(matchesArray[1], 10);
+      const h = parseInt(matchesArray[0], 10);
+      const m = parseInt(matchesArray[1], 10);
       //centi-second
-      const cs = parseInt(matchesArray[2], 10);
+      const s = parseInt(matchesArray[2], 10);
       // console.log(m+"|"+s+"|"+ms);
-      tt = (((m*60)+s)*100 + cs);
+      tt = (((h*60)+m)*60 + s);
     }
-    const tLine = tt*10;
+    const tLine = tt*1000;
     const row = {
       id: d.id,
       tLine:tLine,
