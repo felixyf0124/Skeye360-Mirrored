@@ -13,7 +13,8 @@ import LanePointer from './simulator_management/LanePointer';
 import DragablePoint from './DragablePoint';
 import mappingBGTexture from './intersection1.png';
 import * as tsData from './TSLocalData';
-import data1 from './traffic_normal_case.csv';
+import ndata1 from './traffic_normal_case.csv';
+import edata1 from './traffic_edge_case.csv';
 // import 'pixi-text-input.js';
 
 /**
@@ -118,6 +119,12 @@ class Scene extends Component {
   objRawData: string;
 
   normData: Array<Array<any>>;
+
+  edgeData: Array<Array<any>>;
+
+  caseType: number;
+  
+  caseData: Array<any>;
 
   dataReady: Array<{norm: boolean;normSorted: boolean;
     edge: boolean;edgeSorted: boolean;}>;
@@ -412,11 +419,13 @@ class Scene extends Component {
     this.atIndex = 0;
 
     this.normData = new Array<Array<any>>();
+    this.edgeData = new Array<Array<any>>();
     this.dataReady = new Array<{norm: boolean;normSorted: boolean;
       edge: boolean;edgeSorted: boolean;}>();
 
     this.app.loader.add('./intersection1.png');
-    this.normData.push(tsData.loadCarGenData(data1));
+    this.normData.push(tsData.loadCarGenData(ndata1));
+    this.edgeData.push(tsData.loadCarGenData(edata1));
 
     this.dataReady.push({
       norm: false,
@@ -424,6 +433,9 @@ class Scene extends Component {
       edge: false,
       edgeSorted: false,
     });
+
+    this.caseType = 2;
+    this.caseData = new Array<any>();
     // const test = tsData.sortDataByTime(dataObj1);
     // console.log(test.length);
   }
@@ -734,6 +746,7 @@ class Scene extends Component {
     this.drawMenu();
 
     this.roadIntersection.updateVehiclePosV2();
+    const interSec = 0;
 
     if (this.toggleGroup[0].state) {
       this.vehicleUpdate(852, 478);
@@ -741,39 +754,65 @@ class Scene extends Component {
       this.countDown = Date.now();
     } else {
       // wait
-      if (this.normData[0].length !== 0 && !this.dataReady[0].norm
-        && !this.dataReady[0].normSorted) {
-        console.log(this.normData[0]);
+      if (this.normData[interSec].length !== 0 
+        && !this.dataReady[interSec].norm
+        && !this.dataReady[interSec].normSorted) {
+        console.log(this.normData[interSec]);
 
-        // this.normData[0] =
-        tsData.sortDataByTime(this.normData[0]);
-        this.dataReady[0].norm = true;
+        // this.normData[interSec] =
+        tsData.sortDataByTime(this.normData[interSec]);
+        this.dataReady[interSec].norm = true;
+      }
+      if (this.edgeData[interSec].length !== 0 
+        && !this.dataReady[interSec].edge
+        && !this.dataReady[interSec].edgeSorted) {
+        console.log(this.edgeData[interSec]);
+
+        // this.normData[interSec] =
+        tsData.sortDataByTime(this.edgeData[interSec]);
+        this.dataReady[interSec].edge = true;
       }
 
       // sort
-      if (this.normData[0].length !== 0 && this.dataReady[0].norm
-        && !this.dataReady[0].normSorted) {
-        console.log('loop sorted');
-        console.log(this.normData[0]);
+      if (this.normData[interSec].length !== 0 && this.dataReady[interSec].norm
+        && !this.dataReady[interSec].normSorted) {
+        console.log('normal loop sorted');
+        console.log(this.normData[interSec]);
 
-        this.dataReady[0].normSorted = true;
+        this.dataReady[interSec].normSorted = true;
       }
+      if (this.edgeData[interSec].length !== 0 
+        && this.dataReady[interSec].edge
+        && !this.dataReady[interSec].edgeSorted) {
+        console.log('edge loop sorted');
+        console.log(this.edgeData[interSec]);
 
+        this.dataReady[interSec].edgeSorted = true;
+      }
+      
+      if(this.caseType === 1
+        && this.dataReady[interSec].norm 
+        && this.dataReady[interSec].normSorted) {
+          this.caseData = this.normData[interSec];
+        }else if(this.caseType === 2
+        && this.dataReady[interSec].edge 
+        && this.dataReady[interSec].edgeSorted){
+          this.caseData = this.edgeData[interSec]
+        }
       // make up car loop
-      if (this.atIndex < this.normData[0].length) {
+      if (this.atIndex < this.caseData.length) {
         this.deltaT = Date.now() - this.countDown;
         let currentCD = 0;
         // const interSec = this.intersectionId;
-        const interSec = 0;
         for (let i = 0; i < this.atIndex + 1; i += 1) {
-          currentCD = this.normData[interSec][this.atIndex].tLine
-            - this.normData[interSec][0].tLine;
+          currentCD = this.caseData[this.atIndex].tLine
+            - this.caseData[0].tLine;
         }
         const maxVSpeed = this.laneW * 0.028;
         if (this.deltaT > currentCD) {
           const dirct = {
-            from: this.normData[interSec][this.atIndex].from,
-            to: this.normData[interSec][this.atIndex].to,
+            from: this.caseData[this.atIndex].from,
+            to: this.caseData[this.atIndex].to,
           };
 
           const laneP = tsData.dirAdapter(dirct.from, dirct.to);
