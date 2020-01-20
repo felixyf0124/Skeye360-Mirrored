@@ -1,5 +1,6 @@
 import Vec2 from './simulator_management/vec2';
 import * as d3 from "d3";
+import LanePointer from './simulator_management/LanePointer';
 
 
 /**
@@ -110,7 +111,10 @@ export function loadCarGenData(path: any): Array<any> {
   
 }
 
-
+/**
+ * sort csv data based on timeLine @param tLine
+ * @param unsorted 
+ */
 export function sortDataByTime(unsorted:Array<any>):void{
 
   const sorted = unsorted.sort((a:any,b:any)=>{
@@ -122,4 +126,86 @@ export function sortDataByTime(unsorted:Array<any>):void{
   console.log(unsorted);
   
   // return sorted;
+}
+
+/**
+ * adapter adapt string direction to @type LanePointer
+ * based on current setting
+ * @param from 
+ * @param to 
+ */
+export function dirAdapter(from:string,to:string):LanePointer{
+  const lPointer = new LanePointer();
+  //from est
+  if(from.includes("east")){
+    lPointer.setSectionId(0);
+    //to
+    if(to.includes("east")){
+      lPointer.setLaneId(0);
+    }
+    if(to.includes("south")){
+      lPointer.setLaneId(1);
+    }
+    if(to.includes("west")){
+      lPointer.setLaneId(2);
+    }
+    if(to.includes("north")){
+      lPointer.setLaneId(3);
+    }
+  }
+  //from west
+  if(from.includes("west")){
+    lPointer.setSectionId(1);
+    //to
+    if(to.includes("west")){
+      lPointer.setLaneId(0);
+    }
+    if(to.includes("north")){
+      lPointer.setLaneId(1);
+    }
+    if(to.includes("east")){
+      lPointer.setLaneId(2);
+    }
+    if(to.includes("south")){
+      lPointer.setLaneId(3);
+    }
+  }
+  //from south
+  if(from.includes("south")){
+    lPointer.setSectionId(2);
+    //to
+    if(to.includes("south")){
+      lPointer.setLaneId(0);
+    }
+    if(to.includes("west")){
+      lPointer.setLaneId(1);
+    }
+    if(to.includes("north")){
+      lPointer.setLaneId(2);
+    }
+    if(to.includes("east")){
+      lPointer.setLaneId(3);
+    }
+  }
+
+  //from north
+  if(from.includes("north")){
+    lPointer.setSectionId(3);
+    //to
+    if(to.includes("north")){
+      // lPointer.setLaneId(0);
+      console.log("N to N, not match video condition");
+    }
+    if(to.includes("east")){
+      lPointer.setLaneId(0);
+    }
+    if(to.includes("south")){
+      lPointer.setLaneId(1);
+    }
+    if(to.includes("west")){
+      lPointer.setLaneId(2);
+    }
+  }
+
+  return lPointer;
 }

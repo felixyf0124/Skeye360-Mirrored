@@ -676,26 +676,17 @@ class Scene extends Component {
           if(!this.toggleGroup[0].state){
             const path = vehicles[i].getPath();
             const pathG = new PIXI.Graphics();
-            // for(let j=0;j<path.length;j+=1){
-            //   if(j===0){
-            //     pathG.lineStyle(1,0xFF0FFF);
-            //     pathG.moveTo(path[j][0].x,path[j][0].y);
-            //   }else{
-
-            //   }
-            //   pathG.lineTo(path[j][1].x,path[j][1].y);
-
-            // }
+            
             const dir = vehicles[i].direction;
-                pathG.lineStyle(1,0xFF0FFF);
-                // pathG.moveTo(position.x,position.y);
-                if(dir !== undefined)
-                {
-                pathG.moveTo(position.x+dir.x*20,position.y+dir.y*20);
-                pathG.lineTo(position.x,position.y);
-                const nextp = path[vehicles[i].getAtPathSection()]
-                [vehicles[i].getAtPath()];
-                pathG.lineTo(nextp.x,nextp.y);}
+            pathG.lineStyle(1,0xFF0FFF);
+            if(dir !== undefined)
+            {
+              pathG.moveTo(position.x+dir.x*20,position.y+dir.y*20);
+              pathG.lineTo(position.x,position.y);
+              // const nextp = path[vehicles[i].getAtPathSection()]
+              // [vehicles[i].getAtPath()];
+              // pathG.lineTo(nextp.x,nextp.y);
+            }
 
             this.objectContainer.addChild(pathG);
           }
@@ -770,25 +761,26 @@ class Scene extends Component {
       if (this.atIndex < this.normData[0].length) {
         this.deltaT = Date.now() - this.countDown;
         let currentCD = 0;
-
+        // const interSec = this.intersectionId;
+        const interSec = 0;
         for (let i = 0; i < this.atIndex + 1; i += 1) {
-          currentCD = this.normData[0][this.atIndex].tLine
-            -this.normData[0][0].tLine;
+          currentCD = this.normData[interSec][this.atIndex].tLine
+            -this.normData[interSec][0].tLine;
         }
         const maxVSpeed = this.laneW * 0.028;
         if (this.deltaT > currentCD) {
-          // this.roadIntersection.addNewVehicleV2(0, 0, maxVSpeed);
-          // this.roadIntersection.addNewVehicle(1, 0, maxVSpeed);
-          // this.roadIntersection.addNewVehicle(2, 0, maxVSpeed);
-          // this.roadIntersection.addNewVehicleV2(0, 1, maxVSpeed);
-          // this.roadIntersection.addNewVehicle(1, 1, maxVSpeed);
-          // this.roadIntersection.addNewVehicle(2, 1, maxVSpeed);
-          // this.roadIntersection.addNewVehicleV2(0, 2, maxVSpeed);
-          // this.roadIntersection.addNewVehicleV2(1, 2, maxVSpeed);
-          // this.roadIntersection.addNewVehicleV2(2, 2, maxVSpeed);
-          // this.roadIntersection.addNewVehicleV2(0, 3, maxVSpeed);
-          // this.roadIntersection.addNewVehicleV2(1, 3, maxVSpeed);
-          // this.roadIntersection.addNewVehicleV2(2, 3, maxVSpeed);
+          
+          const dirct = {
+            from:this.normData[interSec][this.atIndex].from,
+            to:this.normData[interSec][this.atIndex].to,
+          };
+          
+          const laneP = tsData.dirAdapter(dirct.from,dirct.to);
+          //east
+          this.roadIntersection
+            .addNewVehicleV2(laneP.getLaneId(), 
+            laneP.getSectionId(), maxVSpeed);
+          
           this.atIndex += 1;
         }
       } else if (!this.toggleGroup[0].state) {
