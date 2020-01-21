@@ -118,16 +118,13 @@ class Scene extends Component {
 
   objRawData: string;
 
-  normData: Array<Array<any>>;
+  trafficData: Array<Array<any>>;
 
-  edgeData: Array<Array<any>>;
-
-  caseType: number;
+  caseId: number;
   
   caseData: Array<any>;
 
-  dataReady: Array<{norm: boolean;normSorted: boolean;
-    edge: boolean;edgeSorted: boolean;}>;
+  dataReady: Array<{imported: boolean;sorted: boolean}>;
 
   constructor(props: any) {
     super(props);
@@ -356,7 +353,7 @@ class Scene extends Component {
       this.dragablePoints.push(sectionP);
     }
     // menu
-    this.menuPage = 3;
+    this.menuPage = 1;
     this.menuBtns = new Array<Btn>();
     const menuBtn1 = new Btn(49, 26, 'Traffic Light', 0x51BCD8);
     const menuBtn2 = new Btn(49, 26, 'Lane Area', 0x51BCD8);
@@ -418,23 +415,23 @@ class Scene extends Component {
 
     this.atIndex = 0;
 
-    this.normData = new Array<Array<any>>();
-    this.edgeData = new Array<Array<any>>();
-    this.dataReady = new Array<{norm: boolean;normSorted: boolean;
-      edge: boolean;edgeSorted: boolean;}>();
+    this.trafficData = new Array<Array<any>>();
+    this.dataReady = new Array<{imported: boolean;sorted: boolean}>();
 
     this.app.loader.add('./intersection1.png');
-    this.normData.push(tsData.loadCarGenData(ndata1));
-    this.edgeData.push(tsData.loadCarGenData(edata1));
+    this.trafficData.push(tsData.loadCarGenData(ndata1));
+    this.trafficData.push(tsData.loadCarGenData(edata1));
 
     this.dataReady.push({
-      norm: false,
-      normSorted: false,
-      edge: false,
-      edgeSorted: false,
+      imported: false,
+      sorted: false,
+    });
+    this.dataReady.push({
+      imported: false,
+      sorted: false,
     });
 
-    this.caseType = 2;
+    this.caseId = 0;
     this.caseData = new Array<any>();
     // const test = tsData.sortDataByTime(dataObj1);
     // console.log(test.length);
@@ -746,7 +743,7 @@ class Scene extends Component {
     this.drawMenu();
 
     this.roadIntersection.updateVehiclePosV2();
-    const interSec = 0;
+    // const interSec = 0;
 
     if (this.toggleGroup[0].state) {
       this.vehicleUpdate(852, 478);
@@ -754,51 +751,31 @@ class Scene extends Component {
       this.countDown = Date.now();
     } else {
       // wait
-      if (this.normData[interSec].length !== 0 
-        && !this.dataReady[interSec].norm
-        && !this.dataReady[interSec].normSorted) {
-        console.log(this.normData[interSec]);
+      if (this.trafficData[this.caseId].length !== 0 
+        && !this.dataReady[this.caseId].imported
+        && !this.dataReady[this.caseId].sorted) {
+        console.log(this.trafficData[this.caseId]);
 
         // this.normData[interSec] =
-        tsData.sortDataByTime(this.normData[interSec]);
-        this.dataReady[interSec].norm = true;
-      }
-      if (this.edgeData[interSec].length !== 0 
-        && !this.dataReady[interSec].edge
-        && !this.dataReady[interSec].edgeSorted) {
-        console.log(this.edgeData[interSec]);
-
-        // this.normData[interSec] =
-        tsData.sortDataByTime(this.edgeData[interSec]);
-        this.dataReady[interSec].edge = true;
-      }
-
-      // sort
-      if (this.normData[interSec].length !== 0 && this.dataReady[interSec].norm
-        && !this.dataReady[interSec].normSorted) {
-        console.log('normal loop sorted');
-        console.log(this.normData[interSec]);
-
-        this.dataReady[interSec].normSorted = true;
-      }
-      if (this.edgeData[interSec].length !== 0 
-        && this.dataReady[interSec].edge
-        && !this.dataReady[interSec].edgeSorted) {
-        console.log('edge loop sorted');
-        console.log(this.edgeData[interSec]);
-
-        this.dataReady[interSec].edgeSorted = true;
+        tsData.sortDataByTime(this.trafficData[this.caseId]);
+        this.dataReady[this.caseId].imported = true;
       }
       
-      if(this.caseType === 1
-        && this.dataReady[interSec].norm 
-        && this.dataReady[interSec].normSorted) {
-          this.caseData = this.normData[interSec];
-        }else if(this.caseType === 2
-        && this.dataReady[interSec].edge 
-        && this.dataReady[interSec].edgeSorted){
-          this.caseData = this.edgeData[interSec]
-        }
+      // sort
+      if (this.trafficData[this.caseId].length !== 0 
+        && this.dataReady[this.caseId].imported
+        && !this.dataReady[this.caseId].sorted) {
+        console.log('loop sorted');
+        console.log(this.trafficData[this.caseId]);
+
+        this.dataReady[this.caseId].sorted = true;
+      }
+      
+      if(this.dataReady[this.caseId].imported 
+        && this.dataReady[this.caseId].sorted) {
+        this.caseData = this.trafficData[this.caseId];
+      }
+
       // make up car loop
       if (this.atIndex < this.caseData.length) {
         this.deltaT = Date.now() - this.countDown;
