@@ -112,8 +112,6 @@ class Scene extends Component {
 
   deltaT: number;
 
-  makeUpCar: Array<{atTline: number; num: number}>;
-
   atIndex: number;
 
   objRawData: string;
@@ -121,7 +119,7 @@ class Scene extends Component {
   trafficData: Array<Array<any>>;
 
   caseId: number;
-  
+
   caseData: Array<any>;
 
   dataReady: Array<{imported: boolean;sorted: boolean}>;
@@ -207,16 +205,6 @@ class Scene extends Component {
 
     this.roadIntersection.setLaneWidth(this.laneW);
 
-    // const lPointer1 = new LanePointer(0, 0);
-    // const lPointer2 = new LanePointer(1, 0);
-    // const lPointer3 = new LanePointer(2, 0);
-    // const lPointer4 = new LanePointer(3, 0);
-
-
-    // this.roadIntersection.linkLanes(lPointer1, lPointer2);
-    // this.roadIntersection.linkLanes(lPointer2, lPointer1);
-    // this.roadIntersection.linkLanes(lPointer3, lPointer4);
-    // this.roadIntersection.linkLanes(lPointer4, lPointer3);
     // turn back lane
     this.roadIntersection.linkLanes4i(0, 0, 0, 0);
     this.roadIntersection.linkLanes4i(1, 0, 1, 0);
@@ -244,8 +232,8 @@ class Scene extends Component {
 
     let trafficLightBindingData = new Array<Array<{section: number;id: number}>>();
     trafficLightBindingData = [
-      //check with this setting
-      //https://docs.google.com/document/d/16vO1rzYfO5zxDH2cdHm7ID-XomgAhGAfLoSCu2RI-W0/edit
+      // check with this setting
+      // https://docs.google.com/document/d/16vO1rzYfO5zxDH2cdHm7ID-XomgAhGAfLoSCu2RI-W0/edit
       [// straight - E&W
         { section: 0, id: 2 },
         { section: 1, id: 2 },
@@ -273,14 +261,14 @@ class Scene extends Component {
       ],
     ];
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 40);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 15)
-    //special overlap offset - 55
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 15);
+    // special overlap offset - 55
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], 55);
-      this.roadIntersection.setTLOverlapOffset(2,-55);
+    this.roadIntersection.setTLOverlapOffset(2, -55);
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 35);
-    //special overlap offset - 50
+    // special overlap offset - 50
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[4], 50);
-    this.roadIntersection.setTLOverlapOffset(4,-50);
+    this.roadIntersection.setTLOverlapOffset(4, -50);
 
     this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();
@@ -379,40 +367,11 @@ class Scene extends Component {
     // h c car obj
 
     this.numberOfCars = 0;
-    // for (let i = 0; i < 3; i += 1) {
-    //   this.roadIntersection.addNewVehicle(0, 0, 0.06);
-    // }
 
     this.objRawData = '';
 
     this.countDown = Date.now();
     this.deltaT = 0;
-    this.makeUpCar = [
-      { atTline: 2800, num: 1 },
-      { atTline: 3800, num: 1 },
-      { atTline: 5600, num: 1 },
-      { atTline: 6500, num: 1 },
-      { atTline: 9500, num: 1 },
-      { atTline: 10300, num: 1 },
-      { atTline: 10900, num: 1 },
-      { atTline: 11500, num: 1 },
-      { atTline: 12000, num: 1 },
-      { atTline: 12900, num: 2 },
-      { atTline: 13500, num: 1 },
-      { atTline: 14500, num: 1 },
-      { atTline: 15800, num: 1 },
-      { atTline: 16100, num: 1 },
-      { atTline: 18900, num: 1 },
-      { atTline: 20200, num: 1 },
-      { atTline: 20900, num: 1 },
-      { atTline: 22400, num: 1 },
-      { atTline: 23400, num: 1 },
-      { atTline: 25300, num: 1 },
-      { atTline: 28000, num: 1 },
-      { atTline: 29000, num: 1 },
-      { atTline: 29900, num: 1 },
-    ];
-
 
     this.atIndex = 0;
 
@@ -688,7 +647,7 @@ class Scene extends Component {
           this.objectContainer.addChild(spot);
           // test
           if (!this.toggleGroup[0].state) {
-            const path = vehicles[i].getPath();
+            // const path = vehicles[i].getPath();
             const pathG = new PIXI.Graphics();
 
             const dir = vehicles[i].direction;
@@ -752,27 +711,27 @@ class Scene extends Component {
       this.countDown = Date.now();
     } else {
       // wait
-      if (this.trafficData[this.caseId].length !== 0 
+      if (this.trafficData[this.caseId].length !== 0
         && !this.dataReady[this.caseId].imported
         && !this.dataReady[this.caseId].sorted) {
-        console.log(this.trafficData[this.caseId]);
+        // console.log(this.trafficData[this.caseId]);
 
         // this.normData[interSec] =
         tsData.sortDataByTime(this.trafficData[this.caseId]);
         this.dataReady[this.caseId].imported = true;
       }
-      
+
       // sort
-      if (this.trafficData[this.caseId].length !== 0 
+      if (this.trafficData[this.caseId].length !== 0
         && this.dataReady[this.caseId].imported
         && !this.dataReady[this.caseId].sorted) {
-        console.log('loop sorted');
-        console.log(this.trafficData[this.caseId]);
+        // console.log('loop sorted');
+        // console.log(this.trafficData[this.caseId]);
 
         this.dataReady[this.caseId].sorted = true;
       }
-      
-      if(this.dataReady[this.caseId].imported 
+
+      if (this.dataReady[this.caseId].imported
         && this.dataReady[this.caseId].sorted) {
         this.caseData = this.trafficData[this.caseId];
       }
@@ -926,7 +885,6 @@ class Scene extends Component {
     delete this.textStyle;
     delete this.coordinateOffset;
     delete this.vehicles;
-    delete this.makeUpCar;
     delete this.pixiContent;
     delete this.context;
     delete this.render;
@@ -1018,7 +976,7 @@ class Scene extends Component {
       this.tlDisplayPanelContainer.addChild(tDataCD);
 
       textStyle.fill = '0xFFFFFF';
-      const timeYG =  tlQueue[i].getTotalTime().toString();
+      const timeYG = tlQueue[i].getTotalTime().toString();
       const textYG = new PIXI.Text(timeYG, textStyle);
       textYG.x = tDataState.x + 108;
       textYG.y = rowOffset * (i + 1);

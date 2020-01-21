@@ -114,15 +114,7 @@ export function loadCarGenData(path: any): Array<any> {
  * @param unsorted
  */
 export function sortDataByTime(unsorted: Array<any>): void{
-  const sorted = unsorted.sort((a: any, b: any) => {
-    // console.log('called');
-
-    return a.tLine - b.tLine;
-  });
-
-  // console.log(unsorted);
-
-  // return sorted;
+  unsorted.sort((a: any, b: any) => a.tLine - b.tLine);
 }
 
 /**
