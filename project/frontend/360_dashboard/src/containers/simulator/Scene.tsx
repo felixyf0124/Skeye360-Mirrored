@@ -993,6 +993,7 @@ class Scene extends Component {
     const tlQueue = this.roadIntersection.getTrafficLightQueue();
     for (let i = 0; i < tlQueue.length; i += 1) {
       const index = (i + 1);
+      textStyle.fill = '0xFFFFFF';
       // index
       const tDataId = new PIXI.Text(index.toString(), textStyle);
       tDataId.x = 8;
@@ -1007,7 +1008,6 @@ class Scene extends Component {
       tDataState.y = rowOffset * (i + 1);
       this.tlDisplayPanelContainer.addChild(tDataState);
 
-      textStyle.fill = '0x51BCD8';
       let CD = 'N/A';
       if (!Number.isNaN(tlQueue[i].getCountDown())) {
         CD = Math.round(tlQueue[i].getCountDown()).toString();
