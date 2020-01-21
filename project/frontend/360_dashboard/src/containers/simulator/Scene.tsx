@@ -985,7 +985,7 @@ class Scene extends Component {
       fontWeight: '600',
     };
 
-    const tHeader = new PIXI.Text('TL #   State   CD ', textStyle);
+    const tHeader = new PIXI.Text('TL #   State   CD   t(Y+G)', textStyle);
 
     this.tlDisplayPanelContainer.addChild(tHeader);
 
@@ -1016,6 +1016,13 @@ class Scene extends Component {
       tDataCD.x = tDataState.x + 56;
       tDataCD.y = rowOffset * (i + 1);
       this.tlDisplayPanelContainer.addChild(tDataCD);
+
+      textStyle.fill = '0xFFFFFF';
+      const timeYG =  tlQueue[i].getTotalTime().toString();
+      const textYG = new PIXI.Text(timeYG, textStyle);
+      textYG.x = tDataState.x + 108;
+      textYG.y = rowOffset * (i + 1);
+      this.tlDisplayPanelContainer.addChild(textYG);
     }
     const tempX = this.tlDisplayPanelContainer.width - this.controlPanelG.width;
     this.tlDisplayPanelContainer.x = Math.abs(tempX) / 2;
