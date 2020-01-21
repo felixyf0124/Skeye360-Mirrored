@@ -244,42 +244,43 @@ class Scene extends Component {
 
     let trafficLightBindingData = new Array<Array<{section: number;id: number}>>();
     trafficLightBindingData = [
-      [// turn left
-        { section: 0, id: 0 },
-        { section: 0, id: 1 },
-        { section: 1, id: 0 },
-        { section: 1, id: 1 },
+      //check with this setting
+      //https://docs.google.com/document/d/16vO1rzYfO5zxDH2cdHm7ID-XomgAhGAfLoSCu2RI-W0/edit
+      [// straight - E&W
         { section: 0, id: 2 },
         { section: 1, id: 2 },
+      ],
+      [// left/back - E&W
+        { section: 0, id: 0 },
+        { section: 1, id: 0 },
+        { section: 0, id: 1 },
+        { section: 1, id: 1 },
+      ],
+      [// right - E&W
         { section: 0, id: 3 },
         { section: 1, id: 3 },
       ],
-      // [// straight & right
-      //   { section: 0, id: 2 },
-      //   { section: 1, id: 2 },
-      //   { section: 0, id: 3 },
-      //   { section: 1, id: 3 },
-      // ],
-      [// left / back
+      [// left (S/N) / back (S) /straight (S/N) /right(N)
         { section: 2, id: 0 },
-        { section: 3, id: 0 },
         { section: 2, id: 1 },
         { section: 2, id: 2 },
+        { section: 3, id: 0 },
         { section: 3, id: 1 },
-        { section: 2, id: 3 },
         { section: 3, id: 2 },
       ],
-      // [// straight & right
-      //   { section: 2, id: 2 },
-      //   { section: 3, id: 1 },
-      //   { section: 2, id: 3 },
-      //   { section: 3, id: 2 },
-      // ],
+      [// right (S)
+        { section: 2, id: 3 },
+      ],
     ];
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 20);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 20);
-    // this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], 20);
-    // this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 30);
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 40);
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 15)
+    //special overlap offset - 55
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], 55);
+      this.roadIntersection.setTLOverlapOffset(2,-55);
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 35);
+    //special overlap offset - 50
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[4], 50);
+    this.roadIntersection.setTLOverlapOffset(4,-50);
 
     this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();

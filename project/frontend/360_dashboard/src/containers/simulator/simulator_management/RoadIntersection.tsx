@@ -147,6 +147,16 @@ export default class RoadIntersection {
     }
 
     /**
+     * set tl overlap offset 
+     * if tl overlaps with another tl either the ealier one (-) or later one (+)
+     * @param id 
+     * @param overlapOffset 
+     */
+    setTLOverlapOffset(id:number,overlapOffset:number):void{
+      this.TLManager.setTrafficLightOverlapOffset(id,overlapOffset);
+    }
+
+    /**
      * old bug function
      * has been replaced by addNewVehicleV2
      * To be removed
