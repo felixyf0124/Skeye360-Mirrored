@@ -15,8 +15,8 @@ def rowPreparator(id, direction, fromD, toD, am45Data, am56Data, am67Data, am78D
     data78 = numCar(startedYear, date, am78Data)
     data89 = numCar(startedYear, date, am89Data)
     row = {'id': id, 'direction': direction, 'from': fromD, 'to': toD, 'date': date,
-                '4:00-5:00am': data45, '5:00-6:00am': data56, '6:00-7:00am': data67,
-                '7:00-8:00am': data78, '8:00-9:00am': data89}
+                '4:00-5:00pm': data45, '5:00-6:00pm': data56, '6:00-7:00pm': data67,
+                '7:00-8:00pm': data78, '8:00-9:00pm': data89}
     return row
 
 def numCar(startedYear, date, numCar):
@@ -72,7 +72,7 @@ am89 = numberGenerator(60, 90)
 # with open('./data_analytics/360_python/ayalytics_models/generatedDataset.csv', mode='w') as csvFile:
 # The following code creates the generatedDataset.csv file and writes into it
 with open('360_python\models\generatedDataset.csv', mode='w') as csvFile:
-    fieldNames = ['id', 'direction', 'from', 'to', 'date', "4:00-5:00am", "5:00-6:00am", "6:00-7:00am", "7:00-8:00am", "8:00-9:00am"]
+    fieldNames = ['id', 'direction', 'from', 'to', 'date', "4:00-5:00pm", "5:00-6:00pm", "6:00-7:00pm", "7:00-8:00pm", "8:00-9:00pm"]
     csvWriter = csv.DictWriter(csvFile, fieldnames=fieldNames)
     csvWriter.writeheader()
     indexID = 1
@@ -81,16 +81,32 @@ with open('360_python\models\generatedDataset.csv', mode='w') as csvFile:
     # The reason is that with 2 for loops, it is easier to fake the data, because the second index is from 1 to 4 and each 'second index'
     # correponds to a direction
     for firstIndex in range(numTimes):
-        for secondIndex in range(1, 5):
+        for secondIndex in range(1, 13):
             currentIndex = indexID - 1
             if(secondIndex == 1):
-                rowData = rowPreparator(indexID, 'north', 'south', 'north', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
+                rowData = rowPreparator(indexID, 'north', 'south', 'NS', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
             elif(secondIndex == 2):
-                rowData = rowPreparator(indexID, 'south', 'north', 'south', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
+                rowData = rowPreparator(indexID, 'north', 'east', 'NE', int(round(am45[currentIndex]/2)), int(round(am56[currentIndex]/2)), int(round(am67[currentIndex]/2)), int(round(am78[currentIndex]/2)), int(round(am89[currentIndex]/2)))
             elif(secondIndex == 3):
-                rowData = rowPreparator(indexID, 'east', 'west', 'east', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
+                rowData = rowPreparator(indexID, 'north', 'west', 'NW', int(round(am45[currentIndex]/2)), int(round(am56[currentIndex]/2)), int(round(am67[currentIndex]/2)), int(round(am78[currentIndex]/2)), int(round(am89[currentIndex]/2)))
             elif(secondIndex == 4):
-                rowData = rowPreparator(indexID, 'west', 'east', 'west', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
+                rowData = rowPreparator(indexID, 'south', 'north', 'SN', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
+            elif(secondIndex == 5):
+                rowData = rowPreparator(indexID, 'south', 'east', 'SE', int(round(am45[currentIndex]/2)), int(round(am56[currentIndex]/2)), int(round(am67[currentIndex]/2)), int(round(am78[currentIndex]/2)), int(round(am89[currentIndex]/2)))
+            elif(secondIndex == 6):
+                rowData = rowPreparator(indexID, 'south', 'west', 'SW', int(round(am45[currentIndex]/2)), int(round(am56[currentIndex]/2)), int(round(am67[currentIndex]/2)), int(round(am78[currentIndex]/2)), int(round(am89[currentIndex]/2)))
+            elif(secondIndex == 7):
+                rowData = rowPreparator(indexID, 'east', 'west', 'EW', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
+            elif(secondIndex == 8):
+                rowData = rowPreparator(indexID, 'east', 'north', 'EN', int(round(am45[currentIndex]/2)), int(round(am56[currentIndex]/2)), int(round(am67[currentIndex]/2)), int(round(am78[currentIndex]/2)), int(round(am89[currentIndex]/2)))
+            elif(secondIndex == 9):
+                rowData = rowPreparator(indexID, 'east', 'south', 'ES', int(round(am45[currentIndex]/2)), int(round(am56[currentIndex]/2)), int(round(am67[currentIndex]/2)), int(round(am78[currentIndex]/2)), int(round(am89[currentIndex]/2)))
+            elif(secondIndex == 10):
+                rowData = rowPreparator(indexID, 'west', 'east', 'WE', am45[currentIndex], am56[currentIndex], am67[currentIndex], am78[currentIndex], am89[currentIndex])
+            elif(secondIndex == 11):
+                rowData = rowPreparator(indexID, 'west', 'north', 'WN', int(round(am45[currentIndex]/2)), int(round(am56[currentIndex]/2)), int(round(am67[currentIndex]/2)), int(round(am78[currentIndex]/2)), int(round(am89[currentIndex]/2)))
+            elif(secondIndex == 12):
+                rowData = rowPreparator(indexID, 'west', 'south', 'WS', int(round(am45[currentIndex]/2)), int(round(am56[currentIndex]/2)), int(round(am67[currentIndex]/2)), int(round(am78[currentIndex]/2)), int(round(am89[currentIndex]/2)))
                 indexID += 1
             csvWriter.writerow(rowData)
 
