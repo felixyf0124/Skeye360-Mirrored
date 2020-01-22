@@ -15,6 +15,7 @@ import SessionRoutes from './SessionRoutes';
 import { authenticated } from './contexts/authentication';
 import IntersectionList from './containers/IntersectionList';
 import CamView from './containers/CamView';
+import DisplayCount from './components/DisplayMovAVG';
 
 interface StateProps {
   authenticated: boolean;
@@ -38,6 +39,7 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
           />
           <Route exact path="/chartsprototype" component={ChartsPrototype} />
           <Route exact path="/map" component={SkeyeMap} />
+          <Route exact path="/countTest/" component={DisplayCount} />
         </SessionRoutes>
       </Switch>
     </Route>
