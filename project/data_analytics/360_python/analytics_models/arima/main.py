@@ -26,7 +26,7 @@ class main:
 
     # Read the csv file that was generated from the datasetGenerator.py
     # For Windows
-    dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\\test.csv", encoding = 'utf-16', delimiter=";")
+    dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\\test.csv", index_col = ['date'], parse_dates = ['date'], encoding = 'utf-16', delimiter=";")
     # For Linux, the path depends on where the Github project is cloned
     # dataframe = panda.read_csv("~/Soen490/project/data_analytics/360_python/data_generator/generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
 
@@ -42,7 +42,7 @@ class main:
     # print(dataframe.head)
 
     # Separate the data by north, south, east and west
-    nsDataRaw = dataframe.loc[dataframe['series'] == "ns"]
+    tnsDataRaw = dataframe.loc[dataframe['series'] == "ns"]
     neDataRaw = dataframe.loc[dataframe['series'] == "ne"]
     nwDataRaw = dataframe.loc[dataframe['series'] == "nw"]
     snDataRaw = dataframe.loc[dataframe['series'] == "sn"]
@@ -62,15 +62,16 @@ class main:
     # eastData = eastDataRaw[['4:00-5:00pm']]
     # westData = westDataRaw[['4:00-5:00pm']]
 
+    nsDataRaw = tnsDataRaw[['value']]
 
     # Seperate the data as train set and test set
-    # startTestDate = '2017-12-02 00:00:00.000'
-    # train = nsDataRaw.loc['2017-08-27 04:00:00.000':'2017-12-01 23:00:00.000']
-    # test = nsDataRaw.loc[startTestDate:'2017-12-31 23:00:00.000']
     startTestDate = '2017-12-02 00:00:00.000'
-    train = nsDataRaw.loc[(nsDataRaw['date']>'2017-08-27 04:00:00.000') & (nsDataRaw['date']<'2017-12-01 23:00:00.000')]
-    print(train)
-    test = nsDataRaw.loc[(nsDataRaw['date']>startTestDate) & (nsDataRaw['date']<'2017-12-31 23:00:00.000')]
+    train = nsDataRaw.loc['2017-08-27 04:00:00.000':'2017-12-01 23:00:00.000']
+    test = nsDataRaw.loc[startTestDate:'2017-12-31 23:00:00.000']
+    # startTestDate = '2017-12-02 00:00:00.000'
+    # train = nsDataRaw.loc[(nsDataRaw['date']>'2017-08-27 04:00:00.000') & (nsDataRaw['date']<'2017-12-01 23:00:00.000')]
+    # print(train)
+    # test = nsDataRaw.loc[(nsDataRaw['date']>startTestDate) & (nsDataRaw['date']<'2017-12-31 23:00:00.000')]
 
     # Uncomment out the following code to view values to see if the data is stationary
     # adfullerResultsObj = adfullerResults()
@@ -79,7 +80,6 @@ class main:
     # Check if it is stationary
     adfTest = ADFTest(alpha=0.05)
     pValue, should_diff = adfTest.should_diff(train)
-    #### Error for line 81: ValueError: could not convert string to float: '2017-08-27 05:00:00.000' #####
 
     # The following prints out values for us to decide about the model
     # P-value is used to determine if the data is stationary, value less than 0.05 is stationary
