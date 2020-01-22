@@ -1,0 +1,52 @@
+{
+  "generators":[
+    {
+      "name": "monthly-basis",
+      "type": "monthly",
+      "points": {"january": 150, "february": 190, "march": 185, "april": 200, "may": 200, "june": 160,
+        "july": 100, "august": 150, "september": 180, "october": 200, "november": 200, "december": 150}
+    },
+    {
+       "name": "daily-variation",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -140,
+          "02:00:00.000": -135,
+          "04:00:00.000": -100,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -75,
+          "12:00:00.000": -50,
+          "14:00:00.000": -40,
+          "16:00:00.000": 0,
+          "18:00:00.000": 50,
+          "20:00:00.000": -25,
+          "22:00:00.000": -100
+       }
+    },
+    {
+       "name": "result",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis",
+          "daily-variation"
+       ]
+    }],
+  "exported":[
+    {"name": "ns", "generator": "result", "frequency": 3600000},
+    {"name": "ne", "generator": "result", "frequency": 3600000},
+    {"name": "nw", "generator": "result", "frequency": 3600000},
+    {"name": "sn", "generator": "result", "frequency": 3600000},
+    {"name": "se", "generator": "result", "frequency": 3600000},
+    {"name": "nw", "generator": "result", "frequency": 3600000},
+    {"name": "ew", "generator": "result", "frequency": 3600000},
+    {"name": "en", "generator": "result", "frequency": 3600000},
+    {"name": "es", "generator": "result", "frequency": 3600000},
+    {"name": "we", "generator": "result", "frequency": 3600000},
+    {"name": "wn", "generator": "result", "frequency": 3600000},
+    {"name": "ws", "generator": "result", "frequency": 3600000}
+  ],
+  "from": "2016-01-01 00:00:00.000",
+  "to": "2017-12-31 23:59:59.999"
+}
