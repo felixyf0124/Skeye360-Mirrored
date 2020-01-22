@@ -26,7 +26,7 @@ class main:
 
     # Read the csv file that was generated from the datasetGenerator.py
     # For Windows
-    dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
+    dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\\test.csv", encoding = 'utf-16', delimiter=";")
     # For Linux, the path depends on where the Github project is cloned
     # dataframe = panda.read_csv("~/Soen490/project/data_analytics/360_python/data_generator/generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
 
@@ -42,21 +42,35 @@ class main:
     # print(dataframe.head)
 
     # Separate the data by north, south, east and west
-    northDataRaw = dataframe.loc[dataframe['direction'] == "north"]
-    southDataRaw = dataframe.loc[dataframe['direction'] == "south"]
-    eastDataRaw = dataframe.loc[dataframe['direction'] == "east"]
-    westDataRaw = dataframe.loc[dataframe['direction'] == "west"]
+    nsDataRaw = dataframe.loc[dataframe['series'] == "ns"]
+    neDataRaw = dataframe.loc[dataframe['series'] == "ne"]
+    nwDataRaw = dataframe.loc[dataframe['series'] == "nw"]
+    snDataRaw = dataframe.loc[dataframe['series'] == "sn"]
+    seDataRaw = dataframe.loc[dataframe['series'] == "se"]
+    swDataRaw = dataframe.loc[dataframe['series'] == "sw"]
+    esDataRaw = dataframe.loc[dataframe['series'] == "ew"]
+    enDataRaw = dataframe.loc[dataframe['series'] == "en"]
+    esDataRaw = dataframe.loc[dataframe['series'] == "es"]
+    weDataRaw = dataframe.loc[dataframe['series'] == "we"]
+    wnDataRaw = dataframe.loc[dataframe['series'] == "wn"]
+    wsDataRaw = dataframe.loc[dataframe['series'] == "ws"]
 
-    # For comparison purposes, we will only use 1 specific time frame
-    northData = northDataRaw[['8:00-9:00am']]
-    southData = southDataRaw[['8:00-9:00am']]
-    eastData = eastDataRaw[['8:00-9:00am']]
-    westData = westDataRaw[['8:00-9:00am']]
+
+    # # For comparison purposes, we will only use 1 specific time frame
+    # northData = northDataRaw[['4:00-5:00pm']]
+    # southData = southDataRaw[['4:00-5:00pm']]
+    # eastData = eastDataRaw[['4:00-5:00pm']]
+    # westData = westDataRaw[['4:00-5:00pm']]
+
 
     # Seperate the data as train set and test set
-    startTestDate = '1999-06-20'
-    train = westData.loc['1992-08-09':'1999-06-29']
-    test = westData.loc[startTestDate:'1999-06-27']
+    # startTestDate = '2017-12-02 00:00:00.000'
+    # train = nsDataRaw.loc['2017-08-27 04:00:00.000':'2017-12-01 23:00:00.000']
+    # test = nsDataRaw.loc[startTestDate:'2017-12-31 23:00:00.000']
+    startTestDate = '2017-12-02 00:00:00.000'
+    train = nsDataRaw.loc[(nsDataRaw['date']>'2017-08-27 04:00:00.000') & (nsDataRaw['date']<'2017-12-01 23:00:00.000')]
+    print(train)
+    test = nsDataRaw.loc[(nsDataRaw['date']>startTestDate) & (nsDataRaw['date']<'2017-12-31 23:00:00.000')]
 
     # Uncomment out the following code to view values to see if the data is stationary
     # adfullerResultsObj = adfullerResults()
@@ -64,7 +78,8 @@ class main:
 
     # Check if it is stationary
     adfTest = ADFTest(alpha=0.05)
-    pValue, should_diff = adfTest.should_diff(westData)
+    pValue, should_diff = adfTest.should_diff(train)
+    #### Error for line 81: ValueError: could not convert string to float: '2017-08-27 05:00:00.000' #####
 
     # The following prints out values for us to decide about the model
     # P-value is used to determine if the data is stationary, value less than 0.05 is stationary
@@ -78,11 +93,11 @@ class main:
     # The else part will directly use the auto_arima function without apply any differencing
     if(should_diff == True):
         # Estimate the parameter d (lower case d or called differencing)
-        numDiff = ndiffs(westData, test='adf')
+        numDiff = ndiffs(train, test='adf')
         print("Estimated d parameter:", numDiff)
 
         # Estimate the parameter D (capital d or called seasonal differencing)
-        numSDiff = nsdiffs(westData,
+        numSDiff = nsdiffs(train,
                             m=10,
                             max_D=7,
                             test='ch')
@@ -130,12 +145,12 @@ class main:
         print(testStartDateObj + timedelta(days=index))
 
 
-    # To connect to the database
-    dbConnect = dbConnection()
-    client = dbConnect.connect()
-    wtd = writeToDatabase()
-    collection = wtd.connection('360backend', 'djangosite_api_count', client)
-    # The following command calls the write method in writeToDatabase.py to write to the mongodb
-    wtd.write("EW", forecast, listOfDate, "arima", collection)
-    # The following command calls the read method in writeToDatabase.py to read from the mongodb
-    wtd.read(collection)
+    # # To connect to the database
+    # dbConnect = dbConnection()
+    # client = dbConnect.connect()
+    # wtd = writeToDatabase()
+    # collection = wtd.connection('360backend', 'djangosite_api_count', client)
+    # # The following command calls the write method in writeToDatabase.py to write to the mongodb
+    # wtd.write("EW", forecast, listOfDate, "arima", collection)
+    # # The following command calls the read method in writeToDatabase.py to read from the mongodb
+    # wtd.read(collection)
