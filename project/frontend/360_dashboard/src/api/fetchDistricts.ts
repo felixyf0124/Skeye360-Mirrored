@@ -1,3 +1,5 @@
+const { REACT_APP_API_URL } = process.env;
+
 export interface Response {
   [district: string]: {
     id: number;
@@ -13,7 +15,7 @@ export interface Response {
   }[];
 }
 
-const APIDomain = '0.0.0.0:8000';
+const APIDomain = REACT_APP_API_URL;
 
 const fetchDistricts = async (): Promise<Response> => {
   const url = `//${APIDomain}/api/district/`;
