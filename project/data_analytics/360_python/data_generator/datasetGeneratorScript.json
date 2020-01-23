@@ -39,7 +39,7 @@
     {"name": "nw", "generator": "result", "frequency": 3600000},
     {"name": "sn", "generator": "result", "frequency": 3600000},
     {"name": "se", "generator": "result", "frequency": 3600000},
-    {"name": "nw", "generator": "result", "frequency": 3600000},
+    {"name": "sw", "generator": "result", "frequency": 3600000},
     {"name": "ew", "generator": "result", "frequency": 3600000},
     {"name": "en", "generator": "result", "frequency": 3600000},
     {"name": "es", "generator": "result", "frequency": 3600000},
