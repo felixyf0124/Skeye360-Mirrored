@@ -115,32 +115,32 @@ class main:
         print(wtd.read(collection))
 
 
+    def mainArima(self):
+        #Start of the code (main)
 
-    #Start of the code (main)
+        # Read the csv file that was generated from the DatasetGenerator.py
+        # For Windows
+        # dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\\test.csv", index_col = ['date'], parse_dates = ['date'], encoding = 'utf-16', delimiter=";")
+        # For Linux, the path depends on where the Github project is cloned
+        dataframe = panda.read_csv("~/Soen490/project/data_analytics/360_python/data_generator/test.csv", index_col = ['date'], parse_dates = ['date'], delimiter=";")
 
-    # Read the csv file that was generated from the DatasetGenerator.py
-    # For Windows
-    # dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\\test.csv", index_col = ['date'], parse_dates = ['date'], encoding = 'utf-16', delimiter=";")
-    # For Linux, the path depends on where the Github project is cloned
-    dataframe = panda.read_csv("~/Soen490/project/data_analytics/360_python/data_generator/test.csv", index_col = ['date'], parse_dates = ['date'], delimiter=";")
+        # Uncomment the following code to preview how the data looks like on a graph
+        # To plot a graph, use only 2 columns
+        # dataframe = panda.read_csv("360_python\models\generatedDataset.csv", index_col = ['date'], usecols=['8:00-9:00am', 'date'], parse_dates = ['date'])
+        # lessData is used to display less data on the graph, it is actually set at 5000 and the size of the data is 10000
+        # lessData = dataframe.head(5000)
+        # matplot.xlabel('Date')
+        # matplot.ylabel('Number of cars')
+        # matplot.plot(lessData)
+        # matplot.show()
+        # print(dataframe.head)
 
-    # Uncomment the following code to preview how the data looks like on a graph
-    # To plot a graph, use only 2 columns
-    # dataframe = panda.read_csv("360_python\models\generatedDataset.csv", index_col = ['date'], usecols=['8:00-9:00am', 'date'], parse_dates = ['date'])
-    # lessData is used to display less data on the graph, it is actually set at 5000 and the size of the data is 10000
-    # lessData = dataframe.head(5000)
-    # matplot.xlabel('Date')
-    # matplot.ylabel('Number of cars')
-    # matplot.plot(lessData)
-    # matplot.show()
-    # print(dataframe.head)
+        allDirectionsNames = dataframe['series']
+        directionNames = list(dict.fromkeys(allDirectionsNames))
+        directionNames.sort()
 
-    allDirectionsNames = dataframe['series']
-    directionNames = list(dict.fromkeys(allDirectionsNames))
-    directionNames.sort()
-
-    for direction in directionNames:
-        dataf = dataframe.loc[dataframe['series'] == direction][['value']].round(0).astype(int)
-        modelAndPredict(dataf, direction)
+        for direction in directionNames:
+            dataf = dataframe.loc[dataframe['series'] == direction][['value']].round(0).astype(int)
+            modelAndPredict(dataf, direction)
 
  
