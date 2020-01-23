@@ -25,8 +25,8 @@ class main:
 
     def modelAndPredict(dataf, direction):
         # Seperate the data as train set and test set
-        startTestDate = '2017-12-02 00:00:00.000'
-        train = dataf.loc['2017-08-27 04:00:00.000':'2017-12-01 23:00:00.000']
+        startTestDate = '2017-12-31 00:00:00.000'
+        train = dataf.loc['2017-08-27 04:00:00.000':'2017-12-30 23:00:00.000']
         test = dataf.loc[startTestDate:'2017-12-31 23:00:00.000']
         # startTestDate = '2017-12-02 00:00:00.000'
         # train = nsDataRaw.loc[(nsDataRaw['date']>'2017-08-27 04:00:00.000') & (nsDataRaw['date']<'2017-12-01 23:00:00.000')]
@@ -112,7 +112,7 @@ class main:
         # The following command calls the write method in writeToDatabase.py to write to the mongodb
         wtd.write(direction, forecast, listOfDate, "arima", collection)
         # The following command calls the read method in writeToDatabase.py to read from the mongodb
-        wtd.read(collection)
+        print(wtd.read(collection))
 
 
 
@@ -122,7 +122,7 @@ class main:
     # For Windows
     # dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\\test.csv", index_col = ['date'], parse_dates = ['date'], encoding = 'utf-16', delimiter=";")
     # For Linux, the path depends on where the Github project is cloned
-    dataframe = panda.read_csv("~/Documents/Github/Soen490/project/data_analytics/360_python/data_generator/test.csv", index_col = ['date'], parse_dates = ['date'], delimiter=";")
+    dataframe = panda.read_csv("~/Soen490/project/data_analytics/360_python/data_generator/test.csv", index_col = ['date'], parse_dates = ['date'], delimiter=";")
 
     # Uncomment the following code to preview how the data looks like on a graph
     # To plot a graph, use only 2 columns
@@ -141,29 +141,6 @@ class main:
 
     for direction in directionNames:
         dataf = dataframe.loc[dataframe['series'] == direction][['value']].round(0).astype(int)
-        # modelAndPredict(dataf, direction)
-
-    # Separate the data by north, south, east and west
-    # nsDataRaw = dataframe.loc[dataframe['series'] == "ns"][['value']].round(0).astype(int)
-    # neDataRaw = dataframe.loc[dataframe['series'] == "ne"][['value']].round(0).astype(int)
-    # nwDataRaw = dataframe.loc[dataframe['series'] == "nw"][['value']].round(0).astype(int)
-    # snDataRaw = dataframe.loc[dataframe['series'] == "sn"][['value']].round(0).astype(int)
-    # seDataRaw = dataframe.loc[dataframe['series'] == "se"][['value']].round(0).astype(int)
-    # swDataRaw = dataframe.loc[dataframe['series'] == "sw"][['value']].round(0).astype(int)
-    # esDataRaw = dataframe.loc[dataframe['series'] == "ew"][['value']].round(0).astype(int)
-    # enDataRaw = dataframe.loc[dataframe['series'] == "en"][['value']].round(0).astype(int)
-    # esDataRaw = dataframe.loc[dataframe['series'] == "es"][['value']].round(0).astype(int)
-    # weDataRaw = dataframe.loc[dataframe['series'] == "we"][['value']].round(0).astype(int)
-    # wnDataRaw = dataframe.loc[dataframe['series'] == "wn"][['value']].round(0).astype(int)
-    # wsDataRaw = dataframe.loc[dataframe['series'] == "ws"][['value']].round(0).astype(int)
-
-    # # For comparison purposes, we will only use 1 specific time frame
-    # northData = northDataRaw[['4:00-5:00pm']]
-    # southData = southDataRaw[['4:00-5:00pm']]
-    # eastData = eastDataRaw[['4:00-5:00pm']]
-    # westData = westDataRaw[['4:00-5:00pm']]
-
-    # print(nsDataRaw)
-    # modelAndPredict(nsDataRaw, "ns")
+        modelAndPredict(dataf, direction)
 
  

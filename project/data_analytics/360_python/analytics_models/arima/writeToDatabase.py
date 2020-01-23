@@ -49,5 +49,8 @@ class writeToDatabase:
             # print(result)
             # Add the result to a list
             results.append(result)
+        
+        # If ran too many times and you want to delete all records (or the whole collection), uncomment the following code
+        # collection.remove()
         return results
         # END of retrieving data from MongoDB
