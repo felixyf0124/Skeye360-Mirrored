@@ -118,7 +118,7 @@ class main:
 
     #Start of the code (main)
 
-    # Read the csv file that was generated from the datasetGenerator.py
+    # Read the csv file that was generated from the DatasetGenerator.py
     # For Windows
     # dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\\test.csv", index_col = ['date'], parse_dates = ['date'], encoding = 'utf-16', delimiter=";")
     # For Linux, the path depends on where the Github project is cloned

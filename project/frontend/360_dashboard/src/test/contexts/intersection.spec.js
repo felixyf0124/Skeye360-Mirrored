@@ -48,7 +48,7 @@ describe('intersection redux', () => {
         intersection_name: '',
         district_id: '',
         error: '',
-        success: true,
+        success: false,
       });
     });
     // SUCCESS

@@ -1,15 +1,14 @@
+const { REACT_APP_API_URL } = process.env;
+
 /* eslint-disable @typescript-eslint/camelcase */
 export interface Response {
   log_message: string;
   user_id: number;
 }
 
-const APIDomain = '0.0.0.0:8000';
+const APIDomain = REACT_APP_API_URL;
 
-const logClicks = async (
-  log_message: string,
-  user_id: number,
-): Promise<Response> => {
+const logClicks = async (log_message: string, user_id: number): Promise<Response> => {
   // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/userlog/`;
   const body = {
