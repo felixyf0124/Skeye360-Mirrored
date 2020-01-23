@@ -12,7 +12,7 @@ class writeToDatabase:
 
     def write(self, direction, predictions, time, modelType, collection):
         # If ran too many times and you want to delete all records (or the whole collection), uncomment the following code
-        collection.remove()
+        # collection.remove()
 
         # START of writing to MongoDB
         # The following code is to get the latest id inserted
