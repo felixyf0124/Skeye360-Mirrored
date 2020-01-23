@@ -10,3 +10,6 @@ sudo pip3 install pandas
 sudo pip3 install matplotlib
 sudo pip3 install statsmodels
 sudo pip3 install pmdarima
+
+(For ARIMA scheduler)
+sudo pip3 install schedule
