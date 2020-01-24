@@ -2,7 +2,8 @@ import json
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, viewsets, permissions, filters, generics
+from rest_framework import status, viewsets, permissions, generics
+from django_filters import rest_framework as filters
 from django.http import HttpResponse
 from knox.models import AuthToken
 from .models import *
@@ -13,6 +14,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 # For /api purpose
@@ -101,11 +103,21 @@ class TrafficLightViewSet(viewsets.ModelViewSet):
     queryset = Trafficlight.objects.all()
     serializer_class = TrafficLightSerializer
 
+# Ref: https://sam.hooke.me/note/2019/07/migrating-from-tastypie-to-django-rest-framework/
+class CountFilter(filters.FilterSet):
+    time = filters.IsoDateTimeFilter(field_name='time')
+    timestamp__lte = filters.IsoDateTimeFilter(field_name="time", lookup_expr="lte")
+    timestamp__gte = filters.IsoDateTimeFilter(field_name="time", lookup_expr="gte")
+
+    class Meta:
+        model = Count
+        fields = ['count_type', 'count_direction']
 
 class CountViewSet(viewsets.ModelViewSet):
     queryset = Count.objects.all()
     serializer_class = CountSerializer
-    filter_fields = ('count_type', 'time', 'count_direction',)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = CountFilter
 
 
 class TimeViewSet(viewsets.ModelViewSet):
