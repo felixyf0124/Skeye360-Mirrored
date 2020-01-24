@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 class main:
     #Start of the code (main)
 
-    # Read the csv file that was generated from the datasetGenerator.py
+    # Read the csv file that was generated from the DatasetGenerator.py
     # For Windows
     # dataframe = panda.read_csv("360_python\data_generator\generatedDataset.csv", index_col = ['date'], parse_dates = ['date'])
     # For Linux, the path depends on where the Github project is cloned
