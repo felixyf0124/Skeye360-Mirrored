@@ -8,11 +8,11 @@ class Counter:
     def __init__(self,start_from, go_to):
         self.direction = Direction(start_from, go_to)
         self.count = 0
-        logger.info("Counter is created")
+        # logger.info("Counter is created")
 
     def inc(self):
         self.count = self.count + 1
-        logger.info("Counter incremented")
+        # logger.info("Counter incremented")
 
     
     def print_counter(self):

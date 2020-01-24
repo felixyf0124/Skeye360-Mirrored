@@ -7,7 +7,7 @@ import logging
 import threading
 import queue
 
-logger = logging.getLogger("timers")
+logger = logging.getLogger("camera")
 
 # initialize a realtime object
 timer = Realtime()
@@ -15,9 +15,8 @@ timer = Realtime()
 # sending timers to frontend
 def get_timers(request):
     logger.info("Sending realtime timers")
-    print("here in get_timers from the view")
     timer.det_timers()
     timers = timer.timers
-    print("printing the timers")
-    print(timers)
+    logger.info("realtime passed")
+    logger.info(timers)
     return HttpResponse(timers,content_type="application/json")

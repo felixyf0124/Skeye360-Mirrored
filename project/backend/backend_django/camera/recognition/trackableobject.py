@@ -15,15 +15,16 @@ class TrackableObject:
 		self.crossing = False
 		self.start_from = ""
 		self.go_to = ""
-		logger.info("trackableObject is created")
+		# logger.info("trackableObject is created")
 
 	def add_centroid(self, centroid):
 		self.centroids.append(centroid)
-		logger.info("centroid updated")
+		# logger.info("centroid updated")
 
 	def print_to(self):
 		for centroid in self.centroids:
-			print ("["+str(centroid[0])+","+str(centroid[1])+"]")
+			# print ("["+str(centroid[0])+","+str(centroid[1])+"]")
+			print("")
 			
 	def get_start_from(self):
 		return self.start_from

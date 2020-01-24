@@ -31,13 +31,13 @@ class Db:
                 "category": "vehicle"}
             insersions = insersions + 1
             collection.insert_one(new_count)        
-            logger.info("Sending data to db")
+            # logger.info("Sending data to db")
         lock.release()
         return insersions
         
 
     def find_all_count(self,collection):
-        logger.info("Retrieving data from db")
+        # logger.info("Retrieving data from db")
         collection.find()
 
     def drop_count(self,collection):
