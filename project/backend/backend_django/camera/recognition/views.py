@@ -45,8 +45,3 @@ def get_level_of_service(request):
         'los': los
     }
     return JsonResponse(data)
-
-def get_light_signals(request):
-    logger.info("get_light_signal")
-    data = detector.light_signals
-    return JsonResponse(data)
