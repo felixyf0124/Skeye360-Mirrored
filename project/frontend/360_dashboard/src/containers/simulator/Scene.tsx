@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/camelcase */
 // learning reference https://medium.com/@peeyush.pathak18/pixijs-with-react-3cd40738180
 
-import React, { Component } from 'react';
+import React from 'react';
 // pixi.js-legacy for VM
 import * as PIXI from 'pixi.js-legacy';
+import { connect } from 'react-redux';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry';
 import Vec2 from './simulator_management/vec2';
@@ -13,13 +15,25 @@ import LanePointer from './simulator_management/LanePointer';
 import DragablePoint from './DragablePoint';
 import mappingBGTexture from './intersection1.png';
 import * as tsData from './TSLocalData';
+import { RootState } from '../../reducers/rootReducer';
+import { logClick } from '../../contexts/LogClicks';
+
 // import 'pixi-text-input.js';
+
+interface StateProps {
+  intersection_id: string;
+  camera_url: string;
+}
+
+interface DispatchProps {
+  logClick: (log_message: string, user_id: number) => any;
+}
 
 /**
  * @class Scene
  * @extends {Component}
  */
-class Scene extends Component {
+class Scene extends React.Component<StateProps & DispatchProps> {
   pixiContent: any;
 
   windowW: number;
@@ -118,7 +132,7 @@ class Scene extends Component {
 
   constructor(props: any) {
     super(props);
-    this.windowScaleRatio = 0.5;
+    this.windowScaleRatio = 0.4;
     this.pixiContent = null;
     this.windowW = window.innerWidth * this.windowScaleRatio;
     this.windowH = window.innerHeight * this.windowScaleRatio;
@@ -241,10 +255,10 @@ class Scene extends Component {
 
     // toggle group
     const videoFeed = { name: 'enable video feed', state: true };
-    const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
-    const uiV7 = { name: 'enable new UI v2.2', state: false };
-    const showSectionAreas = { name: 'Show Section Areas', state: false };
-    const showDirectVideoFeedMapping = { name: 'Show video feed mapping', state: false };
+    const samplingVideoFeed = { name: 'enable sampling video feed', state: false };
+    const uiV7 = { name: 'enable new UI v2.2', state: true };
+    const showSectionAreas = { name: 'Show Section Areas', state: true };
+    const showDirectVideoFeedMapping = { name: 'Show video feed mapping', state: true };
     const showVideoFeedBG = { name: 'Show video feed background', state: false };
     this.toggleGroup.push(videoFeed);
     this.toggleGroup.push(samplingVideoFeed);
@@ -376,7 +390,10 @@ class Scene extends Component {
    * old function for only retrieve total car number from video feed directly
    */
   async getNumberOfCars(): Promise<number> {
-    const rawData = await DataFromCamera.getDataFromCamera() || '';
+    const {
+      camera_url,
+    } = this.props;
+    const rawData = await DataFromCamera.getDataFromCamera(camera_url) || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
     // console.log(`Number of cars : ${numberCars}`);
     this.numberOfCars = numberCars;
@@ -743,8 +760,11 @@ class Scene extends Component {
    * retrieve raw data from video feed
    */
   async retrieveRawData(): Promise<void> {
+    const {
+      camera_url,
+    } = this.props;
     if (!this.toggleGroup[1].state) {
-      const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
+      const rawDataStr: string = await DataFromCamera.getDataFromCamera(camera_url) || 'async error';
 
       this.objRawData = rawDataStr;
     } else {
@@ -798,32 +818,6 @@ class Scene extends Component {
     delete this.laneAreaContainer;
     delete this.mappingBGContainer;
   }
-
-  // render
-  render = (): JSX.Element => (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <div
-                style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                ref={(element): void => { this.updateCar(element); }}
-              />
-            </td>
-            <td>
-              <img
-                style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://127.0.0.1:8001/cam"
-                alt=""
-              />
-            </td>
-
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  )
 
   /**
    * update TL CountDown in control panel
@@ -1333,8 +1327,24 @@ class Scene extends Component {
       }
     }
   }
+
+  // render
+  public render(): JSX.Element {
+    return (
+      <div
+        ref={(element): void => { this.updateCar(element); }}
+      />
+    );
+  }
 }
 
+const mapStateToProps = (state: RootState): StateProps => ({
+  intersection_id: state.intersection.intersection_id,
+  camera_url: state.camera.camera_url,
+});
 
-export default
-(Scene);
+const mapDispatchToProps: DispatchProps = {
+  logClick,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Scene);

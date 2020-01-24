@@ -72,7 +72,6 @@ export function* handleFetchDistricts(): Iterator<any> {
     }
   } catch (e) {
     yield put(getDistrictsFail());
-    throw e;
   }
 }
 
@@ -92,10 +91,14 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       };
     }
     case GET_DISTRICTS_FAIL: {
-      return initState;
+      return {
+        ...state,
+      };
     }
     case RESET_INTERSECTION: {
-      return initState;
+      return {
+        ...state,
+      };
     }
     default:
       return state;

@@ -15,12 +15,17 @@ import {
 import { logClick } from '../contexts/LogClicks';
 import SouthChart from '../components/SouthChart';
 import GoogleMiniMap from '../components/GoogleMiniMap';
-import { SKEYE_WHITE } from '../css/custom';
+import { SKEYE_WHITE, LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 
 // styled-component for map, chart and flexboxes
 const Body = styled.div`
   margin-left: 5rem;
   margin-top: 5rem;
+  @media only screen and (max-width: ${MOBILE_DEVICE_MAX_WIDTH}px) {
+    & {
+      margin-left: 3rem;
+    }
+  }
 `;
 
 const MapContainer = styled.div`
@@ -38,6 +43,11 @@ const AverageMetricChartsContainer = styled.div`
   margin: 1rem;
   vertical-align: middle;
   text-align: center;
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      width: 80vw;
+    }
+  }
 `;
 
 // Smaller charts for the bottom left side charts.
@@ -54,6 +64,12 @@ const BigChartContainer = styled.div`
   position: relative;
   width: 70vw;
   margin: 1rem;
+
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      width: 80vw;
+    }
+  }
 `;
 
 // Generic flexboxes styling
@@ -73,6 +89,14 @@ const ChartHorizontalFlexBox = styled.div`
   justify-content: center;
   align-items: stretch;
   align-content: stretch;
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      justify-content: space-around;
+      align-items: space-around;
+      align-content: space-around;
+      width: 80vw;
+    }
+  }
 `;
 
 // state & props
@@ -114,6 +138,45 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
     } = this.props;
 
     // components render
+    if (window.innerWidth < LOW_RES) {
+      return (
+        <div>
+          <SideDrawer headerTitle={intersectionName} />
+          <Body>
+            <ChartVerticalFlexBox>
+              <MapContainer>
+                {intersectionLat === '' ? (
+                  <p>Loading...</p>
+                ) : (
+                  <GoogleMiniMap
+                    intersectionId={intersectionId}
+                    intersectionLat={intersectionLat}
+                    intersectionLng={intersectionLng}
+                  />
+                )}
+              </MapContainer>
+              <AverageMetricChartsContainer>
+                <h5>Average Cars</h5>
+                <h3>N/A</h3>
+              </AverageMetricChartsContainer>
+              <AverageMetricChartsContainer>
+                <h6>Average Gas Consumption</h6>
+                <h5>N/A L/100km</h5>
+              </AverageMetricChartsContainer>
+              <BigChartContainer>
+                <NorthChart />
+              </BigChartContainer>
+              <BigChartContainer>
+                <SouthChart />
+              </BigChartContainer>
+              <BigChartContainer>
+                <AvgWaitTimeChart />
+              </BigChartContainer>
+            </ChartVerticalFlexBox>
+          </Body>
+        </div>
+      );
+    }
     return (
       <div>
         <SideDrawer headerTitle={intersectionName} />

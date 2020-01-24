@@ -23,5 +23,6 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     url('cam/', recognition_views.cam),
     url('coord/',recognition_views.send_json),
-    url('timers/',realtime_views.get_timers)
+    url('timers/',realtime_views.get_timers),
+    url('los/',recognition_views.get_level_of_service)
 ]
