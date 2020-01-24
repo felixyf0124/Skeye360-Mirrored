@@ -143,7 +143,7 @@ class Detector:
         for r in ROI_list[1].values():
             cv2.polylines(image, [r], True, (255), 2)
         cv2.polylines(image, [ROI_list[0]], True, (255), 2)
-        # logger.info("Drawing ROIs")
+        logger.info("Drawing ROIs")
     # create a deepsort tracker with deep_sort Definition of the parameters
 
     def create_tracker(self):
