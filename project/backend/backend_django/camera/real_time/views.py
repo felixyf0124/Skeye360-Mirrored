@@ -15,5 +15,6 @@ realtimers = Realtime()
 # sending timers to frontend
 def get_timers(request):
     logger.info("Sending realtime timers")
-    timers = realtimers.det_timers()
+    realtimers.det_timers()
+    timers = realtimers.timers
     return HttpResponse(timers,content_type="application/json")
