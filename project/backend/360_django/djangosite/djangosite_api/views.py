@@ -111,7 +111,7 @@ class CountFilter(filters.FilterSet):
 
     class Meta:
         model = Count
-        fields = ['count_type', 'count_direction']
+        fields = ['count_type', 'count_direction','intersection_id']
 
 class CountViewSet(viewsets.ModelViewSet):
     queryset = Count.objects.all()
