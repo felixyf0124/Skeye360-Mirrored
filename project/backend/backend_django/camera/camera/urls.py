@@ -17,8 +17,11 @@ from django.contrib import admin
 # from django.urls import path
 from django.conf.urls import url
 from recognition import views as recognition_views
+from real_time import views as realtime_views
+
 urlpatterns = [
     url('admin/', admin.site.urls),
     url('cam/', recognition_views.cam),
-    url('coord/',recognition_views.send_json)
+    url('coord/',recognition_views.send_json),
+    url('realtime/',realtime_views.get_timers)
 ]
