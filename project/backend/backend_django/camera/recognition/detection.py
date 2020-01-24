@@ -323,9 +323,9 @@ class Detector:
             # save the coordinates for the tracked vehicles and get ready for front end to retrieve them
             self.save_coordinate(coord_dict)
 
-            # fps = "FPS: " + str(int (1/(time.time()-prev_time)))
+            fps = "FPS: " + str(int (1/(time.time()-prev_time)))
             cv2.putText(image, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
-            self.start_counting = True
+            self.start_counting = Trues
             self.draw_ROIs(image, ROI_list)
             frame = self.frame_to_bytes(image)
             intersection.print_counters()      
