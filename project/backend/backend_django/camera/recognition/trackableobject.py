@@ -15,6 +15,8 @@ class TrackableObject:
 		self.crossing = False
 		self.start_from = ""
 		self.go_to = ""
+		self.time_0 = None
+		self.time_1 = None
 		logger.info("trackableObject is created")
 
 	def add_centroid(self, centroid):

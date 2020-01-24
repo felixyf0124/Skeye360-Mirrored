@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.http import StreamingHttpResponse
 from .detection import Detector
 from .coordinate import Coordinate
@@ -38,3 +38,10 @@ def send_json(request):
     j = detector.coord.dict.items()
     return HttpResponse(j,content_type="application/json")
 
+def get_level_of_service(request):
+    logger.info("get_level_of_service")
+    los = detector.level_of_service
+    data = {
+        'los': los
+    }
+    return JsonResponse(data)
