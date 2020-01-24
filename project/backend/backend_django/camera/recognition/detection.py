@@ -18,6 +18,8 @@ from .deep_sort import nn_matching
 from .deep_sort.detection import Detection
 from .deep_sort.tracker import Tracker
 
+
+logging.disable(logging.INFO)
 # set up for logging
 logger = logging.getLogger("camera")
 
@@ -38,6 +40,11 @@ class Detector:
         self.coord = Coordinate()
         self.start_counting = False
         self.frame = bytes("", 'utf-8')
+        self.level_of_service = 0
+        # sum of crossing time and number of crossed vehicle, will be reset every 100 seconds
+        self.crossing_time = 0 
+        self.crossed_number = 0.001 # avoid devide by zero error
+
         logger.info("Detector is created")
 
     # Load names classes
@@ -82,7 +89,20 @@ class Detector:
             # intersection.reset_counter()
             db.find_all_count(col)
         threading.Timer(WAIT_SECONDS, self.counting,[col,intersection]).start()
-                               
+
+    # get average level of service 
+    def save_level_of_service_then_reset(self):
+        self.level_of_service = self.crossing_time/self.crossed_number
+        print(self.crossing_time)
+        print(self.crossed_number)
+        print("LOS: " + str(self.level_of_service))
+        print("reset!")
+        WAIT_SECONDS = 100
+        self.crossed_number = 0.0001 # avoid devide by zero error
+        self.crossing_time = 0
+        threading.Timer(WAIT_SECONDS, self.save_level_of_service_then_reset,[]).start()
+        
+
     # Open a video
     def open_video(self):
         cap = cv2.VideoCapture(self.stream)
@@ -124,6 +144,7 @@ class Detector:
         for r in ROI_list[1].items():
             if (cv2.pointPolygonTest(r[1], start_point, False)) >= 0:
                 trackableObject.start_from = r[0]
+                trackableObject.time_0 = time.time()
                 break
             
 
@@ -136,6 +157,7 @@ class Detector:
             if trackableObject.crossing and (cv2.pointPolygonTest(r[1], current, False)) >= 0:
                 trackableObject.go_to = r[0]
                 trackableObject.counted = True
+                trackableObject.time_1 = time.time()
                 break
 
     # Draw ROIs
@@ -169,6 +191,8 @@ class Detector:
         database = Db()
         col = database.connection()
 
+        self.save_level_of_service_then_reset()
+
         # start counting the objects to be detected
         self.counting(col,intersection)
         
@@ -180,6 +204,9 @@ class Detector:
         # create ROIs
         ROI_list = self.create_ROIs()
 
+
+
+        #darknet parameters
         netMain = None
         metaMain = None
         altNames = None
@@ -228,7 +255,7 @@ class Detector:
             if not hasframe:
                 logger.error("Video importing error")
                 return -1     
-     
+    
             totalFrames += 1
             if totalFrames%3!=1:
                continue
@@ -310,16 +337,10 @@ class Detector:
                         current = (x.centroids[-1][0], x.centroids[-1][1])
                         self.get_destination(current,x,ROI_list)
                         intersection.inc(x.start_from, x.go_to)
+                        if((x.time_1 is not None) and (x.time_0 is not None)):
+                            self.crossed_number = self.crossed_number + 1
+                            self.crossing_time = self.crossing_time + (x.time_1 - x.time_0)
 
-			# draw both the ID of the object and the centroid of the
-			# object on the output frame  COMMENTED OUT, NEEDED FOR FUTURE REFACTORY
-            # for x in tracking_dict.values():
-            #     print("ID {}".format(x.objectID)+ ' start: ', end="")
-            #     print(str(x.centroids[0][0])+' , '+str(x.centroids[0][1])+ ' current: '+str(x.centroids[-1][0])+' , '+str(x.centroids[-1][1]))
-            #     print("ID {}".format(track.track_id)+ ' start: '+str(to.centroids[0][0])+' , '+str(to.centroids[0][1])+ ' current: '+str(to.centroids[-1][0])+' , '+str(to.centroids[-1][1]))
-            #     print(x.start_from)
-            #     print(x.go_to)
-            
             # save the coordinates for the tracked vehicles and get ready for front end to retrieve them
             self.save_coordinate(coord_dict)
 
@@ -329,7 +350,6 @@ class Detector:
             self.draw_ROIs(image, ROI_list)
             frame = self.frame_to_bytes(image)
             intersection.print_counters()      
-
             # cv2.imshow("Display window", image)
             # cv2.waitKey(1)
             # yield the bytes of frame, and get ready for front end to retrieve them

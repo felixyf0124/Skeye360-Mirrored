@@ -13,7 +13,7 @@ import StreetView from './containers/StreetView';
 import ChartsPrototype from './components/ChartsPrototype';
 import SessionRoutes from './SessionRoutes';
 import { authenticated } from './contexts/authentication';
-import IntersectionList from './components/IntersectionList';
+import IntersectionList from './containers/IntersectionList';
 import CamView from './containers/CamView';
 
 interface StateProps {

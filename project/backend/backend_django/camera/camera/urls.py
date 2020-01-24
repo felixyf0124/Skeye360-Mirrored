@@ -20,5 +20,6 @@ from recognition import views as recognition_views
 urlpatterns = [
     url('admin/', admin.site.urls),
     url('cam/', recognition_views.cam),
-    url('coord/',recognition_views.send_json)
+    url('coord/',recognition_views.send_json),
+    url('los/',recognition_views.get_level_of_service)
 ]
