@@ -10,11 +10,14 @@ import queue
 logger = logging.getLogger("timers")
 
 # initialize a realtime object
-realtimers = Realtime()
+timer = Realtime()
 
 # sending timers to frontend
 def get_timers(request):
     logger.info("Sending realtime timers")
-    realtimers.det_timers()
-    timers = realtimers.timers
+    print("here in get_timers from the view")
+    timer.det_timers()
+    timers = timer.timers
+    print("printing the timers")
+    print(timers)
     return HttpResponse(timers,content_type="application/json")

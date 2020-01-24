@@ -6,9 +6,12 @@ class Realtime:
         self.timers = {}
 
     def det_timers(self):
+
+        print("trying to extract")
         #  Extracting traffic data from csv file
         raw_data = panda.read_csv("~/Soen490/project/backend/backend_django/camera/real_time/traffic_normal_case.csv")
 
+        print("raw data extracted")
         # Separating traffic data by directions
         southToSouth = raw_data.loc[(raw_data['from'] == "south") & (raw_data['to'] == "south")]
         southToNorth = raw_data.loc[(raw_data['from'] == "south") & (raw_data['to'] == "north")]
@@ -99,3 +102,5 @@ class Realtime:
         self.timers['NorthSouth timers'] = northSouthTimer
         self.timers['EastWest timers'] = eastWestTimer
         self.timers['EastWest timers'] = leftTurnTimer
+
+        print(self.timers)

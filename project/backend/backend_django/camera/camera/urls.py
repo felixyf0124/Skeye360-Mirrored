@@ -23,5 +23,5 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     url('cam/', recognition_views.cam),
     url('coord/',recognition_views.send_json),
-    url('realtime/',realtime_views.get_timers)
+    url('timers/',realtime_views.get_timers)
 ]
