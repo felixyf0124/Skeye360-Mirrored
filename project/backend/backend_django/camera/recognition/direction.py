@@ -10,7 +10,8 @@ class Direction:
 		# logger.info("Direction is created")
 		
 	def print_direction(self):
-		print(self.start_from + "->" + self.go_to, end="")
+		# print(self.start_from + "->" + self.go_to, end="")
+		print("")
    
 	def get_direction(self):
 		return (self.start_from + "->" + self.go_to)

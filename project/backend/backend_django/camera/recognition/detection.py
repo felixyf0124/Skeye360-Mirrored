@@ -143,7 +143,7 @@ class Detector:
         for r in ROI_list[1].values():
             cv2.polylines(image, [r], True, (255), 2)
         cv2.polylines(image, [ROI_list[0]], True, (255), 2)
-        logger.info("Drawing ROIs")
+        # logger.info("Drawing ROIs")
     # create a deepsort tracker with deep_sort Definition of the parameters
 
     def create_tracker(self):
@@ -323,7 +323,7 @@ class Detector:
             # save the coordinates for the tracked vehicles and get ready for front end to retrieve them
             self.save_coordinate(coord_dict)
 
-            fps = "FPS: " + str(int (1/(time.time()-prev_time)))
+            # fps = "FPS: " + str(int (1/(time.time()-prev_time)))
             cv2.putText(image, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
             self.start_counting = True
             self.draw_ROIs(image, ROI_list)
