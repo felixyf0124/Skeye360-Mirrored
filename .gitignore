@@ -1,6 +1,6 @@
 .idea/*
-dev_env/*
 dev_env/devenv/*
+dev_env/template/*
 project/simulator/TrafficSimulator/traffic_simulator/yarn.lock
 venv/*
 .vscode/*
@@ -16,3 +16,4 @@ project/backend/backend_django/camera/yolov3.weights
 project/backend/backend_django/camera/recognition/test/__pycache__/*
 project/backend/backend_django/camera/recognition/pyimagesearch/__pycache__/*
 project/backend/backend_django/camera/camera/__pycache__/*
+dev_env/template/Vagrantfile
