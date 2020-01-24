@@ -18,7 +18,7 @@ class main:
         # For Windows
         # dataframe = panda.read_csv("~\Documents\Github\soen490_dev_env\project\data_analytics\\360_python\data_generator\\test.csv", index_col = ['date'], parse_dates = ['date'], encoding = 'utf-16', delimiter=";")
         # For Linux, the path depends on where the Github project is cloned
-        dataframe = panda.read_csv("~/Desktop/Soen490/project/data_analytics/360_python/data_generator/test.csv", index_col = ['date'], parse_dates = ['date'], delimiter=";")
+        dataframe = panda.read_csv("~/Soen490/project/data_analytics/360_python/data_generator/test.csv", index_col = ['date'], parse_dates = ['date'], delimiter=";")
 
         # Uncomment the following code to preview how the data looks like on a graph
         # To plot a graph, use only 2 columns
