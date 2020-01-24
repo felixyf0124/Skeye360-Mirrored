@@ -8,7 +8,7 @@ export default class DataFromCamera {
       // console.log("TEXT:" + await response.text());
       return await response.text();
     } catch (e) {
-      console.log(`ERROR in DataFromCamera:${e}`);
+      // console.log(`ERROR in DataFromCamera:${e}`);
       return `ERROR:${e}`;
     }
   }

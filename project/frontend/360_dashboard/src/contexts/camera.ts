@@ -99,13 +99,13 @@ export const getExistingCamera = (id: string): GetCameraAction => ({
   id,
 });
 
-export interface GetIntersectionSuccessAction {
+export interface GetCameraSuccessAction {
   type: string;
   data: cameraResponse;
 }
 
 // success case
-export const getCameraSuccess = (data: cameraResponse): GetIntersectionSuccessAction => ({
+export const getCameraSuccess = (data: cameraResponse): GetCameraSuccessAction => ({
   type: GET_CAMERA_SUCCESS,
   data,
 });
@@ -175,7 +175,7 @@ export interface DeleteCameraSuccessAction {
 }
 
 // success case
-export const deleteIntersectionSuccess = (id: string): DeleteCameraSuccessAction => ({
+export const deleteCameraSuccess = (id: string): DeleteCameraSuccessAction => ({
   type: DELETE_CAMERA_SUCCESS,
   id,
 });
@@ -274,7 +274,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       };
     }
     case GET_CAMERA_SUCCESS: {
-      const { data } = action as GetIntersectionSuccessAction;
+      const { data } = action as GetCameraSuccessAction;
       return {
         ...state,
         id: data.id,
@@ -294,6 +294,9 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     case DELETE_CAMERA_SUCCESS: {
       return {
         ...state,
+        id: 0,
+        camera_url: '',
+        intersection_id: 0,
         error: 'Camera deleted.',
         success: true,
       };
@@ -301,6 +304,9 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     case ADD_CAMERA_FAIL: {
       return {
         ...state,
+        id: 0,
+        camera_url: '',
+        intersection_id: 0,
         error: 'Error while adding new camera.',
         success: false,
       };
@@ -308,6 +314,9 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     case GET_CAMERA_FAIL: {
       return {
         ...state,
+        id: 0,
+        camera_url: '',
+        intersection_id: 0,
         error: 'Error while getting existing camera.',
         success: false,
       };
@@ -315,6 +324,9 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     case EDIT_CAMERA_FAIL: {
       return {
         ...state,
+        id: 0,
+        camera_url: '',
+        intersection_id: 0,
         error: 'Error while editing existing camera.',
         success: false,
       };
@@ -322,6 +334,9 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     case DELETE_CAMERA_FAIL: {
       return {
         ...state,
+        id: 0,
+        camera_url: '',
+        intersection_id: 0,
         error: 'Error while deleting existing camera.',
         success: false,
       };

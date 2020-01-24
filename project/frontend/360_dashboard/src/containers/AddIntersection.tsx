@@ -2,12 +2,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
 import { logClick } from '../contexts/LogClicks';
 import SideDrawer from '../components/SideDrawer';
+
+const Body = styled.div`
+  overflow-y: none;
+`;
 
 interface StateProps {
   path: string;
@@ -120,7 +125,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
   const classes = useStyles();
 
   return (
-    <div>
+    <Body>
       <SideDrawer headerTitle={title} />
       <div className={classes.content}>
         {error !== '' ? (
@@ -189,7 +194,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
           </div>
         </form>
       </div>
-    </div>
+    </Body>
   );
 };
 

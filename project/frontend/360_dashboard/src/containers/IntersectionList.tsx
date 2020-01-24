@@ -6,8 +6,6 @@ import styled from 'styled-components';
 import SideDrawer from '../components/SideDrawer';
 import IntersectionTable from '../components/IntersectionTable';
 import { RootState } from '../reducers/rootReducer';
-import DisplayCount from '../components/DisplayMovAVG';
-
 import {
   STATE as districtState,
   GetDistrictsAction,
@@ -17,28 +15,58 @@ import {
 } from '../contexts/districts';
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
 import { logClick, LogAction } from '../contexts/LogClicks';
-import {
-  STATE as countState,
-  GetCountAction,
-  getCount,
-} from '../contexts/countTime';
 import TrafficNews from '../components/TrafficNews';
+import { LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 
 // Generic flexboxes styling
-const HorizontalFlexBox = styled.div`
+const ContentFlexBox = styled.div`
+  margin-left: 5rem;
+  margin-right: 0rem;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: space-around;
   align-content: stretch;
+
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+  }
+  @media only screen and (max-width: ${MOBILE_DEVICE_MAX_WIDTH}px) {
+    & {
+      margin-left: 2.5rem;
+    }
+  }
+`;
+
+const TableDiv = styled.div`
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      width: 90vw;
+    }
+  }
+`;
+
+const TrafficDiv = styled.div`
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      width: 93vw;
+    }
+  }
+  @media only screen and (max-width: ${MOBILE_DEVICE_MAX_WIDTH}px) {
+    & {
+      width: 100vw;
+    }
+  }
 `;
 
 const title = 'Montreal';
 interface StateProps {
   user_id: number;
   districts: districtState;
-  count: countState;
 }
 
 interface DispatchProps {
@@ -46,16 +74,13 @@ interface DispatchProps {
   resetIntersection(): ResetDistrictAction;
   deleteExistingIntersection: (id: string) => DeleteIntersectionAction;
   logClick: (log_message: string, user_id: number) => LogAction;
-  getCount(): GetCountAction;
 }
 
 class IntersectionList extends React.Component<(StateProps & DispatchProps) | any> {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { getDistricts } = this.props;
-    const { getCount } = this.props;
     getDistricts();
-    getCount();
   }
 
   public componentDidUpdate(): void {
@@ -72,25 +97,28 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
 
   public render(): JSX.Element {
     const { districts } = this.props;
-    const { count } = this.props;
     // const districtsProps = {
     //   // eslint-disable-next-line object-shorthand
     //   districts: districts,
     // };
     return (
-      <HorizontalFlexBox>
+      <div>
         <SideDrawer headerTitle={title} />
-        {districts[0] === undefined ? <div /> : <IntersectionTable districts={districts} />}
-        <TrafficNews />
-        <DisplayCount count={count}/>
-      </HorizontalFlexBox>
+        <ContentFlexBox>
+          <TableDiv>
+            {districts[0] === undefined ? <div /> : <IntersectionTable districts={districts} />}
+          </TableDiv>
+          <TrafficDiv>
+            <TrafficNews />
+          </TrafficDiv>
+        </ContentFlexBox>
+      </div>
     );
   }
 }
 const mapStateToProps = (state: RootState): StateProps => ({
   user_id: state.authentication.user_id,
   districts: state.districts,
-  count: state.countTime,
 });
 
 const mapDispatchToProps: DispatchProps = {
@@ -98,6 +126,5 @@ const mapDispatchToProps: DispatchProps = {
   resetIntersection,
   deleteExistingIntersection,
   logClick,
-  getCount,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(IntersectionList);

@@ -20,3 +20,5 @@ export const getCount = async (cameraUrl: string): Promise<Response> => {
 
   return data;
 };
+
+export default getCount;

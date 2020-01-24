@@ -28,7 +28,7 @@ interface DispatchProps {
   logClick: (log_message: string, user_id: number) => any;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& > *': {
       width: 200,
