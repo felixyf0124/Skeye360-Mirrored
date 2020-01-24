@@ -5,7 +5,7 @@ def callMain():
     mainObj = main()
     mainObj.mainArima()
 
-schedule.every(1).minutes.do(callMain)
+schedule.every().day.at("02:00").do(callMain)
 
 while True:
     schedule.run_pending()
