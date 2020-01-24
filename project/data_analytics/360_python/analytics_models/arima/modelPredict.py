@@ -104,6 +104,6 @@ class modelPredict:
         wtd = writeToDatabase()
         collection = wtd.connection('360backend', 'djangosite_api_count', client)
         # The following command calls the write method in writeToDatabase.py to write to the mongodb
-        wtd.write(direction, forecast, listOfDate, "arima", collection)
+        wtd.write(direction, forecast, listOfDate, "arima", 1, collection)
         # The following command calls the read method in writeToDatabase.py to read from the mongodb
         print(wtd.read(collection))

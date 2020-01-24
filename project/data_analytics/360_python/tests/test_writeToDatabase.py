@@ -10,6 +10,7 @@ class test_writeToDatabase(unittest.TestCase):
     predictions = np.ndarray(shape=(1), buffer=np.array(['62.49457301', '61.77780322']))
     time = ['1999-06-20 00:00:00', '1999-06-21 00:00:00']
     modelType = "arima"
+    intersectionID = 1
 
 
     def test_write(self):
@@ -21,7 +22,8 @@ class test_writeToDatabase(unittest.TestCase):
         listOfInsertedID = wtd.write(self.direction, 
         self.predictions, 
         self.time, 
-        self.modelType, 
+        self.modelType,
+        self.intersectionID, 
         collectionMock)
 
         # counter to count every id that exists in the database
@@ -42,7 +44,7 @@ class test_writeToDatabase(unittest.TestCase):
 
         # Create writeToDatabase object and call write method
         wtd = writeToDatabase()
-        wtd.write(self.direction, self.predictions, self.time, self.modelType, collectionMock)
+        wtd.write(self.direction, self.predictions, self.time, self.modelType, self.intersectionID, collectionMock)
         listOfResults = wtd.read(collectionMock)
 
         # counter to count every id that exists in the database
