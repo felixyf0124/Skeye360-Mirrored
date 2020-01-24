@@ -21,6 +21,6 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     url('cam/', recognition_views.cam),
     url('coord/',recognition_views.send_json),
-    url('los/',recognition_views.get_level_of_service)
+    url('los/',recognition_views.get_level_of_service),
     url('lights/',recognition_views.get_light_signals)
 ]
