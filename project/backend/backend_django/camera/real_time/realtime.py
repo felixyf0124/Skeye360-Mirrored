@@ -3,7 +3,7 @@ import json
 
 class Realtime: 
     def __init__(self):
-        self.timers = {}
+        self.timers = {'north-south': 0, 'east-west': 0, 'left': 0}
 
     def det_timers(self):
 
@@ -99,8 +99,7 @@ class Realtime:
             northSouthTimer = 20
             eastWestTimer = 30 
 
-        self.timers['NorthSouth timers'] = northSouthTimer
-        self.timers['EastWest timers'] = eastWestTimer
-        self.timers['EastWest timers'] = leftTurnTimer
+        self.timers['north-south'] = northSouthTimer
+        self.timers['east-west'] = eastWestTimer
+        self.timers['left'] = leftTurnTimer
 
-        print(self.timers)

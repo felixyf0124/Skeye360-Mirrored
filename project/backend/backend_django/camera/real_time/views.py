@@ -1,11 +1,6 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import StreamingHttpResponse
+from django.http import HttpResponse, JsonResponse
 from .realtime import Realtime
-import os
 import logging
-import threading
-import queue
 
 logger = logging.getLogger("camera")
 
@@ -16,7 +11,8 @@ timer = Realtime()
 def get_timers(request):
     logger.info("Sending realtime timers")
     timer.det_timers()
-    timers = timer.timers
+    timers_data = timer.timers
     logger.info("realtime passed")
-    logger.info(timers)
-    return HttpResponse(timers,content_type="application/json")
+    #logger.info(timers)
+    logger.info(timers_data)
+    return JsonResponse(timers_data)
