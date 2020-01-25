@@ -19,7 +19,7 @@ class modelPredict:
     def modelAndPredict(self, dataf, direction):
         # Seperate the data as train set and test set
         startTestDate = '2017-12-31 00:00:00.000'
-        train = dataf.loc['2017-08-27 04:00:00.000':'2017-12-30 23:00:00.000']
+        train = dataf.loc['2017-12-27 00:00:00.000':'2017-12-30 23:00:00.000']
         test = dataf.loc[startTestDate:'2017-12-31 23:00:00.000']
         # startTestDate = '2017-12-02 00:00:00.000'
         # train = nsDataRaw.loc[(nsDataRaw['date']>'2017-08-27 04:00:00.000') & (nsDataRaw['date']<'2017-12-01 23:00:00.000')]
@@ -103,7 +103,8 @@ class modelPredict:
         client = dbConnect.connect()
         wtd = writeToDatabase()
         collection = wtd.connection('360backend', 'djangosite_api_count', client)
+        intersectionID = 1
         # The following command calls the write method in writeToDatabase.py to write to the mongodb
-        wtd.write(direction, forecast, listOfDate, "arima", 1, collection)
+        wtd.write(direction, forecast, listOfDate, "arima", intersectionID, collection)
         # The following command calls the read method in writeToDatabase.py to read from the mongodb
         print(wtd.read(collection))

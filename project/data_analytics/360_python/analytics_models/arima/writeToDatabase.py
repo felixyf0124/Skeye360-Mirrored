@@ -22,7 +22,7 @@ class writeToDatabase:
         listInsertedID = list()
         # For loop to insert into MongoDB
         for index in range(len(predictions)):
-            insertedID = collection.insert_one({"id": lastId + index, "count_direction":direction, "count":predictions[index], "time":time[index], "count_type":modelType, "intersection_id":intersectionID}).inserted_id
+            insertedID = collection.insert_one({"id": lastId + index, "count_direction":direction, "count":predictions[index], "time":time[index], "intersection_id_id":intersectionID, "count_type":modelType}).inserted_id
             listInsertedID.append(insertedID)
         return listInsertedID
         # END of writing to MongoDB
@@ -44,8 +44,9 @@ class writeToDatabase:
             resultCount = str(row['count'])
             resultTime = str(row['time'])
             resultType = str(row['count_type'])
+            resultIntersectionID = str(row['intersection_id_id'])
             # Prepare the results and print it
-            result = resultDirection + " | " + resultCount + " | " + resultTime + " | " + resultType
+            result = resultDirection + " | " + resultCount + " | " + resultTime + " | " + resultIntersectionID + " | " + resultType 
             # print(result)
             # Add the result to a list
             results.append(result)
