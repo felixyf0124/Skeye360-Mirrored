@@ -27,10 +27,12 @@ export const GET_COUNT_MA_FAIL = 'GET_COUNT_MA_FAIL';
 
 export interface GetCountMAvgAction extends Action {
   type: string,
+  id: string,
 }
 
-export const getCountMAvg = (): GetCountMAvgAction => ({
+export const getCountMAvg = (id: string): GetCountMAvgAction => ({
   type: GET_COUNT_MA,
+  id,
 });
 
 export interface GetCountMAvgSuccessAction {
@@ -52,9 +54,9 @@ export const getCountMAvgFail = (): GetCountMAvgFailAction => ({
 
 // SAGA
 //This is where the get request gets made, by calling yield call(getCountMA)
-export function* handleFetchMACount(): Iterator<any> {
+export function* handleFetchMACount({ id }: GetCountMAvgAction): Iterator<any> {
   try {
-    const data = yield call(getCountMA);
+    const data = yield call(getCountMA, id);
     if (data !== undefined) {
       yield put(getCountMAvgSuccess(data));
     }

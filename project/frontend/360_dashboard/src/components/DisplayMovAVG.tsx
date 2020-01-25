@@ -1,32 +1,25 @@
 import React from 'react';
-//import { STATE as countState, getCount, GetCountAction, } from '../contexts/countTime';
-
 import { RootState } from '../reducers/rootReducer';
 import { connect } from 'react-redux';
-
 import { getCountMAvg, GetCountMAvgAction } from '../contexts/countTime';
 import { STATE as countState } from '../contexts/countTime';
 
 interface StateProps {
   countAvg: countState;
   intersection_id: string;
-
-}
-interface SomeProps{
- // intersection_id: string;
 }
 interface DispatchProps {
-  getCountMAvg(): GetCountMAvgAction;
+  getCountMAvg(id: string): GetCountMAvgAction;
 }
 class DisplayCount extends React.Component<StateProps & DispatchProps> {
   public componentDidMount(): void {
-    const { getCountMAvg } = this.props;
-    getCountMAvg(); //this is what calls the GET request
+    const { getCountMAvg, intersection_id } = this.props;
+    getCountMAvg(intersection_id); //this is what calls the GET request
   }
   
 
   public render(): JSX.Element {
-
+    const { intersection_id } = this.props;
     return(
       <div style={{margin: '50vh', color: 'pink'}}>
       

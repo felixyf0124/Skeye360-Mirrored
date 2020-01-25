@@ -9,17 +9,13 @@ export interface Response {
 
 const APIDomain = REACT_APP_API_URL;
 
-//TEST:
-//Return all count responses with count_type as moving average
-export const getCountMA = async (): Promise<Response> => {
-    const url = `//${APIDomain}/api/count/?count_type=MoAvg`;
+export const getCountMA = async (intersection_id: string): Promise<Response> => {
+    const url = `//${APIDomain}/api/count/?intersection_id=${intersection_id}&count_type=arima`;
     const settings = {
         method: 'GET',
         headers: {},
     };
     const response = await fetch(url, settings);
-    const data = (await response.json()) as Response; 
-    console.log(data);
-    console.log('test frm data')
+    const data = (await response.json()) as Response;
     return data;
 }
