@@ -16,7 +16,6 @@ class DisplayCount extends React.Component<StateProps & DispatchProps> {
     const { getCountMAvg, intersection_id } = this.props;
     getCountMAvg(intersection_id); //this is what calls the GET request
   }
-  
 
   public render(): JSX.Element {
     const { intersection_id } = this.props;
@@ -57,7 +56,17 @@ function getDateLastYear(){
 
   return lastYearDate; 
 }
-
+//Function that retrieves time strings and associates them with an hour of the day
+function mapHours(times: string[]){
+  const newX: any[] = [];
+  var currentTime;
+  var timeToInt;
+  times.map((time) => {
+    currentTime = time.substring(11,12);
+    timeToInt = parseInt(currentTime);
+    newX.push(time)
+  });
+}
 function mapIntoNS(counts: countState[]){
   const x: any[] = [];
   const y: number[] = [];
@@ -70,5 +79,35 @@ function mapIntoNS(counts: countState[]){
   return [x,y];
 }
 
+//Function that sorts count responses based on time, interval of 24 hours
+//Sorting from smallest to largest
+//Sort from key-value pairs
+//https://stackoverflow.com/questions/14208651/javascript-sort-key-value-pair-object-based-on-value
+//https://stackoverflow.com/questions/5467129/sort-javascript-object-by-key
+function mapIntoKeyPairValues(counts: countState[]){
+  var keyValuePairArray: any[] = [];
+  var keyTimes: any[] = [];
+  var sortedPair: any[] = [];
 
-export default connect(mapStateToProps, mapDispatchToProps)(DisplayCount);;
+  //iterate through the count responses to create an array with key-pair values that are time and counts respectively
+  //Obtain the specific hour in the time and use it as the key
+  counts.map((count) =>{
+    keyValuePairArray.push({
+      key: parseInt(count.time.substring(11,12)),
+      value: count.count,
+    });
+    //push the keys in another array for sorting purposes
+    keyTimes.push(parseInt(count.time.substring(11,12)));
+  });
+
+  //sort the keys
+  keyTimes.sort();
+
+  //sort the key-value array based on the sorted keys array
+  keyTimes.map((keyTime) => {
+    sortedPair.push(keyValuePairArray[keyTime]);
+  });
+  return sortedPair;
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DisplayCount);
