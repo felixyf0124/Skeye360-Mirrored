@@ -162,7 +162,8 @@ export default class TrafficLightManager {
 
     initialUpdate(): boolean {
       const total = this.getTimePeriod();
-      this.deltaT = (Date.now() - this.startTime) / 1000;
+      this.deltaT = (Date.now() - this.startTime + this.timeOffset) 
+        / 1000;
       this.deltaT %= total;
       let addUp = 0;
       let isUpdating = false;

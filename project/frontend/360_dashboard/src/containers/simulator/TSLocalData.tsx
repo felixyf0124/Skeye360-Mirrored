@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import Vec2 from './simulator_management/vec2';
 import LanePointer from './simulator_management/LanePointer';
+import { stringify } from 'querystring';
 
 
 /**
@@ -205,15 +206,15 @@ export function dirAdapter(from: string, to: string): LanePointer {
  * @param url 
  * @param endP 
  */
-export function retrieve(url:string,endP:string):string{
+export async function retrieve(url:string,endP:string):Promise<any>{
  
-  let response = ``;
+  const result = await
   fetch(`http://${url}/${endP}/`)
   .then(response=>response.text())
-  .then(result => console.log(result))
+  // .then(result => console.log(result))
   .catch(error => console.log('error', error));
-  
-  return response;
+  console.log(result);
+  return result;
 
 }
 
@@ -221,7 +222,12 @@ export function retrieve(url:string,endP:string):string{
  * specific retrieve function for tl timing of pedestrian case
  * @param url 
  */
-export function tlPedestrianData(url:string):any{
-  const data = retrieve(url,`lights`);
-  return data;
+export async function tlPedestrianData(url:string):Promise<any>{
+  try{
+    const data = await fetch(`http://${url}/lights/`)
+    return await data.json();
+  }catch(e){console.log('error', e);}
+    // console.log(data);
+  
+  
 }

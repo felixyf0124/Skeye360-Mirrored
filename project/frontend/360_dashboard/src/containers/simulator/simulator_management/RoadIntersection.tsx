@@ -156,6 +156,14 @@ export default class RoadIntersection {
       this.TLManager.setTrafficLightOverlapOffset(id, overlapOffset);
     }
 
+    setTLCounterOffset(offset:number){
+      this.TLManager.setTimeOffset(offset);
+    }
+
+    getTLCounterOffset():number{
+      return this.TLManager.getTimeOffset();
+    }
+
     /**
      * old bug function
      * has been replaced by addNewVehicleV2
