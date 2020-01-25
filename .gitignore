@@ -16,3 +16,7 @@ project/backend/backend_django/camera/yolov3.weights
 project/backend/backend_django/camera/recognition/test/__pycache__/*
 project/backend/backend_django/camera/recognition/pyimagesearch/__pycache__/*
 project/backend/backend_django/camera/camera/__pycache__/*
+project/backend/backend_django/camera/recognition/deep_sort/__pycache__/*
+project/backend/backend_django/camera/recognition/migrations/__pycache__/*
+project/backend/backend_django/darknet/__pycache__/*
+project/backend/backend_django/darknet/cfg/coco.data

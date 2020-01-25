@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'recognition',
     'corsheaders',
+    'real_time',
 ]
 
 MIDDLEWARE = [
