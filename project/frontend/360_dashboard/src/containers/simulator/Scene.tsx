@@ -101,6 +101,8 @@ class Scene extends React.Component<StateProps & DispatchProps> {
 
   labelGroup: Array<Btn>;
 
+  tlCaseBtnGroup: Array<Btn>;
+
   btnShowCP: Btn;
 
   btnStop: Btn;
@@ -131,6 +133,8 @@ class Scene extends React.Component<StateProps & DispatchProps> {
   objRawData: string;
 
   trafficData: Array<Array<any>>;
+
+  tlCaseId:number;
 
   caseId: number;
 
@@ -311,6 +315,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     this.btnGroup = new Array<{text: PIXI.Text; btn: Btn}>();
     this.toggleGroup = new Array<{name: string;state: boolean}>();
     this.labelGroup = new Array<Btn>();
+    this.tlCaseBtnGroup = new Array<Btn>();
 
     // toggle group
     const videoFeed = { name: 'enable video feed', state: false };
@@ -340,6 +345,15 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       }
     }
 
+
+    //tl case
+    this.tlCaseId = 3;
+    const tlCaseBtn1 = new Btn(60, 26, 'Real-time', 0x51BCD8,1);
+    const tlCaseBtn2 = new Btn(60, 26, 'Arima', 0x51BCD8,1);
+    const tlCaseBtn3 = new Btn(60, 26, 'Pedestrian', 0x51BCD8,1);
+    this.tlCaseBtnGroup.push(tlCaseBtn1);
+    this.tlCaseBtnGroup.push(tlCaseBtn2);
+    this.tlCaseBtnGroup.push(tlCaseBtn3);
 
     this.laneAreaContainer.x = -this.coordinateOffset.x;
     this.laneAreaContainer.y = -this.coordinateOffset.y;
@@ -718,6 +732,9 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     // menu
     this.updateMenuState();
     this.drawMenu();
+    //tl case
+    this.updateTLCase();
+
     const camera_url= this.props.camera_url;
     tsData.tlPedestrianData(camera_url);
 
@@ -1070,7 +1087,17 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       this.btnGroup[i].text.y = 20 + i * 26 + 6;
     }
 
+    //tlcase btns
+    const numOfTL = this.roadIntersection.getTrafficLightQueue().length;
+    for(let i=0;i<this.tlCaseBtnGroup.length;i+=1){
+      this.tlCaseBtnGroup[i].setBackground(color, 0.1, 1, color);
+      this.tlCaseBtnGroup[i].setTextStyle(textStyle3);
+      this.tlCaseBtnGroup[i].x = (this.controlPanelG.width 
+        - this.tlCaseBtnGroup[i].width) * 0.5;
+      this.tlCaseBtnGroup[i].y = numOfTL * 26 + 50 + i* 27;
+    }
 
+    // menu btns
     for (let i = 0; i < this.menuBtns.length; i += 1) {
       this.menuBtns[i].setTextStyle(textStyle);
       this.menuBtns[i].setDemansion(this.menuBtns[i].text.width + 12, 26);
@@ -1144,6 +1171,12 @@ class Scene extends React.Component<StateProps & DispatchProps> {
         if (this.btnStop.parent == null) {
           this.controlPanelContainer.addChild(this.btnStop);
         }
+        for(let i=0;i<this.tlCaseBtnGroup.length;i+=1){
+          if (this.tlCaseBtnGroup[i].parent == null) {
+            this.controlPanelContainer.addChild(this.tlCaseBtnGroup[i]);
+          }
+        }
+
         break;
       }
       case 2:
@@ -1202,6 +1235,25 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       if (this.menuBtns[i].isPressed()) {
         this.menuPage = i + 1;
       }
+    }
+  }
+
+  updateTLCase(){
+    for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
+      if (this.tlCaseBtnGroup[i].isPressed()) {
+        this.tlCaseId = i + 1;
+      }
+    }
+    // console.log(this.tlCaseId);
+
+    const color = 0x51BCD8;
+    for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
+      if (this.tlCaseId === i + 1) {
+        this.tlCaseBtnGroup[i].setBoarder(2, color);
+      }else{
+        this.tlCaseBtnGroup[i].setBoarder(0, color);
+      }
+
     }
   }
 
