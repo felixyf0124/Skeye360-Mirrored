@@ -19,6 +19,7 @@ import ndata1 from './traffic_normal_case.csv';
 import edata1 from './traffic_edge_case.csv';
 import { RootState } from '../../reducers/rootReducer';
 import { logClick } from '../../contexts/LogClicks';
+import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
 
 // import 'pixi-text-input.js';
 
@@ -141,6 +142,12 @@ class Scene extends React.Component<StateProps & DispatchProps> {
   caseData: Array<any>;
 
   dataReady: Array<{imported: boolean;sorted: boolean}>;
+
+  //pedestrian ai data set for tl
+  pAiDataTL:{current:any,last:any};
+
+  forceHelper: {startT:number,delay: number, 
+    fPeriod:number, isForced:boolean};
 
   constructor(props: any) {
     super(props);
@@ -423,6 +430,9 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     this.caseData = new Array<any>();
     // const test = tsData.sortDataByTime(dataObj1);
     // console.log(test.length);
+
+    this.forceHelper = {startT:0,delay: 5, fPeriod:10, isForced:false};
+    this.pAiDataTL = {current:undefined,last:undefined};
   }
 
   /**
@@ -461,6 +471,27 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     // console.log(`Number of cars : ${numberCars}`);
     this.numberOfCars = numberCars;
     return numberCars;
+  }
+
+  /**
+   * retrieve pedestrian case tl data
+   */
+  async getPedestrianTLInfo(): Promise<void>{
+    const pUrl = this.props.camera_url;
+    const obj = await tsData.tlPedestrianData(pUrl);
+    
+    if(obj!==undefined&& obj['east-west']!==undefined){
+      // console.log(obj['east-west']);
+      this.pAiDataTL.current = {
+        ew:parseFloat(obj['east-west']),
+        ns:parseFloat(obj['north-south'])
+      };
+      // console.log(this.pAiDataTL.current);
+    }
+   
+       
+    
+    // this.pAiDataTL.last = this.pAiDataTL.current;
   }
 
   /**
@@ -735,9 +766,11 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     //tl case
     this.updateTLCase();
 
-    const camera_url= this.props.camera_url;
-    tsData.tlPedestrianData(camera_url);
 
+    this.getPedestrianTLInfo();
+    // this.pedestrianCaseTLUpdate();
+    tlUpdateHelper.updateCasePedestrian(this.pAiDataTL, this.roadIntersection,this.forceHelper);
+    
     this.roadIntersection.updateVehiclePosV2();
     // const interSec = 0;
 
@@ -823,6 +856,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       this.fps = this.fpsCounter;
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
+
       // this.getNumberOfCars();
     }
 
@@ -834,6 +868,24 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
+
+    if(this.tlCaseId === 3){
+      const pCD = Math.round((Date.now() - this.forceHelper.startT)/1000);
+      const pCDText = new PIXI.Text(`Pedestrian Time: N/A`, this.textStyle);
+      if(this.forceHelper.isForced === true){
+        if( pCD <= this.forceHelper.delay){
+          pCDText.text = `Pedestrian Time: -${this.forceHelper.delay - pCD}`;
+        }else if(pCD <= this.forceHelper.delay + this.forceHelper.fPeriod) {
+          // const roundedPCD = Math.round()
+          pCDText.text = `Pedestrian Time: ${this.forceHelper.fPeriod 
+            + this.forceHelper.delay - pCD}`;
+        }
+      }
+      pCDText.x =this.windowW / 2 - 160;
+      pCDText.y = -this.windowH / 2 + 40;
+      this.displayPlaneContainer.addChild(pCDText);
+
+    }
 
     const url = window.location.href;
     if (!url.includes('/camview/')) {

@@ -5,13 +5,10 @@ import TL from './TrafficLight';
 export async function updateCasePedestrian(TStampData:{current:{ew:number,ns:number}, last:any},
     intersection:IntSect, 
     forceHelper:{startT:number,delay: number, fPeriod:number, isForced:boolean}){
-        // console.log(TStampData.current.ew+"|"+TStampData.current.ns);
-        // console.log(TStampData.current.ew);
+
     if(TStampData.current!== undefined &&  
         TStampData.current.ew !==undefined &&!isNaN(TStampData.current.ew)){
         
-        console.log(forceHelper.startT);
-                console.log(forceHelper.isForced);
         if(TStampData.current !== TStampData.last
             ){
         // console.log(TStampData.current.ew+"|"+TStampData.current.ns);
@@ -22,8 +19,7 @@ export async function updateCasePedestrian(TStampData:{current:{ew:number,ns:num
                 
                 forceHelper.startT = Date.now();
                 forceHelper.isForced = true;
-                console.log(forceHelper.startT);
-                  console.log(forceHelper.isForced);
+                // console.log(forceHelper.startT);
                 // console.log('Pedestrians are waiting, let them go first.');
             }
             
