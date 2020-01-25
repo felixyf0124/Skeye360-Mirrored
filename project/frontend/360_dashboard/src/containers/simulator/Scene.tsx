@@ -135,7 +135,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
 
   trafficData: Array<Array<any>>;
 
-  tlCaseId:number;
+  tlCaseId: number;
 
   caseId: number;
 
@@ -143,11 +143,11 @@ class Scene extends React.Component<StateProps & DispatchProps> {
 
   dataReady: Array<{imported: boolean;sorted: boolean}>;
 
-  //pedestrian ai data set for tl
-  pAiDataTL:{current:any,last:any};
+  // pedestrian ai data set for tl
+  pAiDataTL: {current: any;last: any};
 
-  forceHelper: {startT:number,delay: number, 
-    fPeriod:number, isForced:boolean};
+  forceHelper: {startT: number;delay: number;
+    fPeriod: number; isForced: boolean;};
 
   constructor(props: any) {
     super(props);
@@ -353,11 +353,11 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     }
 
 
-    //tl case
+    // tl case
     this.tlCaseId = 3;
-    const tlCaseBtn1 = new Btn(60, 26, 'Real-time', 0x51BCD8,1);
-    const tlCaseBtn2 = new Btn(60, 26, 'Arima', 0x51BCD8,1);
-    const tlCaseBtn3 = new Btn(60, 26, 'Pedestrian', 0x51BCD8,1);
+    const tlCaseBtn1 = new Btn(60, 26, 'Real-time', 0x51BCD8, 1);
+    const tlCaseBtn2 = new Btn(60, 26, 'Arima', 0x51BCD8, 1);
+    const tlCaseBtn3 = new Btn(60, 26, 'Pedestrian', 0x51BCD8, 1);
     this.tlCaseBtnGroup.push(tlCaseBtn1);
     this.tlCaseBtnGroup.push(tlCaseBtn2);
     this.tlCaseBtnGroup.push(tlCaseBtn3);
@@ -431,8 +431,10 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     // const test = tsData.sortDataByTime(dataObj1);
     // console.log(test.length);
 
-    this.forceHelper = {startT:0,delay: 5, fPeriod:10, isForced:false};
-    this.pAiDataTL = {current:undefined,last:undefined};
+    this.forceHelper = {
+      startT: 0, delay: 5, fPeriod: 10, isForced: false,
+    };
+    this.pAiDataTL = { current: undefined, last: undefined };
   }
 
   /**
@@ -476,21 +478,22 @@ class Scene extends React.Component<StateProps & DispatchProps> {
   /**
    * retrieve pedestrian case tl data
    */
-  async getPedestrianTLInfo(): Promise<void>{
-    const pUrl = this.props.camera_url;
-    const obj = await tsData.tlPedestrianData(pUrl);
-    
-    if(obj!==undefined&& obj['east-west']!==undefined){
+  async getPedestrianTLInfo(): Promise<void> {
+    const {
+      camera_url,
+    } = this.props;
+    const obj = await tsData.tlPedestrianData(camera_url);
+
+    if (obj !== undefined && obj['east-west'] !== undefined) {
       // console.log(obj['east-west']);
       this.pAiDataTL.current = {
-        ew:parseFloat(obj['east-west']),
-        ns:parseFloat(obj['north-south'])
+        ew: parseFloat(obj['east-west']),
+        ns: parseFloat(obj['north-south']),
       };
       // console.log(this.pAiDataTL.current);
     }
-   
-       
-    
+
+
     // this.pAiDataTL.last = this.pAiDataTL.current;
   }
 
@@ -763,14 +766,14 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     // menu
     this.updateMenuState();
     this.drawMenu();
-    //tl case
+    // tl case
     this.updateTLCase();
 
 
     this.getPedestrianTLInfo();
     // this.pedestrianCaseTLUpdate();
-    tlUpdateHelper.updateCasePedestrian(this.pAiDataTL, this.roadIntersection,this.forceHelper);
-    
+    tlUpdateHelper.updateCasePedestrian(this.pAiDataTL, this.roadIntersection, this.forceHelper);
+
     this.roadIntersection.updateVehiclePosV2();
     // const interSec = 0;
 
@@ -869,22 +872,21 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
 
-    if(this.tlCaseId === 3){
-      const pCD = Math.round((Date.now() - this.forceHelper.startT)/1000);
-      const pCDText = new PIXI.Text(`Pedestrian Time: N/A`, this.textStyle);
-      if(this.forceHelper.isForced === true){
-        if( pCD <= this.forceHelper.delay){
+    if (this.tlCaseId === 3) {
+      const pCD = Math.round((Date.now() - this.forceHelper.startT) / 1000);
+      const pCDText = new PIXI.Text('Pedestrian Time: N/A', this.textStyle);
+      if (this.forceHelper.isForced === true) {
+        if (pCD <= this.forceHelper.delay) {
           pCDText.text = `Pedestrian Time: -${this.forceHelper.delay - pCD}`;
-        }else if(pCD <= this.forceHelper.delay + this.forceHelper.fPeriod) {
+        } else if (pCD <= this.forceHelper.delay + this.forceHelper.fPeriod) {
           // const roundedPCD = Math.round()
-          pCDText.text = `Pedestrian Time: ${this.forceHelper.fPeriod 
+          pCDText.text = `Pedestrian Time: ${this.forceHelper.fPeriod
             + this.forceHelper.delay - pCD}`;
         }
       }
-      pCDText.x =this.windowW / 2 - 160;
+      pCDText.x = this.windowW / 2 - 160;
       pCDText.y = -this.windowH / 2 + 40;
       this.displayPlaneContainer.addChild(pCDText);
-
     }
 
     const url = window.location.href;
@@ -1139,14 +1141,14 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       this.btnGroup[i].text.y = 20 + i * 26 + 6;
     }
 
-    //tlcase btns
+    // tlcase btns
     const numOfTL = this.roadIntersection.getTrafficLightQueue().length;
-    for(let i=0;i<this.tlCaseBtnGroup.length;i+=1){
+    for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
       this.tlCaseBtnGroup[i].setBackground(color, 0.1, 1, color);
       this.tlCaseBtnGroup[i].setTextStyle(textStyle3);
-      this.tlCaseBtnGroup[i].x = (this.controlPanelG.width 
+      this.tlCaseBtnGroup[i].x = (this.controlPanelG.width
         - this.tlCaseBtnGroup[i].width) * 0.5;
-      this.tlCaseBtnGroup[i].y = numOfTL * 26 + 50 + i* 27;
+      this.tlCaseBtnGroup[i].y = numOfTL * 26 + 50 + i * 27;
     }
 
     // menu btns
@@ -1223,7 +1225,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
         if (this.btnStop.parent == null) {
           this.controlPanelContainer.addChild(this.btnStop);
         }
-        for(let i=0;i<this.tlCaseBtnGroup.length;i+=1){
+        for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
           if (this.tlCaseBtnGroup[i].parent == null) {
             this.controlPanelContainer.addChild(this.tlCaseBtnGroup[i]);
           }
@@ -1290,7 +1292,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     }
   }
 
-  updateTLCase(){
+  updateTLCase() {
     for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
       if (this.tlCaseBtnGroup[i].isPressed()) {
         this.tlCaseId = i + 1;
@@ -1302,10 +1304,9 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
       if (this.tlCaseId === i + 1) {
         this.tlCaseBtnGroup[i].setBoarder(2, color);
-      }else{
+      } else {
         this.tlCaseBtnGroup[i].setBoarder(0, color);
       }
-
     }
   }
 

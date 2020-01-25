@@ -156,11 +156,11 @@ export default class RoadIntersection {
       this.TLManager.setTrafficLightOverlapOffset(id, overlapOffset);
     }
 
-    setTLCounterOffset(offset:number){
+    setTLCounterOffset(offset: number) {
       this.TLManager.setTimeOffset(offset);
     }
 
-    getTLCounterOffset():number{
+    getTLCounterOffset(): number {
       return this.TLManager.getTimeOffset();
     }
 
