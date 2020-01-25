@@ -56,6 +56,7 @@ class test_writeToDatabase(unittest.TestCase):
             if(result == (self.direction + " | " + 
             str(self.predictions[index]) + " | " + 
             self.time[index] + " | " + 
+            str(self.intersectionID) + " | " +
             self.modelType)):
                 counter += 1
             index += 1

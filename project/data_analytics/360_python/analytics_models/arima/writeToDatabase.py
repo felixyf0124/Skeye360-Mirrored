@@ -21,6 +21,7 @@ class writeToDatabase:
 
         listInsertedID = list()
         # For loop to insert into MongoDB
+        #intersection_id is named intersection_id_id because it is a foreign key, which django forced to be named that way
         for index in range(len(predictions)):
             insertedID = collection.insert_one({"id": lastId + index, "count_direction":direction, "count":predictions[index], "time":time[index], "intersection_id_id":intersectionID, "count_type":modelType}).inserted_id
             listInsertedID.append(insertedID)
@@ -44,6 +45,7 @@ class writeToDatabase:
             resultCount = str(row['count'])
             resultTime = str(row['time'])
             resultType = str(row['count_type'])
+            #intersection_id is named intersection_id_id because it is a foreign key, which django forced to be named that way
             resultIntersectionID = str(row['intersection_id_id'])
             # Prepare the results and print it
             result = resultDirection + " | " + resultCount + " | " + resultTime + " | " + resultIntersectionID + " | " + resultType 
