@@ -28,11 +28,15 @@ export const GET_COUNT_MA_FAIL = 'GET_COUNT_MA_FAIL';
 export interface GetCountMAvgAction extends Action {
   type: string,
   id: string,
+  dateLastYear: string,
+  dateTomorrowLastYear: string,
 }
 
-export const getCountMAvg = (id: string): GetCountMAvgAction => ({
+export const getCountMAvg = (id: string, dateLastYear: string, dateTomorrowLastYear: string): GetCountMAvgAction => ({
   type: GET_COUNT_MA,
   id,
+  dateLastYear,
+  dateTomorrowLastYear
 });
 
 export interface GetCountMAvgSuccessAction {
@@ -54,9 +58,9 @@ export const getCountMAvgFail = (): GetCountMAvgFailAction => ({
 
 // SAGA
 //This is where the get request gets made, by calling yield call(getCountMA)
-export function* handleFetchMACount({ id }: GetCountMAvgAction): Iterator<any> {
+export function* handleFetchMACount({ id, dateLastYear, dateTomorrowLastYear }: GetCountMAvgAction): Iterator<any> {
   try {
-    const data = yield call(getCountMA, id);
+    const data = yield call(getCountMA, id, dateLastYear, dateTomorrowLastYear);
     if (data !== undefined) {
       yield put(getCountMAvgSuccess(data));
     }

@@ -7,55 +7,76 @@ import { STATE as countState } from '../contexts/countTime';
 interface StateProps {
   countAvg: countState;
   intersection_id: string;
+  dateLastYear: string;
+  dateTomorrowLastYear: string;
 }
 interface DispatchProps {
-  getCountMAvg(id: string): GetCountMAvgAction;
+  getCountMAvg(id: string, dateLastYear: string, dateTomorrowLastYear: string): GetCountMAvgAction;
 }
-class DisplayCount extends React.Component<StateProps & DispatchProps> {
-  public componentDidMount(): void {
-    const { getCountMAvg, intersection_id } = this.props;
-    getCountMAvg(intersection_id); //this is what calls the GET request
-  }
 
+const datesLastYear = getDateLastYear();
+const date1 = datesLastYear[0];
+const date2 = datesLastYear[1];
+
+class DisplayCount extends React.Component<StateProps & DispatchProps> {
+  
+  public componentDidMount(): void {  
+    
+    const { getCountMAvg, intersection_id } = this.props;
+    getCountMAvg(intersection_id, date1, date2); //this is what calls the GET request
+  }
   public render(): JSX.Element {
-    const { intersection_id } = this.props;
+    var lastYr = getDateLastYear();
+    
     return(
       <div style={{margin: '50vh', color: 'pink'}}>
-      
       </div>
     )
   }
 }
+
+
 const mapStateToProps = (state: RootState): StateProps => ({
   countAvg: state.countTime,
   intersection_id: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
-  )
+  ),
+  dateLastYear: date1,
+  dateTomorrowLastYear: date2,
+  
 });
 
 const mapDispatchToProps: DispatchProps = {
   getCountMAvg,
 };
 
-//Function that generates the exact date last year to retrieve based on today's date
-//This gets saved into a STATE that will be passed to the GET Request.
+//Function that generates the exact date last year to retrieve based on today's date as well as the day after it
+//This gets saved into a STATE that will be passed to the GET Request to retrieve all of the count in an intersection of a particular date.
 function getDateLastYear(){
-  //Create a new date, today
-  var today = new Date();
-  //Convert to ISO
+  //create a new date object based on today and convert to ISO string
+  const today = new Date();
   const todayToISO = today.toISOString();
-  //Retrieve the current year
-  var thisYear = todayToISO.substring(0,3);
-  var thisYearInt = parseInt(thisYear);
-  const lastYear = thisYearInt - 1;
-  const lastYearString = lastYear.toString();
 
-  //Retrieve the date (month and day)
-  var monthDay = todayToISO.substring(4,9);
-  var lastYearDate = lastYearString + monthDay; 
+  //Retrieve the year, month, day
+  const thisYear = parseInt(todayToISO.substring(0,4));
+  const thisMonth = parseInt(todayToISO.substring(5,7));
+  const thisDate = parseInt(todayToISO.substring(8,10));
 
-  return lastYearDate; 
+  //Create a date object last year based on today and create one for the next day
+  const lastYearDate = new Date(thisYear-1,thisMonth-1,thisDate);
+  const lastYearNextDay = new Date(thisYear-1,thisMonth-1,thisDate+1);
+
+  //Convert the dates to ISO
+  const lastYearToISO = lastYearDate.toISOString();
+  const lastYearNextDayToISO = lastYearNextDay.toISOString();
+
+  //Retrieve the date string in the YYYY/MM/DD format 
+  const getLastYearDateFormat = lastYearToISO.substring(0,10);
+  const getLastYearNextDayFormat = lastYearNextDayToISO.substring(0,10);
+
+  return [getLastYearDateFormat, getLastYearNextDayFormat];
 }
+
 //Function that retrieves time strings and associates them with an hour of the day
 function mapHours(times: string[]){
   const newX: any[] = [];
