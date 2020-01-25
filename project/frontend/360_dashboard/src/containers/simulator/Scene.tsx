@@ -718,6 +718,8 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     // menu
     this.updateMenuState();
     this.drawMenu();
+    const camera_url= this.props.camera_url;
+    tsData.tlPedestrianData(camera_url);
 
     this.roadIntersection.updateVehiclePosV2();
     // const interSec = 0;

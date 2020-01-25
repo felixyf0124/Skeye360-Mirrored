@@ -198,3 +198,30 @@ export function dirAdapter(from: string, to: string): LanePointer {
 
   return lPointer;
 }
+
+
+/**
+ * R2 new url retrieve function
+ * @param url 
+ * @param endP 
+ */
+export function retrieve(url:string,endP:string):string{
+ 
+  let response = ``;
+  fetch(`http://${url}/${endP}/`)
+  .then(response=>response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+  
+  return response;
+
+}
+
+/**
+ * specific retrieve function for tl timing of pedestrian case
+ * @param url 
+ */
+export function tlPedestrianData(url:string):any{
+  const data = retrieve(url,`lights`);
+  return data;
+}
