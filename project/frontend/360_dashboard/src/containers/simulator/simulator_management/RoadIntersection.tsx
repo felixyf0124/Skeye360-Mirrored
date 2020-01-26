@@ -85,12 +85,33 @@ export default class RoadIntersection {
       return this.TLManager.getTrafficLightQueue();
     }
 
+    getTrafficLight(id:number):TrafficLight{
+      return this.TLManager.getTrafficLight(id);
+    }
+
     getTrafficLightState(id: number): string {
       return this.TLManager.getTrafficLightState(id);
     }
 
     getTrafficLightCD(id: number): number {
       return Math.round(this.TLManager.getTrafficLightCD(id));
+    }
+
+    getTrafficLightSetting(id:number)
+    : {green:number,yellow:number}{
+      const tl = this.TLManager.getTrafficLight(id);
+      return tl.getCountDownSetting();
+    }
+
+    getTrafficLightIndex(id:number):number{
+      return this.TLManager.getTrafficLightIndex(id);
+    }
+
+     /**
+     * get traffic light counter offset
+     */
+    getTLCounterOffset(): number {
+      return this.TLManager.getTimeOffset();
     }
 
     getLaneState(sectionId: number, laneId: number, isLaneIn?: boolean): string {
@@ -160,9 +181,15 @@ export default class RoadIntersection {
       this.TLManager.setTimeOffset(offset);
     }
 
-    getTLCounterOffset(): number {
-      return this.TLManager.getTimeOffset();
+    /**
+     * set tl total time in second
+     * @param id 
+     * @param totalTime = 5 + green
+     */
+    setTrafficLightTime(id:number,totalTime:number):void{
+      this.TLManager.setTime(id,totalTime);
     }
+   
 
     /**
      * old bug function

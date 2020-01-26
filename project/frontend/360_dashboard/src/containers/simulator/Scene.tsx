@@ -1043,7 +1043,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       fontWeight: '600',
     };
 
-    const tHeader = new PIXI.Text('TL #   State   CD   t(Y+G)', textStyle);
+    const tHeader = new PIXI.Text('#|id   State   CD   t(Y+G)', textStyle);
 
     this.tlDisplayPanelContainer.addChild(tHeader);
 
@@ -1053,7 +1053,8 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       const index = (i + 1);
       textStyle.fill = '0xFFFFFF';
       // index
-      const tDataId = new PIXI.Text(index.toString(), textStyle);
+      const tDataId = new PIXI.Text(index.toString() 
+      + "|"+tlQueue[i].getId(), textStyle);
       tDataId.x = 8;
       tDataId.y = rowOffset * (i + 1);
       this.tlDisplayPanelContainer.addChild(tDataId);
