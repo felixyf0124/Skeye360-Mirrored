@@ -354,7 +354,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
 
 
     // tl case
-    this.tlCaseId = 3;
+    this.tlCaseId = 1;
     const tlCaseBtn1 = new Btn(60, 26, 'Real-time', 0x51BCD8, 1);
     const tlCaseBtn2 = new Btn(60, 26, 'Arima', 0x51BCD8, 1);
     const tlCaseBtn3 = new Btn(60, 26, 'Pedestrian', 0x51BCD8, 1);
@@ -495,6 +495,32 @@ class Scene extends React.Component<StateProps & DispatchProps> {
 
 
     // this.pAiDataTL.last = this.pAiDataTL.current;
+  }
+
+
+  async getRealTimeTLUpdate():Promise<void>{
+    const {camera_url} = this.props
+    const obj = await tsData.tlRealTimeData(camera_url);
+    if (obj !== undefined && obj[`east-west`] !== undefined) {
+      const data0 = {
+        id:0,
+        t:obj[`east-west`],
+      }
+      const data1 = {
+        id:1,
+        t:obj[`left`],
+      }
+      const data3 = {
+        id:3,
+        t:obj[`north-south`],
+      }
+      const dataPack = new Array<any>();
+      dataPack.push(data0);
+      dataPack.push(data1);
+      dataPack.push(data3);
+
+      tlUpdateHelper.updateCaseRealTime(dataPack,this.roadIntersection);
+    }
   }
 
   /**
@@ -769,11 +795,8 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     // tl case
     this.updateTLCase();
 
-
-    this.getPedestrianTLInfo();
-    // this.pedestrianCaseTLUpdate();
-    tlUpdateHelper.updateCasePedestrian(this.pAiDataTL, this.roadIntersection, this.forceHelper);
-
+    
+    
     this.roadIntersection.updateVehiclePosV2();
     // const interSec = 0;
 
@@ -860,7 +883,17 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
 
-      // this.getNumberOfCars();
+      //real-time case
+      if(this.tlCaseId ===1){
+        this.getRealTimeTLUpdate();
+      }
+
+      // pedestrian case
+      if(this.tlCaseId === 3) {
+        this.getPedestrianTLInfo();
+        // this.pedestrianCaseTLUpdate();
+        tlUpdateHelper.updateCasePedestrian(this.pAiDataTL, this.roadIntersection, this.forceHelper);
+      };
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);

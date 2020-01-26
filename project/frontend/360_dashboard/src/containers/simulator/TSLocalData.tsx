@@ -210,7 +210,7 @@ export async function retrieve(url: string, endP: string): Promise<any> {
   const result = await
   fetch(`http://${url}/${endP}/`)
     .then((response) => response.json())
-  // .then(result => console.log(result))
+    // .then(result => console.log(result))
     .catch((error) => console.log('error', error));
   // console.log(result);
   return result;
@@ -223,5 +223,14 @@ export async function retrieve(url: string, endP: string): Promise<any> {
 export async function tlPedestrianData(url: string): Promise<any> {
   const data = await retrieve(url, 'lights');
 
+  return data;
+}
+
+/**
+ * specific retrieve function for tl timing of real-time case
+ * @param url 
+ */
+export async function tlRealTimeData(url: string): Promise<any>{
+  const data = await retrieve(url, `timers`);
   return data;
 }

@@ -1,4 +1,5 @@
 import IntSect from './RoadIntersection';
+import RoadIntersection from './RoadIntersection';
 
 export async function updateCasePedestrian(TStampData: {
     current: {ew: number; ns: number}; last: {ew: number; ns: number};},
@@ -65,6 +66,21 @@ forceHelper: {startT: number;delay: number; fPeriod: number;
 }
 
 
-export function updateCaseRealTime() {
-  //
+export function updateCaseRealTime(data:any, intersection:RoadIntersection) {
+    console.log(data);
+    // const doUpdate = false;
+    // const tlQue = intersection.getTrafficLightQueue();
+    // let noRedId = -1;
+    // find which tl now is not red
+    // for(let i=0;i<tlQue.length;i+=1){
+    //     const id = tlQue[i].getId();
+    //     if(id !==2 && id !== 4){
+    //         if(tlQue[i].getStatus() === "green" 
+    //         ||  tlQue[i].getStatus() === "yellow") {
+    //             noRedId = id;
+    //             break;
+    //         }
+    //     }
+        
+    // }
 }
