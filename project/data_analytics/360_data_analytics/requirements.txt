@@ -1,0 +1,12 @@
+pandas
+numpy
+# Link with mongoDB
+pymongo
+# For data generator to generate normal distribution data
+statsmodels
+# plot data
+matplotlib
+# mock mongoDB
+mongomock
+# unit test
+unittest
