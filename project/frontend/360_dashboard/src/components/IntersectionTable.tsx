@@ -18,6 +18,7 @@ import styled from 'styled-components';
 import { STATE as districtState } from '../contexts/districts';
 import DeleteIntersectionButton from './DeleteIntersectionButton';
 import TrafficIntensity from './TrafficIntensity';
+import CameraConnectionStatus from './CameraConnectionStatus';
 import { Response as cameraResponse } from '../api/camera';
 
 // Generic flexboxes styling
@@ -76,6 +77,7 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
               <TableCell>Streetview</TableCell>
               <TableCell>Cameras</TableCell>
               <TableCell>Traffic Intensity</TableCell>
+              <TableCell>Camera Status</TableCell>
               <TableCell>Edit</TableCell>
               <TableCell>Delete</TableCell>
             </TableRow>
@@ -84,6 +86,7 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
             {districts.districts[0] === undefined ? (
               <TableRow>
                 <TableCell component="th" scope="row" />
+                <TableCell />
                 <TableCell />
                 <TableCell />
                 <TableCell />
@@ -113,9 +116,14 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                   </TableCell>
                   <TableCell>
                     {intersection.cameras.map((camera: cameraResponse) => (
-                      <Link key={camera.id} to={`/camview/${camera.id}`}>
+                      <a key={camera.id} href={`http://${camera.camera_url}/los/`}>
                         <TrafficIntensity camera_url={camera.camera_url} />
-                      </Link>
+                      </a>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {intersection.cameras.map((camera: cameraResponse) => (
+                      <CameraConnectionStatus key={camera.id} camera_url={camera.camera_url} />
                     ))}
                   </TableCell>
                   <TableCell>
