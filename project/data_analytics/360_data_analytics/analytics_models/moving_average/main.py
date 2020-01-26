@@ -4,8 +4,9 @@ from db_connection import DBConnection
 
 def main():
     # Use Tuple to save directions
-    directions = ('ew', 'ws', 'ee', 'es', 'ww', 'wn', 'en', 'ws', 'sw', 'ss', 'sn', 'ne', 'ns',
-                  'nw', 'se')
+    # directions = ('ew', 'ws', 'ee', 'es', 'ww', 'wn', 'en', 'ws', 'sw', 'ss', 'sn', 'ne', 'ns',
+    #               'nw', 'se')
+    directions = ('se', 'ns', 'ew', 'wn', 'sn', 'en', 'es', 'sw', 'nw', 'ne', 'we', 'ws')
     intersecion_id = 1
     # Step 1: Link with MA server and database
     data_base = DBConnection('360backend', 'myUserAdmin', 'abc123', 'localhost', '27017')
