@@ -6,8 +6,8 @@ logger = logging.getLogger("camera")
 
 # initialize a realtime object
 timer = Realtime(2)
-logger.info("******New timer object created******")
-
+print("********************************************************************")
+logger.info("HERE")
 # sending timers to frontend
 def get_timers(request):
     timer.det_timers()
