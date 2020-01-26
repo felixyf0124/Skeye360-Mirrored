@@ -3,9 +3,10 @@ import { RootState } from '../reducers/rootReducer';
 import { connect } from 'react-redux';
 import { getCountMAvg, GetCountMAvgAction } from '../contexts/countTime';
 import { STATE as countState } from '../contexts/countTime';
+import { Response as countResponse } from '../api/countTime';
 
 interface StateProps {
-  countAvg: countState;
+  countAvg: countResponse;
   intersection_id: string;
   dateLastYear: string;
   dateTomorrowLastYear: string;
@@ -26,15 +27,16 @@ class DisplayCount extends React.Component<StateProps & DispatchProps> {
     getCountMAvg(intersection_id, date1, date2); //this is what calls the GET request
   }
   public render(): JSX.Element {
-    var lastYr = getDateLastYear();
-    
+    const { countAvg } = this.props;
+    const directions = mapByDirection(countAvg);
+    //console.log(directions[1]);
+
     return(
       <div style={{margin: '50vh', color: 'pink'}}>
       </div>
     )
   }
 }
-
 
 const mapStateToProps = (state: RootState): StateProps => ({
   countAvg: state.countTime,
@@ -88,16 +90,110 @@ function mapHours(times: string[]){
     newX.push(time)
   });
 }
-function mapIntoNS(counts: countState[]){
-  const x: any[] = [];
-  const y: number[] = [];
-  counts.map((count)=> {
-    if(count.count_direction === 'NS'){
-      x.push(count.time);
-      y.push(count.count);
+
+//Function that places every count response in a different array based on its direction
+function mapByDirection(counts: countResponse){
+  const xns: any[] = [];
+  const yns: number[] = [];
+
+  const xsn: any[] = [];
+  const ysn: number[] = [];
+
+  const xen: any[] = [];
+  const yen: number[] = [];
+  
+  const xes: any[] = [];
+  const yes: number[] = [];
+
+  const xew: any[] = [];
+  const yew: number[] = [];
+
+  const xne: any[] = [];
+  const yne: number[] = [];
+
+  const xnw: any[] = [];
+  const ynw: number[] = [];
+
+  const xse: any[] = [];
+  const yse: number[] = [];
+
+  const xsw: any[] = [];
+  const ysw: number[] = [];
+
+  const xwe: any[] = [];
+  const ywe: number[] = [];
+
+  const xwn: any[] = [];
+  const ywn: number[] = [];
+
+  const xws: any[] = [];
+  const yws: number[] = [];
+
+  Object.values(counts).forEach(value => {
+    if(value.count_direction === 'ns'){
+      xns.push(value.time);
+      yns.push(value.count);
     }
-  });
-  return [x,y];
+    if(value.count_direction === 'sn'){
+      xsn.push(value.time);
+      ysn.push(value.count);
+    }
+    if(value.count_direction === 'en'){
+      xen.push(value.time);
+      yen.push(value.count);
+    }
+    if(value.count_direction === 'es'){
+      xes.push(value.time);
+      yes.push(value.count);
+    }
+    if(value.count_direction === 'ew'){
+      xew.push(value.time);
+      yew.push(value.count);
+    }
+    if(value.count_direction === 'ne'){
+      xne.push(value.time);
+      yne.push(value.count);
+    }
+    if(value.count_direction === 'nw'){
+      xnw.push(value.time);
+      ynw.push(value.count);
+    }
+    if(value.count_direction === 'se'){
+      xse.push(value.time);
+      yse.push(value.count);
+    }
+    if(value.count_direction === 'sw'){
+      xsw.push(value.time);
+      ysw.push(value.count);
+    }
+    if(value.count_direction === 'we'){
+      xwe.push(value.time);
+      ywe.push(value.count);
+    }
+    if(value.count_direction === 'wn'){
+      xwn.push(value.time);
+      ywn.push(value.count);
+    }
+    if(value.count_direction === 'ws'){
+      xws.push(value.time);
+      yws.push(value.count);
+    }
+  }); 
+  
+  return [
+    {xns, yns},
+    {xsn, ysn},
+    {xen, yen},
+    {xes, yes},
+    {xew, yew},
+    {xne, yne},
+    {xnw, ynw},
+    {xse, yse},
+    {xsw, ysw},
+    {xwe, ywe},
+    {xwn, ywn},
+    {xws, yws}
+  ];
 }
 
 //Function that sorts count responses based on time, interval of 24 hours
