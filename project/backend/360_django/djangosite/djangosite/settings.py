@@ -137,6 +137,8 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
 }
 # %(threadName)-14s (%(pathname)s:%(lineno)d)
 CONFIG_BASE_FILE = os.path.dirname(__file__)
@@ -227,7 +229,6 @@ def exception_hook(type, value, traceback):
 # The function assigned to sys.excepthook is called only just before control is returned to the prompt; in a Python
 # program this happens just before the program exits.
 sys.excepthook = exception_hook
-
 
 CORS_ORIGIN_ALLOW_ALL = True
 
