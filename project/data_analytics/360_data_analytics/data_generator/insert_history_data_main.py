@@ -5,7 +5,13 @@ from tools.format_csv_file import read_format_csv
 from db_connection.db_connection import DBConnection
 import pandas as pd
 
-LOGGER = logging.getLogger('main.py')
+LOGGER = logging.getLogger('insert_history_data_main.py')
+
+
+def drop_na(data_frame):
+    """Drop NA from csv file """
+    LOGGER.info("drop NA")
+    return data_frame.dropna(inplace=True)
 
 
 def main():
