@@ -21,7 +21,7 @@ sys.modules['scipy.optimze.linear_assignment_'] = MagicMock()
 sys.modules['tensorflow'] = MagicMock()
 sys.modules['Db'] = MagicMock()
 # from ..detection import Detector
-# from ..views import cam,send_json,get_level_of_service
+# from ..views import cam, send_json, get_level_of_service, get_light_signals
 from django.http import StreamingHttpResponse, HttpResponse, JsonResponse
 # Create your tests here.
 
@@ -270,6 +270,12 @@ class YourTestClass(unittest.TestCase):
     # def test_get_level_of_service(self,mock_request):
     #     output = get_level_of_service(mock_request)
     #     self.assertTrue(type(output) is JsonResponse)
+
+    # @patch('requests.get')
+    # def test_get_light_signals(self,mock_request):
+    #     output = get_light_signals(mock_request)
+    #     self.assertTrue(type(output) is JsonResponse)
+
 
     #test db class
     @patch('pymongo.MongoClient')
