@@ -200,6 +200,7 @@ class Detector:
     def save_coordinate(self, coord_dict):
         self.coord= coord_dict
 
+    # yield frames to frontend
     def yield_frame(self):
         while True:
             time.sleep(.03)
@@ -268,15 +269,15 @@ class Detector:
                 pass
 
         cap.set(3, 1280)
-        cap.set(4, 720) 
+        cap.set(4, 720)
         # Create an image we reuse for each detect
         darknet_image = darknet.make_image(darknet.network_width(netMain), darknet.network_height(netMain),3)	
         # deep_sort Definition of the parameters
-        nms_max_overlap = 0.3 
+        nms_max_overlap = 0.3
 
+        #create 2 trackers for vehicles and pedestrians 
         tracker = self.create_tracker()        
         tracking_dict = {}
-
         p_tracker = self.create_tracker()
         p_tracking_dict = {}
 
@@ -284,11 +285,12 @@ class Detector:
         while True:
             time.sleep(.03)
             prev_time = time.time()
-            hasframe, image = cap.read()       
+            hasframe, image = cap.read()
             if not hasframe:
                 logger.error("Video importing error")
-                return -1     
-    
+                return -1
+
+            # to make the backend runs faster on servers with lower specs, we skip frames    
             totalFrames += 1
             if totalFrames%3!=1:
                continue
@@ -321,23 +323,24 @@ class Detector:
                     x = (float (out[2][0]))/415*852-0.5*w
                     y = (float (out[2][1]))/415*478-0.5*h
                     
+                    # To detect vehiclies
                     if class_name in ["car","bus","truck"]:
                         class_names.append(class_name)
                         confidences.append(float(confidence))
                         yolo_boxes.append([x, y, w, h])
                         # output vehicle detected on the frame
                         self.draw_pred(image, class_name, round(x), round(y), round(x+w), round(y+h))
+                    # To detect pedestrian for night mode
                     elif self.night_mode:
                         pedestrian_coord = [(round(x), round(y)),(round(x+w), round(y)),(round(x), round(y+h)),(round(x+w), round(y+h))]
-                        ROI_key = self.pedestrian_waiting(pedestrian_coord,pedestrian_ROI_dict)
-                        # self.inc_pedestria_counters(ROI_key,pedestrian_waiting_counters)
-                        # output pedestrian detected on the frame
+                        # find out in which area, there is pedestrians and output these pedestrians detected on the frame
+                        ROI_key = self.pedestrian_waiting(pedestrian_coord,pedestrian_ROI_dict)                        
                         if ROI_key:
                             self.draw_pred(image, "pedestrian", round(x), round(y), round(x+w), round(y+h))
                             p_confidences.append(float(confidence))
                             p_yolo_boxes.append([x, y, w, h])
 			
-            # Run non-maxima suppression.
+            # Run non-maxima suppression, get the data ready for Vehichle tracker.
             detection_boxes = np.array(yolo_boxes)
             scores = np.array(confidences)
             indices = preprocessing.non_max_suppression(detection_boxes, nms_max_overlap, scores)
@@ -350,7 +353,7 @@ class Detector:
             tracker.predict()
             tracker.update(detections)
             	
-			# potential tracking out of DeepSort algorithm
+			# potential vehicles have been tracked by DeepSort algorithm
             for track in tracker.tracks:
                 if not track.is_confirmed() or track.time_since_update > 1:
                     continue 
@@ -382,7 +385,7 @@ class Detector:
             self.save_coordinate(coord_dict)
 
             if self.night_mode:
-                # Run non-maxima suppression.
+                # Run non-maxima suppression get the data ready for Pedestrian tracker..
                 p_detection_boxes = np.array(p_yolo_boxes)
                 p_scores = np.array(p_confidences)
                 p_indices = preprocessing.non_max_suppression(p_detection_boxes, nms_max_overlap, p_scores)
@@ -395,6 +398,7 @@ class Detector:
                 p_tracker.predict()
                 p_tracker.update(p_detections)
 
+                # potential pedestrians have been tracked by DeepSort algorithm
                 for track in p_tracker.tracks:
                     if not track.is_confirmed() or track.time_since_update > 1:
                         continue
@@ -402,17 +406,21 @@ class Detector:
                     cv2.rectangle(image, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,255,255), 2)
                     cv2.putText(image, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 200, (0,255,0),2)
                     centroid = (int((bbox[0]+ bbox[2]) / 2.0), int((bbox[1] + bbox[3]) / 2.0))
-                    ROI_key = self.pedestrian_waiting(pedestrian_coord,pedestrian_ROI_dict)
 
+                    # if someone was not tracked, put them in the tracking list 
                     if track.track_id not in p_tracking_dict:
                         trackable_pedestrian = TrackableObject(track.track_id)
                         trackable_pedestrian.add_centroid(centroid)
                         p_tracking_dict[track.track_id] = trackable_pedestrian
+                        # find the area where someone is and record the first time when they get tracked
                         self.get_pedestrian_area(centroid, trackable_pedestrian, pedestrian_ROI_dict)
+                        # record the current
                         trackable_pedestrian.time_1 = time.time()
-                    else:                        
+                    else:
+                        # if someone is tracked already, update the current time
                         p_tracking_dict[track.track_id].time_1 = time.time()
-                        
+
+                    # if someone who's been tracked for 10s or longer, turn pn the traffic light signals for the corresponding directions.    
                     if p_tracking_dict[track.track_id].time_1 - p_tracking_dict[track.track_id].time_0 > 10:
                         waiting_area = p_tracking_dict[track.track_id].start_from
                         if waiting_area in ["ROI_11","ROI_1","ROI_5","ROI_7"] and self.light_signals['east-west'] == 0:
@@ -421,13 +429,15 @@ class Detector:
                         elif waiting_area in ["ROI_10","ROI_2","ROI_4","ROI_8"] and self.light_signals['north-south'] == 0:
                             self.light_signals['north-south'] = time.time()
                             print('north-south' + str(self.light_signals['north-south']))
-
+                            
+                    # after 8s update the light signals to off
                     current_time = time.time()
                     if current_time - self.light_signals['east-west'] > 8:
                         self.light_signals['east-west'] = 0
                     if current_time - self.light_signals['north-south'] > 8:
                         self.light_signals['north-south'] = 0
 
+            # calculate fps and show it in the frame
             fps = "FPS: " + str(int (1/(time.time()-prev_time)))
             cv2.putText(image, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
             self.start_counting = True
