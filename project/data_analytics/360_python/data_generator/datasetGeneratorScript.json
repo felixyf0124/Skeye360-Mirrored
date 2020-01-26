@@ -1,0 +1,416 @@
+{
+  "generators":[
+    {
+      "name": "monthly-basis-ns",
+      "type": "monthly",
+      "points": {"january": 172, "february": 190, "march": 185, "april": 200, "may": 200, "june": 160,
+        "july": 142, "august": 150, "september": 180, "october": 200, "november": 200, "december": 150}
+    },
+    {
+       "name": "daily-variation-ns",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -140,
+          "02:00:00.000": -135,
+          "04:00:00.000": -100,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -75,
+          "12:00:00.000": -50,
+          "14:00:00.000": -40,
+          "16:00:00.000": 0,
+          "18:00:00.000": 50,
+          "20:00:00.000": -25,
+          "22:00:00.000": -100
+       }
+    },
+    {
+       "name": "result-ns",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-ns",
+          "daily-variation-ns"
+       ]
+    },
+    {
+      "name": "monthly-basis-ne",
+      "type": "monthly",
+      "points": {"january": 50, "february": 48, "march": 45, "april": 55, "may": 55, "june": 60,
+        "july": 53, "august": 50, "september": 55, "october": 60, "november": 60, "december": 50}
+    },
+    {
+       "name": "daily-variation-ne",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -35,
+          "02:00:00.000": -40,
+          "04:00:00.000": -10,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -20,
+          "12:00:00.000": -5,
+          "14:00:00.000": 10,
+          "16:00:00.000": 20,
+          "18:00:00.000": 50,
+          "20:00:00.000": 10,
+          "22:00:00.000": -20
+       }
+    },
+    {
+       "name": "result-ne",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-ne",
+          "daily-variation-ne"
+       ]
+    },
+    {
+      "name": "monthly-basis-nw",
+      "type": "monthly",
+      "points": {"january": 55, "february": 52, "march": 42, "april": 58, "may": 57, "june": 65,
+        "july": 50, "august": 52, "september": 59, "october": 67, "november": 65, "december": 52}
+    },
+    {
+       "name": "daily-variation-nw",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -35,
+          "02:00:00.000": -40,
+          "04:00:00.000": -10,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -20,
+          "12:00:00.000": -5,
+          "14:00:00.000": 10,
+          "16:00:00.000": 20,
+          "18:00:00.000": 50,
+          "20:00:00.000": 10,
+          "22:00:00.000": -20
+       }
+    },
+    {
+       "name": "result-nw",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-nw",
+          "daily-variation-nw"
+       ]
+    },
+    {
+      "name": "monthly-basis-sn",
+      "type": "monthly",
+      "points": {"january": 152, "february": 188, "march": 199, "april": 222, "may": 212, "june": 200,
+        "july": 153, "august": 163, "september": 182, "october": 230, "november": 232, "december": 189}
+    },
+    {
+       "name": "daily-variation-sn",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -140,
+          "02:00:00.000": -135,
+          "04:00:00.000": -100,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -75,
+          "12:00:00.000": -50,
+          "14:00:00.000": -40,
+          "16:00:00.000": 0,
+          "18:00:00.000": 50,
+          "20:00:00.000": -25,
+          "22:00:00.000": -100
+       }
+    },
+    {
+       "name": "result-sn",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-sn",
+          "daily-variation-sn"
+       ]
+    },
+    {
+      "name": "monthly-basis-se",
+      "type": "monthly",
+      "points": {"january": 45, "february": 52, "march": 42, "april": 58, "may": 62, "june": 75,
+        "july": 80, "august": 75, "september": 55, "october": 61, "november": 58, "december": 48}
+    },
+    {
+       "name": "daily-variation-se",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -35,
+          "02:00:00.000": -20,
+          "04:00:00.000": -10,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -20,
+          "12:00:00.000": -5,
+          "14:00:00.000": 10,
+          "16:00:00.000": 20,
+          "18:00:00.000": 50,
+          "20:00:00.000": 10,
+          "22:00:00.000": -20
+       }
+    },
+    {
+       "name": "result-se",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-se",
+          "daily-variation-se"
+       ]
+    },
+    {
+      "name": "monthly-basis-sw",
+      "type": "monthly",
+      "points": {"january": 52, "february": 49, "march": 42, "april": 59, "may": 62, "june": 57,
+        "july": 56, "august": 51, "september": 50, "october": 43, "november": 46, "december": 56}
+    },
+    {
+       "name": "daily-variation-sw",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -35,
+          "02:00:00.000": -40,
+          "04:00:00.000": -10,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -20,
+          "12:00:00.000": -5,
+          "14:00:00.000": 10,
+          "16:00:00.000": 20,
+          "18:00:00.000": 50,
+          "20:00:00.000": 10,
+          "22:00:00.000": -20
+       }
+    },
+    {
+       "name": "result-sw",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-sw",
+          "daily-variation-sw"
+       ]
+    },
+    {
+      "name": "monthly-basis-ew",
+      "type": "monthly",
+      "points": {"january": 138, "february": 160, "march": 158, "april": 188, "may": 190, "june": 153,
+        "july": 142, "august": 153, "september": 186, "october": 200, "november": 201, "december": 190}
+    },
+    {
+       "name": "daily-variation-ew",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -140,
+          "02:00:00.000": -135,
+          "04:00:00.000": -100,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -75,
+          "12:00:00.000": -50,
+          "14:00:00.000": -40,
+          "16:00:00.000": 0,
+          "18:00:00.000": 50,
+          "20:00:00.000": -25,
+          "22:00:00.000": -100
+       }
+    },
+    {
+       "name": "result-ew",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-ew",
+          "daily-variation-ew"
+       ]
+    },
+    {
+      "name": "monthly-basis-en",
+      "type": "monthly",
+      "points": {"january": 58, "february": 50, "march": 45, "april": 68, "may": 69, "june": 75,
+        "july": 80, "august": 76, "september": 59, "october": 52, "november": 49, "december": 54}
+    },
+    {
+       "name": "daily-variation-en",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -35,
+          "02:00:00.000": -40,
+          "04:00:00.000": -10,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -20,
+          "12:00:00.000": -5,
+          "14:00:00.000": 10,
+          "16:00:00.000": 20,
+          "18:00:00.000": 50,
+          "20:00:00.000": 10,
+          "22:00:00.000": -20
+       }
+    },
+    {
+       "name": "result-en",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-en",
+          "daily-variation-en"
+       ]
+    },
+    {
+      "name": "monthly-basis-es",
+      "type": "monthly",
+      "points": {"january": 63, "february": 56, "march": 59, "april": 53, "may": 51, "june": 68,
+        "july": 78, "august": 79, "september": 65, "october": 58, "november": 53, "december": 62}
+    },
+    {
+       "name": "daily-variation-es",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -35,
+          "02:00:00.000": -40,
+          "04:00:00.000": -10,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -20,
+          "12:00:00.000": -5,
+          "14:00:00.000": 10,
+          "16:00:00.000": 20,
+          "18:00:00.000": 50,
+          "20:00:00.000": 10,
+          "22:00:00.000": -20
+       }
+    },
+    {
+       "name": "result-es",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-es",
+          "daily-variation-es"
+       ]
+    },
+    {
+      "name": "monthly-basis-we",
+      "type": "monthly",
+      "points": {"january": 160, "february": 156, "march": 169, "april": 172, "may": 170, "june": 189,
+        "july": 222, "august": 210, "september": 201, "october": 182, "november": 172, "december": 208}
+    },
+    {
+       "name": "daily-variation-we",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -150,
+          "02:00:00.000": -135,
+          "04:00:00.000": -100,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -75,
+          "12:00:00.000": -50,
+          "14:00:00.000": -40,
+          "16:00:00.000": 0,
+          "18:00:00.000": 50,
+          "20:00:00.000": -25,
+          "22:00:00.000": -100
+       }
+    },
+    {
+       "name": "result-we",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-we",
+          "daily-variation-we"
+       ]
+    },
+    {
+      "name": "monthly-basis-wn",
+      "type": "monthly",
+      "points": {"january": 52, "february": 59, "march": 55, "april": 62, "may": 67, "june": 70,
+        "july": 77, "august": 86, "september": 71, "october": 52, "november": 55, "december": 67}
+    },
+    {
+       "name": "daily-variation-wn",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -35,
+          "02:00:00.000": -40,
+          "04:00:00.000": -10,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -20,
+          "12:00:00.000": -5,
+          "14:00:00.000": 10,
+          "16:00:00.000": 20,
+          "18:00:00.000": 50,
+          "20:00:00.000": 10,
+          "22:00:00.000": -20
+       }
+    },
+    {
+       "name": "result-wn",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-wn",
+          "daily-variation-wn"
+       ]
+    },
+    {
+      "name": "monthly-basis-ws",
+      "type": "monthly",
+      "points": {"january": 68, "february": 57, "march": 53, "april": 56, "may": 59, "june": 69,
+        "july": 77, "august": 75, "september": 68, "october": 53, "november": 56, "december": 67}
+    },
+    {
+       "name": "daily-variation-ws",
+       "type": "daily",
+       "points": {
+          "00:00:00.000": -35,
+          "02:00:00.000": -40,
+          "04:00:00.000": -10,
+          "06:00:00.000": 0,
+          "08:00:00.000": 25,
+          "10:00:00.000": -20,
+          "12:00:00.000": -5,
+          "14:00:00.000": 10,
+          "16:00:00.000": 20,
+          "18:00:00.000": 50,
+          "20:00:00.000": 10,
+          "22:00:00.000": -20
+       }
+    },
+    {
+       "name": "result-ws",
+       "type": "aggregate",
+       "aggregator": "sum",
+       "generators": [
+          "monthly-basis-ws",
+          "daily-variation-ws"
+       ]
+    }
+  ],
+  "exported":[
+    {"name": "ns", "generator": "result-ns", "frequency": 3600000},
+    {"name": "ne", "generator": "result-ne", "frequency": 3600000},
+    {"name": "nw", "generator": "result-nw", "frequency": 3600000},
+    {"name": "sn", "generator": "result-sn", "frequency": 3600000},
+    {"name": "se", "generator": "result-se", "frequency": 3600000},
+    {"name": "sw", "generator": "result-sw", "frequency": 3600000},
+    {"name": "ew", "generator": "result-ew", "frequency": 3600000},
+    {"name": "en", "generator": "result-en", "frequency": 3600000},
+    {"name": "es", "generator": "result-es", "frequency": 3600000},
+    {"name": "we", "generator": "result-we", "frequency": 3600000},
+    {"name": "wn", "generator": "result-wn", "frequency": 3600000},
+    {"name": "ws", "generator": "result-ws", "frequency": 3600000}
+  ],
+  "from": "2016-01-01 00:00:00.000",
+  "to": "2017-12-31 23:59:59.999"
+}

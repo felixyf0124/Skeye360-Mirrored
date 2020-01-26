@@ -1,6 +1,6 @@
 import unittest
 import pandas as panda
-from models.adfullerResults import adfullerADF, adfullerPValue, adfullerCritVal1, adfullerCritVal5, adfullerCritVal10
+from analytics_models.arima.adfullerResults import adfullerResults #adfullerADF, adfullerPValue, adfullerCritVal1, adfullerCritVal5, adfullerCritVal10
 from statsmodels.tsa.stattools import adfuller
 
 class TestAdfullerResults(unittest.TestCase):
@@ -11,29 +11,34 @@ class TestAdfullerResults(unittest.TestCase):
         return adfuller(dataFrame['numberOfCars'])
         
     def test_adfullerADF(self):
-        adfullerResults = self.initialization()
-        value = adfullerADF(adfullerResults)
-        self.assertEqual(value, -1.9154655060571146)
+        adfullerResult = self.initialization()
+        adfullerResultsObj = adfullerResults()
+        value = adfullerResultsObj.adfullerADF(adfullerResult)
+        self.assertEqual(round(value, 12), round(-1.9154655060571146, 12))
 
     def test_adfullerPValue(self):
-        adfullerResults = self.initialization()
-        value = adfullerPValue(adfullerResults)
-        self.assertEqual(value, 0.3248209893507471)
+        adfullerResult = self.initialization()
+        adfullerResultsObj = adfullerResults()
+        value = adfullerResultsObj.adfullerPValue(adfullerResult)
+        self.assertEqual(round(value, 12), round(0.3248209893507471, 12))
 
     def test_adfullerCritVal1(self):
-        adfullerResults = self.initialization()
-        value = adfullerCritVal1(adfullerResults)
-        self.assertEqual(value, -4.137829282407408)
+        adfullerResult = self.initialization()
+        adfullerResultsObj = adfullerResults()
+        value = adfullerResultsObj.adfullerCritVal1(adfullerResult)
+        self.assertEqual(round(value, 12), round(-4.137829282407408, 12))
 
     def test_adfullerCritVal5e(self):
-        adfullerResults = self.initialization()
-        value = adfullerCritVal5(adfullerResults)
-        self.assertEqual(value, -3.1549724074074077)
+        adfullerResult = self.initialization()
+        adfullerResultsObj = adfullerResults()
+        value = adfullerResultsObj.adfullerCritVal5(adfullerResult)
+        self.assertEqual(round(value, 12), round(-3.1549724074074077, 12))
 
     def test_adfullerCritVal10(self):
-        adfullerResults = self.initialization()
-        value = adfullerCritVal10(adfullerResults)
-        self.assertEqual(value, -2.7144769444444443)
+        adfullerResult = self.initialization()
+        adfullerResultsObj = adfullerResults()
+        value = adfullerResultsObj.adfullerCritVal10(adfullerResult)
+        self.assertEqual(round(value, 12), round(-2.7144769444444443, 12))
 
 
 
