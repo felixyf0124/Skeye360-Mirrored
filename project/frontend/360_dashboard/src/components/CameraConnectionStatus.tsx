@@ -33,7 +33,7 @@ class CameraConnectionStatus extends React.Component<{} & Props, StateProps> {
     fetch(API_URL)
       .then((results) => results.json())
       .then(
-        (data: any) => {
+        () => {
           this.setState({
             isLoaded: true,
           });
