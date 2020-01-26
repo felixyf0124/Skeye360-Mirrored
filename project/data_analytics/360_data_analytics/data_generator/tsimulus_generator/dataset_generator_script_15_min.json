@@ -398,18 +398,18 @@
     }
   ],
   "exported":[
-    {"name": "ns", "generator": "result-ns", "frequency": 3600000},
-    {"name": "ne", "generator": "result-ne", "frequency": 3600000},
-    {"name": "nw", "generator": "result-nw", "frequency": 3600000},
-    {"name": "sn", "generator": "result-sn", "frequency": 3600000},
-    {"name": "se", "generator": "result-se", "frequency": 3600000},
-    {"name": "sw", "generator": "result-sw", "frequency": 3600000},
-    {"name": "ew", "generator": "result-ew", "frequency": 3600000},
-    {"name": "en", "generator": "result-en", "frequency": 3600000},
-    {"name": "es", "generator": "result-es", "frequency": 3600000},
-    {"name": "we", "generator": "result-we", "frequency": 3600000},
-    {"name": "wn", "generator": "result-wn", "frequency": 3600000},
-    {"name": "ws", "generator": "result-ws", "frequency": 3600000}
+    {"name": "ns", "generator": "result-ns", "frequency": 900000},
+    {"name": "ne", "generator": "result-ne", "frequency": 900000},
+    {"name": "nw", "generator": "result-nw", "frequency": 900000},
+    {"name": "sn", "generator": "result-sn", "frequency": 900000},
+    {"name": "se", "generator": "result-se", "frequency": 900000},
+    {"name": "sw", "generator": "result-sw", "frequency": 900000},
+    {"name": "ew", "generator": "result-ew", "frequency": 900000},
+    {"name": "en", "generator": "result-en", "frequency": 900000},
+    {"name": "es", "generator": "result-es", "frequency": 900000},
+    {"name": "we", "generator": "result-we", "frequency": 900000},
+    {"name": "wn", "generator": "result-wn", "frequency": 900000},
+    {"name": "ws", "generator": "result-ws", "frequency": 900000}
   ],
   "from": "2020-01-01 00:00:00.000",
   "to": "2020-01-26 23:59:59.999"
