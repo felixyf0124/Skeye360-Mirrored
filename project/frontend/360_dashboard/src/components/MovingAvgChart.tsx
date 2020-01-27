@@ -4,7 +4,7 @@ import Chart from 'react-apexcharts';
 // For more Line Chart information:
 // https://apexcharts.com/react-chart-demos/line-charts/basic/
 
-// A chart that shows the average waiting time for cars going from north to south
+//This is a chart that displays values for the moving average
 const MovingAvgChart = (values: any): JSX.Element => {
   
   const data1x = Array();
@@ -15,28 +15,23 @@ const MovingAvgChart = (values: any): JSX.Element => {
   const data2y = Array();
   const data3y = Array();
 
+  
   for(let i=0; i < values.values[0].time.length; i++){
-    //data1.push((values.values[0].time[i] + ',' + values.values[0].count[i]).toString());
+    
     data1x.push(parseInt(values.values[0].time[i]));
     data1y.push(parseInt(values.values[0].count[i]));
   };
 
   console.log('leng' + values.values[1].time.length)
   for(let i=0; i< values.values[1].time.length; i++){
-    //data2.push({[values.values[1].time[i]]: values.values[1].count[i]});
     data2x.push(parseInt(values.values[1].time[i]));
     data2y.push(parseInt(values.values[1].count[i]));
   };
   for(let i=0; i<values.values[2].time.length; i++){
-   // data3.push({[values.values[2].time[i]]: values.values[2].count[i]});
     data3x.push(parseInt(values.values[2].time[i]));
     data3y.push(parseInt(values.values[2].count[i]));
   }; 
-  console.log('DATAS');
-  console.log(data1x[0]);
-  console.log(data1y[0]);
 
-  
   const state = {
     options: {
       chart: {
@@ -61,7 +56,7 @@ const MovingAvgChart = (values: any): JSX.Element => {
       xaxis: {
         categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
         title: {
-          text: 'Hours of the Day',
+          text: '',
         },
       },
       yaxis: {
@@ -69,11 +64,11 @@ const MovingAvgChart = (values: any): JSX.Element => {
           text: 'Car Count',
         },
       },
-      colors: ['#04a777','#000','#444']
+      colors: ['#04a777','#51bcd8','#808080']
     },
     series: [
       {
-        name: 'Number Of Cars',
+        name: 'North-South',
         data: [
           [data1x[0],data1y[0]],[data1x[1],data1y[1]],[data1x[2],data1y[2]],[data1x[3],data1y[3]],[data1x[4],data1y[4]],
           [data1x[5],data1y[5]],[data1x[6],data1y[6]],[data1x[7],data1y[7]],[data1x[8],data1y[8]],[data1x[9],data1y[9]],
@@ -83,7 +78,7 @@ const MovingAvgChart = (values: any): JSX.Element => {
         ],
       },
       {
-        name: 'Number Of Cars',
+        name: 'South-North',
         data: [
           [data2x[0],data2y[0]],[data2x[1],data2y[1]],[data2x[2],data2y[2]],[data2x[3],data2y[3]],[data2x[4],data2y[4]],
           [data2x[5],data2y[5]],[data2x[6],data2y[6]],[data2x[7],data2y[7]],[data2x[8],data2y[8]],[data2x[9],data2y[9]],
@@ -93,7 +88,7 @@ const MovingAvgChart = (values: any): JSX.Element => {
         ],
       },
       {
-        name: 'Number Of Cars',
+        name: 'East-North',
         data: [
           [data3x[0],data3y[0]],[data3x[1],data3y[1]],[data3x[2],data3y[2]],[data3x[3],data3y[3]],[data3x[4],data3y[4]],
           [data3x[5],data3y[5]],[data3x[6],data3y[6]],[data3x[7],data3y[7]],[data3x[8],data3y[8]],[data3x[9],data3y[9]],
