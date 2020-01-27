@@ -125,8 +125,6 @@ class Scene extends React.Component<StateProps & DispatchProps> {
   numberOfCars: number;
 
   // for test map car
-  countDown: number;
-
   deltaT: number;
 
   atIndex: number;
@@ -370,7 +368,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     this.atArimaH = -1;
 
     // tl case
-    this.tlCaseId = 2;
+    this.tlCaseId = 1;
     const tlCaseBtn1 = new Btn(60, 26, 'Real-time', 0x51BCD8, 1);
     const tlCaseBtn2 = new Btn(60, 26, 'Arima', 0x51BCD8, 1);
     const tlCaseBtn3 = new Btn(60, 26, 'Pedestrian', 0x51BCD8, 1);
@@ -421,10 +419,10 @@ class Scene extends React.Component<StateProps & DispatchProps> {
 
     this.objRawData = '';
 
-    this.countDown = Date.now();
+    // this.countDown = Date.now();
     this.deltaT = 0;
 
-    this.atIndex = 0;
+    this.atIndex = -1;
 
     this.trafficData = new Array<Array<any>>();
     this.dataReady = new Array<{imported: boolean;sorted: boolean}>();
@@ -838,7 +836,6 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     if (this.toggleGroup[0].state) {
       this.vehicleUpdate(852, 478);
       this.sectionAreaCounter();
-      this.countDown = Date.now();
     } else {
       // wait
       if (this.trafficData[this.caseId].length !== 0
@@ -867,32 +864,48 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       }
 
       // make up car loop
-      if (this.atIndex < this.caseData.length) {
-        this.deltaT = Date.now() - this.countDown;
-        let currentCD = 0;
-        // const interSec = this.intersectionId;
-        for (let i = 0; i < this.atIndex + 1; i += 1) {
-          currentCD = this.caseData[this.atIndex].tLine
-            - this.caseData[0].tLine;
-        }
-        const maxVSpeed = this.laneW * 0.028;
-        if (this.deltaT > currentCD) {
-          const dirct = {
-            from: this.caseData[this.atIndex].from,
-            to: this.caseData[this.atIndex].to,
-          };
+      if (this.caseData.length !== 0) {
+        const period = this.caseData[this.caseData.length - 1].tLine
+         - this.caseData[0].tLine;
+        this.deltaT = Date.now() % period;
+        // initial atIndex for makeup cars
+        if (this.atIndex < 0) {
+          this.atIndex = 0;
 
-          const laneP = tsData.dirAdapter(dirct.from, dirct.to);
-          // east
-          this.roadIntersection
-            .addNewVehicleV2(laneP.getLaneId(),
-              laneP.getSectionId(), maxVSpeed);
+          let currentCD = 0;
+          for (let i = 0; i < this.caseData.length; i += 1) {
+            currentCD = this.caseData[this.atIndex].tLine
+              - this.caseData[0].tLine;
+            if (this.deltaT > currentCD) {
+              this.atIndex += 1;
+            }
+          }
+        } else
+        if (this.atIndex < this.caseData.length) {
+          let currentCD = 0;
+          // const interSec = this.intersectionId;
+          for (let i = 0; i < this.atIndex + 1; i += 1) {
+            currentCD = this.caseData[this.atIndex].tLine
+              - this.caseData[0].tLine;
+          }
+          const maxVSpeed = this.laneW * 0.028;
+          if (this.deltaT > currentCD) {
+            const dirct = {
+              from: this.caseData[this.atIndex].from,
+              to: this.caseData[this.atIndex].to,
+            };
 
-          this.atIndex += 1;
+            const laneP = tsData.dirAdapter(dirct.from, dirct.to);
+            // east
+            this.roadIntersection
+              .addNewVehicleV2(laneP.getLaneId(),
+                laneP.getSectionId(), maxVSpeed);
+
+            this.atIndex += 1;
+          }
+        } else if (!this.toggleGroup[0].state) {
+          this.atIndex = -1;
         }
-      } else if (!this.toggleGroup[0].state) {
-        this.countDown = Date.now();
-        this.atIndex = 0;
       }
 
       this.numberOfCars = this.roadIntersection.getVehiclesNum();
@@ -1132,7 +1145,8 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       this.tlDisplayPanelContainer.addChild(tDataCD);
 
       textStyle.fill = '0xFFFFFF';
-      const timeYG = tlQueue[i].getTotalTime().toString();
+      const timeYG = (Math.round(tlQueue[i].getTotalTime() * 10)
+        / 10).toString();
       const textYG = new PIXI.Text(timeYG, textStyle);
       textYG.x = tDataState.x + 108;
       textYG.y = rowOffset * (i + 1);
