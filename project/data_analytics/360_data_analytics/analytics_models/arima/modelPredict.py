@@ -3,6 +3,7 @@ import numpy as np
 import pandas as panda
 from matplotlib import pyplot as matplot
 from pandas.plotting import register_matplotlib_converters
+
 register_matplotlib_converters()
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.arima_model import ARIMA
@@ -13,6 +14,7 @@ from writeToDatabase import writeToDatabase
 from dbConnection import dbConnection
 from datetime import datetime, timedelta, date
 from forecastArima import forecastArima
+
 
 class modelPredict:
 
@@ -36,8 +38,8 @@ class modelPredict:
         # arimaModel.plot_diagnostics(figsize=(7,5))
 
         # Plot the test values on the graph, as well as the forecast/prediction values obtained in the code above
-        future_forecast = panda.DataFrame(forecast,index = test.index,columns=['Prediction'])
-        panda.concat([test,future_forecast],axis=1).plot()
+        future_forecast = panda.DataFrame(forecast, index=test.index, columns=['Prediction'])
+        panda.concat([test, future_forecast], axis=1).plot()
         matplot.show()
 
         # Create a list of date for the prediction based on the date got from the test set
