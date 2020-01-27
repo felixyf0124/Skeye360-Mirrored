@@ -2,6 +2,12 @@ import IntSect from './RoadIntersection';
 import RoadIntersection from './RoadIntersection';
 // import { timingSafeEqual } from 'crypto';
 
+/**
+ * update tl case for pedestrian
+ * @param TStampData 
+ * @param intersection 
+ * @param forceHelper 
+ */
 export async function updateCasePedestrian(TStampData: {
     current: {ew: number; ns: number}; last: {ew: number; ns: number};},
 intersection: IntSect,
@@ -66,7 +72,11 @@ forceHelper: {startT: number;delay: number; fPeriod: number;
   }
 }
 
-
+/**
+ * tl case update for real time
+ * @param data 
+ * @param intersection 
+ */
 export function updateCaseRealTime(data:any, intersection:RoadIntersection) {
     // console.log(data);
     let doUpdate = false;
@@ -115,7 +125,7 @@ export function updateCaseRealTime(data:any, intersection:RoadIntersection) {
                 if(index < noRedTL.index){
                     counter += (data[i].t - totalT);
                 }
-                console.log(data[i].id);
+                // console.log(data[i].id);
                 intersection.setTrafficLightTime(data[i].id,data[i].t);
             }
         }
@@ -145,4 +155,39 @@ export function updateCaseRealTime(data:any, intersection:RoadIntersection) {
     }
     
     
+}
+
+/**
+ * tl case update for arima
+ * @param tlDistribution 
+ * @param intersection 
+ */
+export function updateCaseArima(tlDistribution:any, intersection:RoadIntersection):void {
+  
+  const currentDistribution = {
+    tl0:intersection.getTrafficLight(0).getTotalTime(),
+    tl1:intersection.getTrafficLight(1).getTotalTime(),
+    tl3:intersection.getTrafficLight(3).getTotalTime(),
+  }
+  if(currentDistribution !==tlDistribution ){
+    const data0 = {
+      id:0,
+      t:tlDistribution.tl0,
+    }
+    const data1 = {
+      id:1,
+      t:tlDistribution.tl1,
+    }
+    const data3 = {
+      id:3,
+      t:tlDistribution.tl3,
+    }
+    const dataPack = new Array<any>();
+    dataPack.push(data0);
+    dataPack.push(data1);
+    dataPack.push(data3);
+
+    updateCaseRealTime(dataPack, intersection);
+  }
+  
 }

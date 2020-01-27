@@ -295,18 +295,15 @@ export function tlArimaDataToTimeDistribution(adaptedData:any){
   for (let i=0;i<adaptedData.length;i+=1){
     tCount += adaptedData[i].count;
   }
-  console.log(tCount);
+  // console.log(tCount);
   const tl0 = tTime * 
     (adaptedData[0].count / tCount);
-    console.log(adaptedData[0].count);
 
   const tl1 = tTime * 
     (adaptedData[1].count / tCount);
-    console.log(adaptedData[1].count);
 
   const tl3 = tTime * 
   (adaptedData[2].count / tCount);
-  console.log(adaptedData[2].count);
 
   const tlTDistrib = {tl0:tl0,tl1:tl1,tl3:tl3};
   return tlTDistrib;

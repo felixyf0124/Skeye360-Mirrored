@@ -149,6 +149,9 @@ class Scene extends React.Component<StateProps & DispatchProps> {
   forceHelper: {startT: number;delay: number;
     fPeriod: number; isForced: boolean;};
 
+  tlDefaultDistribution:{tl0:number,tl1:number,tl3:number};
+  atArimaH:number;
+
   constructor(props: any) {
     super(props);
     this.windowScaleRatio = 0.4;
@@ -285,15 +288,25 @@ class Scene extends React.Component<StateProps & DispatchProps> {
         { section: 2, id: 3 },
       ],
     ];
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 40);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 15);
+
+
+    this.tlDefaultDistribution = {tl0:40,tl1:15,tl3:35};
+
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 
+      this.tlDefaultDistribution.tl0);
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 
+      this.tlDefaultDistribution.tl1);
     // special overlap offset - 55
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], 55);
-    this.roadIntersection.setTLOverlapOffset(2, -55);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 35);
+    const tl2 = this.tlDefaultDistribution.tl0 + this.tlDefaultDistribution.tl1;
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], tl2);
+    this.roadIntersection.setTLOverlapOffset(2, -tl2);
+
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 
+      this.tlDefaultDistribution.tl3);
     // special overlap offset - 50
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[4], 50);
-    this.roadIntersection.setTLOverlapOffset(4, -50);
+    const tl4 = this.tlDefaultDistribution.tl1 + this.tlDefaultDistribution.tl3;
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[4], tl4);
+    this.roadIntersection.setTLOverlapOffset(4, -tl4);
 
     this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();
@@ -352,6 +365,8 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       }
     }
 
+    // at arima hour case
+    this.atArimaH = -1;
 
     // tl case
     this.tlCaseId = 2;
@@ -524,11 +539,24 @@ class Scene extends React.Component<StateProps & DispatchProps> {
   }
 
   async getArimaTLUpdate():Promise<void>{
-    const ip = `168.62.183.116:8000`
-    const distribution = await tsData.tlArimaData(ip);
-    if(distribution !== undefined ){
-      console.log(distribution);
+
+    const currentH = new Date().getHours();
+
+    if(currentH !== this.atArimaH) {
+      const ip = `168.62.183.116:8000`;
+
+      const distribution = await tsData.tlArimaData(ip);
+
+      if(distribution !== undefined ){
+        // console.log(distribution);
+        this.tlDefaultDistribution = distribution;
+        this.atArimaH = currentH;
+      }
     }
+
+    tlUpdateHelper
+      .updateCaseArima(
+        this.tlDefaultDistribution,this.roadIntersection);
   }
 
   /**
