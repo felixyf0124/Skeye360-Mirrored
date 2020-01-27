@@ -5,7 +5,7 @@ import authentication, { STATE as authState } from '../contexts/authentication';
 import logClick, { STATE as logState } from '../contexts/LogClicks';
 import districts, { STATE as districtState } from '../contexts/districts';
 import intersection, { STATE as intersectionState } from '../contexts/intersection';
-import countTime, {STATE as countTimeState } from '../contexts/countTime';
+import countTime, { STATE as countTimeState } from '../contexts/countTime';
 import count, { STATE as countState } from '../contexts/vehicleCounts';
 import camera, { STATE as cameraState } from '../contexts/camera';
 

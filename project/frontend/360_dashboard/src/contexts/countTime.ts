@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable max-len */
 import { Action } from 'redux';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { 
-  Response as CountResponse, 
-  getCountMA 
+import {
+  Response as CountResponse,
+  getCountMA,
 } from '../api/countTime';
+
 export interface STATE {
   count_type: string;
   count_direction: string;
@@ -26,17 +29,17 @@ export const GET_COUNT_MA_FAIL = 'GET_COUNT_MA_FAIL';
 
 
 export interface GetCountMAvgAction extends Action {
-  type: string,
-  id: string,
-  dateLastYear: string,
-  dateTomorrowLastYear: string,
+  type: string;
+  id: string;
+  dateLastYear: string;
+  dateTomorrowLastYear: string;
 }
 
 export const getCountMAvg = (id: string, dateLastYear: string, dateTomorrowLastYear: string): GetCountMAvgAction => ({
   type: GET_COUNT_MA,
   id,
   dateLastYear,
-  dateTomorrowLastYear
+  dateTomorrowLastYear,
 });
 
 export interface GetCountMAvgSuccessAction {
@@ -47,17 +50,17 @@ export interface GetCountMAvgSuccessAction {
 export const getCountMAvgSuccess = (data: CountResponse): GetCountMAvgSuccessAction => ({
   type: GET_COUNT_MA_SUCCESS,
   data,
-})
+});
 
 export interface GetCountMAvgFailAction {
   type: string;
 }
 export const getCountMAvgFail = (): GetCountMAvgFailAction => ({
   type: GET_COUNT_MA_FAIL,
-})
+});
 
 // SAGA
-//This is where the get request gets made, by calling yield call(getCountMA)
+// This is where the get request gets made, by calling yield call(getCountMA)
 export function* handleFetchMACount({ id, dateLastYear, dateTomorrowLastYear }: GetCountMAvgAction): Iterator<any> {
   try {
     const data = yield call(getCountMA, id, dateLastYear, dateTomorrowLastYear);
@@ -87,8 +90,8 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     }
     case GET_COUNT_MA_FAIL: {
       return {
-        ...state
-      }
+        ...state,
+      };
     }
     default:
       return state;

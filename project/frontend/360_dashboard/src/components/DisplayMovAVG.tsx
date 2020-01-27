@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-/* eslint-disable max-len */ 
+/* eslint-disable max-len */
 import React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from '../reducers/rootReducer';
@@ -24,9 +24,9 @@ function getDateLastYear() {
   const todayToISO = today.toISOString();
 
   // Retrieve the year, month, day
-  const thisYear = parseInt(todayToISO.substring(0, 4));
-  const thisMonth = parseInt(todayToISO.substring(5, 7));
-  const thisDate = parseInt(todayToISO.substring(8, 10));
+  const thisYear = parseInt(todayToISO.substring(0, 4), 10);
+  const thisMonth = parseInt(todayToISO.substring(5, 7), 10);
+  const thisDate = parseInt(todayToISO.substring(8, 10), 10);
 
   // Create a date object last year based on today and create one for the next day
   const lastYearDate = new Date(thisYear - 1, thisMonth - 1, thisDate);
@@ -162,10 +162,14 @@ function mapByDirection(counts: countResponse) {
         ws.count.push(value.count);
         ws.time.push(value.time.substring(11, 12));
         break;
+      default:
+        ws.count.push(0);
     }
   });
   return [ns, sn, en, es, ew, ne, nw, se, sw, we, wn, ws];
 }
+
+// Class that renders the Moving Average Chart
 class DisplayCount extends React.Component<StateProps & DispatchProps> {
   public componentDidMount(): void {
     const { getCountMAvg, intersection_id } = this.props;
@@ -176,10 +180,7 @@ class DisplayCount extends React.Component<StateProps & DispatchProps> {
     const { countAvg } = this.props;
     const directions = mapByDirection(countAvg);
     return (
-      <div>
-        <h1 style={{color: 'red'}}>THE CHART SHOULD BE HERE</h1>
       <MovingAvgChart values={directions} />
-      </div>
     );
   }
 }
