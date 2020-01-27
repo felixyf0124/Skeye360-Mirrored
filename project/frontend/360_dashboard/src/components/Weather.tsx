@@ -42,20 +42,23 @@ class Weather extends React.Component<{}, StateProps> {
   componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     fetch(API_CALL)
-      .then((results) => results.json()).then((data) => {
-        this.setState({
-          isLoaded: true,
-          weatherIcon: data.weather[0].icon,
-          temperature: data.main.temp,
-          tempDescription: data.weather[0].main,
-        });
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      });
+      .then((results) => results.json())
+      .then(
+        (data) => {
+          this.setState({
+            isLoaded: true,
+            weatherIcon: data.weather[0].icon,
+            temperature: data.main.temp,
+            tempDescription: data.weather[0].main,
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error,
+          });
+        },
+      );
   }
 
   // Renders the Weather component
@@ -71,7 +74,7 @@ class Weather extends React.Component<{}, StateProps> {
     if (error) {
       return (
         <div>
-Error:
+          Error:
           {error.message}
         </div>
       );
@@ -84,10 +87,9 @@ Error:
       <TempDiv>
         <img src={iconsrc} alt="Weather Icon" />
         <Typography variant="h6">
-                        &nbsp;
+          &nbsp;
           {tempCelsius}
-&deg;C
-                        &nbsp;
+          &deg;C &nbsp;
           {tempDescription}
         </Typography>
       </TempDiv>

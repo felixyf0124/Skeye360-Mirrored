@@ -1,9 +1,7 @@
 """This module is to calculate moving average"""
+
 import logging
 import datetime
-
-# import matplotlib.pyplot as plt
-# import pandas as pd
 
 LOGGER = logging.getLogger('moving_average.py')
 
@@ -36,3 +34,4 @@ def cal_one_hr_moving_average(data_base, directions, intersection_id):
         # Step 3: Save back to MongoDB.
         data_base.insert_one_count(data_base.get_collection_name(), i, count_average[i],
                                    rounder(datetime.datetime.now()), 'MA', intersection_id)
+

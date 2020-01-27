@@ -22,6 +22,16 @@ export default class Vehicle extends Object {
 
     maxSpeed: number;
 
+    speed: number;
+
+    accel: number;
+
+    decel: number;
+
+    direction: vec2|undefined;
+
+    targetSpeed: number|undefined;
+
     constructor(id: number, laneId: number, roadSectionId: number,
       speed: number, position?: vec2) {
       super(id, laneId, roadSectionId, speed, position);
@@ -33,9 +43,20 @@ export default class Vehicle extends Object {
       this.isInTransition = false;
       this.lastTime = Date.now();
       this.maxSpeed = speed;
+      this.speed = 0;
+      this.accel = 0.8 * this.maxSpeed;
+      this.decel = 2.6 * this.maxSpeed;
+      this.direction = undefined;
+      this.targetSpeed = undefined;
     }
 
-    // Getters
+    /**
+     * old function
+     * check the front car
+     * @param frontPostion
+     * @param safetyDistance
+     * @param targetSpeed
+     */
     checkFront(frontPostion: vec2, safetyDistance: number, targetSpeed?: number): void {
       const distance = ts.tsLength(frontPostion.minus(this.position));
       let speed = targetSpeed;
@@ -49,7 +70,11 @@ export default class Vehicle extends Object {
       }
     }
 
-
+    /**
+     * old function to update speed
+     * @param targetSpeed
+     * @param acceleration
+     */
     updateSpeed(targetSpeed?: number, acceleration?: number): void {
       let acce = acceleration;
       let speed = targetSpeed;
@@ -83,6 +108,7 @@ export default class Vehicle extends Object {
       }
     }
 
+    // Getters
     getPath(): Array<Array<vec2>> {
       return this.path;
     }
@@ -107,14 +133,23 @@ export default class Vehicle extends Object {
       return this.isInTransition;
     }
 
+    getTargetSpeed(): number|undefined {
+      return this.targetSpeed;
+    }
+
     resetIsInTransition(): void {
       this.isInTransition = false;
     }
 
+    /**
+     * update position by speed disToTravel
+     * @param disToTravel
+     */
     updatePosition(disToTravel: number): void {
       const unitVec = ts.tsNormalize(
         this.path[this.atPathSection][this.atPath + 1].minus(this.position),
       );
+      this.direction = unitVec;
       const lengthOfCurrentPath = this.getPathLength(this.atPathSection, this.atPath + 1);
       if (this.atPathSection === 0) {
         const disToTravelOfCurrentPath = ts.tsLength(this.position.minus(
@@ -166,5 +201,168 @@ export default class Vehicle extends Object {
         length += ts.tsLength(this.path[pathSection][i + 1].minus(this.path[pathSection][i]));
       }
       return length;
+    }
+
+    /**
+     * set direction
+     * @param dir
+     */
+    setDirection(dir: vec2|undefined): void{
+      this.direction = dir;
+    }
+
+    /**
+     * update position v2
+     * @param deltaTime
+     */
+    update(deltaTime?: number): void {
+      let deltaT = this.getDeltaT();
+      // let deltaT = 1 / 60;
+      if (deltaTime !== undefined) {
+        deltaT = deltaTime;
+      }
+      // acceleration
+      if (this.state === 1) {
+        let mSpeed = this.maxSpeed;
+        if (this.targetSpeed !== undefined) {
+          mSpeed = this.targetSpeed;
+        }
+        if (this.speed < mSpeed) {
+          this.speed += this.accel * deltaT;
+          if (this.speed > mSpeed) {
+            this.speed = mSpeed;
+          }
+        }
+      } else {
+        let mSpeed = 0;
+        if (this.targetSpeed !== undefined) {
+          mSpeed = this.targetSpeed;
+        }
+        if (this.speed > mSpeed) { // deceleration
+          this.speed -= this.decel * deltaT;
+          if (this.speed < mSpeed) {
+            this.speed = mSpeed;
+          }
+        }
+      }
+
+      // check if it is off the path or not
+      if (!this.checkOnLine()) {
+        // console.log(this);
+      }
+      // translate
+      this.updatePosition(this.speed);
+    }
+
+    /**
+     * signal move
+     * @param targetSpeed
+     */
+    move(targetSpeed?: number): void {
+      this.state = 1;
+      this.targetSpeed = targetSpeed;
+    }
+
+    /**
+     * signal stop
+     * @param targetSpeed
+     */
+    stop(targetSpeed?: number): void {
+      this.state = -1;
+      this.targetSpeed = targetSpeed;
+    }
+
+    /**
+     * R2 new function
+     * check front obsticle
+     * if it is obsticle then return true
+     * else return false
+     * @param pos
+     * @param safetyDistance
+     */
+    checkFrontObsticle(pos: vec2, safetyDistance: number, width: number): boolean {
+      const distance = ts.tsLength(pos.minus(this.position));
+      if (distance < safetyDistance) {
+        if (this.direction !== undefined) {
+          const front = ts.tsNormalize(this.direction);
+          const right = ts.tsRotateByOrigin(this.direction, -Math.PI / 2);
+          const poly = new Array<vec2>();
+          poly.push(this.position
+            .plus(front.multiply(safetyDistance)));
+          poly.push(this.position
+            .plus(front.multiply(0.8 * safetyDistance))
+            .plus(right.multiply(0.5 * width)));
+          poly.push(this.position
+            .plus(right.multiply(0.5 * width)));
+          poly.push(this.position
+            .plus(right.multiply(-0.5 * width)));
+          poly.push(this.position
+            .plus(front.multiply(0.8 * safetyDistance))
+            .plus(right.multiply(-0.5 * width)));
+          if (ts.inside(pos, poly)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
+     * R2 new function
+     * check front & back obsticle
+     * if it is obsticle then return true
+     * else return false
+     * @param pos
+     * @param safetyDistance
+     */
+    checkFrontNBackObsticle(pos: vec2, safetyDistance: number, width: number): boolean {
+      const distance = ts.tsLength(pos.minus(this.position));
+      if (distance < safetyDistance) {
+        if (this.direction !== undefined) {
+          const front = ts.tsNormalize(this.direction);
+          const right = ts.tsRotateByOrigin(this.direction, -Math.PI / 2);
+          const poly = new Array<vec2>();
+          poly.push(this.position
+            .plus(front.multiply(safetyDistance)));
+          poly.push(this.position
+            .plus(front.multiply(0.8 * safetyDistance))
+            .plus(right.multiply(0.5 * width)));
+          poly.push(this.position
+            .plus(front.multiply(-0.8 * safetyDistance))
+            .plus(right.multiply(0.5 * width)));
+          poly.push(this.position
+            .plus(front.multiply(-safetyDistance)));
+          poly.push(this.position
+            .plus(front.multiply(-0.8 * safetyDistance))
+            .plus(right.multiply(-0.5 * width)));
+          poly.push(this.position
+            .plus(front.multiply(0.8 * safetyDistance))
+            .plus(right.multiply(-0.5 * width)));
+          if (ts.inside(pos, poly)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+
+    checkOnLine(): boolean {
+      let dir = ts
+        .getAngleOfVec(this.path[this.atPathSection][0].minus(this.position));
+      let dir2 = ts
+        .getAngleOfVec(this.path[this.atPathSection][1].minus(this.path[this.atPathSection][0]));
+
+      // const prod = ts.tsCrossVec2(dir,dir2);
+      dir = Math.round(dir * 10000) / 10000;
+      dir2 = Math.round(dir2 * 10000) / 10000;
+
+      // console.log(dir +"| "+dir2);
+      if (dir === dir2) {
+        // console.log(this);
+        return true;
+      }
+      // console.log(this);
+      return false;
     }
 }

@@ -121,4 +121,61 @@ describe('road intersection', () => {
     
   });
 
+
+  it(`addNewTrafficLight, get traffic light`,()=>{
+    expect(intersection.getTrafficLightQueue().length).to.equal(0);
+    intersection.addNewTrafficLight({section:0,id:0},10);
+    expect(intersection.getTrafficLightQueue().length).to.equal(1);
+    expect(intersection.getTrafficLightQueue()[0].id).to.equal(0);
+    expect(intersection.getTrafficLightQueue()[0].getTotalTime()).to.equal(10);
+
+    intersection.addNewTrafficLight({section:1,id:0},16);
+    expect(intersection.getTrafficLightQueue().length).to.equal(2);
+    expect(intersection.getTrafficLightQueue()[1].id).to.equal(1);
+    expect(intersection.getTrafficLightQueue()[1].getTotalTime()).to.equal(16);
+  });
+
+
+  it(`getTrafficLightIndex`,()=>{
+
+    const id = intersection.getTrafficLightQueue()[0].getId();
+    expect(intersection.getTrafficLightIndex(id)).to.equal(0);
+  });
+
+  it(`getTrafficLightSetting`,()=>{
+    expect(intersection.getTrafficLightQueue().length).to.equal(2);
+    intersection.addNewTrafficLight({section:2,id:0},17);
+    expect(intersection.getTrafficLightQueue().length).to.equal(3);
+    const last = intersection.getTrafficLightQueue().length;
+    expect(intersection.getTrafficLightQueue()[last-1].id).to.equal(last-1);
+    const setting = intersection.getTrafficLightSetting(last-1);
+    expect(setting.green).to.equal(12);
+  });
+
+  
+  it(`setTLOverlapOffset`,()=>{
+
+    expect(intersection.getTrafficLight(0).getOverlapOffset()).to.equal(0);
+    intersection.setTLOverlapOffset(0,30);
+    expect(intersection.getTrafficLight(0).getOverlapOffset()).to.equal(30);
+
+  });
+
+  it(`setTLCounterOffset`,()=>{
+
+    expect(intersection.getTLCounterOffset()).to.equal(0);
+    intersection.setTLCounterOffset(33);
+    expect(intersection.getTLCounterOffset()).to.equal(33);
+    intersection.setTLCounterOffset(0);
+
+  });
+
+  it(`setTrafficLightTime`,()=>{
+
+    intersection.setTrafficLightTime(0,30);
+    expect(intersection.getTrafficLight(0).getTotalTime()).to.equal(30);
+    expect(intersection.getTrafficLight(0).getGreenTime()).to.equal(25);
+
+  });
+
 });
