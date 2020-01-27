@@ -111,6 +111,16 @@ export default class TrafficLightManager {
       this.startTime = startTime;
     }
 
+    /**
+     * set total time at @param id
+     * @param id
+     * @param totalTime = 5 + green time
+     */
+    setTime(id: number, totalTime: number): void{
+      const index = this.getTrafficLightIndex(id);
+      this.trafficLightQueue[index].setTotalTime(totalTime);
+    }
+
     setTimeOffset(timeOffset: number): void {
       this.timeOffset = timeOffset;
     }
@@ -162,7 +172,8 @@ export default class TrafficLightManager {
 
     initialUpdate(): boolean {
       const total = this.getTimePeriod();
-      this.deltaT = (Date.now() - this.startTime) / 1000;
+      this.deltaT = (Date.now() - this.startTime + this.timeOffset)
+        / 1000;
       this.deltaT %= total;
       let addUp = 0;
       let isUpdating = false;

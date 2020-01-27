@@ -9,7 +9,7 @@ class Realtime:
 
         print("trying to extract")
         #  Extracting traffic data from csv file
-        raw_data = panda.read_csv("~/Soen490/project/backend/backend_django/camera/real_time/traffic_normal_case.csv")
+        raw_data = panda.read_csv("./real_time/traffic_normal_case.csv")
 
         print("raw data extracted")
         # Separating traffic data by directions
