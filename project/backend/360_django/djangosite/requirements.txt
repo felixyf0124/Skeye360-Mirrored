@@ -18,3 +18,4 @@ pytest
 pytest-cov
 mixer
 pandas
+freezegun
