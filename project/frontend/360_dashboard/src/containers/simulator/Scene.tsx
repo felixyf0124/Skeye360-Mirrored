@@ -23,6 +23,10 @@ import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
 
 // import 'pixi-text-input.js';
 
+interface Props {
+  isSmartTL: boolean;
+}
+
 interface StateProps {
   intersection_id: string;
   camera_url: string;
@@ -36,7 +40,7 @@ interface DispatchProps {
  * @class Scene
  * @extends {Component}
  */
-class Scene extends React.Component<StateProps & DispatchProps> {
+class Scene extends React.Component<Props & StateProps & DispatchProps> {
   pixiContent: any;
 
   windowW: number;
@@ -931,24 +935,28 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
 
-      // real-time case
-      if (this.tlCaseId === 1) {
-        this.getRealTimeTLUpdate();
-      }
+      const {isSmartTL} = this.props;
+      if(isSmartTL){
+          // real-time case
+        if (this.tlCaseId === 1) {
+          this.getRealTimeTLUpdate();
+        }
 
-      // arima case
-      if (this.tlCaseId === 2) {
-        this.getArimaTLUpdate();
-      }
+        // arima case
+        if (this.tlCaseId === 2) {
+          this.getArimaTLUpdate();
+        }
 
-      // pedestrian case
-      if (this.tlCaseId === 3) {
-        this.getPedestrianTLInfo();
-        // this.pedestrianCaseTLUpdate();
-        tlUpdateHelper
-          .updateCasePedestrian(this.pAiDataTL,
-            this.roadIntersection, this.forceHelper);
+        // pedestrian case
+        if (this.tlCaseId === 3) {
+          this.getPedestrianTLInfo();
+          // this.pedestrianCaseTLUpdate();
+          tlUpdateHelper
+            .updateCasePedestrian(this.pAiDataTL,
+              this.roadIntersection, this.forceHelper);
+        }
       }
+      
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -1329,7 +1337,9 @@ class Scene extends React.Component<StateProps & DispatchProps> {
           this.controlPanelContainer.addChild(this.btnStop);
         }
         for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
-          if (this.tlCaseBtnGroup[i].parent == null) {
+          const {isSmartTL} = this.props;
+          // console.log(isSmartTL);
+          if (this.tlCaseBtnGroup[i].parent == null && isSmartTL) {
             this.controlPanelContainer.addChild(this.tlCaseBtnGroup[i]);
           }
         }
