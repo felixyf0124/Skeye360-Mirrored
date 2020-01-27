@@ -4,6 +4,10 @@ import os
 import io
 import unittest
 import mongomock
+import pandas as panda
+import numpy
+from freezegun import freeze_time
+from ..realtime import Realtime
 from unittest.mock import MagicMock, patch
 sys.modules['cv2'] = MagicMock()
 sys.modules['requests'] = MagicMock()
@@ -14,23 +18,32 @@ sys.modules['cmake'] = MagicMock()
 sys.modules['scipy.optimze.linear_assignment_'] = MagicMock()
 sys.modules['tensorflow'] = MagicMock()
 sys.modules['Db'] = MagicMock()
-sys.modules['pandas'] = MagicMock()
 # from ..views import get_timers
 from django.http import JsonResponse
 # Create your tests here.
 
 class realtime_test_class(unittest.TestCase):
     def setUp(self):
-        print("setUp: Run once for every test method to setup clean data.")
-        pass
+        df = panda.DataFrame()
+        datetime = ['2017-12-31 01:00:10', '2017-12-31 01:00:10', '2017-12-31 01:00:02', '2017-12-31 01:00:20', '2017-12-31 01:00:30', '2017-12-31 01:00:01', '2017-12-31 01:00:40']
+        car_id = [1, 2, 3, 4, 5, 6, 7]
+        car_from = ['north', 'east', 'east', 'west', 'south', 'north', 'west']
+        car_to = ['south', 'north', 'south', 'north', 'east', 'east', 'north']
 
-    def test_false_is_false(self):
-        print("Method: test_false_is_false.")
-        self.assertFalse(False)
-    
-    def test_false_is_true(self):
-        print("Method: test_false_is_true.")
-        self.assertTrue(True)
+        df['id'] = car_id
+        df['datetime'] = datetime
+        df['from'] = car_from
+        df['to'] = car_to
+
+        return df
+
+    @freeze_time("2017-01-14 01:00:20")
+    def test_realtime(self):
+        df = self.setUp()
+        real_time_object = Realtime()
+        self.assertEquals(real_time_object.get_milli_time(), 12030000)
+        real_time_object.det_timers()
+        print(real_time_object.timers)
     
     # @patch('requests.get')
     # def test_get_timers(self,mock_request):
