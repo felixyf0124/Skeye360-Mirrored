@@ -986,7 +986,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
     const url = window.location.href;
     if (!url.includes('/camview/')) {
-      // this.unmountDestroy();
+      this.unmountDestroy();
     }
   }
 
