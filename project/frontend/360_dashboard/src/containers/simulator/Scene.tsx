@@ -354,7 +354,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
 
 
     // tl case
-    this.tlCaseId = 1;
+    this.tlCaseId = 2;
     const tlCaseBtn1 = new Btn(60, 26, 'Real-time', 0x51BCD8, 1);
     const tlCaseBtn2 = new Btn(60, 26, 'Arima', 0x51BCD8, 1);
     const tlCaseBtn3 = new Btn(60, 26, 'Pedestrian', 0x51BCD8, 1);
@@ -493,11 +493,11 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       // console.log(this.pAiDataTL.current);
     }
 
-
-    // this.pAiDataTL.last = this.pAiDataTL.current;
   }
 
-
+  /**
+   * retrieve real time case tl data
+   */
   async getRealTimeTLUpdate():Promise<void>{
     const {camera_url} = this.props
     const obj = await tsData.tlRealTimeData(camera_url);
@@ -520,6 +520,14 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       dataPack.push(data3);
 
       tlUpdateHelper.updateCaseRealTime(dataPack,this.roadIntersection);
+    }
+  }
+
+  async getArimaTLUpdate():Promise<void>{
+    const ip = `168.62.183.116:8000`
+    const distribution = await tsData.tlArimaData(ip);
+    if(distribution !== undefined ){
+      console.log(distribution);
     }
   }
 
@@ -886,6 +894,11 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       //real-time case
       if(this.tlCaseId ===1){
         this.getRealTimeTLUpdate();
+      }
+
+      // arima case
+      if(this.tlCaseId ===2){
+        this.getArimaTLUpdate();
       }
 
       // pedestrian case
