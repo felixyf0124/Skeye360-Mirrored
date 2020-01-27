@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger("camera")
 
 # initialize a realtime object
-timer = Realtime(2)
+timer = Realtime()
 
 # sending timers to frontend
 def get_timers(request):

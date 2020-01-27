@@ -1,51 +1,59 @@
 import pandas as panda
 import json
+import numpy as np
+from datetime import datetime
 
 class Realtime: 
-    def __init__(self, counter):
+    def __init__(self):
         self.timers = {'north-south': 0, 'east-west': 0, 'left': 0}
-        self.counter = counter
-        self.start = '0:00:00'
-        self.end = '0:00:00'
+        self.start = 0
+        self.end = 0
     
-    # Determine which data from csv file to analyze. 
-    def det_timeframe(self, counter):
-        if (counter == 1):
-            self.start = '5:39:55'
-            self.end = '5:41:35'
-        elif (counter == 2):
-            self.start = '5:41:35'
-            self.end = '5:43:15'
-        elif (counter == 3):
-            self.start = '5:43:15'
-            self.end = '5:44:55'
-        elif (counter == 4):
-            self.start = '5:44:55'
-            self.end = '5:46:35'
-        elif (counter == 5): 
-            self.start = '5:46:35'
-            self.end = '5:48:15'
-        elif (counter == 6):
-            self.start = '5:48:15'
-            self.end = '5:49:55'
-        elif (counter == 7):
-            self.start = '5:49:55'
-            self.end = '5:51:35'
+    def get_milli_time(self):
+        time = datetime.now()
+        return (((((time.hour * 60) + time.minute) * 60) + time.second) * 1000)
+
+    def add_loop_time(self, data):
+        for i in range(data.shape[0]):
+            if (i == 0):
+                data.loc[i, 'loop_time'] = 0
+            else: 
+                data.loc[i, 'loop_time'] = data.iloc[i]['milli_time'] - data.iloc[0]['milli_time']
+        return data
     
     def det_timers(self):
 
         #  Extracting traffic data from csv file.
         raw_data = panda.read_csv("~/Soen490/project/backend/backend_django/camera/real_time/traffic_normal_case.csv")
-
-        # Determine which data frame to use.
-        self.det_timeframe(self.counter)
-                
+        
         # Convert csv file data column to datetime index.
         raw_data['datetime'] = panda.to_datetime(raw_data['datetime'])
-        raw_data = raw_data.set_index('datetime')
+        
+        # Sorting time (ascending) and resetting index.
+        raw_data = raw_data.sort_values(['datetime'])
+        raw_data = raw_data.reset_index(drop=True)
 
-        # Filter data frame by time.
-        raw_data = raw_data.between_time(self.start, self.end)
+        # Adding new column with time im milliseconds.
+        raw_data['milli_time'] = (((((raw_data['datetime'].dt.hour * 60) + raw_data['datetime'].dt.minute) * 60) + raw_data['datetime'].dt.second) * 1000)
+
+        # Get current time.
+        t_sys = int(self.get_milli_time())
+
+        # Get data period.
+        period = int(raw_data.tail(1)['milli_time']) - int(raw_data.head(1)['milli_time'])
+
+        # Set matching time (timeline for the loop).
+        currentTime = np.mod(t_sys, period)
+        
+        # Add loop_time to match current time each call.
+        raw_data = self.add_loop_time(raw_data)
+
+        # Set start and end range time to run algorithm.
+        self.start = np.mod((np.mod(t_sys, period) - (20*1000) + period), period)
+        self.end = currentTime
+
+        # Data selection based on time. 
+        raw_data = raw_data.loc[(raw_data['loop_time'] >= self.start) & (raw_data['loop_time'] <= self.end)]
 
         # Separating traffic data by directions.
         southToSouth = raw_data.loc[(raw_data['from'] == "south") & (raw_data['to'] == "south")]
@@ -97,10 +105,19 @@ class Realtime:
         northSouthLeftCount = swCount + neCount
         eastWestLeftCount = wnCount + esCount
 
-        # Calculating ratio and percentage for all directions.
-        nsLeftPercentage = (northSouthLeftCount/northSouthCount)*100
-        ewLeftPercentage = (eastWestLeftCount/eastWestCount)*100
-        straightRatio = (northSouthCount/eastWestCount)
+        # Calculating ratios for all directions
+        if (northSouthCount == 0):
+            nsLeftPercentage = 0
+        else: 
+            nsLeftPercentage = (northSouthLeftCount/northSouthCount)*100
+        
+        if (eastWestCount == 0):
+            ewLeftPercentage = 0
+            straightRatio = 10
+
+        else: 
+            ewLeftPercentage = (eastWestLeftCount/eastWestCount)*100
+            straightRatio = (northSouthCount/eastWestCount)
 
         # Setting timers: sum(timers) = 80s
         timerSum = 80
