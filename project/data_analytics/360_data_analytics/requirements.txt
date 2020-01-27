@@ -10,3 +10,4 @@ matplotlib
 mongomock
 # unit test
 unittest
+pmdarima
