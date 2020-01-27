@@ -242,8 +242,8 @@ export async function tlRealTimeData(url: string): Promise<any> {
 export function tlArimaDataAdapter(filtered: any) {
   const adapted = new Array<any>();
   const tl0 = { id: 0, count: 0 };
-  const tl1 = { id: 0, count: 0 };
-  const tl3 = { id: 0, count: 0 };
+  const tl1 = { id: 1, count: 0 };
+  const tl3 = { id: 3, count: 0 };
   for (let i = 0; i < filtered.length; i += 1) {
     // tl id 0
     // e->w
