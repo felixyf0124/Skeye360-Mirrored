@@ -935,9 +935,9 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
 
-      const {isSmartTL} = this.props;
-      if(isSmartTL){
-          // real-time case
+      const { isSmartTL } = this.props;
+      if (isSmartTL) {
+        // real-time case
         if (this.tlCaseId === 1) {
           this.getRealTimeTLUpdate();
         }
@@ -956,7 +956,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
               this.roadIntersection, this.forceHelper);
         }
       }
-      
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -1337,7 +1336,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           this.controlPanelContainer.addChild(this.btnStop);
         }
         for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
-          const {isSmartTL} = this.props;
+          const { isSmartTL } = this.props;
           // console.log(isSmartTL);
           if (this.tlCaseBtnGroup[i].parent == null && isSmartTL) {
             this.controlPanelContainer.addChild(this.tlCaseBtnGroup[i]);

@@ -122,11 +122,11 @@ class CamView extends React.Component<StateProps & DispatchProps> {
               <h2>Simulation of Traffic</h2>
               <h3>Default Traffic Light Setting</h3>
               <SimContainer>
-                <Simulator  isSmartTL={false}/> 
+                <Simulator isSmartTL={false} />
               </SimContainer>
               <h3>Optimized Traffic Light Setting</h3>
               <SimContainer>
-                <Simulator isSmartTL={true}/> 
+                <Simulator isSmartTL />
               </SimContainer>
             </InnerDiv>
           </VerticalFlexBox>
