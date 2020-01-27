@@ -1,47 +1,80 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
-import { connect } from 'react-redux';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { Link } from 'react-router-dom';
-import { RootState } from '../reducers/rootReducer';
+import styled from 'styled-components';
+import { CircularProgress } from '@material-ui/core/';
 
-import { logClick, LogAction } from '../contexts/LogClicks';
-import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
+const TrafficIntensityContainer = styled.div``;
 
 interface Props {
-  intersection_id: number;
+  camera_url: string;
 }
 
 interface StateProps {
-  user_id: number;
+  error: string;
+  los: number;
+  isLoaded: boolean;
 }
 
-interface DispatchProps {
-  deleteExistingIntersection: (id: string) => DeleteIntersectionAction;
-  logClick: (log_message: string, user_id: number) => LogAction;
+interface IntensityState {
+  los: number;
 }
 
-const TrafficIntensity = (props: Props & StateProps & DispatchProps): JSX.Element => {
-  const { user_id, intersection_id } = props;
-  const handleDelete = (id: string): void => {
-    props.deleteExistingIntersection(id);
-    props.logClick('Deleted Intersection', user_id);
-  };
-  return (
-    <Link to="/" onClick={(): void => handleDelete(intersection_id.toString())}>
-      <DeleteIcon />
-    </Link>
-  );
-};
+// Traffic Intensity Metric
+class TrafficIntensity extends React.Component<{} & Props, StateProps> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      error: '',
+      isLoaded: false,
+      los: -1,
+    };
+  }
 
-const mapStateToProps = (state: RootState): StateProps => ({
-  ...state,
-  user_id: state.authentication.user_id,
-});
+  // Fetches LOS from the camera server for traffic intensity measurements.
+  componentDidMount(): void {
+    const { camera_url } = this.props;
+    const API_URL = `http://${camera_url}/los/`;
+    // eslint-disable-next-line no-shadow
+    fetch(API_URL)
+      .then((results) => results.json())
+      .then(
+        (data: IntensityState) => {
+          this.setState({
+            isLoaded: true,
+            los: data.los,
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error,
+          });
+        },
+      );
+  }
 
-const mapDispatchToProps: DispatchProps = {
-  deleteExistingIntersection,
-  logClick,
-};
+  // Render Traffic Intensity Metric
+  render(): JSX.Element {
+    const { error, isLoaded, los } = this.state;
 
-export default connect(mapStateToProps, mapDispatchToProps)(TrafficIntensity);
+    const displayIntensity = (): any => {
+      if (error) {
+        // return `${error}`;
+        return 'N/A';
+      }
+      if (!isLoaded || los === -1) {
+        return <CircularProgress />;
+      }
+      if (los <= 20) {
+        return 'Low';
+      }
+      if (los > 55) {
+        return 'High';
+      }
+      return 'Medium';
+    };
+    return <TrafficIntensityContainer>{displayIntensity()}</TrafficIntensityContainer>;
+  }
+}
+
+export default TrafficIntensity;

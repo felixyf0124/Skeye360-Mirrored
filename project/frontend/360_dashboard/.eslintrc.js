@@ -56,6 +56,7 @@ module.exports = {
     "linebreak-style": 0,
     "global-require": 0,
     "eslint linebreak-style": [0, "error", "windows"],
+    "no-param-reassign": ["error", { "props": false }],
   },
   settings: {
     'import/resolver': {

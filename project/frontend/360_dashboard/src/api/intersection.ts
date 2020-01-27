@@ -1,3 +1,5 @@
+const { REACT_APP_API_URL } = process.env;
+
 /* eslint-disable @typescript-eslint/camelcase */
 export interface Response {
   id: number;
@@ -8,7 +10,7 @@ export interface Response {
   district_id: number;
 }
 
-const APIDomain = '0.0.0.0:8000';
+const APIDomain = REACT_APP_API_URL;
 
 // CREATE
 export const addIntersection = async (
@@ -40,9 +42,7 @@ export const addIntersection = async (
 };
 
 // READ
-export const getIntersection = async (
-  id: string,
-): Promise<Response> => {
+export const getIntersection = async (id: string): Promise<Response> => {
   // ENDPOINT
   const url = `//${APIDomain}/api/intersection/${id}/`;
 
@@ -89,9 +89,7 @@ export const editIntersection = async (
 };
 
 // DELETE
-export const deleteIntersection = async (
-  id: string,
-): Promise<any> => {
+export const deleteIntersection = async (id: string): Promise<any> => {
   // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/intersection/${id}/`;
   const settings = {

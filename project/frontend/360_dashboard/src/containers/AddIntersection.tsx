@@ -2,12 +2,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
 import { logClick } from '../contexts/LogClicks';
 import SideDrawer from '../components/SideDrawer';
+
+const Body = styled.div`
+  overflow-y: none;
+`;
 
 interface StateProps {
   path: string;
@@ -33,7 +38,7 @@ interface DispatchProps {
   logClick: (log_message: string, user_id: number) => any;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& > *': {
       width: 200,
@@ -63,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     backgroundColor: '#212121',
     margin: 'auto',
-    marginTop: '20rem',
+    marginTop: '10rem',
     width: '25rem',
     height: '30rem',
     border: '1px solid grey',
@@ -120,7 +125,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
   const classes = useStyles();
 
   return (
-    <div>
+    <Body>
       <SideDrawer headerTitle={title} />
       <div className={classes.content}>
         {error !== '' ? (
@@ -154,6 +159,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                 type="text"
                 name="intersection_name"
                 value={intersection_name}
+                placeholder="e.g. Guy/St-Catherine"
                 className={classes.textField}
                 onChange={handleChange}
               />
@@ -164,6 +170,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                 type="text"
                 name="latitude"
                 value={latitude}
+                placeholder="e.g. 12.3456"
                 className={classes.textField}
                 onChange={handleChange}
               />
@@ -174,6 +181,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                 type="text"
                 name="longitude"
                 value={longitude}
+                placeholder="e.g. 12.3456"
                 className={classes.textField}
                 onChange={handleChange}
               />
@@ -186,7 +194,7 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
           </div>
         </form>
       </div>
-    </div>
+    </Body>
   );
 };
 
@@ -194,10 +202,10 @@ const mapStateToProps = (state: RootState): StateProps => ({
   path: '/intersection/add',
   username: state.authentication.username,
 
-  latitude: '45.5017',
-  longitude: '-73.5673',
+  latitude: '',
+  longitude: '',
   district_id: '1',
-  intersection_name: 'Guy St/St-Cath',
+  intersection_name: '',
 
   error: state.intersection.error,
   user_id: state.authentication.user_id,

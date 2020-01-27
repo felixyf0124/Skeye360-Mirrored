@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/camelcase */
 // learning reference https://medium.com/@peeyush.pathak18/pixijs-with-react-3cd40738180
 
-import React, { Component } from 'react';
+import React from 'react';
 // pixi.js-legacy for VM
 import * as PIXI from 'pixi.js-legacy';
+import { connect } from 'react-redux';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry';
 import Vec2 from './simulator_management/vec2';
@@ -13,13 +15,32 @@ import LanePointer from './simulator_management/LanePointer';
 import DragablePoint from './DragablePoint';
 import mappingBGTexture from './intersection1.png';
 import * as tsData from './TSLocalData';
+import ndata1 from './traffic_normal_case.csv';
+import edata1 from './traffic_edge_case.csv';
+import { RootState } from '../../reducers/rootReducer';
+import { logClick } from '../../contexts/LogClicks';
+import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
+
 // import 'pixi-text-input.js';
+
+interface Props {
+  isSmartTL: boolean;
+}
+
+interface StateProps {
+  intersection_id: string;
+  camera_url: string;
+}
+
+interface DispatchProps {
+  logClick: (log_message: string, user_id: number) => any;
+}
 
 /**
  * @class Scene
  * @extends {Component}
  */
-class Scene extends Component {
+class Scene extends React.Component<Props & StateProps & DispatchProps> {
   pixiContent: any;
 
   windowW: number;
@@ -85,6 +106,8 @@ class Scene extends Component {
 
   labelGroup: Array<Btn>;
 
+  tlCaseBtnGroup: Array<Btn>;
+
   btnShowCP: Btn;
 
   btnStop: Btn;
@@ -106,19 +129,35 @@ class Scene extends Component {
   numberOfCars: number;
 
   // for test map car
-  countDown: number;
-
   deltaT: number;
-
-  makeUpCar: Array<{atTline: number; num: number}>;
 
   atIndex: number;
 
   objRawData: string;
 
+  trafficData: Array<Array<any>>;
+
+  tlCaseId: number;
+
+  caseId: number;
+
+  caseData: Array<any>;
+
+  dataReady: Array<{imported: boolean;sorted: boolean}>;
+
+  // pedestrian ai data set for tl
+  pAiDataTL: {current: any;last: any};
+
+  forceHelper: {startT: number;delay: number;
+    fPeriod: number; isForced: boolean;};
+
+  tlDefaultDistribution: {tl0: number;tl1: number;tl3: number};
+
+  atArimaH: number;
+
   constructor(props: any) {
     super(props);
-    this.windowScaleRatio = 0.5;
+    this.windowScaleRatio = 0.4;
     this.pixiContent = null;
     this.windowW = window.innerWidth * this.windowScaleRatio;
     this.windowH = window.innerHeight * this.windowScaleRatio;
@@ -180,36 +219,97 @@ class Scene extends Component {
     this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW * 0.16, -this.windowH / 2));
 
     for (let i = 0; i < this.roadIntersection.getRoadSections().length; i += 1) {
-      this.roadIntersection.addNewLane(i, 1, 'straight', 1);
-      this.roadIntersection.addNewLane(i, -1, 'straight', 1);
+      if (i === 3) {
+        this.roadIntersection.addNewLane(i, 1, 'left', 1);
+        this.roadIntersection.addNewLane(i, 1, 'straight', 1);
+        this.roadIntersection.addNewLane(i, 1, 'right', 1);
+        this.roadIntersection.addNewLane(i, -1, 'straight', 3);
+      } else {
+        this.roadIntersection.addNewLane(i, 1, 'back', 1);
+        this.roadIntersection.addNewLane(i, 1, 'left', 1);
+        this.roadIntersection.addNewLane(i, 1, 'straight', 1);
+        this.roadIntersection.addNewLane(i, 1, 'right', 1);
+        this.roadIntersection.addNewLane(i, -1, 'straight', 3);
+      }
+      // console.log(` _ ${this.roadIntersection.getRoadSections()[i].getLaneIn().length}`);
     }
 
     this.roadIntersection.setLaneWidth(this.laneW);
 
-    const lPointer1 = new LanePointer(0, 0);
-    const lPointer2 = new LanePointer(1, 0);
-    const lPointer3 = new LanePointer(2, 0);
-    const lPointer4 = new LanePointer(3, 0);
+    // turn back lane
+    this.roadIntersection.linkLanes4i(0, 0, 0, 0);
+    this.roadIntersection.linkLanes4i(1, 0, 1, 0);
+    this.roadIntersection.linkLanes4i(2, 0, 2, 0);
 
 
-    this.roadIntersection.linkLanes(lPointer1, lPointer2);
-    this.roadIntersection.linkLanes(lPointer2, lPointer1);
-    this.roadIntersection.linkLanes(lPointer3, lPointer4);
-    this.roadIntersection.linkLanes(lPointer4, lPointer3);
+    // to left lane linking
+    this.roadIntersection.linkLanes4i(0, 1, 2, 0);
+    this.roadIntersection.linkLanes4i(1, 1, 3, 0);
+    this.roadIntersection.linkLanes4i(2, 1, 1, 0);
+    this.roadIntersection.linkLanes4i(3, 0, 0, 0);
+
+    // straight lane linking
+    this.roadIntersection.linkLanes4i(0, 2, 1, 1);
+    this.roadIntersection.linkLanes4i(1, 2, 0, 1);
+    this.roadIntersection.linkLanes4i(2, 2, 3, 1);
+    this.roadIntersection.linkLanes4i(3, 1, 2, 1);
+
+    // to right lane linking
+    this.roadIntersection.linkLanes4i(0, 3, 3, 2);
+    this.roadIntersection.linkLanes4i(1, 3, 2, 2);
+    this.roadIntersection.linkLanes4i(2, 3, 0, 2);
+    this.roadIntersection.linkLanes4i(3, 2, 1, 2);
+
 
     let trafficLightBindingData = new Array<Array<{section: number;id: number}>>();
     trafficLightBindingData = [
-      [
+      // check with this setting
+      // https://docs.google.com/document/d/16vO1rzYfO5zxDH2cdHm7ID-XomgAhGAfLoSCu2RI-W0/edit
+      [// straight - E&W
+        { section: 0, id: 2 },
+        { section: 1, id: 2 },
+      ],
+      [// left/back - E&W
         { section: 0, id: 0 },
         { section: 1, id: 0 },
+        { section: 0, id: 1 },
+        { section: 1, id: 1 },
       ],
-      [
+      [// right - E&W
+        { section: 0, id: 3 },
+        { section: 1, id: 3 },
+      ],
+      [// left (S/N) / back (S) /straight (S/N) /right(N)
         { section: 2, id: 0 },
+        { section: 2, id: 1 },
+        { section: 2, id: 2 },
         { section: 3, id: 0 },
+        { section: 3, id: 1 },
+        { section: 3, id: 2 },
+      ],
+      [// right (S)
+        { section: 2, id: 3 },
       ],
     ];
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 20);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 20);
+
+
+    this.tlDefaultDistribution = { tl0: 40, tl1: 15, tl3: 35 };
+
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0],
+      this.tlDefaultDistribution.tl0);
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1],
+      this.tlDefaultDistribution.tl1);
+    // special overlap offset - 55
+    const tl2 = this.tlDefaultDistribution.tl0 + this.tlDefaultDistribution.tl1;
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], tl2);
+    this.roadIntersection.setTLOverlapOffset(2, -tl2);
+
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3],
+      this.tlDefaultDistribution.tl3);
+    // special overlap offset - 50
+    const tl4 = this.tlDefaultDistribution.tl1 + this.tlDefaultDistribution.tl3;
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[4], tl4);
+    this.roadIntersection.setTLOverlapOffset(4, -tl4);
 
     this.roadIntersection.updateLane();
     this.roadIntersection.resortTrafficLightQueue();
@@ -238,9 +338,10 @@ class Scene extends Component {
     this.btnGroup = new Array<{text: PIXI.Text; btn: Btn}>();
     this.toggleGroup = new Array<{name: string;state: boolean}>();
     this.labelGroup = new Array<Btn>();
+    this.tlCaseBtnGroup = new Array<Btn>();
 
     // toggle group
-    const videoFeed = { name: 'enable video feed', state: true };
+    const videoFeed = { name: 'enable video feed', state: false };
     const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
     const uiV7 = { name: 'enable new UI v2.2', state: false };
     const showSectionAreas = { name: 'Show Section Areas', state: false };
@@ -267,6 +368,17 @@ class Scene extends Component {
       }
     }
 
+    // at arima hour case
+    this.atArimaH = -1;
+
+    // tl case
+    this.tlCaseId = 1;
+    const tlCaseBtn1 = new Btn(60, 26, 'Real-time', 0x51BCD8, 1);
+    const tlCaseBtn2 = new Btn(60, 26, 'Arima', 0x51BCD8, 1);
+    const tlCaseBtn3 = new Btn(60, 26, 'Pedestrian', 0x51BCD8, 1);
+    this.tlCaseBtnGroup.push(tlCaseBtn1);
+    this.tlCaseBtnGroup.push(tlCaseBtn2);
+    this.tlCaseBtnGroup.push(tlCaseBtn3);
 
     this.laneAreaContainer.x = -this.coordinateOffset.x;
     this.laneAreaContainer.y = -this.coordinateOffset.y;
@@ -283,7 +395,7 @@ class Scene extends Component {
       this.dragablePoints.push(sectionP);
     }
     // menu
-    this.menuPage = 3;
+    this.menuPage = 1;
     this.menuBtns = new Array<Btn>();
     const menuBtn1 = new Btn(49, 26, 'Traffic Light', 0x51BCD8);
     const menuBtn2 = new Btn(49, 26, 'Lane Area', 0x51BCD8);
@@ -307,45 +419,40 @@ class Scene extends Component {
     });
     // h c car obj
 
-    this.numberOfCars = 3;
-    for (let i = 0; i < 3; i += 1) {
-      this.roadIntersection.addNewVehicle(0, 0, 0.06);
-    }
+    this.numberOfCars = 0;
 
     this.objRawData = '';
 
-    this.countDown = Date.now();
+    // this.countDown = Date.now();
     this.deltaT = 0;
-    this.makeUpCar = [
-      { atTline: 2800, num: 1 },
-      { atTline: 3800, num: 1 },
-      { atTline: 5600, num: 1 },
-      { atTline: 6500, num: 1 },
-      { atTline: 9500, num: 1 },
-      { atTline: 10300, num: 1 },
-      { atTline: 10900, num: 1 },
-      { atTline: 11500, num: 1 },
-      { atTline: 12000, num: 1 },
-      { atTline: 12900, num: 2 },
-      { atTline: 13500, num: 1 },
-      { atTline: 14500, num: 1 },
-      { atTline: 15800, num: 1 },
-      { atTline: 16100, num: 1 },
-      { atTline: 18900, num: 1 },
-      { atTline: 20200, num: 1 },
-      { atTline: 20900, num: 1 },
-      { atTline: 22400, num: 1 },
-      { atTline: 23400, num: 1 },
-      { atTline: 25300, num: 1 },
-      { atTline: 28000, num: 1 },
-      { atTline: 29000, num: 1 },
-      { atTline: 29900, num: 1 },
-    ];
 
+    this.atIndex = -1;
 
-    this.atIndex = 0;
+    this.trafficData = new Array<Array<any>>();
+    this.dataReady = new Array<{imported: boolean;sorted: boolean}>();
 
     this.app.loader.add('./intersection1.png');
+    this.trafficData.push(tsData.loadCarGenData(ndata1));
+    this.trafficData.push(tsData.loadCarGenData(edata1));
+
+    this.dataReady.push({
+      imported: false,
+      sorted: false,
+    });
+    this.dataReady.push({
+      imported: false,
+      sorted: false,
+    });
+
+    this.caseId = 0;
+    this.caseData = new Array<any>();
+    // const test = tsData.sortDataByTime(dataObj1);
+    // console.log(test.length);
+
+    this.forceHelper = {
+      startT: 0, delay: 5, fPeriod: 10, isForced: false,
+    };
+    this.pAiDataTL = { current: undefined, last: undefined };
   }
 
   /**
@@ -376,11 +483,82 @@ class Scene extends Component {
    * old function for only retrieve total car number from video feed directly
    */
   async getNumberOfCars(): Promise<number> {
-    const rawData = await DataFromCamera.getDataFromCamera() || '';
+    const {
+      camera_url,
+    } = this.props;
+    const rawData = await DataFromCamera.getDataFromCamera(camera_url) || '';
     const numberCars = await DataFromCamera.getNumberOfCars(rawData);
     // console.log(`Number of cars : ${numberCars}`);
     this.numberOfCars = numberCars;
     return numberCars;
+  }
+
+  /**
+   * retrieve pedestrian case tl data
+   */
+  async getPedestrianTLInfo(): Promise<void> {
+    const {
+      camera_url,
+    } = this.props;
+    const obj = await tsData.tlPedestrianData(camera_url);
+
+    if (obj !== undefined && obj['east-west'] !== undefined) {
+      // console.log(obj['east-west']);
+      this.pAiDataTL.current = {
+        ew: parseFloat(obj['east-west']),
+        ns: parseFloat(obj['north-south']),
+      };
+      // console.log(this.pAiDataTL.current);
+    }
+  }
+
+  /**
+   * retrieve real time case tl data
+   */
+  async getRealTimeTLUpdate(): Promise<void> {
+    const { camera_url } = this.props;
+    const obj = await tsData.tlRealTimeData(camera_url);
+    if (obj !== undefined && obj['east-west'] !== undefined) {
+      const data0 = {
+        id: 0,
+        t: obj['east-west'],
+      };
+      const data1 = {
+        id: 1,
+        t: obj.left,
+      };
+      const data3 = {
+        id: 3,
+        t: obj['north-south'],
+      };
+      const dataPack = new Array<any>();
+      dataPack.push(data0);
+      dataPack.push(data1);
+      dataPack.push(data3);
+
+      tlUpdateHelper.updateCaseRealTime(dataPack, this.roadIntersection);
+    }
+  }
+
+  async getArimaTLUpdate(): Promise<void> {
+    const currentH = new Date().getHours();
+
+    if (currentH !== this.atArimaH) {
+      const ip = '168.62.183.116:8000';
+
+      const distribution = await tsData.tlArimaData(ip);
+
+      if (distribution !== undefined) {
+        // console.log(distribution);
+        this.tlDefaultDistribution = distribution;
+        this.atArimaH = currentH;
+      }
+    }
+
+    tlUpdateHelper
+      .updateCaseArima(
+        this.tlDefaultDistribution, this.roadIntersection,
+      );
   }
 
   /**
@@ -474,7 +652,7 @@ class Scene extends Component {
     this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
     this.drawRoad();
     this.initialButtons();
-    this.roadIntersection.updateVehiclePos();
+    this.roadIntersection.updateVehiclePosV2();
 
     this.laneAreaContainer.x = -this.coordinateOffset.x;
     this.laneAreaContainer.y = -this.coordinateOffset.y;
@@ -596,6 +774,23 @@ class Scene extends Component {
         } else {
           const spot = this.drawVehicleSpot(position, 0xFFFFCC);
           this.objectContainer.addChild(spot);
+          // test
+          if (!this.toggleGroup[0].state) {
+            // const path = vehicles[i].getPath();
+            const pathG = new PIXI.Graphics();
+
+            const dir = vehicles[i].direction;
+            pathG.lineStyle(1, 0xFF0FFF);
+            if (dir !== undefined) {
+              pathG.moveTo(position.x + dir.x * 20, position.y + dir.y * 20);
+              pathG.lineTo(position.x, position.y);
+              // const nextp = path[vehicles[i].getAtPathSection()]
+              // [vehicles[i].getAtPath()];
+              // pathG.lineTo(nextp.x,nextp.y);
+            }
+
+            this.objectContainer.addChild(pathG);
+          }
         }
       }
     }
@@ -635,33 +830,86 @@ class Scene extends Component {
     // menu
     this.updateMenuState();
     this.drawMenu();
+    // tl case
+    this.updateTLCase();
 
-    this.roadIntersection.updateVehiclePos();
+
+    this.roadIntersection.updateVehiclePosV2();
+    // const interSec = 0;
 
     if (this.toggleGroup[0].state) {
       this.vehicleUpdate(852, 478);
       this.sectionAreaCounter();
-      this.countDown = Date.now();
     } else {
+      // wait
+      if (this.trafficData[this.caseId].length !== 0
+        && !this.dataReady[this.caseId].imported
+        && !this.dataReady[this.caseId].sorted) {
+        // console.log(this.trafficData[this.caseId]);
+
+        // this.normData[interSec] =
+        tsData.sortDataByTime(this.trafficData[this.caseId]);
+        this.dataReady[this.caseId].imported = true;
+      }
+
+      // sort
+      if (this.trafficData[this.caseId].length !== 0
+        && this.dataReady[this.caseId].imported
+        && !this.dataReady[this.caseId].sorted) {
+        // console.log('loop sorted');
+        // console.log(this.trafficData[this.caseId]);
+
+        this.dataReady[this.caseId].sorted = true;
+      }
+
+      if (this.dataReady[this.caseId].imported
+        && this.dataReady[this.caseId].sorted) {
+        this.caseData = this.trafficData[this.caseId];
+      }
+
       // make up car loop
-      if (this.atIndex < this.makeUpCar.length) {
-        this.deltaT = Date.now() - this.countDown;
-        let currentCD = 0;
+      if (this.caseData.length !== 0) {
+        const period = this.caseData[this.caseData.length - 1].tLine
+         - this.caseData[0].tLine;
+        this.deltaT = Date.now() % period;
+        // initial atIndex for makeup cars
+        if (this.atIndex < 0) {
+          this.atIndex = 0;
 
-        for (let i = 0; i < this.atIndex + 1; i += 1) {
-          currentCD = this.makeUpCar[this.atIndex].atTline;
-        }
+          let currentCD = 0;
+          for (let i = 0; i < this.caseData.length; i += 1) {
+            currentCD = this.caseData[this.atIndex].tLine
+              - this.caseData[0].tLine;
+            if (this.deltaT > currentCD) {
+              this.atIndex += 1;
+            }
+          }
+        } else
+        if (this.atIndex < this.caseData.length) {
+          let currentCD = 0;
+          // const interSec = this.intersectionId;
+          for (let i = 0; i < this.atIndex + 1; i += 1) {
+            currentCD = this.caseData[this.atIndex].tLine
+              - this.caseData[0].tLine;
+          }
+          const maxVSpeed = this.laneW * 0.028;
+          if (this.deltaT > currentCD) {
+            const dirct = {
+              from: this.caseData[this.atIndex].from,
+              to: this.caseData[this.atIndex].to,
+            };
 
-        if (this.deltaT > currentCD) {
-          this.roadIntersection.addNewVehicle(0, 0, 0.06);
-          this.roadIntersection.addNewVehicle(0, 1, 0.06);
-          this.roadIntersection.addNewVehicle(0, 2, 0.06);
-          this.roadIntersection.addNewVehicle(0, 3, 0.06);
-          this.atIndex += 1;
+            const laneP = tsData.dirAdapter(dirct.from, dirct.to);
+            // east
+            this.roadIntersection
+              .addNewVehicleV2(laneP.getLaneId(),
+                laneP.getSectionId(), maxVSpeed);
+
+            this.atIndex += 1;
+          }
+        } else if (!this.toggleGroup[0].state) {
+          this.atIndex = -1;
         }
-      } else if (!this.toggleGroup[0].state) {
-        this.countDown = Date.now();
-        this.atIndex = 0;
       }
 
       this.numberOfCars = this.roadIntersection.getVehiclesNum();
@@ -686,7 +934,28 @@ class Scene extends Component {
       this.fps = this.fpsCounter;
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
-      // this.getNumberOfCars();
+
+      const { isSmartTL } = this.props;
+      if (isSmartTL) {
+        // real-time case
+        if (this.tlCaseId === 1) {
+          this.getRealTimeTLUpdate();
+        }
+
+        // arima case
+        if (this.tlCaseId === 2) {
+          this.getArimaTLUpdate();
+        }
+
+        // pedestrian case
+        if (this.tlCaseId === 3) {
+          this.getPedestrianTLInfo();
+          // this.pedestrianCaseTLUpdate();
+          tlUpdateHelper
+            .updateCasePedestrian(this.pAiDataTL,
+              this.roadIntersection, this.forceHelper);
+        }
+      }
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -697,6 +966,23 @@ class Scene extends Component {
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
+
+    if (this.tlCaseId === 3) {
+      const pCD = Math.round((Date.now() - this.forceHelper.startT) / 1000);
+      const pCDText = new PIXI.Text('Pedestrian Time: N/A', this.textStyle);
+      if (this.forceHelper.isForced === true) {
+        if (pCD <= this.forceHelper.delay) {
+          pCDText.text = `Pedestrian Time: -${this.forceHelper.delay - pCD}`;
+        } else if (pCD <= this.forceHelper.delay + this.forceHelper.fPeriod) {
+          // const roundedPCD = Math.round()
+          pCDText.text = `Pedestrian Time: ${this.forceHelper.fPeriod
+            + this.forceHelper.delay - pCD}`;
+        }
+      }
+      pCDText.x = this.windowW / 2 - 160;
+      pCDText.y = -this.windowH / 2 + 40;
+      this.displayPlaneContainer.addChild(pCDText);
+    }
 
     const url = window.location.href;
     if (!url.includes('/camview/')) {
@@ -743,8 +1029,11 @@ class Scene extends Component {
    * retrieve raw data from video feed
    */
   async retrieveRawData(): Promise<void> {
+    const {
+      camera_url,
+    } = this.props;
     if (!this.toggleGroup[1].state) {
-      const rawDataStr: string = await DataFromCamera.getDataFromCamera() || 'async error';
+      const rawDataStr: string = await DataFromCamera.getDataFromCamera(camera_url) || 'async error';
 
       this.objRawData = rawDataStr;
     } else {
@@ -784,7 +1073,6 @@ class Scene extends Component {
     delete this.textStyle;
     delete this.coordinateOffset;
     delete this.vehicles;
-    delete this.makeUpCar;
     delete this.pixiContent;
     delete this.context;
     delete this.render;
@@ -797,33 +1085,20 @@ class Scene extends Component {
     delete this.objRawData;
     delete this.laneAreaContainer;
     delete this.mappingBGContainer;
+    delete this.atArimaH;
+    delete this.atIndex;
+    delete this.caseData;
+    delete this.caseId;
+    delete this.dataReady;
+    delete this.forceHelper;
+    delete this.objRawData;
+    delete this.pAiDataTL;
+    delete this.tlCaseBtnGroup;
+    delete this.tlCaseId;
+    delete this.tlDefaultDistribution;
+    delete this.trafficLightCounter;
+    delete this.trafficLightCounterOffset;
   }
-
-  // render
-  render = (): JSX.Element => (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <div
-                style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                ref={(element): void => { this.updateCar(element); }}
-              />
-            </td>
-            <td>
-              <img
-                style={{ width: this.windowW, minWidth: this.windowMin, minHeight: this.windowMin }}
-                src="http://127.0.0.1:8001/cam"
-                alt=""
-              />
-            </td>
-
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  )
 
   /**
    * update TL CountDown in control panel
@@ -843,7 +1118,7 @@ class Scene extends Component {
       fontWeight: '600',
     };
 
-    const tHeader = new PIXI.Text('TL #   State   CD ', textStyle);
+    const tHeader = new PIXI.Text('#|id   State   CD   t(Y+G)', textStyle);
 
     this.tlDisplayPanelContainer.addChild(tHeader);
 
@@ -851,8 +1126,10 @@ class Scene extends Component {
     const tlQueue = this.roadIntersection.getTrafficLightQueue();
     for (let i = 0; i < tlQueue.length; i += 1) {
       const index = (i + 1);
+      textStyle.fill = '0xFFFFFF';
       // index
-      const tDataId = new PIXI.Text(index.toString(), textStyle);
+      const tDataId = new PIXI.Text(`${index.toString()
+      }|${tlQueue[i].getId()}`, textStyle);
       tDataId.x = 8;
       tDataId.y = rowOffset * (i + 1);
       this.tlDisplayPanelContainer.addChild(tDataId);
@@ -865,7 +1142,6 @@ class Scene extends Component {
       tDataState.y = rowOffset * (i + 1);
       this.tlDisplayPanelContainer.addChild(tDataState);
 
-      textStyle.fill = '0x51BCD8';
       let CD = 'N/A';
       if (!Number.isNaN(tlQueue[i].getCountDown())) {
         CD = Math.round(tlQueue[i].getCountDown()).toString();
@@ -874,6 +1150,14 @@ class Scene extends Component {
       tDataCD.x = tDataState.x + 56;
       tDataCD.y = rowOffset * (i + 1);
       this.tlDisplayPanelContainer.addChild(tDataCD);
+
+      textStyle.fill = '0xFFFFFF';
+      const timeYG = (Math.round(tlQueue[i].getTotalTime() * 10)
+        / 10).toString();
+      const textYG = new PIXI.Text(timeYG, textStyle);
+      textYG.x = tDataState.x + 108;
+      textYG.y = rowOffset * (i + 1);
+      this.tlDisplayPanelContainer.addChild(textYG);
     }
     const tempX = this.tlDisplayPanelContainer.width - this.controlPanelG.width;
     this.tlDisplayPanelContainer.x = Math.abs(tempX) / 2;
@@ -967,7 +1251,17 @@ class Scene extends Component {
       this.btnGroup[i].text.y = 20 + i * 26 + 6;
     }
 
+    // tlcase btns
+    const numOfTL = this.roadIntersection.getTrafficLightQueue().length;
+    for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
+      this.tlCaseBtnGroup[i].setBackground(color, 0.1, 1, color);
+      this.tlCaseBtnGroup[i].setTextStyle(textStyle3);
+      this.tlCaseBtnGroup[i].x = (this.controlPanelG.width
+        - this.tlCaseBtnGroup[i].width) * 0.5;
+      this.tlCaseBtnGroup[i].y = numOfTL * 26 + 50 + i * 27;
+    }
 
+    // menu btns
     for (let i = 0; i < this.menuBtns.length; i += 1) {
       this.menuBtns[i].setTextStyle(textStyle);
       this.menuBtns[i].setDemansion(this.menuBtns[i].text.width + 12, 26);
@@ -1041,6 +1335,14 @@ class Scene extends Component {
         if (this.btnStop.parent == null) {
           this.controlPanelContainer.addChild(this.btnStop);
         }
+        for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
+          const { isSmartTL } = this.props;
+          // console.log(isSmartTL);
+          if (this.tlCaseBtnGroup[i].parent == null && isSmartTL) {
+            this.controlPanelContainer.addChild(this.tlCaseBtnGroup[i]);
+          }
+        }
+
         break;
       }
       case 2:
@@ -1098,6 +1400,24 @@ class Scene extends Component {
     for (let i = 0; i < this.menuBtns.length; i += 1) {
       if (this.menuBtns[i].isPressed()) {
         this.menuPage = i + 1;
+      }
+    }
+  }
+
+  updateTLCase() {
+    for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
+      if (this.tlCaseBtnGroup[i].isPressed()) {
+        this.tlCaseId = i + 1;
+      }
+    }
+    // console.log(this.tlCaseId);
+
+    const color = 0x51BCD8;
+    for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
+      if (this.tlCaseId === i + 1) {
+        this.tlCaseBtnGroup[i].setBoarder(2, color);
+      } else {
+        this.tlCaseBtnGroup[i].setBoarder(0, color);
       }
     }
   }
@@ -1333,8 +1653,24 @@ class Scene extends Component {
       }
     }
   }
+
+  // render
+  public render(): JSX.Element {
+    return (
+      <div
+        ref={(element): void => { this.updateCar(element); }}
+      />
+    );
+  }
 }
 
+const mapStateToProps = (state: RootState): StateProps => ({
+  intersection_id: state.intersection.intersection_id,
+  camera_url: state.camera.camera_url,
+});
 
-export default
-(Scene);
+const mapDispatchToProps: DispatchProps = {
+  logClick,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Scene);

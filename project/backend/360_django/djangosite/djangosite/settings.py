@@ -228,7 +228,6 @@ def exception_hook(type, value, traceback):
 # program this happens just before the program exits.
 sys.excepthook = exception_hook
 
-
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (

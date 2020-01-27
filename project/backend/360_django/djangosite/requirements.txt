@@ -17,3 +17,5 @@ pytest-django
 pytest
 pytest-cov
 mixer
+pandas
+freezegun
