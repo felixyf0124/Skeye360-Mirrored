@@ -352,10 +352,7 @@ export default class Vehicle extends Object {
         .getAngleOfVec(this.path[this.atPathSection][0].minus(this.position));
       let dir2 = ts
         .getAngleOfVec(this.path[this.atPathSection][1].minus(this.path[this.atPathSection][0]));
-      // dir.x = Math.round(dir.x * 10000)/10000;
-      // dir.y = Math.round(dir.y * 10000)/10000;
-      // dir2.x = Math.round(dir2.x * 10000)/10000;
-      // dir2.y = Math.round(dir2.y * 10000)/10000;
+
       // const prod = ts.tsCrossVec2(dir,dir2);
       dir = Math.round(dir * 10000) / 10000;
       dir2 = Math.round(dir2 * 10000) / 10000;

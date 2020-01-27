@@ -149,8 +149,9 @@ class Scene extends React.Component<StateProps & DispatchProps> {
   forceHelper: {startT: number;delay: number;
     fPeriod: number; isForced: boolean;};
 
-  tlDefaultDistribution:{tl0:number,tl1:number,tl3:number};
-  atArimaH:number;
+  tlDefaultDistribution: {tl0: number;tl1: number;tl3: number};
+
+  atArimaH: number;
 
   constructor(props: any) {
     super(props);
@@ -290,18 +291,18 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     ];
 
 
-    this.tlDefaultDistribution = {tl0:40,tl1:15,tl3:35};
+    this.tlDefaultDistribution = { tl0: 40, tl1: 15, tl3: 35 };
 
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0], 
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[0],
       this.tlDefaultDistribution.tl0);
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1], 
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[1],
       this.tlDefaultDistribution.tl1);
     // special overlap offset - 55
     const tl2 = this.tlDefaultDistribution.tl0 + this.tlDefaultDistribution.tl1;
     this.roadIntersection.addNewTrafficLight(trafficLightBindingData[2], tl2);
     this.roadIntersection.setTLOverlapOffset(2, -tl2);
 
-    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3], 
+    this.roadIntersection.addNewTrafficLight(trafficLightBindingData[3],
       this.tlDefaultDistribution.tl3);
     // special overlap offset - 50
     const tl4 = this.tlDefaultDistribution.tl1 + this.tlDefaultDistribution.tl3;
@@ -507,47 +508,45 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       };
       // console.log(this.pAiDataTL.current);
     }
-
   }
 
   /**
    * retrieve real time case tl data
    */
-  async getRealTimeTLUpdate():Promise<void>{
-    const {camera_url} = this.props
+  async getRealTimeTLUpdate(): Promise<void> {
+    const { camera_url } = this.props;
     const obj = await tsData.tlRealTimeData(camera_url);
-    if (obj !== undefined && obj[`east-west`] !== undefined) {
+    if (obj !== undefined && obj['east-west'] !== undefined) {
       const data0 = {
-        id:0,
-        t:obj[`east-west`],
-      }
+        id: 0,
+        t: obj['east-west'],
+      };
       const data1 = {
-        id:1,
-        t:obj[`left`],
-      }
+        id: 1,
+        t: obj.left,
+      };
       const data3 = {
-        id:3,
-        t:obj[`north-south`],
-      }
+        id: 3,
+        t: obj['north-south'],
+      };
       const dataPack = new Array<any>();
       dataPack.push(data0);
       dataPack.push(data1);
       dataPack.push(data3);
 
-      tlUpdateHelper.updateCaseRealTime(dataPack,this.roadIntersection);
+      tlUpdateHelper.updateCaseRealTime(dataPack, this.roadIntersection);
     }
   }
 
-  async getArimaTLUpdate():Promise<void>{
-
+  async getArimaTLUpdate(): Promise<void> {
     const currentH = new Date().getHours();
 
-    if(currentH !== this.atArimaH) {
-      const ip = `168.62.183.116:8000`;
+    if (currentH !== this.atArimaH) {
+      const ip = '168.62.183.116:8000';
 
       const distribution = await tsData.tlArimaData(ip);
 
-      if(distribution !== undefined ){
+      if (distribution !== undefined) {
         // console.log(distribution);
         this.tlDefaultDistribution = distribution;
         this.atArimaH = currentH;
@@ -556,7 +555,8 @@ class Scene extends React.Component<StateProps & DispatchProps> {
 
     tlUpdateHelper
       .updateCaseArima(
-        this.tlDefaultDistribution,this.roadIntersection);
+        this.tlDefaultDistribution, this.roadIntersection,
+      );
   }
 
   /**
@@ -831,8 +831,7 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     // tl case
     this.updateTLCase();
 
-    
-    
+
     this.roadIntersection.updateVehiclePosV2();
     // const interSec = 0;
 
@@ -919,22 +918,24 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
 
-      //real-time case
-      if(this.tlCaseId ===1){
+      // real-time case
+      if (this.tlCaseId === 1) {
         this.getRealTimeTLUpdate();
       }
 
       // arima case
-      if(this.tlCaseId ===2){
+      if (this.tlCaseId === 2) {
         this.getArimaTLUpdate();
       }
 
       // pedestrian case
-      if(this.tlCaseId === 3) {
+      if (this.tlCaseId === 3) {
         this.getPedestrianTLInfo();
         // this.pedestrianCaseTLUpdate();
-        tlUpdateHelper.updateCasePedestrian(this.pAiDataTL, this.roadIntersection, this.forceHelper);
-      };
+        tlUpdateHelper
+          .updateCasePedestrian(this.pAiDataTL,
+            this.roadIntersection, this.forceHelper);
+      }
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -1064,6 +1065,19 @@ class Scene extends React.Component<StateProps & DispatchProps> {
     delete this.objRawData;
     delete this.laneAreaContainer;
     delete this.mappingBGContainer;
+    delete this.atArimaH;
+    delete this.atIndex;
+    delete this.caseData;
+    delete this.caseId;
+    delete this.dataReady;
+    delete this.forceHelper;
+    delete this.objRawData;
+    delete this.pAiDataTL;
+    delete this.tlCaseBtnGroup;
+    delete this.tlCaseId;
+    delete this.tlDefaultDistribution;
+    delete this.trafficLightCounter;
+    delete this.trafficLightCounterOffset;
   }
 
   /**
@@ -1094,8 +1108,8 @@ class Scene extends React.Component<StateProps & DispatchProps> {
       const index = (i + 1);
       textStyle.fill = '0xFFFFFF';
       // index
-      const tDataId = new PIXI.Text(index.toString() 
-      + "|"+tlQueue[i].getId(), textStyle);
+      const tDataId = new PIXI.Text(`${index.toString()
+      }|${tlQueue[i].getId()}`, textStyle);
       tDataId.x = 8;
       tDataId.y = rowOffset * (i + 1);
       this.tlDisplayPanelContainer.addChild(tDataId);

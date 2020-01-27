@@ -228,53 +228,52 @@ export async function tlPedestrianData(url: string): Promise<any> {
 
 /**
  * specific retrieve function for tl timing of real-time case
- * @param url 
+ * @param url
  */
-export async function tlRealTimeData(url: string): Promise<any>{
-  const data = await retrieve(url, `timers`);
+export async function tlRealTimeData(url: string): Promise<any> {
+  const data = await retrieve(url, 'timers');
   return data;
 }
 
 /**
  * adapter for arima data
- * @param filtered 
+ * @param filtered
  */
-export function tlArimaDataAdapter(filtered:any){
+export function tlArimaDataAdapter(filtered: any) {
   const adapted = new Array<any>();
-  const tl0 = {id:0, count:0};
-  const tl1 = {id:0, count:0};
-  const tl3 = {id:0, count:0};
-  for (let i=0;i<filtered.length;i+=1){
-    // tl id 0 
-    //e->w
-    //w->s
-    if(filtered[i].dir === `ew`
-    || filtered[i].dir === `we`){
+  const tl0 = { id: 0, count: 0 };
+  const tl1 = { id: 0, count: 0 };
+  const tl3 = { id: 0, count: 0 };
+  for (let i = 0; i < filtered.length; i += 1) {
+    // tl id 0
+    // e->w
+    // w->s
+    if (filtered[i].dir === 'ew'
+    || filtered[i].dir === 'we') {
       tl0.count += filtered[i].count;
     }
 
-    // tl id 1 
-    //e->e e->s
-    //w->w w->n
-    if(filtered[i].dir === `ee`
-    || filtered[i].dir === `es`
-    || filtered[i].dir === `ww`
-    || filtered[i].dir === `wn`){
+    // tl id 1
+    // e->e e->s
+    // w->w w->n
+    if (filtered[i].dir === 'ee'
+    || filtered[i].dir === 'es'
+    || filtered[i].dir === 'ww'
+    || filtered[i].dir === 'wn') {
       tl1.count += filtered[i].count;
     }
 
     // tl id 3
-    //s->w s->n s->s
-    //n->e n->s n->w
-    if(filtered[i].dir === `sw`
-    || filtered[i].dir === `sn`
-    || filtered[i].dir === `ss`
-    || filtered[i].dir === `ne`
-    || filtered[i].dir === `ns`
-    || filtered[i].dir === `nw`){
+    // s->w s->n s->s
+    // n->e n->s n->w
+    if (filtered[i].dir === 'sw'
+    || filtered[i].dir === 'sn'
+    || filtered[i].dir === 'ss'
+    || filtered[i].dir === 'ne'
+    || filtered[i].dir === 'ns'
+    || filtered[i].dir === 'nw') {
       tl3.count += filtered[i].count;
     }
-
   }
 
   adapted.push(tl0);
@@ -286,51 +285,50 @@ export function tlArimaDataAdapter(filtered:any){
 
 /**
  * calculate tl distribution based on the adapeted data
- * @param adaptedData 
+ * @param adaptedData
  */
-export function tlArimaDataToTimeDistribution(adaptedData:any){
+export function tlArimaDataToTimeDistribution(adaptedData: any) {
   // total time period = 90s
   const tTime = 90.0;
   let tCount = 0;
-  for (let i=0;i<adaptedData.length;i+=1){
+  for (let i = 0; i < adaptedData.length; i += 1) {
     tCount += adaptedData[i].count;
   }
   // console.log(tCount);
-  const tl0 = tTime * 
-    (adaptedData[0].count / tCount);
+  const tl0 = tTime
+    * (adaptedData[0].count / tCount);
 
-  const tl1 = tTime * 
-    (adaptedData[1].count / tCount);
+  const tl1 = tTime
+    * (adaptedData[1].count / tCount);
 
-  const tl3 = tTime * 
-  (adaptedData[2].count / tCount);
+  const tl3 = tTime
+  * (adaptedData[2].count / tCount);
 
-  const tlTDistrib = {tl0:tl0,tl1:tl1,tl3:tl3};
+  const tlTDistrib = { tl0, tl1, tl3 };
   return tlTDistrib;
 }
 
 
-
 /**
  * specific retrieve function for tl timing of arima case
- * @param url 
+ * @param url
  */
-export async function tlArimaData(url:string): Promise<any>{
-  const data = await retrieve(url,`api/count`);
+export async function tlArimaData(url: string): Promise<any> {
+  const data = await retrieve(url, 'api/count');
   const currentH = new Date().getHours();
   // console.log(new Date());
   const filtered = new Array<any>();
-  if(data !== undefined && data.length !== 0){
-    for(let i = 0; i<data.length;i+=1){
-      //eg. "time": "2020-01-26T00:00:00Z",
-      const hh = parseInt(data[i].time.substring(11,13),10);
+  if (data !== undefined && data.length !== 0) {
+    for (let i = 0; i < data.length; i += 1) {
+      // eg. "time": "2020-01-26T00:00:00Z",
+      const hh = parseInt(data[i].time.substring(11, 13), 10);
       // console.log( hh);
-      
-      if(hh === currentH){
+
+      if (hh === currentH) {
         const cData = {
           dir: data[i].count_direction,
-          count: data[i].count
-        }
+          count: data[i].count,
+        };
 
         filtered.push(cData);
       }

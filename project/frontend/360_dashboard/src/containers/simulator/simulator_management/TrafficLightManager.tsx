@@ -113,10 +113,10 @@ export default class TrafficLightManager {
 
     /**
      * set total time at @param id
-     * @param id 
+     * @param id
      * @param totalTime = 5 + green time
      */
-    setTime(id:number, totalTime:number):void{
+    setTime(id: number, totalTime: number): void{
       const index = this.getTrafficLightIndex(id);
       this.trafficLightQueue[index].setTotalTime(totalTime);
     }
