@@ -5,7 +5,6 @@ import io
 import unittest
 import mongomock
 from unittest.mock import MagicMock, patch
-from ..real_time import Realtime
 sys.modules['cv2'] = MagicMock()
 sys.modules['requests'] = MagicMock()
 sys.modules['numpy'] = MagicMock()
@@ -16,7 +15,7 @@ sys.modules['scipy.optimze.linear_assignment_'] = MagicMock()
 sys.modules['tensorflow'] = MagicMock()
 sys.modules['Db'] = MagicMock()
 sys.modules['pandas'] = MagicMock()
-
+# from ..views import get_timers
 from django.http import JsonResponse
 # Create your tests here.
 
