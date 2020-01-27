@@ -7,8 +7,8 @@
         "july": 18.4, "august": 18, "september": 14.9, "october": 11.1, "november": 6.8, "december": 3.9}
     }],
   "exported":[
-    {"name": "temperature", "generator": "monthly-basis", "frequency": 3600000}
+    {"name": "temperature", "generator": "monthly-basis", "frequency": 900000}
   ],
-  "from": "2016-01-01 00:00:00.000",
+  "from": "2017-12-01 00:00:00.000",
   "to": "2017-12-31 23:59:59.999"
 }

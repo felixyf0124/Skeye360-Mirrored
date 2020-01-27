@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { CircularProgress } from '@material-ui/core/';
 
-const TrafficIntensityContainer = styled.div``;
+const Body = styled.div``;
 
 interface Props {
   camera_url: string;
@@ -11,37 +11,31 @@ interface Props {
 
 interface StateProps {
   error: string;
-  los: number;
   isLoaded: boolean;
 }
 
-interface IntensityState {
-  los: number;
-}
-
-// Traffic Intensity Metric
-class TrafficIntensity extends React.Component<{} & Props, StateProps> {
+// Camera Server Status
+class CameraConnectionStatus extends React.Component<{} & Props, StateProps> {
   constructor(props: any) {
     super(props);
     this.state = {
       error: '',
       isLoaded: false,
-      los: -1,
     };
   }
 
-  // Fetches LOS from the camera server for traffic intensity measurements.
+  // Fetches online status from the camera server for the server status.
   componentDidMount(): void {
     const { camera_url } = this.props;
+    // Using a random end point just to see if the connection is established.
     const API_URL = `http://${camera_url}/los/`;
     // eslint-disable-next-line no-shadow
     fetch(API_URL)
       .then((results) => results.json())
       .then(
-        (data: IntensityState) => {
+        () => {
           this.setState({
             isLoaded: true,
-            los: data.los,
           });
         },
         (error) => {
@@ -53,28 +47,22 @@ class TrafficIntensity extends React.Component<{} & Props, StateProps> {
       );
   }
 
-  // Render Traffic Intensity Metric
+  // Render the camera server status.
   render(): JSX.Element {
-    const { error, isLoaded, los } = this.state;
+    const { error, isLoaded } = this.state;
 
-    const displayIntensity = (): any => {
+    const displayServerStatus = (): any => {
       if (error) {
         // return `${error}`;
-        return 'N/A';
+        return 'Offline';
       }
-      if (!isLoaded || los === -1) {
+      if (!isLoaded) {
         return <CircularProgress />;
       }
-      if (los <= 20) {
-        return 'Low';
-      }
-      if (los > 55) {
-        return 'High';
-      }
-      return 'Medium';
+      return 'Online';
     };
-    return <TrafficIntensityContainer>{displayIntensity()}</TrafficIntensityContainer>;
+    return <Body>{displayServerStatus()}</Body>;
   }
 }
 
-export default TrafficIntensity;
+export default CameraConnectionStatus;

@@ -85,12 +85,32 @@ export default class RoadIntersection {
       return this.TLManager.getTrafficLightQueue();
     }
 
+    getTrafficLight(id: number): TrafficLight {
+      return this.TLManager.getTrafficLight(id);
+    }
+
     getTrafficLightState(id: number): string {
       return this.TLManager.getTrafficLightState(id);
     }
 
     getTrafficLightCD(id: number): number {
       return Math.round(this.TLManager.getTrafficLightCD(id));
+    }
+
+    getTrafficLightSetting(id: number): {green: number;yellow: number} {
+      const tl = this.TLManager.getTrafficLight(id);
+      return tl.getCountDownSetting();
+    }
+
+    getTrafficLightIndex(id: number): number {
+      return this.TLManager.getTrafficLightIndex(id);
+    }
+
+    /**
+     * get traffic light counter offset
+     */
+    getTLCounterOffset(): number {
+      return this.TLManager.getTimeOffset();
     }
 
     getLaneState(sectionId: number, laneId: number, isLaneIn?: boolean): string {
@@ -147,6 +167,33 @@ export default class RoadIntersection {
     }
 
     /**
+     * set tl overlap offset
+     * if tl overlaps with another tl either the ealier one (-) or later one (+)
+     * @param id
+     * @param overlapOffset
+     */
+    setTLOverlapOffset(id: number, overlapOffset: number): void{
+      this.TLManager.setTrafficLightOverlapOffset(id, overlapOffset);
+    }
+
+    setTLCounterOffset(offset: number) {
+      this.TLManager.setTimeOffset(offset);
+    }
+
+    /**
+     * set tl total time in second
+     * @param id
+     * @param totalTime = 5 + green
+     */
+    setTrafficLightTime(id: number, totalTime: number): void{
+      this.TLManager.setTime(id, totalTime);
+    }
+
+
+    /**
+     * old bug function
+     * has been replaced by addNewVehicleV2
+     * To be removed
      * add new vehicle
      * this is different from addNewSimpleVehicle
      * @param laneId
@@ -167,6 +214,7 @@ export default class RoadIntersection {
 
       this.roadSections[this.getRoadSectionIndex(objV.getRoadSectionId())]
         .laneIn[objV.getLaneId()].addObjId(objV.getId());
+      // const laneFrom = this.getLane(laneId, this.getRoadSectionIndex(sectionId));
       const laneFrom = this.getLane(laneId, sectionId);
       const lanePointer = laneFrom.getHeadLink();
       const laneTo = this.getLane(lanePointer[0].getLaneId(),
@@ -179,20 +227,84 @@ export default class RoadIntersection {
       objV.path.push([laneTo.getTail(), laneTo.getHead()]);
 
       const dir = ts.tsNormalize(laneFrom.getHead().minus(laneFrom.getTail()));
-
+      objV.setDirection(dir);
       if (laneFrom.getObjIndex(objV.getId()) > 0) {
         const id = laneFrom.getObjects()[laneFrom.getObjIndex(objV.getId()) - 1];
+        // console.log(id);
         const frontV = this.getVehicle(id);
-        const frontPos = frontV.getPosition().minus(dir.multiply(safetyDis));
-        const dis1 = ts.tsLength(frontPos.minus(laneFrom.getHead()));
+        // const frontPos = frontV.getPosition().minus(dir.multiply(safetyDis));
+        const frontPos = frontV.getPosition();
+        const frontToTravel = ts.tsLength(frontPos.minus(
+          frontV.path[frontV.atPathSection][frontV.atPath + 1],
+        ));
+
+
+        // const dis1 = ts.tsLength(frontPos.minus(laneFrom.getHead()));
         const dis2 = ts.tsLength(laneFrom.getTail().minus(laneFrom.getHead()));
-        if (dis1 < dis2) {
+        if (frontToTravel + safetyDis < dis2) {
           objV.setPosition(laneFrom.getTail());
         } else {
-          objV.setPosition(frontPos);
+          objV.setPosition(laneFrom.getTail());
+          // objV.setPosition(frontPos.minus(dir.multiply(safetyDis)));
         }
       } else {
         objV.setPosition(laneFrom.getTail());
+      }
+      // console.log(objV.getPosition());
+      this.vehicles.push(objV);
+      this.vehicleCount += 1;
+    }
+
+    /**
+     * R2 new funciton
+     * add new vehicle
+     * this is different from addNewSimpleVehicle
+     * @param laneId
+     * @param sectionId
+     * @param speed
+     * @param vehicleId
+     * @param position
+     */
+    addNewVehicleV2(laneId: number, sectionId: number, speed: number,
+      vehicleId?: number, position?: Vec2): void {
+      let vId = vehicleId;
+      if (vId === undefined) {
+        const str1 = Date.now().toString();
+        const str2 = Math.round(Math.random() * 1000);
+        vId = parseInt(`${str1}${str2}`, 10);
+      }
+      const objV = new Vehicle(vId, laneId, sectionId, speed, position);
+
+      this.roadSections[this.getRoadSectionIndex(objV.getRoadSectionId())]
+        .laneIn[objV.getLaneId()].addObjId(objV.getId());
+      // const laneFrom = this.getLane(laneId, this.getRoadSectionIndex(sectionId));
+      const laneFrom = this.getLane(laneId, sectionId);
+      const lanePointer = laneFrom.getHeadLink();
+      const laneTo = this.getLane(lanePointer[0].getLaneId(),
+        lanePointer[0].getSectionId(), false);
+      // safety dis
+      const safetyDis = this.laneWidth * 1.1;
+      const vWidth = this.laneWidth * 0.16;
+      objV.path.push([laneFrom.getTail(), laneFrom.getHead()]);
+      objV.path.push([laneFrom.getHead(), laneTo.getTail()]);
+      objV.path.push([laneTo.getTail(), laneTo.getHead()]);
+
+      const dir = ts.tsNormalize(laneFrom.getHead().minus(laneFrom.getTail()));
+      objV.setDirection(dir);
+      objV.setPosition(laneFrom.getTail());
+      for (let j = 0; j < this.vehicles.length; j += 1) {
+        if (objV.getId() !== this.vehicles[j].getId()) {
+          if (objV.checkFrontNBackObsticle(
+            this.vehicles[j].getPosition(), safetyDis, vWidth,
+          )) {
+            if (objV.checkFrontNBackObsticle(
+              this.vehicles[j].getPosition(), safetyDis * 0.8, vWidth,
+            )) {
+              const currentPos = objV.getPosition();
+              objV.setPosition(currentPos.minus(dir.multiply(0.9 * safetyDis)));
+            }
+          }
+        }
       }
       this.vehicles.push(objV);
       this.vehicleCount += 1;
@@ -428,16 +540,44 @@ export default class RoadIntersection {
      */
     addNewLane(roadSectionId: number, laneDirection: number,
       laneType: string, numOfLanes: number): void {
-      this.roadSections[roadSectionId].addNewLane(laneDirection, laneType, numOfLanes);
+      /**
+         * since this function is called before road resort
+         * the road section id is same as the index
+         * this.roadSections[(roadSectionId)]
+         * .addNewLane(laneDirection, laneType, numOfLanes);
+         */
+
+      this.roadSections[this.getRoadSectionIndex(roadSectionId)]
+        .addNewLane(laneDirection, laneType, numOfLanes);
     }
 
+    /**
+     * link two lanes incoming(as a tail) -> outgoing(as a head)
+     * @param tail
+     * @param head
+     */
     linkLanes(tail: LanePointer, head: LanePointer): void {
-      this.roadSections[tail.getSectionId()].laneIn[tail.getLaneId()].addHeadLink(head);
-      this.roadSections[head.getSectionId()].laneOut[head.getLaneId()].addTailLink(tail);
+      // this.roadSections[tail.getSectionId()].laneIn[tail.getLaneId()].addHeadLink(head);
+      // this.roadSections[head.getSectionId()].laneOut[head.getLaneId()].addTailLink(tail);
+      this.roadSections[this.getRoadSectionIndex(tail.getSectionId())]
+        .laneIn[tail.getLaneId()].addHeadLink(head);
+      this.roadSections[this.getRoadSectionIndex(head.getSectionId())]
+        .laneOut[head.getLaneId()].addTailLink(tail);
 
       // TODO
       // should we menually set road direction like straight turn left or right,
       // or make it auto adjusted when the lanes are linked to each other?
+    }
+
+    /**
+     * link two lanes by 4 inputs
+     * @param s1
+     * @param l1
+     * @param s2
+     * @param l2
+     */
+    linkLanes4i(s1: number, l1: number, s2: number, l2: number): void {
+      this.linkLanes(new LanePointer(s1, l1), new LanePointer(s2, l2));
     }
 
     /**
@@ -464,6 +604,9 @@ export default class RoadIntersection {
     }
 
     /**
+     * old function
+     * to be removed
+     * replaced by new improved function V2
      * update vehicles' positions
      * these vehicles are from the vehicles array not the simpleVehicles
      */
@@ -494,6 +637,72 @@ export default class RoadIntersection {
         }
         this.vehicles[i].updatePosition(this.vehicles[i].getSpeed() * this.vehicles[i].getDeltaT());
       }
+      this.checkTransitionVehicle();
+      while (this.checkLeavingVehicle());
+    }
+
+    /**
+     * R2 new function
+     * update vehicle posiiton with different algorithem
+     * @param deltaT
+     */
+    updateVehiclePosV2(deltaT?: number): void{
+      const safetyDis = this.laneWidth * 1.1;
+      const vWidth = this.laneWidth * 0.3;
+      for (let i = 0; i < this.vehicles.length; i += 1) {
+        let go = true;
+        for (let j = 0; j < this.vehicles.length; j += 1) {
+          if (i !== j) {
+            if (this.vehicles[i].checkFrontObsticle(
+              this.vehicles[j].getPosition(), safetyDis, vWidth,
+            )) {
+              const targetSpeed = this.vehicles[j].getSpeed();
+              const dis = ts.tsLength(this.vehicles[i].getPosition()
+                .minus(this.vehicles[j].getPosition()));
+              const mSpeed = targetSpeed * (dis / safetyDis);
+              const mSpeed2 = this.vehicles[i].getTargetSpeed();
+              if (mSpeed2 !== undefined) {
+                this.vehicles[i].targetSpeed = Math
+                  .min(mSpeed, mSpeed2);
+              } else {
+                this.vehicles[i].targetSpeed = mSpeed;
+              }
+              go = false;
+            }
+          }
+        }
+
+        // if(go === true){
+        const sectionId = this.vehicles[i].getRoadSectionId();
+        const laneId = this.vehicles[i].getLaneId();
+        if (sectionId !== -1 && laneId !== -1) {
+          const tlId = this.roadSections[this.getRoadSectionIndex(sectionId)]
+            .getLaneAt(laneId).getTrafficLightId();
+          const tlState = this.getTrafficLightState(tlId);
+          const tlCD = this.getTrafficLightCD(tlId);
+          if (tlState === 'red' || (tlState === 'yellow' && tlCD < 3)) {
+            const stopLine = this.getLane(laneId, sectionId).getHead();
+
+            if (this.vehicles[i]
+              .checkFrontObsticle(stopLine, safetyDis, vWidth)) {
+              go = false;
+              this.vehicles[i].targetSpeed = undefined;
+            }
+          }
+        } else {
+          // console.log("unidefined section or lane id");
+        }
+        // }
+
+        if (go) {
+          this.vehicles[i].move();
+        } else {
+          this.vehicles[i].stop();
+        }
+
+        this.vehicles[i].update(deltaT);
+      }
+      // the following two function calls are very important
       this.checkTransitionVehicle();
       while (this.checkLeavingVehicle());
     }

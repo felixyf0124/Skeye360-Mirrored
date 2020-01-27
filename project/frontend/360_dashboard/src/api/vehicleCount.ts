@@ -1,5 +1,4 @@
 export interface Response {
-  intersection_id: number;
   los: number;
 }
 

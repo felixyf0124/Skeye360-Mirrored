@@ -81,7 +81,6 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       const { data } = action as GetCountSuccessAction;
       return {
         ...state,
-        intersection_id: data.intersection_id,
         los: data.los,
         error: '',
         success: true,
