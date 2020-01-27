@@ -1,7 +1,5 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
-import AvgWaitingTime from '../PostData/avgWaitingTime.json';
-import AvgWaitingTimeAfter from '../PostData/avgWaitingTimeAfter.json';
 
 // For more Line Chart information:
 // https://apexcharts.com/react-chart-demos/line-charts/basic/
@@ -9,24 +7,35 @@ import AvgWaitingTimeAfter from '../PostData/avgWaitingTimeAfter.json';
 // A chart that shows the average waiting time for cars going from north to south
 const MovingAvgChart = (values: any): JSX.Element => {
   
-  const data1 = Array();
-  const data2 = Array();
-  const data3 = Array();
+  const data1x = Array();
+  const data2x = Array();
+  const data3x = Array();
+
+  const data1y = Array();
+  const data2y = Array();
+  const data3y = Array();
 
   for(let i=0; i < values.values[0].time.length; i++){
-    data1.push({[values.values[0].time[i]]: values.values[0].count[i]});
+    //data1.push((values.values[0].time[i] + ',' + values.values[0].count[i]).toString());
+    data1x.push(parseInt(values.values[0].time[i]));
+    data1y.push(parseInt(values.values[0].count[i]));
   };
 
+  console.log('leng' + values.values[1].time.length)
   for(let i=0; i< values.values[1].time.length; i++){
-    data2.push({[values.values[1].time[i]]: values.values[1].count[i]});
+    //data2.push({[values.values[1].time[i]]: values.values[1].count[i]});
+    data2x.push(parseInt(values.values[1].time[i]));
+    data2y.push(parseInt(values.values[1].count[i]));
   };
   for(let i=0; i<values.values[2].time.length; i++){
-    data3.push({[values.values[2].time[i]]: values.values[2].count[i]});
+   // data3.push({[values.values[2].time[i]]: values.values[2].count[i]});
+    data3x.push(parseInt(values.values[2].time[i]));
+    data3y.push(parseInt(values.values[2].count[i]));
   }; 
+  console.log('DATAS');
+  console.log(data1x[0]);
+  console.log(data1y[0]);
 
-  console.log(data1);
-
-  //console.log(data1);
   
   const state = {
     options: {
@@ -60,14 +69,37 @@ const MovingAvgChart = (values: any): JSX.Element => {
           text: 'Car Count',
         },
       },
-      colors: ['#04a777'],
-      
+      colors: ['#04a777','#000','#444']
     },
     series: [
       {
         name: 'Number Of Cars',
         data: [
-          [1,0],[22,4]
+          [data1x[0],data1y[0]],[data1x[1],data1y[1]],[data1x[2],data1y[2]],[data1x[3],data1y[3]],[data1x[4],data1y[4]],
+          [data1x[5],data1y[5]],[data1x[6],data1y[6]],[data1x[7],data1y[7]],[data1x[8],data1y[8]],[data1x[9],data1y[9]],
+          [data1x[10],data1y[10]],[data1x[11],data1y[11]],[data1x[12],data1y[12]],[data1x[13],data1y[13]],[data1x[14],data1y[14]],
+          [data1x[15],data1y[15]],[data1x[16],data1y[16]],[data1x[17],data1y[17]],[data1x[18],data1y[18]],[data1x[19],data1y[19]],
+          [data1x[20],data1y[20]],[data1x[21],data1y[21]],[data1x[22],data1y[22]],[data1x[23],data1y[23]],
+        ],
+      },
+      {
+        name: 'Number Of Cars',
+        data: [
+          [data2x[0],data2y[0]],[data2x[1],data2y[1]],[data2x[2],data2y[2]],[data2x[3],data2y[3]],[data2x[4],data2y[4]],
+          [data2x[5],data2y[5]],[data2x[6],data2y[6]],[data2x[7],data2y[7]],[data2x[8],data2y[8]],[data2x[9],data2y[9]],
+          [data2x[10],data2y[10]],[data2x[11],data2y[11]],[data2x[12],data2y[12]],[data2x[13],data2y[13]],[data2x[14],data2y[14]],
+          [data2x[15],data2y[15]],[data2x[16],data2y[16]],[data2x[17],data2y[17]],[data2x[18],data2y[18]],[data2x[19],data2y[19]],
+          [data2x[20],data2y[20]],[data2x[21],data2y[21]],[data2x[22],data2y[22]],[data2x[23],data2y[23]],
+        ],
+      },
+      {
+        name: 'Number Of Cars',
+        data: [
+          [data3x[0],data3y[0]],[data3x[1],data3y[1]],[data3x[2],data3y[2]],[data3x[3],data3y[3]],[data3x[4],data3y[4]],
+          [data3x[5],data3y[5]],[data3x[6],data3y[6]],[data3x[7],data3y[7]],[data3x[8],data3y[8]],[data3x[9],data3y[9]],
+          [data3x[10],data3y[10]],[data3x[11],data3y[11]],[data3x[12],data3y[12]],[data3x[13],data3y[13]],[data3x[14],data3y[14]],
+          [data3x[15],data3y[15]],[data3x[16],data3y[16]],[data3x[17],data3y[17]],[data3x[18],data3y[18]],[data3x[19],data3y[19]],
+          [data3x[20],data3y[20]],[data3x[21],data3y[21]],[data3x[22],data3y[22]],[data3x[23],data3y[23]],
         ],
       },
     ],
