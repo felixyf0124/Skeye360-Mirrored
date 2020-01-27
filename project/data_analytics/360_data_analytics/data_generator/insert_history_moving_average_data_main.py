@@ -1,9 +1,7 @@
 """This module is to read csv file and save to database"""
 import logging
-import csv
 from tools.format_csv_file import read_format_csv
 from db_connection.db_connection import DBConnection
-import pandas as pd
 
 LOGGER = logging.getLogger('insert_history_moving_average_data_main.py')
 
@@ -15,6 +13,7 @@ def drop_na(data_frame):
 
 
 def main():
+    """This function is to calculate MA and insert history MA data from csv to mongoDB"""
     logging.info('main')
     read_file_name = 'csv/test.csv'
     index_col = 'date'
@@ -32,7 +31,7 @@ def main():
     data_base.set_collection_name('djangosite_api_count')
 
     # Step 4: Find latest id
-    count_latest_id = data_base.find_latest_id('djangosite_api_count');
+    count_latest_id = data_base.find_latest_id('djangosite_api_count')
 
     for index, row in data_frame.iterrows():
         new_count = {

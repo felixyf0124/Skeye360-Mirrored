@@ -14,7 +14,7 @@ def main():
     # Step 2: Setup collection
     data_base.set_collection_name('djangosite_api_count')
 
-    # Step 3: Calculate latest an hour's moving average for each direction
+    # Step 3: Calculate and insert latest an hour's moving average for each direction
     cal_one_hr_moving_average(data_base, directions, intersecion_id)
 
 
