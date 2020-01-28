@@ -53,8 +53,7 @@ pipeline {
                     }
                     steps {
                         dir("project/backend/backend_django/camera/") {
-                            sh "python3 test.py"
-                            sh "pytest --cov=recognition recognition/test/test_functions.py"
+                            sh "pytest --cov=. real_time/test/ recognition/test/"
                         }
                     }
                 }
