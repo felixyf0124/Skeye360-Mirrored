@@ -1,0 +1,30 @@
+django==2.2
+djangorestframework==3.9.2
+django-cors-headers
+django-extensions # ref: https://django-extensions.readthedocs.io/en/latest/installation_instructions.html
+django-filter # ref: https://django-filter.readthedocs.io/en/master/
+djongo==1.2.35
+rest-meets-djongo
+sqlparse==0.2.4
+wheel
+markdown
+django-rest-swagger
+# For testing:
+pylint
+django-rest-knox
+pytest-django
+pytest
+pytest-cov
+mixer
+pandas
+numpy
+# Link with mongoDB
+pymongo
+# For data generator to generate normal distribution data
+statsmodels
+# plot data
+matplotlib
+# mock mongoDB
+mongomock
+pmdarima
+freezegun

@@ -27,5 +27,5 @@ Under project folder:
 1. [Frontend](https://github.com/vincentsun870530/Soen490/tree/master/project/frontend/360_dashboard)
 2. [Backend_RESTAPI](https://github.com/vincentsun870530/Soen490/tree/master/project/backend/360_django)
 3. [Backend_Detection](https://github.com/vincentsun870530/Soen490/tree/master/project/backend/backend_django)
-4. [Backend_Data_Analytics](https://github.com/vincentsun870530/Soen490/tree/master/project/data_analytics/360_python/analytics_models)
+4. [Backend_Data_Analytics](https://github.com/vincentsun870530/Soen490/tree/master/project/data_analytics/360_data_analytics)
 5. [MongoDB](https://github.com/vincentsun870530/Soen490/tree/master/project/database/360_mongo)
