@@ -10,6 +10,15 @@ Note: `8000:8000` a placeholder port. It will be changed accordingly to the port
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Running the Frontend On The Server
+1. Navigate to `/Soen490/projects/frontend/360_dashboard/`
+
+### On Mac or Linux
+Execute the command `yarn prod`
+
+### On Windows
+Execute the command `($env:REACT_APP_API_URL = "168.62.183.116:8000") -and (yarn start:windows)`
+
 ## Available Scripts
 
 In the project directory, you can run:
