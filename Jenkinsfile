@@ -59,7 +59,7 @@ pipeline {
                 }
 
                 //Testing data_analytics
-                 stage('test_djangoserver') 
+                stage('test_data_analytics') 
                 {
                     agent {
                         docker "project_360_django"
