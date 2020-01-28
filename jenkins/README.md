@@ -3,7 +3,7 @@
 
 ## Prerequisites
 
-mongo container should be running.
+mongo container must be running.
 
 ### How to start docker container?
 
@@ -11,11 +11,11 @@ mongo container should be running.
 
 ```docker-compose -f docker-compose-jenkins.yml up --build```
 
-## Getting Started
+## How to update my python testing environment?
 
-### STEP 1: modify requirements to install your python dependencies
+### STEP 1: Modify requirements.txt to add your new python dependencies
 
-### SETP 2: ssh to jenkins server 40.121.23.48
+### SETP 2: SSH jenkins server 40.121.23.48
 
 ```cd /home/Soen490/Soen490```
 
