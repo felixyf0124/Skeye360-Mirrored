@@ -2,22 +2,37 @@
 /* eslint-disable max-len */
 import React from 'react';
 import { connect } from 'react-redux';
+import { CircularProgress } from '@material-ui/core';
 import { RootState } from '../reducers/rootReducer';
-import { getCountMAvg, GetCountMAvgAction } from '../contexts/countTime';
-import { Response as countResponse } from '../api/countTime';
 import MovingAvgChart from './MovingAvgChart';
 
-interface StateProps {
-  countAvg: countResponse;
+interface Props {
   intersection_id: string;
-  dateLastYear: string;
-  dateTomorrowLastYear: string;
 }
-interface DispatchProps {
-  getCountMAvg(id: string, dateLastYear: string, dateTomorrowLastYear: string): GetCountMAvgAction;
+
+interface StateProps {
+  error: any;
+  isLoaded: boolean;
+  dataNS: any;
 }
-// Function that generates the exact date last year to retrieve based on today's date as well as the day after it
-// This gets saved into a STATE that will be passed to the GET Request to retrieve all of the count in an intersection of a particular date.
+
+const { REACT_APP_API_URL } = process.env;
+const APIDomain = REACT_APP_API_URL;
+
+// Function that performs the GET Request to retrieve the car count of a specific direction.
+export const getCountMAvgNS = async (intersection_id: string): Promise<Response> => {
+  const url = `//${APIDomain}/api/count/?intersection_id=${intersection_id}&count_type=arima&count_direction=ns`;
+  const settings = {
+    method: 'GET',
+    headers: {},
+  };
+  const response = await fetch(url, settings);
+  const data = (await response.json()) as Response;
+  return data;
+};
+
+
+// Function that generates the exact date last year to retrieve based on today's date as well as the day after it.
 function getDateLastYear() {
   // create a new date object based on today and convert to ISO string
   const today = new Date();
@@ -47,156 +62,69 @@ const datesLastYear = getDateLastYear();
 const date1 = datesLastYear[0];
 const date2 = datesLastYear[1];
 
-// Function that places every count response in a different array based on its direction
-/* eslint-disable @typescript-eslint/no-array-constructor */
-function mapByDirection(counts: countResponse) {
-  const ns = {
-    count: Array(),
-    direction: 'ns',
-    time: Array(),
-  };
-  const sn = {
-    count: Array(),
-    direction: 'sn',
-    time: Array(),
-  };
-  const en = {
-    count: Array(),
-    direction: 'en',
-    time: Array(),
-  };
-  const es = {
-    count: Array(),
-    direction: 'es',
-    time: Array(),
-  };
-  const ew = {
-    count: Array(),
-    direction: 'ew',
-    time: Array(),
-  };
-  const ne = {
-    count: Array(),
-    direction: 'ne',
-    time: Array(),
-  };
-  const nw = {
-    count: Array(),
-    direction: 'nw',
-    time: Array(),
-  };
-  const se = {
-    count: Array(),
-    direction: 'se',
-    time: Array(),
-  };
-  const sw = {
-    count: Array(),
-    direction: 'sw',
-    time: Array(),
-  };
-  const we = {
-    count: Array(),
-    direction: 'we',
-    time: Array(),
-  };
-  const wn = {
-    count: Array(),
-    direction: 'wn',
-    time: Array(),
-  };
-  const ws = {
-    count: Array(),
-    direction: 'ws',
-    time: Array(),
-  };
-
-  // Iterating through the count responses
-  Object.values(counts).forEach((value) => {
-    switch (value.count_direction) {
-      case 'ns':
-        ns.count.push(value.count);
-        ns.time.push(value.time.substring(11, 12));
-        break;
-      case 'sn':
-        sn.count.push(value.count);
-        sn.time.push(value.time.substring(11, 12));
-        break;
-      case 'en':
-        en.count.push(value.count);
-        en.time.push(value.time.substring(11, 12));
-        break;
-      case 'es':
-        es.count.push(value.count);
-        es.time.push(value.time.substring(11, 12));
-        break;
-      case 'ew':
-        ew.count.push(value.count);
-        ew.time.push(value.time.substring(11, 12));
-        break;
-      case 'ne':
-        ne.count.push(value.count);
-        ne.time.push(value.time.substring(11, 12));
-        break;
-      case 'nw':
-        nw.count.push(value.count);
-        nw.time.push(value.time.substring(11, 12));
-        break;
-      case 'se':
-        se.count.push(value.count);
-        se.time.push(value.time.substring(11, 12));
-        break;
-      case 'sw':
-        sw.count.push(value.count);
-        sw.time.push(value.time.substring(11, 12));
-        break;
-      case 'we':
-        we.count.push(value.count);
-        we.time.push(value.time.substring(11, 12));
-        break;
-      case 'wn':
-        wn.count.push(value.count);
-        wn.time.push(value.time.substring(11, 12));
-        break;
-      case 'ws':
-        ws.count.push(value.count);
-        ws.time.push(value.time.substring(11, 12));
-        break;
-      default:
-        ws.count.push(0);
-    }
-  });
-  return [ns, sn, en, es, ew, ne, nw, se, sw, we, wn, ws];
+/* Function that retrieves specific key-pair value of data:
+  Input: array of different time entries for a specific direction.
+  Output: Array of key-pair values for time and count which will be passed to the moving average graph. */
+function splitIntoTwo(values: any) {
+  const data1x = [];
+  const data1y = [];
+  let i;
+  let j;
+  /* eslint-disable no-plusplus */
+  /* eslint-disable radix */
+  for (i = 0; i < values.length; i++) {
+    data1x.push(parseInt(values[i].time.substring(11, 13)));
+  }
+  for (j = 0; j < values.length; j++) {
+    data1y.push(parseInt(values[j].count));
+  }
+  return [[data1x[0], data1y[0]], [data1x[1], data1y[1]], [data1x[2], data1y[2]], [data1x[3], data1y[3]], [data1x[4], data1y[4]],
+    [data1x[5], data1y[5]], [data1x[6], data1y[6]], [data1x[7], data1y[7]], [data1x[8], data1y[8]], [data1x[9], data1y[9]],
+    [data1x[10], data1y[10]], [data1x[11], data1y[11]], [data1x[12], data1y[12]], [data1x[13], data1y[13]], [data1x[14], data1y[14]],
+    [data1x[15], data1y[15]], [data1x[16], data1y[16]], [data1x[17], data1y[17]], [data1x[18], data1y[18]], [data1x[19], data1y[19]],
+    [data1x[20], data1y[20]], [data1x[21], data1y[21]], [data1x[22], data1y[22]], [data1x[23], data1y[23]]];
 }
 
-// Class that renders the Moving Average Chart
-class DisplayCount extends React.Component<StateProps & DispatchProps> {
+class DisplayCount extends React.Component<{} & Props, StateProps> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      dataNS: null,
+    };
+  }
+
   public componentDidMount(): void {
-    const { getCountMAvg, intersection_id } = this.props;
-    getCountMAvg(intersection_id, date1, date2); // this is what calls the GET request
+    const { intersection_id } = this.props;
+    getCountMAvgNS(intersection_id)
+      .then(
+        (data: any) => {
+          this.setState({
+            isLoaded: true,
+            dataNS: splitIntoTwo(data),
+          });
+        },
+      );
   }
 
   public render(): JSX.Element {
-    const { countAvg } = this.props;
-    const directions = mapByDirection(countAvg);
-    return (
-      <MovingAvgChart values={directions} />
-    );
+    const { isLoaded, dataNS, error } = this.state;
+
+    if (!isLoaded) {
+      return <CircularProgress />;
+    }
+    if (error) {
+      return <h1>Error</h1>;
+    }
+    return <MovingAvgChart values={dataNS} />;
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => ({
-  countAvg: state.countTime,
+const mapStateToProps = (state: RootState): Props => ({
   intersection_id: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
   ),
-  dateLastYear: date1,
-  dateTomorrowLastYear: date2,
-
 });
 
-const mapDispatchToProps: DispatchProps = {
-  getCountMAvg,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DisplayCount);
+export default connect(mapStateToProps)(DisplayCount);

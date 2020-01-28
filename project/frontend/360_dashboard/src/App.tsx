@@ -39,7 +39,6 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
           />
           <Route exact path="/chartsprototype" component={ChartsPrototype} />
           <Route exact path="/map" component={SkeyeMap} />
-          <Route exact path="/countTest/" component={DisplayCount} />
         </SessionRoutes>
       </Switch>
     </Route>

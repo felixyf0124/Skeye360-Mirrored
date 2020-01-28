@@ -171,7 +171,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
                 <SouthChart />
               </BigChartContainer>
               <BigChartContainer>
-                <AvgWaitTimeChart />
+                <DisplayCount />
               </BigChartContainer>
             </ChartVerticalFlexBox>
           </Body>
