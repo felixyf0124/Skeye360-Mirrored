@@ -10,23 +10,23 @@ pipeline {
 
                 //Testing frontend
                 //Ref: https://hackernoon.com/continuous-delivery-of-react-app-with-jenkins-and-docker-8a1ae1511b86
-                // stage('test_frontend') 
-                // {
-                //    steps
-                //    {
-                //     script 
-                //        {
-                //            dir("project/frontend/360_dashboard")
-                //            {
-                //                 sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
-                //                 // Do tests
-                //                 sh 'docker run --rm react-test'
-                //                 // remove image
-                //                 sh 'docker rmi react-test'
-                //            }
-                //        }
-                //     }
-                // }
+                stage('test_frontend') 
+                {
+                   steps
+                   {
+                    script 
+                       {
+                           dir("project/frontend/360_dashboard")
+                           {
+                                sh 'docker build -t react-test -f Dockerfile.test --no-cache .'
+                                // Do tests
+                                sh 'docker run --rm react-test'
+                                // remove image
+                                sh 'docker rmi react-test'
+                           }
+                       }
+                    }
+                }
                 //Testing django api
                 stage('test_djangoapi') {
                     agent {
@@ -57,6 +57,20 @@ pipeline {
                         }
                     }
                 }
+
+                //Testing data_analytics
+                 stage('test_djangoserver') 
+                {
+                    agent {
+                        docker "project_360_django"
+                    }
+                    steps {
+                        dir("project/data_analytics/360_data_analytics/") {
+                            sh "pytest --cov=. tests/"
+                        }
+                    }
+                }
+
         }
 
     // Clean up
