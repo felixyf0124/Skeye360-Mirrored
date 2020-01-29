@@ -21,6 +21,7 @@ const { REACT_APP_API_URL } = process.env;
 const APIDomain = REACT_APP_API_URL;
 
 // Function that performs the GET Request to retrieve the car count of a specific direction.
+// change to any direcitons
 export const getCountMAvgNS = async (intersection_id: string): Promise<Response> => {
   const url = `//${APIDomain}/api/count/?intersection_id=${intersection_id}&count_type=arima&count_direction=ns`;
   const settings = {
