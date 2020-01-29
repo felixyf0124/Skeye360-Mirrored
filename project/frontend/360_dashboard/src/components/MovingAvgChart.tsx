@@ -1,5 +1,3 @@
-/* eslint-disable no-plusplus */
-/* eslint-disable max-len */
 import React from 'react';
 import Chart from 'react-apexcharts';
 
