@@ -16,6 +16,7 @@ import { logClick } from '../contexts/LogClicks';
 import SouthChart from '../components/SouthChart';
 import GoogleMiniMap from '../components/GoogleMiniMap';
 import { SKEYE_WHITE, LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
+import DisplayCount from '../components/DisplayMovAVG';
 
 // styled-component for map, chart and flexboxes
 const Body = styled.div`
@@ -170,7 +171,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
                 <SouthChart />
               </BigChartContainer>
               <BigChartContainer>
-                <AvgWaitTimeChart />
+                <DisplayCount />
               </BigChartContainer>
             </ChartVerticalFlexBox>
           </Body>
@@ -214,7 +215,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
               </SmallChartContainer>
             </ChartVerticalFlexBox>
             <BigChartContainer>
-              <AvgWaitTimeChart />
+              <DisplayCount />
             </BigChartContainer>
           </ChartHorizontalFlexBox>
         </Body>
