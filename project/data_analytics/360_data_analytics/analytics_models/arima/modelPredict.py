@@ -55,7 +55,7 @@ class modelPredict:
         client = dbConnect.connect()
         wtd = writeToDatabase()
         collection = wtd.connection('360backend', 'djangosite_api_count', client)
-        intersectionID = 1
+        intersectionID = 2
         # The following command calls the write method in writeToDatabase.py to write to the mongodb
         wtd.write(direction, forecast, listOfDate, "arima", intersectionID, collection)
         # The following command calls the read method in writeToDatabase.py to read from the mongodb
