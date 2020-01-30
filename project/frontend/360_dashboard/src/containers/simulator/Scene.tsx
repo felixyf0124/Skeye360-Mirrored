@@ -939,11 +939,21 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       if (isSmartTL) {
         // real-time case
         if (this.tlCaseId === 1) {
+          
+          const tlQue = this.roadIntersection.getTrafficLightQueue();
+          for (let i = 0; i < tlQue.length; i += 1) {
+            this.roadIntersection.deForceTLState(i);
+          }
           this.getRealTimeTLUpdate();
         }
 
         // arima case
         if (this.tlCaseId === 2) {
+
+          const tlQue = this.roadIntersection.getTrafficLightQueue();
+          for (let i = 0; i < tlQue.length; i += 1) {
+            this.roadIntersection.deForceTLState(i);
+          }
           this.getArimaTLUpdate();
         }
 

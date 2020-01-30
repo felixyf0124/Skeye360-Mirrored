@@ -82,6 +82,9 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
   const noRedTL = {
     id: NaN, cd: NaN, state: '', index: NaN,
   };
+  for (let i = 0; i < tlQue.length; i += 1) {
+    intersection.deForceTLState(i);
+  }
   // find which tl now is not red
   for (let i = 0; i < tlQue.length; i += 1) {
     const id = tlQue[i].getId();
@@ -165,6 +168,7 @@ export function updateCaseArima(tlDistribution: any, intersection: IntSect): voi
     tl1: intersection.getTrafficLight(1).getTotalTime(),
     tl3: intersection.getTrafficLight(3).getTotalTime(),
   };
+
   if (currentDistribution !== tlDistribution) {
     const data0 = {
       id: 0,
