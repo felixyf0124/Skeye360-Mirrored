@@ -24,7 +24,7 @@ class Realtime:
     def det_timers(self):
 
         #  Extracting traffic data from csv file.
-        raw_data = panda.read_csv("~/Soen490/project/backend/backend_django/camera/real_time/traffic_normal_case.csv")
+        raw_data = panda.read_csv("./real_time/traffic_normal_case.csv")
         
         # Convert csv file data column to datetime index.
         raw_data['datetime'] = panda.to_datetime(raw_data['datetime'])
