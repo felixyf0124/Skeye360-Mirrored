@@ -20,9 +20,9 @@ class modelPredict:
 
     def modelAndPredict(self, dataf, direction):
         # Seperate the data as train set and test set
-        startTestDate = '2019-12-31 00:00:00.000'
-        train = dataf.loc['2019-12-27 00:00:00.000':'2019-12-30 23:00:00.000']
-        test = dataf.loc[startTestDate:'2019-12-31 23:00:00.000']
+        startTestDate = '2020-01-19 00:00:00.000'
+        train = dataf.loc['2020-01-01 00:00:00.000':'2020-01-18 23:00:00.000']
+        test = dataf.loc[startTestDate:'2020-01-26 23:00:00.000']
         # startTestDate = '2017-12-02 00:00:00.000'
         # train = nsDataRaw.loc[(nsDataRaw['date']>'2017-08-27 04:00:00.000') & (nsDataRaw['date']<'2017-12-01 23:00:00.000')]
         # print(train)
