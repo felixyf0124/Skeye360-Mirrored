@@ -1,5 +1,3 @@
-/* eslint-disable no-plusplus */
-/* eslint-disable max-len */
 import React from 'react';
 import Chart from 'react-apexcharts';
 
@@ -20,7 +18,7 @@ const MovingAvgChart = (values: any): JSX.Element => {
         enabled: true,
       },
       title: {
-        text: 'Moving Average',
+        text: 'North to South',
         align: 'center',
       },
       grid: {
@@ -36,7 +34,7 @@ const MovingAvgChart = (values: any): JSX.Element => {
       },
       yaxis: {
         title: {
-          text: 'Car Count',
+          text: 'Cars',
         },
       },
       colors: ['#04a777', '#51bcd8', '#808080'],
