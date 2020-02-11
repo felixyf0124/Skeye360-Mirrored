@@ -10,6 +10,24 @@ Note: `8000:8000` a placeholder port. It will be changed accordingly to the port
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Prerequisites for running Frontend locally
+
+1. Make sure you have Node installed: https://nodejs.org/en/download/
+2. `node -v` should be over 10.0.0
+3. Make sure you have yarn installed with `choco install yarn`
+4. Navigate to `/Soen490/projects/frontend/360_dashboard/`
+5. Run ` yarn --network-timeout 100000`
+
+## Running the Frontend Locally
+This allows you to run the Frontend on your local machine by pulling database information from the server.
+1. Navigate to `/Soen490/projects/frontend/360_dashboard/`
+
+### On Mac or Linux
+Execute the command `yarn prod`
+
+### On Windows
+Execute the command `($env:REACT_APP_API_URL = "168.62.183.116:8000") -and (yarn start:windows)`
+
 ## Available Scripts
 
 In the project directory, you can run:
