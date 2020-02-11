@@ -47,7 +47,7 @@ const App = ({ authenticated }: StateProps): JSX.Element => (
 
 const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
-  authenticated: authenticated(),
+  authenticated: authenticated(state),
 });
 
 export default connect(mapStateToProps)(App);
