@@ -53,11 +53,24 @@ pipeline {
                     }
                     steps {
                         dir("project/backend/backend_django/camera/") {
-                            sh "python3 test.py"
-                            sh "pytest --cov=recognition recognition/test/test_functions.py"
+                            sh "pytest --cov=. real_time/test/ recognition/test/"
                         }
                     }
                 }
+
+                //Testing data_analytics
+                stage('test_data_analytics') 
+                {
+                    agent {
+                        docker "project_360_django"
+                    }
+                    steps {
+                        dir("project/data_analytics/360_data_analytics/") {
+                            sh "pytest --cov=. tests/"
+                        }
+                    }
+                }
+
         }
 
     // Clean up
@@ -70,7 +83,12 @@ pipeline {
         }
         failure{
             echo 'pipeline failed, at least one step failed'
-            sh 'docker images -q |xargs docker rmi'
+            // Remove dangling containers
+            sh 'docker ps -q -f status=exited | xargs --no-run-if-empty docker rm'
+            // Remove dangling images
+            sh 'docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi'
+            // Remove dangling volumes 
+            sh 'docker volume ls -qf dangling=true | xargs -r docker volume rm'
         }
     }
 

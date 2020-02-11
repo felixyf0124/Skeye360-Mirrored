@@ -15,6 +15,7 @@ import SessionRoutes from './SessionRoutes';
 import { authenticated } from './contexts/authentication';
 import IntersectionList from './containers/IntersectionList';
 import CamView from './containers/CamView';
+import DisplayCount from './components/DisplayMovAVG';
 
 interface StateProps {
   authenticated: boolean;
