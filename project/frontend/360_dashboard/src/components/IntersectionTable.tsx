@@ -117,13 +117,13 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                   <TableCell>
                     {intersection.cameras.map((camera: cameraResponse) => (
                       <a key={camera.id} href={`http://${camera.camera_url}/los/`}>
-                        <TrafficIntensity camera_url={camera.camera_url} />
+                        <TrafficIntensity camera_id={camera.id} camera_url={camera.camera_url} />
                       </a>
                     ))}
                   </TableCell>
                   <TableCell>
                     {intersection.cameras.map((camera: cameraResponse) => (
-                      <CameraConnectionStatus key={camera.id} camera_url={camera.camera_url} />
+                      <CameraConnectionStatus key={camera.id} camera_id={camera.id} />
                     ))}
                   </TableCell>
                   <TableCell>

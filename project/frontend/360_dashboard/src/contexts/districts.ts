@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { call, put, takeLatest } from 'redux-saga/effects';
 import fetchDistricts, { Response as districtResponse } from '../api/fetchDistricts';
+import { STATE as CAMERA_STATE } from './camera';
 
 export interface STATE {
   [district: string]: {
@@ -9,7 +11,7 @@ export interface STATE {
       id: number;
       intersection_name: string;
       latitude: number;
-      cameras: [];
+      cameras: CAMERA_STATE[] | any;
       longitude: number;
       district_id: number;
     }[];
@@ -98,6 +100,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     case RESET_INTERSECTION: {
       return {
         ...state,
+        ...initState,
       };
     }
     default:

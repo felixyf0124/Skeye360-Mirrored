@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { State } from 'pixi.js-legacy';
 import authenticateUser, { Response as authResponse } from '../api/authenticateUser';
 
 export interface STATE {
