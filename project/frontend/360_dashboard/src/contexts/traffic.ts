@@ -64,7 +64,7 @@ export interface ResetTrafficAction {
 }
 
 // reset traffic state
-export const resetIntersection = (): ResetTrafficAction => ({
+export const resetTraffic = (): ResetTrafficAction => ({
   type: RESET_TRAFFIC,
 });
 
