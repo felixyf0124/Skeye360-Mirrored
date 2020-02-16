@@ -72,14 +72,14 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
         <Table className={classes.table} aria-label="intersection table">
           <TableHead>
             <TableRow>
-              <TableCell>Intersection Name</TableCell>
-              <TableCell>District</TableCell>
-              <TableCell>Streetview</TableCell>
-              <TableCell>Cameras</TableCell>
-              <TableCell>Traffic Intensity</TableCell>
-              <TableCell>Camera Status</TableCell>
-              <TableCell>Edit</TableCell>
-              <TableCell>Delete</TableCell>
+              <TableCell align="center">Intersection Name</TableCell>
+              <TableCell align="center">District</TableCell>
+              <TableCell align="center">Streetview</TableCell>
+              <TableCell align="center">Cameras</TableCell>
+              <TableCell align="center">Traffic Intensity</TableCell>
+              <TableCell align="center">Camera Status</TableCell>
+              <TableCell align="center">Edit</TableCell>
+              <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,16 +96,16 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
             ) : (
               districts.districts[0].intersections.map((intersection) => (
                 <TableRow key={intersection.id}>
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" align="center">
                     {intersection.intersection_name}
                   </TableCell>
-                  <TableCell>{districts.districts[0].district_name}</TableCell>
-                  <TableCell>
+                  <TableCell align="center">{districts.districts[0].district_name}</TableCell>
+                  <TableCell align="center">
                     <Link to={`/streetview/${intersection.id}`}>
                       <LaunchIcon />
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <VerticalFlexBox>
                       {intersection.cameras.map((camera: cameraResponse) => (
                         <Link key={camera.id} to={`/camview/${camera.id}`}>
@@ -114,24 +114,24 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                       ))}
                     </VerticalFlexBox>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     {intersection.cameras.map((camera: cameraResponse) => (
                       <a key={camera.id} href={`http://${camera.camera_url}/los/`}>
                         <TrafficIntensity camera_id={camera.id} camera_url={camera.camera_url} />
                       </a>
                     ))}
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     {intersection.cameras.map((camera: cameraResponse) => (
                       <CameraConnectionStatus key={camera.id} camera_id={camera.id} />
                     ))}
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <Link to={`/intersection/edit/${intersection.id}`}>
                       <EditIcon />
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <DeleteIntersectionButton intersection_id={intersection.id} />
                   </TableCell>
                 </TableRow>

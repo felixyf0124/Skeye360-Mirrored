@@ -83,17 +83,21 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
     getDistricts();
   }
 
-  public componentDidUpdate(): void {
+  public componentDidUpdate(prevProps: StateProps): void {
+    const { districts: prevDistricts } = prevProps;
     // eslint-disable-next-line no-shadow
     const { getDistricts } = this.props;
-    getDistricts();
+    const { districts } = this.props;
+    if (districts !== prevDistricts) {
+      getDistricts();
+    }
   }
 
-  public componentWillUnmount(): void {
-    // eslint-disable-next-line no-shadow
-    const { resetIntersection } = this.props;
-    resetIntersection();
-  }
+  // public componentWillUnmount(): void {
+  //   // eslint-disable-next-line no-shadow
+  //   const { resetIntersection } = this.props;
+  //   resetIntersection();
+  // }
 
   public render(): JSX.Element {
     const { districts } = this.props;
@@ -106,7 +110,7 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
         <SideDrawer headerTitle={title} />
         <ContentFlexBox>
           <TableDiv>
-            {districts[0] === undefined ? <div /> : <IntersectionTable districts={districts} />}
+            <IntersectionTable districts={districts} />
           </TableDiv>
           <TrafficDiv>
             <TrafficNews />
