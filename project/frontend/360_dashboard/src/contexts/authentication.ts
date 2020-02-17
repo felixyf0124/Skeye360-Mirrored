@@ -27,14 +27,6 @@ export const AUTHENTICATE_FAIL = 'AUTHENTICATE_FAIL';
 export const GET_USER_DATA = 'GET_USER_DATA';
 export const LOGOUT = 'LOGOUT';
 
-// selector
-export const authenticated = (): boolean => {
-  if (localStorage.getItem('user') !== null) {
-    return true;
-  }
-  return false;
-};
-
 export interface AuthAction {
   type: string;
   username: string;
@@ -72,16 +64,17 @@ export interface LogoutAction {
   type: string;
 }
 
-interface GetUserDataAction {
+export interface GetUserDataAction {
   type: string;
-  data: STATE;
 }
 
 // get user data
-export const getUserData = (data: STATE): GetUserDataAction => ({
+export const getUserData = (): GetUserDataAction => ({
   type: GET_USER_DATA,
-  data,
 });
+
+// selector
+export const authenticated = (state: { authentication: STATE }): boolean => getUserData() && state.authentication.user_id !== 0 && state.authentication.username !== '';
 
 // logout
 export const logout = (): LogoutAction => ({
@@ -146,15 +139,16 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       };
     }
     case GET_USER_DATA: {
-      const { data } = action as GetUserDataAction;
       if (localStorage.getItem('user') !== null) {
+        const data: any = localStorage.getItem('user');
+        const d = new Date();
         return {
           ...state,
-          sessionToken: data.sessionToken,
-          username: data.username,
-          timestamp: data.timestamp,
+          sessionToken: `${JSON.parse(data).username}-${JSON.parse(data).user_id}`,
+          username: JSON.parse(data).username,
+          timestamp: d.toUTCString(),
           error: '',
-          user_id: data.user_id,
+          user_id: JSON.parse(data).user_id,
         };
       }
       return initState;

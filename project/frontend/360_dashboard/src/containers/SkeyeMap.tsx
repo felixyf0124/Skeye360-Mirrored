@@ -34,11 +34,11 @@ class SkeyeMap extends React.Component<(StateProps & DispatchProps) | any> {
     getDistricts();
   }
 
-  public componentWillUnmount(): void {
-    // eslint-disable-next-line no-shadow
-    const { resetIntersection } = this.props;
-    resetIntersection();
-  }
+  // public componentWillUnmount(): void {
+  //   // eslint-disable-next-line no-shadow
+  //   const { resetIntersection } = this.props;
+  //   resetIntersection();
+  // }
 
   public render(): JSX.Element {
     const { districts } = this.props;
