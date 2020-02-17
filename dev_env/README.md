@@ -107,7 +107,11 @@ Note that this procedure has been tested from a Windows host only, but should wo
   
   or generate a private key for Putty and MobaXterm using ssh:
   
-  [Generating private key using PuttyGen](https://github.com/Varying-Vagrant-Vagrants/VVV/wiki/Connect-to-Your-Vagrant-Virtual-Machine-with-PuTTY)
+  Step 1: Select key from .vagrant.d/insecure_private_key (For example: C:/Users/vince/.vagrant.d/insecure_private_key)
+  
+  Step 2:
+  [Generating private key using PuttyGen](https://www.youtube.com/watch?v=MlACzrm0SCw)
+  
   
 * How can I update my new machine setting without destory it?
   

@@ -19,6 +19,8 @@ Additionally, the project will have a dashboard displaying the data that the cam
 
 Under project folder:
 
+```docker network create --gateway 172.16.0.1 --subnet 172.16.0.0/24 app_net  // This command only needs to do the first time ```
+
 ```cd project/```
 
 ```docker-compose up --build```
