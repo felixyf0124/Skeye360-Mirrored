@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { call, put, takeLatest } from 'redux-saga/effects';
 import fetchDistricts, { Response as districtResponse } from '../api/fetchDistricts';
-import { STATE as CAMERA_STATE } from './camera';
 
 export interface STATE {
   [district: string]: {
@@ -11,15 +10,40 @@ export interface STATE {
       id: number;
       intersection_name: string;
       latitude: number;
-      cameras: CAMERA_STATE[] | any;
+      cameras: {
+        id: number;
+        camera_url: string;
+        intersection_id: number;
+      }[];
       longitude: number;
       district_id: number;
     }[];
-  }[];
+  };
 }
 
 // initState
-const initState: STATE = {};
+const initState: STATE = {
+  0: {
+    id: 1,
+    district_name: 'Montreal',
+    intersections: [
+      {
+        id: 1,
+        intersection_name: 'Guy/St-Cath',
+        latitude: 123,
+        cameras: [
+          {
+            id: 1,
+            camera_url: '0.0.0.0:8001',
+            intersection_id: 1,
+          },
+        ],
+        longitude: 456,
+        district_id: 1,
+      },
+    ],
+  },
+};
 
 // actions
 export const GET_DISTRICTS = 'GET_DISTRICTS';
