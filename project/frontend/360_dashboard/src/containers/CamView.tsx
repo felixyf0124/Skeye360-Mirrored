@@ -8,6 +8,7 @@ import Simulator from './simulator/Scene';
 import { getExistingCamera } from '../contexts/camera';
 import SideDrawer from '../components/SideDrawer';
 // import { SKEYE_WHITE } from '../css/custom';
+import TabsComponent from '../components/camViewComponents/TabsComponent';
 
 // Generic flexboxes styling
 const VerticalFlexBox = styled.div`
@@ -107,6 +108,7 @@ class CamView extends React.Component<StateProps & DispatchProps> {
       <div>
         <SideDrawer headerTitle={intersectionName} />
         <Body>
+          <TabsComponent></TabsComponent>
           <VerticalFlexBox>
             <InnerDiv>
               <h2>Live Camera Feed</h2>
