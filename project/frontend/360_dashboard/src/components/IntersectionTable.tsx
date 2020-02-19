@@ -62,10 +62,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IntersectionTable = (districts: districtState): JSX.Element => {
+interface StateProps {
+  districts: districtState;
+  isStaff: boolean;
+}
+
+const IntersectionTable = (props: StateProps): JSX.Element => {
   // Intersection Table that retrieves all of the intersections of a district
   // And displays their information in the table.
   const classes = useStyles();
+  const { districts, isStaff } = props;
   return (
     <main className={classes.content}>
       <TableContainer component={Paper}>
@@ -78,12 +84,12 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
               <TableCell align="center">Cameras</TableCell>
               <TableCell align="center">Traffic Intensity</TableCell>
               <TableCell align="center">Camera Status</TableCell>
-              <TableCell align="center">Edit</TableCell>
-              <TableCell align="center">Delete</TableCell>
+              {isStaff ? <TableCell align="center">Edit</TableCell> : <div />}
+              {isStaff ? <TableCell align="center">Delete</TableCell> : <div />}
             </TableRow>
           </TableHead>
           <TableBody>
-            {districts.districts[0] === undefined ? (
+            {districts[0] === undefined ? (
               <TableRow>
                 <TableCell component="th" scope="row" />
                 <TableCell />
@@ -94,12 +100,12 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                 <TableCell />
               </TableRow>
             ) : (
-              districts.districts[0].intersections.map((intersection) => (
+              districts[0].intersections.map((intersection) => (
                 <TableRow key={intersection.id}>
                   <TableCell component="th" scope="row" align="center">
                     {intersection.intersection_name}
                   </TableCell>
-                  <TableCell align="center">{districts.districts[0].district_name}</TableCell>
+                  <TableCell align="center">{districts[0].district_name}</TableCell>
                   <TableCell align="center">
                     <Link to={`/streetview/${intersection.id}`}>
                       <LaunchIcon />
@@ -126,25 +132,37 @@ const IntersectionTable = (districts: districtState): JSX.Element => {
                       <CameraConnectionStatus key={camera.id} camera_id={camera.id} />
                     ))}
                   </TableCell>
-                  <TableCell align="center">
-                    <Link to={`/intersection/edit/${intersection.id}`}>
-                      <EditIcon />
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">
-                    <DeleteIntersectionButton intersection_id={intersection.id} />
-                  </TableCell>
+                  {isStaff ? (
+                    <TableCell align="center">
+                      <Link to={`/intersection/edit/${intersection.id}`}>
+                        <EditIcon />
+                      </Link>
+                    </TableCell>
+                  ) : (
+                    <div />
+                  )}
+                  {isStaff ? (
+                    <TableCell align="center">
+                      <DeleteIntersectionButton intersection_id={intersection.id} />
+                    </TableCell>
+                  ) : (
+                    <div />
+                  )}
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
       </TableContainer>
-      <Link to="/intersection/add">
-        <Fab className={classes.addButton} aria-label="add">
-          <AddIcon className={classes.plusIcon} />
-        </Fab>
-      </Link>
+      {isStaff ? (
+        <Link to="/intersection/add">
+          <Fab className={classes.addButton} aria-label="add">
+            <AddIcon className={classes.plusIcon} />
+          </Fab>
+        </Link>
+      ) : (
+        <div />
+      )}
     </main>
   );
 };
