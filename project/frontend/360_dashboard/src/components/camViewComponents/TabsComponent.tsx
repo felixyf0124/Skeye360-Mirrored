@@ -43,7 +43,7 @@ function a11yProps(index: any) {
   };
 }
 
-const width = 88;
+const width = 95;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -60,6 +60,9 @@ const skeyeStyles = {
     TabOnly: {
         backgroundColor: SKEYE_DARK_GREY,
     },
+    Component: {
+      width: `100px`,
+    }
 }
 
 
@@ -91,7 +94,7 @@ export default function TabsComponents() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <OverviewComponent></OverviewComponent>>
+        <OverviewComponent { ...skeyeStyles.Component }></OverviewComponent>>
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two

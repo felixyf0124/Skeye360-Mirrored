@@ -5,6 +5,7 @@ import { RootState } from '../../reducers/rootReducer';
 import SidebarComponent from './SidebarComponent'
 import Simulator from './../../containers/simulator/Scene';
 import { SKEYE_WHITE } from '../../css/custom';
+import { makeStyles, Theme } from '@material-ui/core';
 
 // DIV inside the sideDrawer
 const Body = styled.div`
@@ -52,7 +53,7 @@ const InnerDivVerticalSecondSim = styled.div`
 // Container for the simulator
 const SimContainer = styled.div`
   width: 20vw;
-  height: 25vw;
+  height: 15vw;
   margin-left: 20rem;
   display: flex;
   justify-content: center;
@@ -60,13 +61,13 @@ const SimContainer = styled.div`
 `;
 
 const skeyeStyles = {
-    title: {
+    Title: {
         color: SKEYE_WHITE,
         fontSize: 28,
         marginBottom: 4,
         fontWeight: 900,
     },
-    header: {
+    Header: {
         color: SKEYE_WHITE,
         fontSize: 20,
         marginBottom: 4,
@@ -78,19 +79,18 @@ export default function SimulatorComponent() {
     // eslint-disable-next-line consistent-return
     return (
         <div>
-            
-            <text style={ skeyeStyles.title }>Simulation of Traffic</text>
+            <text style={ skeyeStyles.Title }>Simulation of Traffic</text>
             <HorizontalFlexBox>
                 <SidebarComponent></SidebarComponent>
                 <InnerDivHorizon>
                     <InnerDivVerticalFirstSim>
-                        <text style={ skeyeStyles.header }>Optimized Traffic Light Setting</text>
+                        <text style={ skeyeStyles.Header }>Optimized Traffic Light Setting</text>
                         <SimContainer>
                         <Simulator isSmartTL />
                         </SimContainer>
                     </InnerDivVerticalFirstSim>
                     <InnerDivVerticalSecondSim>
-                        <text style={ skeyeStyles.header }>Default Traffic Light Setting</text>
+                        <text style={ skeyeStyles.Header }>Default Traffic Light Setting</text>
                         <SimContainer>
                         <Simulator isSmartTL={false} />
                         </SimContainer>

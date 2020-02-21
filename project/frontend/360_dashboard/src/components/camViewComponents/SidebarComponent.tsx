@@ -8,10 +8,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import TrackChangesIcon from '@material-ui/icons/TrackChanges';
-import { SKEYE_WHITE, SKEYE_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_RED, SkEYE_LIGHT_BLACK } from '../../css/custom';
+import { SKEYE_WHITE, SKEYE_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_RED, SKEYE_LIGHT_BLACK } from '../../css/custom';
 import Button from '@material-ui/core/Button';
 
-const width = 12;
+const width = 10;
 const height = 50
 
 
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     sidebar: {
-      backgroundColor: SkEYE_LIGHT_BLACK,
+      backgroundColor: SKEYE_LIGHT_BLACK,
       width: `${width}vw`,
     },
     content: {
