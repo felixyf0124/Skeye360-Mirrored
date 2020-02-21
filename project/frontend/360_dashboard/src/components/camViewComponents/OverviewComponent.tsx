@@ -9,6 +9,7 @@ import { getExistingCamera } from '../../contexts/camera';
 import Simulator from './../../containers/simulator/Scene';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
+
 // DIV inside the sideDrawer
 const Body = styled.div`
 //   margin-left: 10rem;
