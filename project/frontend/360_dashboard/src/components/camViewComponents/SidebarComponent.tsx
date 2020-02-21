@@ -10,11 +10,9 @@ import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import { SKEYE_WHITE, SKEYE_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_RED, SKEYE_LIGHT_BLACK } from '../../css/custom';
 import Button from '@material-ui/core/Button';
+import styled from 'styled-components';
 
 const width = 10;
-const height = 50
-
-
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -97,7 +95,7 @@ const skeyeStyles = {
       marginLeft: 8,
       marginRight: 8,
       width: `${width - 2}vw`,
-    }
+    },
 }
 
 export default function SidebarComponent() {
@@ -120,12 +118,6 @@ export default function SidebarComponent() {
         <text style={ skeyeStyles.header }> Modes </text>
         <Divider classes={{root: classes.dividerGrey}} />
         <List>
-          {/* {['Arima', 'Pedestrians', 'Real-Time'].map((text, index) => (
-            <ListItem button key={text} classes={{ root: classes.listItem }}> //selected={selectedIndex === 0} onClick={event => onClickListItem(event, 0)}>
-              <ListItemIcon style={ skeyeStyles.iconStyle } >{index === 0 ? <TrendingUpIcon /> : index === 1 ? <DirectionsWalkIcon /> : <TrackChangesIcon/>}</ListItemIcon>
-              <ListItemText primary={text} style={ skeyeStyles.listItemStyle } />
-            </ListItem>
-          ))} */}
           <ListItem button selected={selectedIndex === 0} classes={{ root: classes.root, selected: classes.selected }} onClick={event => onClickListItem(event, 0)}>
             <ListItemIcon style={ skeyeStyles.iconStyle }>
               <TrendingUpIcon />
