@@ -1,14 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { purple, green } from '@material-ui/core/colors';
-import { RootState } from '../../reducers/rootReducer';
-import SidebarComponent from './SidebarComponent'
-import Simulator from './../../containers/simulator/Scene';
 import { SKEYE_WHITE, SKEYE_GREEN, SKEYE_GREY } from '../../css/custom';
 import { makeStyles, Theme, withStyles, Switch, FormGroup, FormControlLabel } from '@material-ui/core';
 
-// Generic flexboxes styling
+// Horizontal flexbox styling
 const HorizontalFlexBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -19,27 +14,20 @@ const HorizontalFlexBox = styled.div`
   padding: 0px;
 `;
 
-// Generic flexboxes styling
+// Title flexbox styling
 const BoxMain = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   flex-wrap: nowrap;
-//   justify-content: space-around;
-//   align-items: space-around;
-//   align-content: stretch;
-//   padding: 0px;
-//   width: 20vw;
     top: 0px;
     left: 0px;
 `;
 
+// Horizontal box for the entire component
 const BoxHorizontal = styled.div`
     display: flex;
     flex-direction: row;
     margin-left: 10vw;
 `;
 
-// Generic flexboxes styling
+// Box for settings and toggles
 const BoxSettings = styled.div`
   display: flex;
   flex-direction: column;
@@ -51,6 +39,7 @@ const BoxSettings = styled.div`
   margin-top: 2vw;
 `;
 
+// Custom switch
 const GreenSwitch = withStyles({
     switchBase: {
       color: '#64ffda',
@@ -67,6 +56,7 @@ const GreenSwitch = withStyles({
     },
   })(Switch);
 
+// Custom styling
 const skeyeStyles = {
     Title: {
         color: SKEYE_WHITE,

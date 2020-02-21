@@ -9,37 +9,17 @@ import { getExistingCamera } from '../../contexts/camera';
 import Simulator from './../../containers/simulator/Scene';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
-
-// DIV inside the sideDrawer
-const Body = styled.div`
-//   margin-left: 10rem;
-  margin-top: 5rem;
-`;
-
-// Single Container Vertical
-const InnerDivVerticalFirstSim = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-`;
-
-// Single Container Vertical
-const InnerDivVerticalSecondSim = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-  margin-left: 20vw;
-`;
-
-// Single Container
-const InnerDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-`;
+interface StateProps {
+    camera_id: string;
+    camera_url: string;
+    intersectionName: string;
+    error: string;
+    user_id: number;
+  }
+  
+interface DispatchProps {
+    getExistingCamera: (id: string) => any;
+}
 
 // Empty camera feed container
 // To be modified when the camera feed is added
@@ -54,19 +34,7 @@ const CamFeed = styled.img`
   align-items: center;
 `;
 
-interface StateProps {
-    camera_id: string;
-    camera_url: string;
-    intersectionName: string;
-    error: string;
-    user_id: number;
-  }
-  
-  interface DispatchProps {
-    getExistingCamera: (id: string) => any;
-  }
-
-// Generic flexboxes styling
+// Vertical flexbox styling
 const VerticalFlexBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -76,7 +44,7 @@ const VerticalFlexBox = styled.div`
   align-content: stretch;
 `;
 
-// Generic flexboxes styling
+// Horizontal flexbox styling
 const HorizontalFlexBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -117,6 +85,7 @@ const SimContainer = styled.div`
   margin: 1rem;
 `;
 
+// Custom styling
 const skeyeStyles = {
     Title: {
         color: SKEYE_WHITE,
@@ -131,16 +100,16 @@ const skeyeStyles = {
         fontWeight: 900,
     },
     BoxLeft: {
-        width: `18vw`,//`50%`,
-        height: `20vw`,//`50%`,
+        width: `18vw`,
+        height: `20vw`,
         backgroundColor: SKEYE_LIGHT_BLACK,
         marginLeft: `-8.2vw`,
         marginTop: `2.5vw`,
 
     },
     BoxRight: {
-        width: `18vw`,//`50%`,
-        height: `20vw`,//`50%`,
+        width: `18vw`,
+        height: `20vw`,
         backgroundColor: SKEYE_LIGHT_BLACK,
         marginLeft: `2vw`,
         marginTop: `2.5vw`,

@@ -37,24 +37,22 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index: any) {
+function props(index: any) {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
-const width = 95;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    // flexGrow: 1,
+    flexGrow: 1,
     backgroundColor: SKEYE_DARK_GREY,
-    width: `${width}vw`,
+    width: `94vw`,
   },
 }));
 
-const wi = 55;
-
+// Custom styling
 const skeyeStyles = {
     TabBar: {
         backgroundColor: SKEYE_LIGHT_DARK_GREY,
@@ -62,16 +60,7 @@ const skeyeStyles = {
     TabOnly: {
         backgroundColor: SKEYE_DARK_GREY,
     },
-    Component: {
-      width: `100px`,
-    },
-    MenuIcon: {
-      // justifyContent: 'flex-end',
-      // marginTop: `1vh`,
-      // marginLeft: `${wi}vw`,
-    }
 }
-
 
 export default function TabsComponents() {
   const classes = useStyles();
@@ -81,33 +70,19 @@ export default function TabsComponents() {
     setValue(newValue);
   };
 
-//   const getStyle = (isActive: any) => {
-//       if(isActive) {
-//           return skeyeStyles.Active
-//       } else {
-//           return skeyeStyles.NonActive
-//       }
-//     // return isActive ? skeyeStyles.Active : skeyeStyles.NonActive
-//   }
-
   return (
     <div className={classes.root}>
       <AppBar position="static" style={skeyeStyles.TabBar}>
         <Tabs value={value} onChange={handleChange} TabIndicatorProps={{style: {backgroundColor: "white"}}}>
-          <Tab label="Overview" {...a11yProps(0)} style={skeyeStyles.TabOnly} /> 
-          <Tab label="Data Analytics" {...a11yProps(1)} style={skeyeStyles.TabOnly} />
-          <Tab label="Camera" {...a11yProps(2)} style={skeyeStyles.TabOnly} />
-          <Tab label="Simulator" {...a11yProps(3)} style={skeyeStyles.TabOnly} />
-          <Tab label="Settings" {...a11yProps(4)} style={skeyeStyles.TabOnly} />
-          {/* <div style={{ display: "flex", justifyContent: "flex-end"}}>
-            <button style={{ }}>
-              <MoreVertIcon style={ skeyeStyles.MenuIcon }></MoreVertIcon>
-            </button>
-          </div> */}
+          <Tab label="Overview" {...props(0)} style={skeyeStyles.TabOnly} /> 
+          <Tab label="Data Analytics" {...props(1)} style={skeyeStyles.TabOnly} />
+          <Tab label="Camera" {...props(2)} style={skeyeStyles.TabOnly} />
+          <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
+          <Tab label="Settings" {...props(4)} style={skeyeStyles.TabOnly} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <OverviewComponent { ...skeyeStyles.Component }></OverviewComponent>>
+        <OverviewComponent></OverviewComponent>>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <DataAnalyticsComponent></DataAnalyticsComponent>

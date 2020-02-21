@@ -13,7 +13,7 @@ const Body = styled.div`
   margin-top: 5rem;
 `;
 
-// Generic flexboxes styling
+// Horizontal flexbox styling
 const HorizontalFlexBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -33,7 +33,7 @@ const InnerDivHorizon = styled.div`
   margin-left: 10vw;
 `;
 
-// Single Container Vertical
+// Single Container Vertical for the first simulator
 const InnerDivVerticalFirstSim = styled.div`
   display: flex;
   flex-direction: column;
@@ -41,7 +41,7 @@ const InnerDivVerticalFirstSim = styled.div`
   color: white;
 `;
 
-// Single Container Vertical
+// Single Container Vertical for the second simulator
 const InnerDivVerticalSecondSim = styled.div`
   display: flex;
   flex-direction: column;
@@ -60,6 +60,7 @@ const SimContainer = styled.div`
   margin: 1rem;
 `;
 
+// Custom styling
 const skeyeStyles = {
     Title: {
         color: SKEYE_WHITE,
@@ -100,4 +101,3 @@ export default function SimulatorComponent() {
         </div>
     );
 }
-
