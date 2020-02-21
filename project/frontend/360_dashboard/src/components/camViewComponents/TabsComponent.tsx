@@ -5,7 +5,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { SKEYE_GREY, SKEYE_DARK_GREY, SKEYE_LIGHT_DARK_GREY } from '../../css/custom';
@@ -13,8 +12,7 @@ import OverviewComponent from './OverviewComponent';
 import CameraComponent from './CameraComponent';
 import SimulatorComponent from './SimulatorComponent';
 import SettingsComponent from './SettingsComponent';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-
+import DataAnalyticsComponent from './DataAnalyticsComponent';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -112,7 +110,7 @@ export default function TabsComponents() {
         <OverviewComponent { ...skeyeStyles.Component }></OverviewComponent>>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <DataAnalyticsComponent></DataAnalyticsComponent>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <CameraComponent></CameraComponent>
