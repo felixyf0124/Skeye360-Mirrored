@@ -9,6 +9,10 @@ import { getExistingCamera } from '../../contexts/camera';
 import Simulator from './../../containers/simulator/Scene';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
+interface SimProps {
+    tl_mode: number;
+}
+
 interface StateProps {
     camera_id: string;
     camera_url: string;
@@ -167,7 +171,7 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps> {
         return (
             <div>
                 <HorizontalFlexBox>
-                    <SidebarComponent></SidebarComponent>
+                    <SidebarComponent tl_mode={1}></SidebarComponent>
                     <VerticalFlexBox>
                         <InnerDivVertical>
                             <text style={ skeyeStyles.Header }>Live Camera Feed</text>
