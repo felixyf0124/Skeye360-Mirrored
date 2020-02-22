@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import SideDrawer from '../components/SideDrawer';
 import IntersectionTable from '../components/IntersectionTable';
 import { RootState } from '../reducers/rootReducer';
+import { isStaff } from '../contexts/authentication';
 import {
   STATE as districtState,
   GetDistrictsAction,
@@ -65,8 +66,9 @@ const TrafficDiv = styled.div`
 
 const title = 'Montreal';
 interface StateProps {
-  user_id: number;
   districts: districtState;
+  isStaff: boolean;
+  user_id: number;
 }
 
 interface DispatchProps {
@@ -76,7 +78,7 @@ interface DispatchProps {
   logClick: (log_message: string, user_id: number) => LogAction;
 }
 
-class IntersectionList extends React.Component<(StateProps & DispatchProps) | any> {
+class IntersectionList extends React.Component<StateProps & DispatchProps, {}> {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { getDistricts } = this.props;
@@ -100,7 +102,7 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
   // }
 
   public render(): JSX.Element {
-    const { districts } = this.props;
+    const { districts, isStaff } = this.props;
     // const districtsProps = {
     //   // eslint-disable-next-line object-shorthand
     //   districts: districts,
@@ -110,7 +112,7 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
         <SideDrawer headerTitle={title} />
         <ContentFlexBox>
           <TableDiv>
-            <IntersectionTable districts={districts} />
+            <IntersectionTable districts={districts} isStaff={isStaff} />
           </TableDiv>
           <TrafficDiv>
             <TrafficNews />
@@ -121,14 +123,15 @@ class IntersectionList extends React.Component<(StateProps & DispatchProps) | an
   }
 }
 const mapStateToProps = (state: RootState): StateProps => ({
-  user_id: state.authentication.user_id,
   districts: state.districts,
+  isStaff: isStaff(state),
+  user_id: state.authentication.user_id,
 });
 
 const mapDispatchToProps: DispatchProps = {
   getDistricts,
-  resetIntersection,
   deleteExistingIntersection,
   logClick,
+  resetIntersection,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(IntersectionList);

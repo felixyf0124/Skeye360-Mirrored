@@ -33,7 +33,6 @@ export const getCountMAvgNS = async (intersection_id: string): Promise<Response>
   return data;
 };
 
-
 // Function that generates the exact date last year to retrieve based on today's date as well as the day after it.
 function getDateLastYear() {
   // create a new date object based on today and convert to ISO string
@@ -80,15 +79,12 @@ class DisplayCount extends React.Component<{} & Props, StateProps> {
 
   public componentDidMount(): void {
     const { intersection_id } = this.props;
-    getCountMAvgNS(intersection_id)
-      .then(
-        (data: any) => {
-          this.setState({
-            isLoaded: true,
-            dataNS: splitIntoTwo(data),
-          });
-        },
-      );
+    getCountMAvgNS(intersection_id).then((data: any) => {
+      this.setState({
+        isLoaded: true,
+        dataNS: splitIntoTwo(data),
+      });
+    });
   }
 
   public render(): JSX.Element {
