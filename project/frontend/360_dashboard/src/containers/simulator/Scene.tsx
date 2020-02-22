@@ -25,6 +25,7 @@ import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
 
 interface Props {
   isSmartTL: boolean;
+  tl_mode:any;
 }
 
 interface StateProps {
@@ -373,9 +374,9 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
     // tl case
     this.tlCaseId = 1;
-    const tlCaseBtn1 = new Btn(60, 26, 'Real-time', 0x51BCD8, 1);
-    const tlCaseBtn2 = new Btn(60, 26, 'Arima', 0x51BCD8, 1);
-    const tlCaseBtn3 = new Btn(60, 26, 'Pedestrian', 0x51BCD8, 1);
+    const tlCaseBtn3 = new Btn(60, 26, 'Real-time', 0x51BCD8, 1);
+    const tlCaseBtn1 = new Btn(60, 26, 'Arima', 0x51BCD8, 1);
+    const tlCaseBtn2 = new Btn(60, 26, 'Pedestrian', 0x51BCD8, 1);
     this.tlCaseBtnGroup.push(tlCaseBtn1);
     this.tlCaseBtnGroup.push(tlCaseBtn2);
     this.tlCaseBtnGroup.push(tlCaseBtn3);
@@ -935,10 +936,13 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
 
-      const { isSmartTL } = this.props;
+      const { isSmartTL, tl_mode } = this.props;
+      const tl_mode_number = tl_mode;
+      console.log(tl_mode_number + 1);
+      this.tlCaseId = tl_mode + 1;
       if (isSmartTL) {
         // real-time case
-        if (this.tlCaseId === 1) {
+        if (this.tlCaseId === 3) {
           const tlQue = this.roadIntersection.getTrafficLightQueue();
           for (let i = 0; i < tlQue.length; i += 1) {
             this.roadIntersection.deForceTLState(i);
@@ -947,7 +951,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         }
 
         // arima case
-        if (this.tlCaseId === 2) {
+        if (this.tlCaseId === 1) {
           const tlQue = this.roadIntersection.getTrafficLightQueue();
           for (let i = 0; i < tlQue.length; i += 1) {
             this.roadIntersection.deForceTLState(i);
@@ -956,7 +960,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         }
 
         // pedestrian case
-        if (this.tlCaseId === 3) {
+        if (this.tlCaseId === 2) {
           this.getPedestrianTLInfo();
           // this.pedestrianCaseTLUpdate();
           tlUpdateHelper
@@ -975,7 +979,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
 
-    if (this.tlCaseId === 3) {
+    if (this.tlCaseId === 2) {
       const pCD = Math.round((Date.now() - this.forceHelper.startT) / 1000);
       const pCDText = new PIXI.Text('Pedestrian Time: N/A', this.textStyle);
       if (this.forceHelper.isForced === true) {

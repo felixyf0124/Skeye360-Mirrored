@@ -14,7 +14,7 @@ import ReportIcon from '@material-ui/icons/Report';
 
 interface SimProps {
   tl_mode: number;
-  
+  onChangeTLMode: any;
 }
 
 const width = 10;
@@ -106,18 +106,19 @@ const skeyeStyles = {
 }
 
 const SidebarComponent = (props: SimProps | any): JSX.Element =>  {
-  const {tl_mode} = props;
+  const {tl_mode , onChangeTLMode} = props;
   const classes = useStyles(); 
   console.log("props.tl_mode");
   console.log(tl_mode);
-  const [selectedIndex, setSelectedIndex] = React.useState(tl_mode);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const onClickListItem = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number,
   ) => {
     setSelectedIndex(index);
-    
+    // setState(props.tl_mode, index);
+    onChangeTLMode(index);
     // props.tl_mode =index;
   };
 
