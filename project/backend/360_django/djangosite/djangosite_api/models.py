@@ -17,6 +17,7 @@ class Intersection(models.Model):
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     district_id = models.ForeignKey(District, related_name='intersections', on_delete=models.CASCADE, null=True)
+    user_id = models.ForeignKey(User, related_name='intersections', on_delete=models.CASCADE, null=True)
 
 
 class Camera(models.Model):
@@ -62,3 +63,4 @@ class Userlog(models.Model):
     log_message = models.CharField(max_length=255, null=True)
     log_time = models.DateTimeField(auto_now_add=True, null=True)
     user_id = models.ForeignKey(User, related_name='user_logs', on_delete=models.CASCADE, null=True)
+

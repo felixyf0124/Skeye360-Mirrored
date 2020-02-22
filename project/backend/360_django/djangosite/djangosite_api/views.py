@@ -23,6 +23,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
+    # fix django.request.log_response: Method Not Allowed:
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -32,7 +33,7 @@ class RegisterAPI(generics.GenericAPIView):
             username = request.data.get('username')
             password = request.data.get('password')
             email = request.data.get('email')
-            is_staff = request.data.get('is_staff')
+            is_staff = True if request.data.get('is_staff') == 'true' else False
 
             if User.objects.filter(username=username).exists():
                 return JsonResponse({'error': 'Username already exists'})
@@ -54,6 +55,11 @@ class RegisterAPI(generics.GenericAPIView):
 # User login API
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer
+
+    # fix django.request.log_response: Method Not Allowed:
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
         try:
@@ -144,3 +150,9 @@ class UserlogViewSet(viewsets.ModelViewSet):
 class CameraViewSet(viewsets.ModelViewSet):
     queryset = Camera.objects.all()
     serializer_class = CameraSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    filter_fields = ('id',)
