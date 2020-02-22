@@ -171,20 +171,12 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps, {tlM
         // this.simComponentRef = React.createRef();
         // this.tlMode = 0;
         this.onChangeTLMode = this.onChangeTLMode.bind(this);
-        this.onCheckTLMode = this.onCheckTLMode.bind(this);
     }
 
     onChangeTLMode(index:number) {
         this.setState({tlMode: index});
-//   console.log("OC.tl_mode");
-//   console.log(this.tlMode);
 
     }
-
-    onCheckTLMode():number{
-        return (this.state.tlMode);
-    }
-
 
     public componentDidMount(): void {
       // eslint-disable-next-line no-shadow
@@ -194,12 +186,11 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps, {tlM
 
     public render(): JSX.Element {
         const { intersectionName, camera_url } = this.props;
-        // console.log();
     // eslint-disable-next-line consistent-return
         return (
             <div>
                 <HorizontalFlexBox>
-                    <SidebarComponent tl_mode={this.state.tlMode} onChangeTLMode={this.onChangeTLMode}></SidebarComponent>
+                    <SidebarComponent onChangeTLMode={this.onChangeTLMode}></SidebarComponent>
                     <VerticalFlexBox>
                         <InnerDivVertical>
                             <text style={ skeyeStyles.Header }>Live Camera Feed</text>

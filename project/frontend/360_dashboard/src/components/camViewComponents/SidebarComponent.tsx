@@ -110,16 +110,14 @@ const SidebarComponent = (props: SimProps | any): JSX.Element =>  {
   const classes = useStyles(); 
   console.log("props.tl_mode");
   console.log(tl_mode);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedIndex, setSelectedIndex] = React.useState(tl_mode);
 
   const onClickListItem = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number,
   ) => {
     setSelectedIndex(index);
-    // setState(props.tl_mode, index);
     onChangeTLMode(index);
-    // props.tl_mode =index;
   };
 
   return (
@@ -128,7 +126,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element =>  {
         <div className={classes.titleBox}>
           <text style={ skeyeStyles.Title }> Options for Simulator</text>
         </div>
-  <text style={ skeyeStyles.Header }> Modes {tl_mode}</text>
+  <text style={ skeyeStyles.Header }> Modes </text>
         <Divider classes={{root: classes.dividerGrey}} />
         <List>
           <ListItem button selected={selectedIndex === 0} classes={{ root: classes.root, selected: classes.selected }} onClick={event => onClickListItem(event, 0)}>
