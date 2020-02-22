@@ -8,6 +8,7 @@ import Simulator from './simulator/Scene';
 import { getExistingCamera } from '../contexts/camera';
 import SideDrawer from '../components/SideDrawer';
 // import { SKEYE_WHITE } from '../css/custom';
+import TabsComponent from '../components/camViewComponents/TabsComponent';
 
 // Generic flexboxes styling
 const VerticalFlexBox = styled.div`
@@ -21,7 +22,7 @@ const VerticalFlexBox = styled.div`
 
 // DIV inside the sideDrawer
 const Body = styled.div`
-  margin-left: 10rem;
+  margin-left: 5rem;
   margin-top: 5rem;
 `;
 
@@ -107,18 +108,19 @@ class CamView extends React.Component<StateProps & DispatchProps> {
       <div>
         <SideDrawer headerTitle={intersectionName} />
         <Body>
-          <VerticalFlexBox>
+          <TabsComponent></TabsComponent>
+          {/* <VerticalFlexBox>
             <InnerDiv>
               <h2>Live Camera Feed</h2>
               <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
-            </InnerDiv>
+            </InnerDiv> */}
             {/* <InnerDiv>
               <h2>Data Analytics</h2>
               <ChartContainer>
                 <AvgWaitTimeChartComparison />
               </ChartContainer>
             </InnerDiv> */}
-            <InnerDiv>
+            {/* <InnerDiv>
               <h2>Simulation of Traffic</h2>
               <h3>Optimized Traffic Light Setting</h3>
               <SimContainer>
@@ -129,7 +131,7 @@ class CamView extends React.Component<StateProps & DispatchProps> {
                 <Simulator isSmartTL={false} />
               </SimContainer>
             </InnerDiv>
-          </VerticalFlexBox>
+          </VerticalFlexBox> */}
         </Body>
       </div>
     );
