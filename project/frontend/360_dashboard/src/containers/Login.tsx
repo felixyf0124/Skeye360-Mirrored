@@ -4,8 +4,12 @@ import { connect } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import PersonIcon from '@material-ui/icons/Person';
+import LockIcon from '@material-ui/icons/Lock';
 import styled from 'styled-components';
+import TextField from '@material-ui/core/TextField';
 import { RootState } from '../reducers/rootReducer';
 import {
   authenticate,
@@ -35,6 +39,11 @@ interface DispatchProps {
 }
 
 const useStyles = makeStyles(() => ({
+  margin: {
+    margin: loginTheme.spacing(1),
+    paddingBottom: '3rem',
+  },
+
   root: {
     '& > *': {
       width: 200,
@@ -47,18 +56,14 @@ const useStyles = makeStyles(() => ({
   },
 
   iconStyle: {
-    marginTop: '3rem',
-    marginBottom: '1rem',
-    height: '3rem',
-    width: '3rem',
-    color: '#04A777',
-    zIndex: 1,
+    color: 'grey',
   },
 
   loginButton: {
-    marginTop: '3rem',
+    marginLeft: '0.5rem',
+    marginTop: '1rem',
     height: '2.5rem',
-    width: '6rem',
+    width: '13rem',
     border: 'none',
     background: '#04A777',
     color: '#ffffff',
@@ -80,7 +85,7 @@ const useStyles = makeStyles(() => ({
     margin: 'auto',
     marginTop: '10rem',
     width: '25rem',
-    height: '28rem',
+    height: '29rem',
     border: '1px solid grey',
     borderRadius: '15px',
     zIndex: 1,
@@ -99,6 +104,52 @@ const useStyles = makeStyles(() => ({
     color: '#FFFFFF',
   },
 }));
+
+const loginTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#808080',
+    },
+    secondary: {
+      main: '#808080',
+    },
+  },
+  overrides: {
+    MuiInput: {
+      underline: {
+        "&:before": {
+          borderBottom: '1px solid grey'
+        },
+        "&:hover:not($disabled):before": {
+          borderBottom: '1px solid grey'
+        }
+      }
+    },
+    MuiInputLabel: {
+      root: {
+        color: 'grey'
+      }
+    },
+    MuiFormLabel: {
+      root: {
+        color: 'grey'
+      }
+    },
+    MuiInputBase: {
+      root: {
+        color: 'white'
+      }
+    },
+    MuiGrid: {
+      item: {
+        color: 'grey'
+      },
+      container: {
+        paddingBottom: '2rem'
+      }
+    }
+  },
+});
 
 const Logo = styled.img`
   height: 5rem;
@@ -150,58 +201,86 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   }
 
   return (
-    <div>
-      <header className={classes.loginHeader}>
-        <Logo src="/emblem.png" alt="LOGO" />
-      </header>
-      <div className="background-style">
-        <div className={classes.loginBox}>
-          <div className={classes.textInput}>
-            <PersonIcon className={classes.iconStyle} />
-          </div>
-          <form
-            onSubmit={(e): void => {
-              e.preventDefault();
-              handleLoginClick();
-              history.push('/');
-            }}
-          >
-            {error !== '' ? (
-              <div className="form-group">
-                <div className={classes.invalid}>{error}</div>
+    <ThemeProvider theme={loginTheme}>
+      <div>
+        <header className={classes.loginHeader}>
+          <Logo src="/emblem.png" alt="LOGO" />
+        </header>
+        <div className="background-style">
+          <div className={classes.loginBox}>
+            <div className={classes.textInput}>
+              <h1 style={{ color: '#04A777', fontSize: '2rem', fontFamily: 'roboto', marginTop: '3rem', marginBottom: '2rem', }}> Sign in </h1>
+            </div>
+            <form
+              onSubmit={(e): void => {
+                e.preventDefault();
+                handleLoginClick();
+                history.push('/');
+              }}
+            >
+              {error !== '' ? (
+                <div className="classes.margin">
+                  <div className={classes.invalid}>{error}</div>
+                </div>
+              ) : (
+                  <div />
+                )}
+              <div className="classes.margin">
+                <Grid container spacing={1} alignItems="flex-end" justify="center">
+                  <Grid item>
+                    <PersonIcon />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      name="username"
+                      label="Usename"
+                      color="secondary"
+                      value={username}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
               </div>
-            ) : (
-              <div />
-            )}
-            <div className="form-group">
-              <input
-                type="text"
-                name="username"
-                className={classes.loginTextfield}
-                placeholder="Username"
-                value={username}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                name="password"
-                className={classes.loginTextfield}
-                placeholder="Password"
-                value={password}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <button className={classes.loginButton} type="submit">
-                Login
+              <div className="classes.margin">
+                <Grid container spacing={1} alignItems="flex-end" justify="center">
+                  <Grid item>
+                    <LockIcon />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      name="password"
+                      label="Password"
+                      color="secondary"
+                      type="password"
+                      value={password}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
+              </div>
+              {/* <div className="form-group">
+                <input
+                  type="password"
+                  name="password"
+                  className={classes.loginTextfield}
+                  placeholder="Password"
+                  value={password}
+                  onChange={handleChange}
+                />
+              </div> */}
+              <div className="form-group">
+                <button className={classes.loginButton} type="submit">
+                  Login
               </button>
-            </div>
-          </form>
+              </div>
+              <div>
+                <p style={{ color: 'grey', textAlign: 'center', paddingTop: '1rem', font: 'roboto' }}>Don't have an account? <a style={{ color: 'white' }} href="/register">Sign up</a></p>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 };
 
