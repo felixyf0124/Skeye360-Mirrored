@@ -27,6 +27,7 @@ interface Props {
   isSmartTL: boolean;
   tl_mode: any;
   toggles: any;
+  tlStop: boolean;
 }
 
 interface StateProps {
@@ -125,6 +126,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
   isCPAnimating: boolean;
 
   isStopClicked: boolean;
+
+  isTLStop: boolean;
 
   lastBlinkState: boolean;
 
@@ -333,6 +336,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.isControlPanelShown = true;
     this.isCPAnimating = false;
     this.isStopClicked = false;
+    this.isTLStop = false;
     this.btnShowCP = new Btn(26, 26, '<', 0x51BCD8);
     this.btnStop = new Btn(160, 26, 'FORCE STOP', 0x51BCD8, 0.5);
     this.lastBlinkState = false;
@@ -811,9 +815,11 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
     this.updateControlPanelDisplayState(8);
     this.updateTLCountDownDisplayPanel();
-    if (this.btnStop.isPressed()) {
-      this.isStopClicked = !this.isStopClicked;
-      if (this.isStopClicked) {
+    const { tlStop } = this.props;
+    if (true) {
+      // this.isStopClicked = !this.isStopClicked;
+      if (tlStop !== null || tlStop !== undefined) this.isTLStop = tlStop;
+      if (this.isTLStop) {
         for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
           this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(), 'red');
         }

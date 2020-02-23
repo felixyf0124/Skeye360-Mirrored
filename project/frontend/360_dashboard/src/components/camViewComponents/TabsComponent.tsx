@@ -214,8 +214,14 @@ const TabsComponents = (): JSX.Element => {
   });
   const [tlMode, setTlMode] = React.useState(0);
 
+  const [tlStop, setTlStop] = React.useState(false);
+
   const onChangeTLMode = (index: number) => {
     setTlMode(index);
+  };
+
+  const onClickTLStop = () => {
+    setTlStop(!tlStop);
   };
 
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -251,7 +257,14 @@ const TabsComponents = (): JSX.Element => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <OverviewComponent toggles={state} tlMode={tlMode} onChangeTLMode={onChangeTLMode} key="1" />
+        <OverviewComponent
+          toggles={state}
+          tlMode={tlMode}
+          onChangeTLMode={onChangeTLMode}
+          tlStop={tlStop}
+          onClickTLStop={onClickTLStop}
+          key="1"
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <DataAnalyticsComponent />
@@ -260,7 +273,14 @@ const TabsComponents = (): JSX.Element => {
         <CameraComponent />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <SimulatorComponent toggles={state} tlMode={tlMode} onChangeTLMode={onChangeTLMode} key="2" />
+        <SimulatorComponent
+          toggles={state}
+          tlMode={tlMode}
+          onChangeTLMode={onChangeTLMode}
+          tlStop={tlStop}
+          onClickTLStop={onClickTLStop}
+          key="2"
+        />
       </TabPanel>
 
       <Modal

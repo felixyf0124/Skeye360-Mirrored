@@ -17,6 +17,7 @@ import {
 interface SimProps {
   tlMode: number;
   onChangeTLMode: any;
+  onClickTLStop: any;
 }
 
 const width = 10;
@@ -106,7 +107,7 @@ const skeyeStyles = {
 };
 
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
-  const { tlMode, onChangeTLMode } = props;
+  const { tlMode, onChangeTLMode, onClickTLStop } = props;
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
 
@@ -187,7 +188,11 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         <text style={skeyeStyles.Header}> Stop all traffic lights </text>
         <Divider classes={{ root: classes.dividerGrey }} />
 
-        <Button variant="contained" style={skeyeStyles.EmergencyButton}>
+        <Button
+          variant="contained"
+          style={skeyeStyles.EmergencyButton}
+          onClick={onClickTLStop}
+        >
           {' '}
           <ReportIcon style={skeyeStyles.StopIcon} />
           {' '}

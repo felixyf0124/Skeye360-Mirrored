@@ -13,6 +13,8 @@ interface SimProps {
     tlMode: number;
     onChangeTLMode: any;
     toggles: any;
+    tlStop: boolean;
+    onClickTLStop: any;
 }
 
 interface StateProps {
@@ -171,13 +173,18 @@ class OverviewComponent extends React.Component<SimProps
   public render(): JSX.Element {
     const {
       intersectionName, camera_url, tlMode, onChangeTLMode, toggles,
+      tlStop, onClickTLStop,
     } = this.props;
     // console.log(this.props.toggles);
     // eslint-disable-next-line consistent-return
     return (
       <div>
         <HorizontalFlexBox>
-          <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode} />
+          <SidebarComponent
+            tlMode={tlMode}
+            onChangeTLMode={onChangeTLMode}
+            onClickTLStop={onClickTLStop}
+          />
           <VerticalFlexBox>
             <InnerDivVertical>
               <text style={skeyeStyles.Header}>Live Camera Feed</text>
@@ -186,7 +193,12 @@ class OverviewComponent extends React.Component<SimProps
             <InnerDivVertical>
               <text style={skeyeStyles.Header}>Default Traffic Light Setting</text>
               <SimContainer>
-                <Simulator isSmartTL={false} tl_mode={tlMode} toggles={toggles} />
+                <Simulator
+                  isSmartTL={false}
+                  tl_mode={tlMode}
+                  toggles={toggles}
+                  tlStop={tlStop}
+                />
               </SimContainer>
             </InnerDivVertical>
           </VerticalFlexBox>
@@ -228,7 +240,12 @@ class OverviewComponent extends React.Component<SimProps
             <InnerDivVertical>
               <text style={skeyeStyles.Header}>Optimized Traffic Light Setting</text>
               <SimContainer>
-                <Simulator isSmartTL tl_mode={tlMode} toggles={toggles} />
+                <Simulator
+                  isSmartTL
+                  tl_mode={tlMode}
+                  toggles={toggles}
+                  tlStop={tlStop}
+                />
               </SimContainer>
             </InnerDivVertical>
           </VerticalFlexBox>

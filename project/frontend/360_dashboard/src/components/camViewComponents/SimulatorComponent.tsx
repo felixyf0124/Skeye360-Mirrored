@@ -12,6 +12,8 @@ interface SimProps {
   tlMode: number;
   onChangeTLMode: any;
   toggles: any;
+  tlStop: boolean;
+  onClickTLStop: any;
 }
 
 // DIV inside the sideDrawer
@@ -85,24 +87,36 @@ const skeyeStyles = {
 
 const SimulatorComponent = (props: SimProps | any): JSX.Element => {
   // eslint-disable-next-line consistent-return
-  const { tlMode, onChangeTLMode, toggles } = props;
+  const {
+    tlMode, onChangeTLMode, toggles, tlStop, onClickTLStop,
+  } = props;
 
   return (
     <div>
       <text style={skeyeStyles.Title}>Simulation of Traffic</text>
       <HorizontalFlexBox>
-        <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode} />
+        <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode} onClickTLStop={onClickTLStop} />
         <InnerDivHorizon>
           <InnerDivVerticalFirstSim>
             <text style={skeyeStyles.Header}>Optimized Traffic Light Setting</text>
             <SimContainer>
-              <Simulator isSmartTL tl_mode={tlMode} toggles={toggles} />
+              <Simulator
+                isSmartTL
+                tl_mode={tlMode}
+                toggles={toggles}
+                tlStop={tlStop}
+              />
             </SimContainer>
           </InnerDivVerticalFirstSim>
           <InnerDivVerticalSecondSim>
             <text style={skeyeStyles.Header}>Default Traffic Light Setting</text>
             <SimContainer>
-              <Simulator isSmartTL={false} tl_mode={tlMode} toggles={toggles} />
+              <Simulator
+                isSmartTL={false}
+                tl_mode={tlMode}
+                toggles={toggles}
+                tlStop={tlStop}
+              />
             </SimContainer>
           </InnerDivVerticalSecondSim>
         </InnerDivHorizon>
