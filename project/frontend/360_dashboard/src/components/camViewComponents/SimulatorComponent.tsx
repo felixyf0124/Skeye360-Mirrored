@@ -7,6 +7,12 @@ import Simulator from './../../containers/simulator/Scene';
 import { SKEYE_WHITE } from '../../css/custom';
 import { makeStyles, Theme } from '@material-ui/core';
 
+
+interface SimProps {
+  tl_mode: number;
+  
+}
+
 // DIV inside the sideDrawer
 const Body = styled.div`
 //   margin-left: 10rem;
@@ -76,24 +82,26 @@ const skeyeStyles = {
     },
 }
 
-export default function SimulatorComponent() {
+const SimulatorComponent = (props: SimProps | any):JSX.Element=> {
     // eslint-disable-next-line consistent-return
+    const {tl_mode} = props;
+
     return (
         <div>
             <text style={ skeyeStyles.Title }>Simulation of Traffic</text>
             <HorizontalFlexBox>
-                <SidebarComponent></SidebarComponent>
+                <SidebarComponent tl_mode={tl_mode}></SidebarComponent>
                 <InnerDivHorizon>
                     <InnerDivVerticalFirstSim>
                         <text style={ skeyeStyles.Header }>Optimized Traffic Light Setting</text>
                         <SimContainer>
-                        <Simulator isSmartTL />
+                        <Simulator isSmartTL tl_mode={tl_mode}/>
                         </SimContainer>
                     </InnerDivVerticalFirstSim>
                     <InnerDivVerticalSecondSim>
                         <text style={ skeyeStyles.Header }>Default Traffic Light Setting</text>
                         <SimContainer>
-                        <Simulator isSmartTL={false} />
+                        <Simulator isSmartTL={false} tl_mode={tl_mode}/>
                         </SimContainer>
                     </InnerDivVerticalSecondSim>
                 </InnerDivHorizon>
@@ -101,3 +109,5 @@ export default function SimulatorComponent() {
         </div>
     );
 }
+
+export default connect()(SimulatorComponent);

@@ -9,6 +9,10 @@ import { getExistingCamera } from '../../contexts/camera';
 import Simulator from './../../containers/simulator/Scene';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
+interface SimProps {
+    tl_mode: number;
+}
+
 interface StateProps {
     camera_id: string;
     camera_url: string;
@@ -154,7 +158,26 @@ const skeyeStyles = {
     },
 }
 
-class OverviewComponent extends React.Component<StateProps & DispatchProps> {
+class OverviewComponent extends React.Component<StateProps & DispatchProps, {tlMode:number}> {
+    // simComponentRef:any;
+    // tlMode :number;
+    
+
+    constructor(props:any) {
+        super(props);
+        this.state = {
+            tlMode: 0,
+        }
+        // this.simComponentRef = React.createRef();
+        // this.tlMode = 0;
+        this.onChangeTLMode = this.onChangeTLMode.bind(this);
+    }
+
+    onChangeTLMode(index:number) {
+        this.setState({tlMode: index});
+
+    }
+
     public componentDidMount(): void {
       // eslint-disable-next-line no-shadow
       const { camera_id, getExistingCamera } = this.props;
@@ -167,7 +190,7 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps> {
         return (
             <div>
                 <HorizontalFlexBox>
-                    <SidebarComponent></SidebarComponent>
+                    <SidebarComponent onChangeTLMode={this.onChangeTLMode}></SidebarComponent>
                     <VerticalFlexBox>
                         <InnerDivVertical>
                             <text style={ skeyeStyles.Header }>Live Camera Feed</text>
@@ -176,7 +199,7 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps> {
                         <InnerDivVertical>
                             <text style={ skeyeStyles.Header }>Default Traffic Light Setting</text>
                             <SimContainer>
-                            <Simulator isSmartTL={false} />
+                            <Simulator isSmartTL={false} tl_mode={this.state.tlMode}/>
                             </SimContainer>
                         </InnerDivVertical>
                     </VerticalFlexBox>
@@ -218,7 +241,7 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps> {
                         <InnerDivVertical>
                             <text style={ skeyeStyles.Header }>Optimized Traffic Light Setting</text>
                             <SimContainer>
-                            <Simulator isSmartTL/>
+                            <Simulator isSmartTL tl_mode={this.state.tlMode}/>
                             </SimContainer>
                         </InnerDivVertical>
                     </VerticalFlexBox>

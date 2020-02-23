@@ -12,6 +12,10 @@ import { SKEYE_WHITE, SKEYE_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_RED, SKEYE_LIGHT_
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
 
+interface SimProps {
+  onChangeTLMode: any;
+}
+
 const width = 10;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -100,15 +104,17 @@ const skeyeStyles = {
     }
 }
 
-export default function SidebarComponent() {
-  const classes = useStyles();
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+const SidebarComponent = (props: SimProps | any): JSX.Element =>  {
+  const {onChangeTLMode} = props;
+  const classes = useStyles(); 
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const onClickListItem = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number,
   ) => {
     setSelectedIndex(index);
+    onChangeTLMode(index);
   };
 
   return (
@@ -117,7 +123,7 @@ export default function SidebarComponent() {
         <div className={classes.titleBox}>
           <text style={ skeyeStyles.Title }> Options for Simulator</text>
         </div>
-        <text style={ skeyeStyles.Header }> Modes </text>
+  <text style={ skeyeStyles.Header }> Modes </text>
         <Divider classes={{root: classes.dividerGrey}} />
         <List>
           <ListItem button selected={selectedIndex === 0} classes={{ root: classes.root, selected: classes.selected }} onClick={event => onClickListItem(event, 0)}>
@@ -170,3 +176,5 @@ export default function SidebarComponent() {
     </div>
   );
 }
+
+export default SidebarComponent;

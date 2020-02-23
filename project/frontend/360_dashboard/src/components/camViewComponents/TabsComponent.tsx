@@ -23,6 +23,12 @@ import Fade from '@material-ui/core/Fade';
 import SaveIcon from '@material-ui/icons/Save';
 
 
+interface SimProps {
+  tl_mode: number;
+  
+}
+
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
@@ -189,7 +195,7 @@ const skeyeStyles = {
     },
 }
 
-export default function TabsComponents() {
+const TabsComponents = () : JSX.Element => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [open, setOpen] = React.useState(false);
@@ -336,3 +342,5 @@ export default function TabsComponents() {
     </div>
   );
 }
+
+export default TabsComponents;
