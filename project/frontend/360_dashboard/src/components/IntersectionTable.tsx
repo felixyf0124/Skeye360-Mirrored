@@ -9,8 +9,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import LaunchIcon from '@material-ui/icons/Launch';
 import { Link } from 'react-router-dom';
@@ -20,6 +18,7 @@ import DeleteIntersectionButton from './DeleteIntersectionButton';
 import TrafficIntensity from './TrafficIntensity';
 import CameraConnectionStatus from './CameraConnectionStatus';
 import { Response as cameraResponse } from '../api/camera';
+import AddIntersection from '../containers/AddIntersection';
 
 // Generic flexboxes styling
 const VerticalFlexBox = styled.div`
@@ -100,69 +99,65 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
                 <TableCell />
               </TableRow>
             ) : (
-              districts[0].intersections.map((intersection) => (
-                <TableRow key={intersection.id}>
-                  <TableCell component="th" scope="row" align="center">
-                    {intersection.intersection_name}
-                  </TableCell>
-                  <TableCell align="center">{districts[0].district_name}</TableCell>
-                  <TableCell align="center">
-                    <Link to={`/streetview/${intersection.id}`}>
-                      <LaunchIcon />
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">
-                    <VerticalFlexBox>
-                      {intersection.cameras.map((camera: cameraResponse) => (
-                        <Link key={camera.id} to={`/camview/${camera.id}`}>
-                          <LaunchIcon />
-                        </Link>
-                      ))}
-                    </VerticalFlexBox>
-                  </TableCell>
-                  <TableCell align="center">
-                    {intersection.cameras.map((camera: cameraResponse) => (
-                      <a key={camera.id} href={`http://${camera.camera_url}/los/`}>
-                        <TrafficIntensity camera_id={camera.id} camera_url={camera.camera_url} />
-                      </a>
-                    ))}
-                  </TableCell>
-                  <TableCell align="center">
-                    {intersection.cameras.map((camera: cameraResponse) => (
-                      <CameraConnectionStatus key={camera.id} camera_id={camera.id} />
-                    ))}
-                  </TableCell>
-                  {isStaff ? (
+                districts[0].intersections.map((intersection) => (
+                  <TableRow key={intersection.id}>
+                    <TableCell component="th" scope="row" align="center">
+                      {intersection.intersection_name}
+                    </TableCell>
+                    <TableCell align="center">{districts[0].district_name}</TableCell>
                     <TableCell align="center">
-                      <Link to={`/intersection/edit/${intersection.id}`}>
-                        <EditIcon />
+                      <Link to={`/streetview/${intersection.id}`}>
+                        <LaunchIcon />
                       </Link>
                     </TableCell>
-                  ) : (
-                    <div />
-                  )}
-                  {isStaff ? (
                     <TableCell align="center">
-                      <DeleteIntersectionButton intersection_id={intersection.id} />
+                      <VerticalFlexBox>
+                        {intersection.cameras.map((camera: cameraResponse) => (
+                          <Link key={camera.id} to={`/camview/${camera.id}`}>
+                            <LaunchIcon />
+                          </Link>
+                        ))}
+                      </VerticalFlexBox>
                     </TableCell>
-                  ) : (
-                    <div />
-                  )}
-                </TableRow>
-              ))
-            )}
+                    <TableCell align="center">
+                      {intersection.cameras.map((camera: cameraResponse) => (
+                        <a key={camera.id} href={`http://${camera.camera_url}/los/`}>
+                          <TrafficIntensity camera_id={camera.id} camera_url={camera.camera_url} />
+                        </a>
+                      ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      {intersection.cameras.map((camera: cameraResponse) => (
+                        <CameraConnectionStatus key={camera.id} camera_id={camera.id} />
+                      ))}
+                    </TableCell>
+                    {isStaff ? (
+                      <TableCell align="center">
+                        <Link to={`/intersection/edit/${intersection.id}`}>
+                          <EditIcon />
+                        </Link>
+                      </TableCell>
+                    ) : (
+                        <div />
+                      )}
+                    {isStaff ? (
+                      <TableCell align="center">
+                        <DeleteIntersectionButton intersection_id={intersection.id} />
+                      </TableCell>
+                    ) : (
+                        <div />
+                      )}
+                  </TableRow>
+                ))
+              )}
           </TableBody>
         </Table>
       </TableContainer>
       {isStaff ? (
-        <Link to="/intersection/add">
-          <Fab className={classes.addButton} aria-label="add">
-            <AddIcon className={classes.plusIcon} />
-          </Fab>
-        </Link>
+        <AddIntersection />
       ) : (
-        <div />
-      )}
+          <div />
+        )}
     </main>
   );
 };

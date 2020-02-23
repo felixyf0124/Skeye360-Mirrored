@@ -5,10 +5,16 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import DialogContent from '@material-ui/core/DialogContent';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add';
 import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
 import { logClick } from '../contexts/LogClicks';
-import SideDrawer from '../components/SideDrawer';
 
 const Body = styled.div`
   overflow-y: none;
@@ -68,7 +74,6 @@ const useStyles = makeStyles(() => ({
   content: {
     backgroundColor: '#212121',
     margin: 'auto',
-    marginTop: '10rem',
     width: '25rem',
     height: '30rem',
     border: '1px solid grey',
@@ -94,6 +99,37 @@ const useStyles = makeStyles(() => ({
     marginTop: '2rem',
   },
 }));
+
+const addIntTheme = createMuiTheme({
+  overrides: {
+    MuiDialogContent: {
+      root: {
+        padding: 'none',
+        margin: 'none',
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+        paddingTop: '0px',
+        borderRadius: '15px',
+        "&:first-child": {
+          paddingTop: '0px',
+          borderRadius: '15px',
+        }
+      },
+    },
+    MuiButtonBase: {
+      root: {
+        "&:focus": {
+          outline: 'none',
+        }
+      },
+    },
+    MuiDialog: {
+      paper: {
+        borderRadius: '15px',
+      }
+    }
+  },
+});
 
 const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
@@ -124,77 +160,103 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
   const title = 'Add Intersection';
   const classes = useStyles();
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <Body>
-      <SideDrawer headerTitle={title} />
-      <div className={classes.content}>
-        {error !== '' ? (
-          <div className="form-group">
-            <div className={classes.invalid}>{error}</div>
-          </div>
-        ) : (
-          <div />
-        )}
-        <form
-          onSubmit={(e): void => {
-            e.preventDefault();
-            handleSubmit();
-            history.push('/');
-          }}
-        >
-          <div className={classes.innerBox}>
-            <div className="form-group">
-              <div className={classes.textEntry}>District ID</div>
-              <input
-                type="text"
-                name="district_id"
-                value={district_id}
-                className={classes.textField}
-                disabled
-              />
-            </div>
-            <div className="form-group">
-              <div className={classes.textEntry}>Intersection Name</div>
-              <input
-                type="text"
-                name="intersection_name"
-                value={intersection_name}
-                placeholder="e.g. Guy/St-Catherine"
-                className={classes.textField}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <div className={classes.textEntry}>Latitude</div>
-              <input
-                type="text"
-                name="latitude"
-                value={latitude}
-                placeholder="e.g. 12.3456"
-                className={classes.textField}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <div className={classes.textEntry}>Longitude</div>
-              <input
-                type="text"
-                name="longitude"
-                value={longitude}
-                placeholder="e.g. 12.3456"
-                className={classes.textField}
-                onChange={handleChange}
-              />
-            </div>
-            <div className={classes.centeredBox}>
-              <button className={classes.addButton} type="submit">
-                Add
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </Body>
+    <ThemeProvider theme={addIntTheme}>
+      <Body>
+        <div>
+          <IconButton style={{ color: 'white', backgroundColor: '#04A777', marginTop: '1rem' }} onClick={handleClickOpen}>
+            <AddIcon />
+          </IconButton>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+          >
+            <DialogContent>
+              <div className={classes.content}>
+                {error !== '' ? (
+                  <div className="form-group">
+                    <div className={classes.invalid}>{error}</div>
+                  </div>
+                ) : (
+                    <div />
+                  )}
+                <form
+                  onSubmit={(e): void => {
+                    e.preventDefault();
+                    handleSubmit();
+                    history.push('/');
+                  }}
+                >
+                  <div className={classes.innerBox}>
+                    <div style={{ float: "right", marginTop: '-1.5rem' }}>
+                      <IconButton onClick={handleClose} style={{ float: "right" }}>
+                        <CloseIcon />
+                      </IconButton>
+                    </div>
+                    <div className="form-group" style={{ paddingLeft: '3rem' }}>
+                      <div className={classes.textEntry}>District ID</div>
+                      <input
+                        type="text"
+                        name="district_id"
+                        value={district_id}
+                        className={classes.textField}
+                        disabled
+                      />
+                    </div>
+                    <div className="form-group">
+                      <div className={classes.textEntry}>Intersection Name</div>
+                      <input
+                        type="text"
+                        name="intersection_name"
+                        value={intersection_name}
+                        placeholder="e.g. Guy/St-Catherine"
+                        className={classes.textField}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <div className={classes.textEntry}>Latitude</div>
+                      <input
+                        type="text"
+                        name="latitude"
+                        value={latitude}
+                        placeholder="e.g. 12.3456"
+                        className={classes.textField}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <div className={classes.textEntry}>Longitude</div>
+                      <input
+                        type="text"
+                        name="longitude"
+                        value={longitude}
+                        placeholder="e.g. 12.3456"
+                        className={classes.textField}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className={classes.centeredBox}>
+                      <button className={classes.addButton} onClick={handleClose} type="submit">Add</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </Body>
+    </ThemeProvider>
   );
 };
 
