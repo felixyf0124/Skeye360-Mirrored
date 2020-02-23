@@ -103,6 +103,14 @@ const useStyles = makeStyles(() => ({
     borderColor: 'grey',
     color: '#FFFFFF',
   },
+
+  headerText: {
+    color: '#04A777',
+    fontSize: '2rem',
+    fontFamily: 'roboto',
+    marginTop: '3rem',
+    marginBottom: '2rem',
+  }
 }));
 
 const loginTheme = createMuiTheme({
@@ -209,7 +217,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
         <div className="background-style">
           <div className={classes.loginBox}>
             <div className={classes.textInput}>
-              <h1 style={{ color: '#04A777', fontSize: '2rem', fontFamily: 'roboto', marginTop: '3rem', marginBottom: '2rem', }}> Sign in </h1>
+              <h1 className={classes.headerText}> Sign in </h1>
             </div>
             <form
               onSubmit={(e): void => {
@@ -258,16 +266,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
                   </Grid>
                 </Grid>
               </div>
-              {/* <div className="form-group">
-                <input
-                  type="password"
-                  name="password"
-                  className={classes.loginTextfield}
-                  placeholder="Password"
-                  value={password}
-                  onChange={handleChange}
-                />
-              </div> */}
               <div className="form-group">
                 <button className={classes.loginButton} type="submit">
                   Login
