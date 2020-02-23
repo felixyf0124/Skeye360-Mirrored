@@ -34,19 +34,19 @@ const deleteInt = createMuiTheme({
     MuiIconButton: {
       root: {
         color: '#007BFF',
-        "&:hover": {
+        '&:hover': {
           color: '#0056B3',
           backgroundColor: 'transparent',
         },
-        "&:focus": {
+        '&:focus': {
           outline: 'none',
-        }
+        },
       },
     },
     MuiButtonBase: {
       root: {
         color: '#007BFF',
-        "&:focus": {
+        '&:focus': {
           outline: 'none',
           backgroundColor: '#0056B3',
           color: 'white',
@@ -55,12 +55,12 @@ const deleteInt = createMuiTheme({
     },
     MuiButton: {
       textPrimary: {
-        "&:hover": {
+        '&:hover': {
           backgroundColor: '#0056B3',
           color: 'white',
         },
-      }
-    }
+      },
+    },
   },
 });
 
@@ -93,19 +93,19 @@ const DeleteIntersectionButton = (props: Props & StateProps & DispatchProps): JS
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Delete Intersection"}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">Delete Intersection</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Are you sure that you want to delete this intersection?
-        </DialogContentText>
+            </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Cancel
-        </Button>
+            </Button>
             <Button onClick={(): void => handleDelete(intersection_id.toString())} color="primary">
               Ok
-        </Button>
+            </Button>
           </DialogActions>
         </Dialog>
       </div>
