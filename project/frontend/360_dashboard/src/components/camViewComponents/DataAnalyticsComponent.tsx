@@ -1,23 +1,23 @@
 import React from 'react';
-import { SKEYE_WHITE } from '../../css/custom';
 import { connect } from 'react-redux';
-import NorthChart from './../NorthChart';
-import SouthChart from './../SouthChart';
-import GoogleMiniMap from './../GoogleMiniMap';
 import styled from 'styled-components';
+import { SKEYE_WHITE } from '../../css/custom';
+import NorthChart from '../NorthChart';
+import SouthChart from '../SouthChart';
+import GoogleMiniMap from '../GoogleMiniMap';
 import PieChart from '../PieChart';
 import DisplayCount from '../DisplayMovAVG';
 import { RootState } from '../../reducers/rootReducer';
 import {
-    STATE as intersectionState,
-    getExistingIntersection,
-    resetIntersection as resetCurrentIntersection,
-    ResetIntersectionAction,
-} from '../../contexts/intersection'
+  STATE as intersectionState,
+  getExistingIntersection,
+  resetIntersection as resetCurrentIntersection,
+  ResetIntersectionAction,
+} from '../../contexts/intersection';
 import {
-    STATE as cameraState,
-    getExistingCamera
-} from '../../contexts/camera'
+  STATE as cameraState,
+  getExistingCamera,
+} from '../../contexts/camera';
 
 const Body = styled.div`
   margin-left: 5rem;
@@ -83,19 +83,19 @@ const ChartHorizontalFlexBox = styled.div`
 `;
 
 const skeyeStyles = {
-    Title: {
-        color: SKEYE_WHITE,
-        fontSize: 28,
-        marginBottom: 4,
-        fontWeight: 900,
-    },
-    Header: {
-        color: SKEYE_WHITE,
-        fontSize: 20,
-        marginBottom: 4,
-        fontWeight: 900,
-    },
-}
+  Title: {
+    color: SKEYE_WHITE,
+    fontSize: 28,
+    marginBottom: 4,
+    fontWeight: 900,
+  },
+  Header: {
+    color: SKEYE_WHITE,
+    fontSize: 20,
+    marginBottom: 4,
+    fontWeight: 900,
+  },
+};
 
 // state & props
 interface StateProps {
@@ -117,93 +117,92 @@ interface DispatchProps {
 }
 
 class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps> {
-    // component mount will fetch existing intersection
-    public componentDidMount(): void {
-      // eslint-disable-next-line no-shadow
-      const { intersectionId, getExistingIntersection } = this.props;
-      getExistingIntersection('2');
-        const { cameraId, getExistingCamera } = this.props;
-        getExistingCamera(cameraId);
-    }
-  
-    // component unmount resets the loaded data
-    public componentWillUnmount(): void {
-      // eslint-disable-next-line no-shadow
-      const { resetCurrentIntersection } = this.props;
-      resetCurrentIntersection();
-    }
+  // component mount will fetch existing intersection
+  public componentDidMount(): void {
+    // eslint-disable-next-line no-shadow
+    const { intersectionId, getExistingIntersection } = this.props;
+    getExistingIntersection('2');
+    const { cameraId, getExistingCamera } = this.props;
+    getExistingCamera(cameraId);
+  }
 
-    public render(): JSX.Element {
-        const {
-        intersectionId, intersectionName, intersectionLat, intersectionLng, cameraId
-        } = this.props;
-        
-        console.log("-----------DATA--------------");
-        console.log("camera id:" + cameraId);    
-        console.log("Intersection id:" + intersectionId);
-        console.log("Intersection name:" + intersectionName);
-        console.log("intersection lat and long : " + intersectionLat + " | " + intersectionLng);
-        console.log("----------------------------------");
+  // component unmount resets the loaded data
+  public componentWillUnmount(): void {
+    // eslint-disable-next-line no-shadow
+    const { resetCurrentIntersection } = this.props;
+    resetCurrentIntersection();
+  }
 
-        return (
-            <div>
-                <text style={ skeyeStyles.Title }>Data Analytics</text>
-                <Body>
-                <ChartHorizontalFlexBox>
-                    <MapContainer>
-                    {intersectionLat === '' ? (
-                        <p>Loading...</p>
-                    ) : (
-                        <GoogleMiniMap
-                        intersectionId={intersectionId}
-                        intersectionLat={intersectionLat}
-                        intersectionLng={intersectionLng}
-                        />
-                    )}
-                    </MapContainer>
-                </ChartHorizontalFlexBox>
-                <ChartHorizontalFlexBox>
-                    <ChartVerticalFlexBox>
-                    <SmallChartContainer>
-                        <NorthChart />
-                    </SmallChartContainer>
-                    <SmallChartContainer>
-                        <SouthChart />
-                    </SmallChartContainer>
-                    </ChartVerticalFlexBox>
-                    <BigChartContainer>
-                        <PieChart />
-                    </BigChartContainer>
-                </ChartHorizontalFlexBox>
-                </Body>
-            </div>
-        )
-    }
+  public render(): JSX.Element {
+    const {
+      intersectionId, intersectionName, intersectionLat, intersectionLng, cameraId,
+    } = this.props;
+
+    console.log('-----------DATA--------------');
+    console.log(`camera id:${cameraId}`);
+    console.log(`Intersection id:${intersectionId}`);
+    console.log(`Intersection name:${intersectionName}`);
+    console.log(`intersection lat and long : ${intersectionLat} | ${intersectionLng}`);
+    console.log('----------------------------------');
+
+    return (
+      <div>
+        <text style={skeyeStyles.Title}>Data Analytics</text>
+        <Body>
+          <ChartHorizontalFlexBox>
+            <MapContainer>
+              {intersectionLat === '' ? (
+                <p>Loading...</p>
+              ) : (
+                <GoogleMiniMap
+                  intersectionId={intersectionId}
+                  intersectionLat={intersectionLat}
+                  intersectionLng={intersectionLng}
+                />
+              )}
+            </MapContainer>
+          </ChartHorizontalFlexBox>
+          <ChartHorizontalFlexBox>
+            <ChartVerticalFlexBox>
+              <SmallChartContainer>
+                <NorthChart />
+              </SmallChartContainer>
+              <SmallChartContainer>
+                <SouthChart />
+              </SmallChartContainer>
+            </ChartVerticalFlexBox>
+            <BigChartContainer>
+              <PieChart />
+            </BigChartContainer>
+          </ChartHorizontalFlexBox>
+        </Body>
+      </div>
+    );
+  }
 }
 
 
 // state mapping
 const mapStateToProps = (state: RootState): StateProps => ({
-    intersection: state.intersection,
-    cameraId: state.router.location.pathname.substring(
-      state.router.location.pathname.lastIndexOf('/') + 1,
-    ),
-    // cameraId: '2',
-    camera: state.camera,
-    intersectionId: state.camera.intersection_id.toString(),
-    intersectionName: state.intersection.intersection_name,
-    intersectionLat: state.intersection.latitude,
-    intersectionLng: state.intersection.longitude,
-    error: state.intersection.error,
-    user_id: state.authentication.user_id,
-  });
-  
-  // props dispatching
-  const mapDispatchToProps: DispatchProps = {
-    getExistingIntersection,
-    getExistingCamera,
-    resetCurrentIntersection,
-  };
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(DataAnalyticsComponent);
+  intersection: state.intersection,
+  cameraId: state.router.location.pathname.substring(
+    state.router.location.pathname.lastIndexOf('/') + 1,
+  ),
+  // cameraId: '2',
+  camera: state.camera,
+  intersectionId: state.camera.intersection_id.toString(),
+  intersectionName: state.intersection.intersection_name,
+  intersectionLat: state.intersection.latitude,
+  intersectionLng: state.intersection.longitude,
+  error: state.intersection.error,
+  user_id: state.authentication.user_id,
+});
 
+// props dispatching
+const mapDispatchToProps: DispatchProps = {
+  getExistingIntersection,
+  getExistingCamera,
+  resetCurrentIntersection,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DataAnalyticsComponent);

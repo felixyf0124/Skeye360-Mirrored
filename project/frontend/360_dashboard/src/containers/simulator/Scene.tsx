@@ -25,7 +25,8 @@ import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
 
 interface Props {
   isSmartTL: boolean;
-  tl_mode:any;
+  tl_mode: any;
+  toggles: any;
 }
 
 interface StateProps {
@@ -346,7 +347,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
     const uiV7 = { name: 'enable new UI v2.2', state: false };
     const showSectionAreas = { name: 'Show Section Areas', state: false };
-    const showDirectVideoFeedMapping = { name: 'Show video feed mapping', state: false };
+    const showDirectVideoFeedMapping = { name: 'Show video feed mapping', state: true };
     const showVideoFeedBG = { name: 'Show video feed background', state: false };
     this.toggleGroup.push(videoFeed);
     this.toggleGroup.push(samplingVideoFeed);
@@ -937,8 +938,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       this.fpsCounter = 0;
 
       const { isSmartTL, tl_mode } = this.props;
-      const tl_mode_number = tl_mode;
-      console.log(tl_mode_number + 1);
+
       this.tlCaseId = tl_mode + 1;
       if (isSmartTL) {
         // real-time case
@@ -1332,8 +1332,13 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     switch (this.menuPage) {
       case 1:
       {
-        if (this.laneAreaContainer.parent !== null) {
+        if (this.laneAreaContainer.parent !== null
+          && !this.toggleGroup[3].state) {
           this.mapContainer.removeChild(this.laneAreaContainer);
+        }
+        if (this.laneAreaContainer.parent == null
+          && this.toggleGroup[3].state) {
+          this.mapContainer.addChild(this.laneAreaContainer);
         }
         for (let i = 0; i < this.menuBtns.length; i += 1) {
           if (i === this.menuPage - 1) {
@@ -1416,7 +1421,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
   }
 
-  updateTLCase() {
+  updateTLCase(): void {
     for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
       if (this.tlCaseBtnGroup[i].isPressed()) {
         this.tlCaseId = i + 1;
@@ -1438,6 +1443,21 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * update toggle btn state when the btn is pressed
    */
   updateToggleBtnState(): void{
+    const { toggles } = this.props;
+    let togValues = new Array<boolean>();
+    if (toggles !== undefined && toggles !== null) {
+      togValues = Object.values(toggles);
+    }
+    // console.log();
+    for (let i = 0; i < togValues.length; i += 1) {
+      // console.log(togValues[i]);
+      if (i === 4) {
+        this.toggleGroup[i + 1].state = togValues[i];
+      } else {
+        this.toggleGroup[i].state = togValues[i];
+      }
+    }
+
     const color = 0x51BCD8;
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
       if (i === 1) {
