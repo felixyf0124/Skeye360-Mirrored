@@ -20,14 +20,15 @@ import {
 import { logClick } from '../contexts/LogClicks';
 
 interface StateProps {
-  username: string;
-  password: string;
+  username: any;
+  password: any;
   log_message: string;
   isAuthenticated: boolean;
   name: string;
   sessionToken: string;
   error: string;
   user_id: number;
+  remMe: any;
 }
 
 interface DispatchProps {
@@ -110,7 +111,16 @@ const useStyles = makeStyles(() => ({
     fontFamily: 'roboto',
     marginTop: '3rem',
     marginBottom: '2rem',
-  }
+  },
+
+  checkBox: {
+    color: 'grey',
+    fontSize: '0.8rem',
+    display: 'inline',
+    justifyContent: 'center',
+    verticalAlign: 'middle',
+    paddingLeft: '0.5rem',
+  },
 }));
 
 const loginTheme = createMuiTheme({
@@ -168,7 +178,7 @@ const Logo = styled.img`
 const Login = (props: StateProps & DispatchProps): JSX.Element => {
   // state
   const [state, setState] = React.useState(props);
-  const { username, password } = state;
+  const { username, password, remMe } = state;
   const classes = useStyles();
   const history = useHistory();
 
@@ -182,11 +192,23 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 
   // update state on change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setState({ ...state, [e.target.name]: e.target.value });
+    const input = e.target;
+    const value = input.type === 'checkbox' ? input.checked : input.value;
+
+    setState({ ...state, [input.name]: value });
   };
 
   // eslint-disable-next-line consistent-return
   const handleLoginClick = (): any => {
+    if (state.remMe) {
+      localStorage.setItem('remMe', state.remMe);
+      localStorage.setItem('username', state.username);
+      localStorage.setItem('password', state.password);
+    } else {
+      localStorage.removeItem('remMe');
+      localStorage.removeItem('username');
+      localStorage.removeItem('password');
+    }
     // eslint-disable-next-line no-shadow
     props.authenticate(username, password);
   };
@@ -239,11 +261,12 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
                     <PersonIcon />
                   </Grid>
                   <Grid item>
+                    {console.log(state.username)}
                     <TextField
                       name="username"
                       label="Usename"
                       color="secondary"
-                      value={username}
+                      value={state.username}
                       onChange={handleChange}
                     />
                   </Grid>
@@ -260,11 +283,17 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
                       label="Password"
                       color="secondary"
                       type="password"
-                      value={password}
+                      value={state.password}
                       onChange={handleChange}
                     />
                   </Grid>
                 </Grid>
+              </div>
+              <div className="form-group">
+                <div>
+                  <input name="remMe" checked={state.remMe} onChange={handleChange} type="checkbox" style={{ height: '1rem', width: '1rem', verticalAlign: 'middle', }} />
+                  <label className={classes.checkBox}>Remember me</label>
+                </div>
               </div>
               <div className="form-group">
                 <button className={classes.loginButton} type="submit">
@@ -284,14 +313,15 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
-  username: '',
-  password: '',
+  username: localStorage.getItem('username'),
+  password: localStorage.getItem('password'),
   user_id: state.authentication.user_id,
   log_message: '',
   isAuthenticated: authenticated(state),
   name: state.authentication.username,
   sessionToken: state.authentication.sessionToken,
   error: state.authentication.error,
+  remMe: localStorage.getItem('remMe'),
 });
 
 const mapDispatchToProps: DispatchProps = {
