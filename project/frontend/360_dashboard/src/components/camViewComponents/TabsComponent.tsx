@@ -204,6 +204,7 @@ const TabsComponents = () : JSX.Element => {
     checkedB: false,
     checkedC: false,
     checkedD: false,
+    checkedE: false,
   });
 
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -239,7 +240,7 @@ const TabsComponents = () : JSX.Element => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <OverviewComponent key='1'></OverviewComponent>>
+        <OverviewComponent toggles={state} key='1'></OverviewComponent>>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <DataAnalyticsComponent></DataAnalyticsComponent>
@@ -274,6 +275,7 @@ const TabsComponents = () : JSX.Element => {
                 <BoxSettings>
                     <text style={ skeyeStyles.SettingsHeader }>Enable video feed</text>
                     <text style={ skeyeStyles.SettingsHeader }>Enable sampling of video feed</text>
+                    <text style={ skeyeStyles.SettingsHeader }>Enable section car number box</text>
                     <text style={ skeyeStyles.SettingsHeader }>Show section areas</text>
                     <text style={ skeyeStyles.SettingsHeader }>Show video background</text>
                 </BoxSettings>
@@ -318,6 +320,17 @@ const TabsComponents = () : JSX.Element => {
                             checked={state.checkedD}
                             onChange={handleChange('checkedD')}
                             value="checkedD"
+                        />
+                        }
+                        label=""
+                        style={ skeyeStyles.ControlLabel }
+                      />
+                      <FormControlLabel
+                        control={
+                        <GreenSwitch
+                            checked={state.checkedE}
+                            onChange={handleChange('checkedE')}
+                            value="checkedE"
                         />
                         }
                         label=""

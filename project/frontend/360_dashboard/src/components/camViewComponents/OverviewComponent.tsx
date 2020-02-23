@@ -10,7 +10,8 @@ import Simulator from './../../containers/simulator/Scene';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 interface SimProps {
-    tl_mode: number;
+    // tl_mode: number;
+    toggles: any;
 }
 
 interface StateProps {
@@ -158,7 +159,7 @@ const skeyeStyles = {
     },
 }
 
-class OverviewComponent extends React.Component<StateProps & DispatchProps, {tlMode:number}> {
+class OverviewComponent extends React.Component<SimProps & StateProps & DispatchProps, {tlMode:number }> {
     // simComponentRef:any;
     // tlMode :number;
     
@@ -167,6 +168,7 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps, {tlM
         super(props);
         this.state = {
             tlMode: 0,
+            // toggles: props.toggles,
         }
         // this.simComponentRef = React.createRef();
         // this.tlMode = 0;
@@ -186,6 +188,7 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps, {tlM
 
     public render(): JSX.Element {
         const { intersectionName, camera_url } = this.props;
+        console.log(this.props.toggles);
     // eslint-disable-next-line consistent-return
         return (
             <div>
@@ -199,7 +202,7 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps, {tlM
                         <InnerDivVertical>
                             <text style={ skeyeStyles.Header }>Default Traffic Light Setting</text>
                             <SimContainer>
-                            <Simulator isSmartTL={false} tl_mode={this.state.tlMode}/>
+                            <Simulator isSmartTL={false} tl_mode={this.state.tlMode} toggles={this.props.toggles}/>
                             </SimContainer>
                         </InnerDivVertical>
                     </VerticalFlexBox>
@@ -241,7 +244,7 @@ class OverviewComponent extends React.Component<StateProps & DispatchProps, {tlM
                         <InnerDivVertical>
                             <text style={ skeyeStyles.Header }>Optimized Traffic Light Setting</text>
                             <SimContainer>
-                            <Simulator isSmartTL tl_mode={this.state.tlMode}/>
+                            <Simulator isSmartTL tl_mode={this.state.tlMode} toggles={this.props.toggles}/>
                             </SimContainer>
                         </InnerDivVertical>
                     </VerticalFlexBox>
