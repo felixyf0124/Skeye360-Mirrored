@@ -239,7 +239,7 @@ const TabsComponents = () : JSX.Element => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <OverviewComponent></OverviewComponent>>
+        <OverviewComponent key='1'></OverviewComponent>>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <DataAnalyticsComponent></DataAnalyticsComponent>
@@ -248,7 +248,7 @@ const TabsComponents = () : JSX.Element => {
         <CameraComponent></CameraComponent>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <SimulatorComponent></SimulatorComponent>
+        <SimulatorComponent key='2'></SimulatorComponent>
       </TabPanel>
 
       <Modal
