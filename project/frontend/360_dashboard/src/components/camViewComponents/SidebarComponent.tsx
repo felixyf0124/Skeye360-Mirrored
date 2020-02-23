@@ -106,9 +106,9 @@ const skeyeStyles = {
 };
 
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
-  const { onChangeTLMode } = props;
+  const { tlMode, onChangeTLMode } = props;
   const classes = useStyles();
-  const [selectedIndex, setSelectedIndex] = React.useState(props.tlMode);
+  const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
 
   const onClickListItem = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -127,7 +127,12 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         <text style={skeyeStyles.Header}> Modes </text>
         <Divider classes={{ root: classes.dividerGrey }} />
         <List>
-          <ListItem button selected={selectedIndex === 0} classes={{ root: classes.root, selected: classes.selected }} onClick={(event) => onClickListItem(event, 0)}>
+          <ListItem
+            button
+            selected={selectedIndex === 0}
+            classes={{ root: classes.root, selected: classes.selected }}
+            onClick={(event) => onClickListItem(event, 0)}
+          >
             <ListItemIcon style={skeyeStyles.IconStyle}>
               <TrendingUpIcon />
             </ListItemIcon>
@@ -136,7 +141,12 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             </ListItemText>
           </ListItem>
 
-          <ListItem button selected={selectedIndex === 1} classes={{ root: classes.root, selected: classes.selected }} onClick={(event) => onClickListItem(event, 1)}>
+          <ListItem
+            button
+            selected={selectedIndex === 1}
+            classes={{ root: classes.root, selected: classes.selected }}
+            onClick={(event) => onClickListItem(event, 1)}
+          >
             <ListItemIcon style={skeyeStyles.IconStyle}>
               <DirectionsWalkIcon />
             </ListItemIcon>
@@ -145,7 +155,12 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             </ListItemText>
           </ListItem>
 
-          <ListItem button selected={selectedIndex === 2} classes={{ root: classes.root, selected: classes.selected }} onClick={(event) => onClickListItem(event, 2)}>
+          <ListItem
+            button
+            selected={selectedIndex === 2}
+            classes={{ root: classes.root, selected: classes.selected }}
+            onClick={(event) => onClickListItem(event, 2)}
+          >
             <ListItemIcon style={skeyeStyles.IconStyle}>
               <TrackChangesIcon />
             </ListItemIcon>

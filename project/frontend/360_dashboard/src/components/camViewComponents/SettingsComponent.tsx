@@ -107,7 +107,9 @@ export default function SettingsComponent() {
       <HorizontalFlexBox>
         <BoxMain>
           <text style={skeyeStyles.Title}>Settings for the simulators</text>
-          {/* <text style={ skeyeStyles.Message }>All your preferences for the simulators will be saved here</text> */}
+          {/* <text style={ skeyeStyles.Message }>
+            All your preferences for the simulators will be saved here
+          </text> */}
         </BoxMain>
         <BoxHorizontal>
           <BoxSettings>

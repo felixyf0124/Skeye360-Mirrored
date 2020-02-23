@@ -244,7 +244,7 @@ const TabsComponents = (): JSX.Element => {
           <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
 
           <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
-            <button style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
+            <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
               <SettingsIcon />
             </button>
           </BoxSettingsMenu>

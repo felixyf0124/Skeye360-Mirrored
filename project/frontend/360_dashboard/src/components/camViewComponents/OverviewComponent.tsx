@@ -160,11 +160,8 @@ const skeyeStyles = {
   },
 };
 
-class OverviewComponent extends React.Component<SimProps & StateProps & DispatchProps, {tlMode: number }> {
-  constructor(props: any) {
-    super(props);
-  }
-
+class OverviewComponent extends React.Component<SimProps
+& StateProps & DispatchProps, {tlMode: number }> {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { camera_id, getExistingCamera } = this.props;
@@ -172,13 +169,15 @@ class OverviewComponent extends React.Component<SimProps & StateProps & Dispatch
   }
 
   public render(): JSX.Element {
-    const { intersectionName, camera_url } = this.props;
-    console.log(this.props.toggles);
+    const {
+      intersectionName, camera_url, tlMode, onChangeTLMode, toggles,
+    } = this.props;
+    // console.log(this.props.toggles);
     // eslint-disable-next-line consistent-return
     return (
       <div>
         <HorizontalFlexBox>
-          <SidebarComponent tlMode={this.props.tlMode} onChangeTLMode={this.props.onChangeTLMode} />
+          <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode} />
           <VerticalFlexBox>
             <InnerDivVertical>
               <text style={skeyeStyles.Header}>Live Camera Feed</text>
@@ -187,7 +186,7 @@ class OverviewComponent extends React.Component<SimProps & StateProps & Dispatch
             <InnerDivVertical>
               <text style={skeyeStyles.Header}>Default Traffic Light Setting</text>
               <SimContainer>
-                <Simulator isSmartTL={false} tl_mode={this.props.tlMode} toggles={this.props.toggles} />
+                <Simulator isSmartTL={false} tl_mode={tlMode} toggles={toggles} />
               </SimContainer>
             </InnerDivVertical>
           </VerticalFlexBox>
@@ -229,7 +228,7 @@ class OverviewComponent extends React.Component<SimProps & StateProps & Dispatch
             <InnerDivVertical>
               <text style={skeyeStyles.Header}>Optimized Traffic Light Setting</text>
               <SimContainer>
-                <Simulator isSmartTL tl_mode={this.props.tlMode} toggles={this.props.toggles} />
+                <Simulator isSmartTL tl_mode={tlMode} toggles={toggles} />
               </SimContainer>
             </InnerDivVertical>
           </VerticalFlexBox>
