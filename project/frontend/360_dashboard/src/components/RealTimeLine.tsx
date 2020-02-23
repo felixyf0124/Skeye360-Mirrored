@@ -11,8 +11,8 @@ import NorthDataBefore from '../PostData/carsNorth.json';
 var LASTDATE = 0;
 var DATA: any[] = [];
 var data2: any[] = [];
-var TICKINTERVAL = 8640000; //number of milliseconds in a day
-let XAXISRANGE = 77760000;
+var TICKINTERVAL = 86400000; //number of milliseconds in a day
+let XAXISRANGE = 777600000;
 function getDayWiseTimeSeries(baseval: any, count: any, yrange: any) {
   var i = 0;
   while (i < count) {
@@ -59,10 +59,13 @@ function getNewSeries(baseval: any, yrange: any) {
     data2[i].y = 0;
   }
 
+  //Pushes values into the first array (data1)
   DATA.push({
     x: newDate,
     y: Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
   })
+
+  //Pushes values into the second array (data2)
   data2.push({
     x: newDate,
     y: Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min,
@@ -124,11 +127,11 @@ class RealTimeLine extends React.Component<{}, ChartState> {
         }
       },
       series:[{
-        name: 'data1',
+        name: 'Prediction',
         data: DATA.slice(),
       },
     {
-      name: 'data2',
+      name: 'Moving Average',
       data: data2.slice(),
     }]
     }
@@ -149,7 +152,7 @@ class RealTimeLine extends React.Component<{}, ChartState> {
         }
     ]);
       
-    }, 1000)
+    }, 10000)
   }
   render(){
     return(
