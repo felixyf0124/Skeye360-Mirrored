@@ -42,47 +42,47 @@ interface StateProps {
     error: string;
     user_id: number;
   }
-  
+
   interface DispatchProps {
     getExistingCamera: (id: string) => any;
   }
 
-  class CameraComponent extends React.Component<StateProps & DispatchProps> {
-    public componentDidMount(): void {
-      // eslint-disable-next-line no-shadow
-      const { camera_id, getExistingCamera } = this.props;
-      getExistingCamera(camera_id);
-    }
-  
-    public render(): JSX.Element {
-      const { intersectionName, camera_url } = this.props;
-  
-      // eslint-disable-next-line consistent-return
-      return (
-        <div>
-          <VerticalFlexBox>
-            <InnerDiv>
-              <h2>Live Camera Feed</h2>
-              <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
-            </InnerDiv>
-          </VerticalFlexBox>
-        </div>
-      );
-    }
+class CameraComponent extends React.Component<StateProps & DispatchProps> {
+  public componentDidMount(): void {
+    // eslint-disable-next-line no-shadow
+    const { camera_id, getExistingCamera } = this.props;
+    getExistingCamera(camera_id);
   }
-  
-  const mapStateToProps = (state: RootState): StateProps => ({
-    camera_id: state.router.location.pathname.substring(
-      state.router.location.pathname.lastIndexOf('/') + 1,
-    ),
-    camera_url: state.camera.camera_url,
-    intersectionName: state.intersection.intersection_name,
-    error: state.intersection.error,
-    user_id: state.authentication.user_id,
-  });
-  
-  const mapDispatchToProps: DispatchProps = {
-    getExistingCamera,
-  };
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(CameraComponent);
+
+  public render(): JSX.Element {
+    const { intersectionName, camera_url } = this.props;
+
+    // eslint-disable-next-line consistent-return
+    return (
+      <div>
+        <VerticalFlexBox>
+          <InnerDiv>
+            <h2>Live Camera Feed</h2>
+            <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
+          </InnerDiv>
+        </VerticalFlexBox>
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = (state: RootState): StateProps => ({
+  camera_id: state.router.location.pathname.substring(
+    state.router.location.pathname.lastIndexOf('/') + 1,
+  ),
+  camera_url: state.camera.camera_url,
+  intersectionName: state.intersection.intersection_name,
+  error: state.intersection.error,
+  user_id: state.authentication.user_id,
+});
+
+const mapDispatchToProps: DispatchProps = {
+  getExistingCamera,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CameraComponent);

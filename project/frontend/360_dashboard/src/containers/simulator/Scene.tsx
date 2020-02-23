@@ -25,8 +25,8 @@ import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
 
 interface Props {
   isSmartTL: boolean;
-  tl_mode:any;
-  toggles:any;
+  tl_mode: any;
+  toggles: any;
 }
 
 interface StateProps {
@@ -938,8 +938,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       this.fpsCounter = 0;
 
       const { isSmartTL, tl_mode } = this.props;
-      const tl_mode_number = tl_mode;
-      console.log(tl_mode_number + 1);
+
       this.tlCaseId = tl_mode + 1;
       if (isSmartTL) {
         // real-time case
@@ -1422,7 +1421,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
   }
 
-  updateTLCase() {
+  updateTLCase(): void {
     for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
       if (this.tlCaseBtnGroup[i].isPressed()) {
         this.tlCaseId = i + 1;
@@ -1444,17 +1443,17 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * update toggle btn state when the btn is pressed
    */
   updateToggleBtnState(): void{
-    const {toggles} = this.props;
-    let togValues = new Array<boolean>(); 
-    if(toggles != undefined && toggles != null){
+    const { toggles } = this.props;
+    let togValues = new Array<boolean>();
+    if (toggles !== undefined && toggles !== null) {
       togValues = Object.values(toggles);
     }
     // console.log();
-    for (let i = 0;i<togValues.length; i+= 1){
+    for (let i = 0; i < togValues.length; i += 1) {
       // console.log(togValues[i]);
-      if(i==4){
-        this.toggleGroup[i+1].state = togValues[i];
-      }else{
+      if (i === 4) {
+        this.toggleGroup[i + 1].state = togValues[i];
+      } else {
         this.toggleGroup[i].state = togValues[i];
       }
     }

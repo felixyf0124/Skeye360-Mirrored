@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { RootState } from '../../reducers/rootReducer';
-import SidebarComponent from './SidebarComponent'
-import Simulator from './../../containers/simulator/Scene';
-import { SKEYE_WHITE } from '../../css/custom';
 import { makeStyles, Theme } from '@material-ui/core';
+import { RootState } from '../../reducers/rootReducer';
+import SidebarComponent from './SidebarComponent';
+import Simulator from '../../containers/simulator/Scene';
+import { SKEYE_WHITE } from '../../css/custom';
 
 
 interface SimProps {
@@ -69,46 +69,46 @@ const SimContainer = styled.div`
 
 // Custom styling
 const skeyeStyles = {
-    Title: {
-        color: SKEYE_WHITE,
-        fontSize: 28,
-        marginBottom: 4,
-        fontWeight: 900,
-    },
-    Header: {
-        color: SKEYE_WHITE,
-        fontSize: 20,
-        marginBottom: 4,
-        fontWeight: 900,
-    },
-}
+  Title: {
+    color: SKEYE_WHITE,
+    fontSize: 28,
+    marginBottom: 4,
+    fontWeight: 900,
+  },
+  Header: {
+    color: SKEYE_WHITE,
+    fontSize: 20,
+    marginBottom: 4,
+    fontWeight: 900,
+  },
+};
 
-const SimulatorComponent = (props: SimProps | any):JSX.Element=> {
-    // eslint-disable-next-line consistent-return
-    const {tlMode, onChangeTLMode, toggles} = props;
+const SimulatorComponent = (props: SimProps | any): JSX.Element => {
+  // eslint-disable-next-line consistent-return
+  const { tlMode, onChangeTLMode, toggles } = props;
 
-    return (
-        <div>
-            <text style={ skeyeStyles.Title }>Simulation of Traffic</text>
-            <HorizontalFlexBox>
-                <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode}></SidebarComponent>
-                <InnerDivHorizon>
-                    <InnerDivVerticalFirstSim>
-                        <text style={ skeyeStyles.Header }>Optimized Traffic Light Setting</text>
-                        <SimContainer>
-                        <Simulator isSmartTL tl_mode={tlMode} toggles={toggles}/>
-                        </SimContainer>
-                    </InnerDivVerticalFirstSim>
-                    <InnerDivVerticalSecondSim>
-                        <text style={ skeyeStyles.Header }>Default Traffic Light Setting</text>
-                        <SimContainer>
-                        <Simulator isSmartTL={false} tl_mode={tlMode} toggles={toggles}/>
-                        </SimContainer>
-                    </InnerDivVerticalSecondSim>
-                </InnerDivHorizon>
-            </HorizontalFlexBox>
-        </div>
-    );
-}
+  return (
+    <div>
+      <text style={skeyeStyles.Title}>Simulation of Traffic</text>
+      <HorizontalFlexBox>
+        <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode} />
+        <InnerDivHorizon>
+          <InnerDivVerticalFirstSim>
+            <text style={skeyeStyles.Header}>Optimized Traffic Light Setting</text>
+            <SimContainer>
+              <Simulator isSmartTL tl_mode={tlMode} toggles={toggles} />
+            </SimContainer>
+          </InnerDivVerticalFirstSim>
+          <InnerDivVerticalSecondSim>
+            <text style={skeyeStyles.Header}>Default Traffic Light Setting</text>
+            <SimContainer>
+              <Simulator isSmartTL={false} tl_mode={tlMode} toggles={toggles} />
+            </SimContainer>
+          </InnerDivVerticalSecondSim>
+        </InnerDivHorizon>
+      </HorizontalFlexBox>
+    </div>
+  );
+};
 
 export default connect()(SimulatorComponent);

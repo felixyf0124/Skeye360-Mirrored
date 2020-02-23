@@ -108,19 +108,19 @@ class CamView extends React.Component<StateProps & DispatchProps> {
       <div>
         <SideDrawer headerTitle={intersectionName} />
         <Body>
-          <TabsComponent></TabsComponent>
+          <TabsComponent />
           {/* <VerticalFlexBox>
             <InnerDiv>
               <h2>Live Camera Feed</h2>
               <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
             </InnerDiv> */}
-            {/* <InnerDiv>
+          {/* <InnerDiv>
               <h2>Data Analytics</h2>
               <ChartContainer>
                 <AvgWaitTimeChartComparison />
               </ChartContainer>
             </InnerDiv> */}
-            {/* <InnerDiv>
+          {/* <InnerDiv>
               <h2>Simulation of Traffic</h2>
               <h3>Optimized Traffic Light Setting</h3>
               <SimContainer>
