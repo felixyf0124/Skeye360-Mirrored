@@ -6,6 +6,7 @@ import { saga as intersection } from './contexts/intersection';
 import { saga as logging } from './contexts/LogClicks';
 import { saga as count } from './contexts/vehicleCounts';
 import { saga as camera } from './contexts/camera';
+import { saga as traffic } from './contexts/traffic';
 
 export default function* rootSaga(): IterableIterator<any> {
   yield fork(authentication);
@@ -14,4 +15,5 @@ export default function* rootSaga(): IterableIterator<any> {
   yield fork(logging);
   yield fork(count);
   yield fork(camera);
+  yield fork(traffic);
 }

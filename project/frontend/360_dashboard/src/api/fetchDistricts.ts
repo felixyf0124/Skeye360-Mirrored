@@ -8,11 +8,15 @@ export interface Response {
       id: number;
       intersection_name: string;
       latitude: number;
-      cameras: [];
+      cameras: {
+        id: number;
+        camera_url: string;
+        intersection_id: number;
+      }[];
       longitude: number;
       district_id: number;
     }[];
-  }[];
+  };
 }
 
 const APIDomain = REACT_APP_API_URL;

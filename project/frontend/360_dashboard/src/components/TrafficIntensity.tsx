@@ -1,80 +1,68 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
-import styled from 'styled-components';
-import { CircularProgress } from '@material-ui/core/';
-
-const TrafficIntensityContainer = styled.div``;
+import { connect } from 'react-redux';
+import { RootState } from '../reducers/rootReducer';
+import { STATE as trafficState, getTraffic, GetTrafficAction } from '../contexts/traffic';
 
 interface Props {
+  camera_id: number;
   camera_url: string;
 }
 
 interface StateProps {
-  error: string;
-  los: number;
-  isLoaded: boolean;
+  traffic: trafficState;
 }
 
-interface IntensityState {
-  los: number;
+interface DispatchProps {
+  getTraffic(cameraID: number, cameraIP: string): GetTrafficAction;
 }
 
 // Traffic Intensity Metric
-class TrafficIntensity extends React.Component<{} & Props, StateProps> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      error: '',
-      isLoaded: false,
-      los: -1,
-    };
-  }
-
+class TrafficIntensity extends React.Component<{} & Props & StateProps & DispatchProps> {
   // Fetches LOS from the camera server for traffic intensity measurements.
   componentDidMount(): void {
-    const { camera_url } = this.props;
-    const API_URL = `http://${camera_url}/los/`;
-    // eslint-disable-next-line no-shadow
-    fetch(API_URL)
-      .then((results) => results.json())
-      .then(
-        (data: IntensityState) => {
-          this.setState({
-            isLoaded: true,
-            los: data.los,
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error,
-          });
-        },
-      );
+    const { camera_id, camera_url, getTraffic } = this.props;
+    getTraffic(camera_id, camera_url);
+  }
+
+  componentDidUpdate(prevState: StateProps): void {
+    const { traffic: prevTraffic } = prevState;
+    const {
+      traffic, camera_id, camera_url, getTraffic,
+    } = this.props;
+    if (prevTraffic[camera_id] !== traffic[camera_id]) {
+      getTraffic(camera_id, camera_url);
+    }
   }
 
   // Render Traffic Intensity Metric
   render(): JSX.Element {
-    const { error, isLoaded, los } = this.state;
-
+    const { camera_id, traffic } = this.props;
     const displayIntensity = (): any => {
-      if (error) {
-        // return `${error}`;
+      if (traffic[camera_id] === undefined) {
         return 'N/A';
       }
-      if (!isLoaded || los === -1) {
-        return <CircularProgress />;
+      if (traffic[camera_id].los === -1) {
+        return 'N/A';
       }
-      if (los <= 20) {
+      if (traffic[camera_id].los <= 20) {
         return 'Low';
       }
-      if (los > 55) {
+      if (traffic[camera_id].los > 55) {
         return 'High';
       }
       return 'Medium';
     };
-    return <TrafficIntensityContainer>{displayIntensity()}</TrafficIntensityContainer>;
+    return <div>{displayIntensity()}</div>;
   }
 }
 
-export default TrafficIntensity;
+const mapStateToProps = (state: RootState): StateProps => ({
+  traffic: state.traffic,
+});
+
+const mapDispatchToProps: DispatchProps = {
+  getTraffic,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TrafficIntensity);

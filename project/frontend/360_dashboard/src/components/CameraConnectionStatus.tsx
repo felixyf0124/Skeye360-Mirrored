@@ -1,68 +1,40 @@
+/* eslint-disable react/prefer-stateless-function */
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
-import styled from 'styled-components';
-import { CircularProgress } from '@material-ui/core/';
-
-const Body = styled.div``;
+import { connect } from 'react-redux';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import { green } from '@material-ui/core/colors';
+import { RootState } from '../reducers/rootReducer';
+import { STATE as trafficState } from '../contexts/traffic';
 
 interface Props {
-  camera_url: string;
+  camera_id: number;
 }
 
 interface StateProps {
-  error: string;
-  isLoaded: boolean;
+  traffic: trafficState;
 }
 
 // Camera Server Status
-class CameraConnectionStatus extends React.Component<{} & Props, StateProps> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      error: '',
-      isLoaded: false,
-    };
-  }
-
-  // Fetches online status from the camera server for the server status.
-  componentDidMount(): void {
-    const { camera_url } = this.props;
-    // Using a random end point just to see if the connection is established.
-    const API_URL = `http://${camera_url}/los/`;
-    // eslint-disable-next-line no-shadow
-    fetch(API_URL)
-      .then((results) => results.json())
-      .then(
-        () => {
-          this.setState({
-            isLoaded: true,
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error,
-          });
-        },
-      );
-  }
-
-  // Render the camera server status.
+class CameraConnectionStatus extends React.Component<{} & Props & StateProps> {
+  // Render Traffic Intensity Metric
   render(): JSX.Element {
-    const { error, isLoaded } = this.state;
-
-    const displayServerStatus = (): any => {
-      if (error) {
-        // return `${error}`;
-        return 'Offline';
+    const { traffic, camera_id } = this.props;
+    const displayStatus = (): any => {
+      if (traffic[camera_id] === undefined) {
+        return <FiberManualRecordIcon color="secondary" />;
       }
-      if (!isLoaded) {
-        return <CircularProgress />;
+      if (traffic[camera_id].los === -1) {
+        return <FiberManualRecordIcon color="secondary" />;
       }
-      return 'Online';
+      return <FiberManualRecordIcon style={{ color: green[500] }} />;
     };
-    return <Body>{displayServerStatus()}</Body>;
+    return <div>{displayStatus()}</div>;
   }
 }
 
-export default CameraConnectionStatus;
+const mapStateToProps = (state: RootState): StateProps => ({
+  traffic: state.traffic,
+});
+
+export default connect(mapStateToProps, {})(CameraConnectionStatus);

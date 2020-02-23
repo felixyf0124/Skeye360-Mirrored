@@ -12,7 +12,7 @@ const GoogleMap = (districts: districtState): JSX.Element => {
   const [zoom] = useState(11);
   return (
     <GoogleMapReact bootstrapURLKeys={{ key: API_KEY }} defaultCenter={center} defaultZoom={zoom}>
-      {districts.districts[0] === undefined ? (
+      {districts[0] === undefined ? (
         <Marker
           key={0}
           lat={45.5017}
@@ -22,7 +22,7 @@ const GoogleMap = (districts: districtState): JSX.Element => {
           link="/streetview/1"
         />
       ) : (
-        districts.districts[0].intersections.map((intersection) => (
+        districts[0].intersections.map((intersection) => (
           <Marker
             key={intersection.id}
             lat={intersection.latitude}

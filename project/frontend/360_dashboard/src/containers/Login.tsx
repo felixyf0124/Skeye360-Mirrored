@@ -7,7 +7,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import PersonIcon from '@material-ui/icons/Person';
 import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
-import { authenticate, authenticated } from '../contexts/authentication';
+import {
+  authenticate,
+  authenticated,
+  getUserData,
+  GetUserDataAction,
+} from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
 
 interface StateProps {
@@ -22,10 +27,11 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  authenticated: () => boolean;
+  authenticated: (state: any) => boolean;
   authenticate: (username: string, password: string) => void;
   historyPush: (url: string) => void;
   logClick: (log_message: string, user_id: number) => any;
+  getUserData: () => GetUserDataAction;
 }
 
 const useStyles = makeStyles(() => ({
@@ -130,6 +136,13 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     const { logClick } = props;
     logClick('Clicked Login', user_id);
   };
+
+  const loadUserData = (): any => {
+    const { getUserData } = props;
+    getUserData();
+  };
+
+  loadUserData();
   // eslint-disable-next-line no-alert
   if (isAuthenticated) {
     handleLog();
@@ -193,11 +206,12 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
+  ...state,
   username: '',
   password: '',
   user_id: state.authentication.user_id,
   log_message: '',
-  isAuthenticated: authenticated(),
+  isAuthenticated: authenticated(state),
   name: state.authentication.username,
   sessionToken: state.authentication.sessionToken,
   error: state.authentication.error,
@@ -208,6 +222,7 @@ const mapDispatchToProps: DispatchProps = {
   authenticate,
   historyPush: push,
   logClick,
+  getUserData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
