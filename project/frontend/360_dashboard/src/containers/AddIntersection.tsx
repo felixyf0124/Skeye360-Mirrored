@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { push } from 'connected-react-router';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
-import { createMuiTheme } from '@material-ui/core/styles';
+
 import { ThemeProvider } from '@material-ui/styles';
 import DialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
@@ -110,24 +110,24 @@ const addIntTheme = createMuiTheme({
         boxShadow: 'none',
         paddingTop: '0px',
         borderRadius: '15px',
-        "&:first-child": {
+        '&:first-child': {
           paddingTop: '0px',
           borderRadius: '15px',
-        }
+        },
       },
     },
     MuiButtonBase: {
       root: {
-        "&:focus": {
+        '&:focus': {
           outline: 'none',
-        }
+        },
       },
     },
     MuiDialog: {
       paper: {
         borderRadius: '15px',
-      }
-    }
+      },
+    },
   },
 });
 
@@ -188,8 +188,8 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                     <div className={classes.invalid}>{error}</div>
                   </div>
                 ) : (
-                    <div />
-                  )}
+                  <div />
+                )}
                 <form
                   onSubmit={(e): void => {
                     e.preventDefault();
@@ -198,8 +198,8 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                   }}
                 >
                   <div className={classes.innerBox}>
-                    <div style={{ float: "right", marginTop: '-1.5rem' }}>
-                      <IconButton onClick={handleClose} style={{ float: "right" }}>
+                    <div style={{ float: 'right', marginTop: '-1.5rem' }}>
+                      <IconButton onClick={handleClose} style={{ float: 'right' }}>
                         <CloseIcon />
                       </IconButton>
                     </div>
