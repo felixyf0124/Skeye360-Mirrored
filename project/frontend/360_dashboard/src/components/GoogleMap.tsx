@@ -7,9 +7,15 @@ import { STATE as districtState } from '../contexts/districts';
 
 const API_KEY = 'AIzaSyDF3Bsq5rm-uhEMAqqyMqzgc-dXUPl9Byw';
 
-const GoogleMap = (districts: districtState): JSX.Element => {
+interface StateProps {
+  districts: districtState;
+}
+
+const GoogleMap = (props: StateProps): JSX.Element => {
   const [center] = useState({ lat: 45.5017, lng: -73.5673 });
   const [zoom] = useState(11);
+  const { districts } = props;
+
   return (
     <GoogleMapReact bootstrapURLKeys={{ key: API_KEY }} defaultCenter={center} defaultZoom={zoom}>
       {districts[0] === undefined ? (
