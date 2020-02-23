@@ -1445,7 +1445,10 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    */
   updateToggleBtnState(): void{
     const {toggles} = this.props;
-    const togValues:Array<boolean> = Object.values(toggles);
+    let togValues = new Array<boolean>(); 
+    if(toggles != undefined && toggles != null){
+      togValues = Object.values(toggles);
+    }
     // console.log();
     for (let i = 0;i<togValues.length; i+= 1){
       // console.log(togValues[i]);

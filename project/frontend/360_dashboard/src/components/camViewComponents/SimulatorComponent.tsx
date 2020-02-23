@@ -9,7 +9,8 @@ import { makeStyles, Theme } from '@material-ui/core';
 
 
 interface SimProps {
-  tl_mode: number;
+  tlMode: number;
+  onChangeTLMode: any;
   toggles: any;
 }
 
@@ -84,24 +85,24 @@ const skeyeStyles = {
 
 const SimulatorComponent = (props: SimProps | any):JSX.Element=> {
     // eslint-disable-next-line consistent-return
-    const {tl_mode, toggles} = props;
+    const {tlMode, onChangeTLMode, toggles} = props;
 
     return (
         <div>
             <text style={ skeyeStyles.Title }>Simulation of Traffic</text>
             <HorizontalFlexBox>
-                <SidebarComponent tl_mode={tl_mode}></SidebarComponent>
+                <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode}></SidebarComponent>
                 <InnerDivHorizon>
                     <InnerDivVerticalFirstSim>
                         <text style={ skeyeStyles.Header }>Optimized Traffic Light Setting</text>
                         <SimContainer>
-                        <Simulator isSmartTL tl_mode={tl_mode} toggles={toggles}/>
+                        <Simulator isSmartTL tl_mode={tlMode} toggles={toggles}/>
                         </SimContainer>
                     </InnerDivVerticalFirstSim>
                     <InnerDivVerticalSecondSim>
                         <text style={ skeyeStyles.Header }>Default Traffic Light Setting</text>
                         <SimContainer>
-                        <Simulator isSmartTL={false} tl_mode={tl_mode} toggles={toggles}/>
+                        <Simulator isSmartTL={false} tl_mode={tlMode} toggles={toggles}/>
                         </SimContainer>
                     </InnerDivVerticalSecondSim>
                 </InnerDivHorizon>

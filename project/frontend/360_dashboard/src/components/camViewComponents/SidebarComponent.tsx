@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
 
 interface SimProps {
+  tlMode:number;
   onChangeTLMode: any;
 }
 
@@ -107,7 +108,7 @@ const skeyeStyles = {
 const SidebarComponent = (props: SimProps | any): JSX.Element =>  {
   const {onChangeTLMode} = props;
   const classes = useStyles(); 
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedIndex, setSelectedIndex] = React.useState(props.tlMode);
 
   const onClickListItem = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,

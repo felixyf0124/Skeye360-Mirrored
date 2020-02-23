@@ -206,6 +206,11 @@ const TabsComponents = () : JSX.Element => {
     checkedD: false,
     checkedE: false,
   });
+  const [tlMode, setTlMode] = React.useState(0);
+
+  const onChangeTLMode = (index:number) =>{
+    setTlMode(index);
+  }
 
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -240,7 +245,7 @@ const TabsComponents = () : JSX.Element => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <OverviewComponent toggles={state} key='1'></OverviewComponent>>
+        <OverviewComponent toggles={state} tlMode={tlMode} onChangeTLMode={onChangeTLMode} key='1'></OverviewComponent>>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <DataAnalyticsComponent></DataAnalyticsComponent>
@@ -249,7 +254,7 @@ const TabsComponents = () : JSX.Element => {
         <CameraComponent></CameraComponent>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <SimulatorComponent key='2'></SimulatorComponent>
+        <SimulatorComponent toggles={state} tlMode={tlMode} onChangeTLMode={onChangeTLMode} key='2'></SimulatorComponent>
       </TabPanel>
 
       <Modal
