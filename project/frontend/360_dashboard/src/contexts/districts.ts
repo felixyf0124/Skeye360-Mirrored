@@ -25,11 +25,11 @@ export interface STATE {
 const initState: STATE = {
   0: {
     id: 1,
-    district_name: 'Montreal',
+    district_name: 'Loading...',
     intersections: [
       {
         id: 1,
-        intersection_name: 'Guy/St-Cath',
+        intersection_name: 'Loading...',
         latitude: 123,
         cameras: [
           {
