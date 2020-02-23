@@ -848,7 +848,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       if (this.trafficData[this.caseId].length !== 0
         && !this.dataReady[this.caseId].imported
         && !this.dataReady[this.caseId].sorted) {
-
         tsData.sortDataByTime(this.trafficData[this.caseId]);
         this.dataReady[this.caseId].imported = true;
       }
@@ -857,7 +856,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       if (this.trafficData[this.caseId].length !== 0
         && this.dataReady[this.caseId].imported
         && !this.dataReady[this.caseId].sorted) {
-
         this.dataReady[this.caseId].sorted = true;
       }
 
@@ -1312,7 +1310,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * replacement for drawMenu after moving toggles out
    * update toggled features
    */
-  featureToggling():void{
+  featureToggling(): void{
     if (this.laneAreaContainer.parent !== null
       && !this.toggleGroup[3].state) {
       this.mapContainer.removeChild(this.laneAreaContainer);
