@@ -5,7 +5,7 @@ import { SKEYE_WHITE } from '../../css/custom';
 import NorthChart from '../NorthChart';
 import SouthChart from '../SouthChart';
 import GoogleMiniMap from '../GoogleMiniMap';
-import PieChart from '../PieChart';
+import NorthChartComparison from '../NorthChartComparison';
 import { RootState } from '../../reducers/rootReducer';
 import {
   STATE as intersectionState,
@@ -114,13 +114,6 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
     this.getData(cameraId);
   }
 
-  async getData(cameraId:string) {
-    var data = getCamera(cameraId).then((data) => {
-    const { getExistingIntersection } = this.props;
-        getExistingIntersection((data.intersection_id).toString());
-    });
-  }
-
   // component unmount resets the loaded data
   public componentWillUnmount(): void {
     // eslint-disable-next-line no-shadow
@@ -128,9 +121,16 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
     resetCurrentIntersection();
   }
 
+  async getData(cameraId: string) {
+    getCamera(cameraId).then((data) => {
+      const { getExistingIntersection } = this.props;
+      getExistingIntersection((data.intersection_id).toString());
+    });
+  }
+
   public render(): JSX.Element {
     const {
-      intersectionId, intersectionLat, intersectionLng, cameraId, intersectionName
+      intersectionId, intersectionLat, intersectionLng,
     } = this.props;
 
     return (
@@ -160,7 +160,7 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
               </SmallChartContainer>
             </ChartVerticalFlexBox>
             <BigChartContainer>
-              <PieChart />
+              <NorthChartComparison />
             </BigChartContainer>
           </ChartHorizontalFlexBox>
         </Body>

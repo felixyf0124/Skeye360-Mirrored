@@ -11,7 +11,6 @@ import Vec2 from './simulator_management/vec2';
 import Btn from './Button';
 import DataFromCamera from './simulator_management/DataFromCamera';
 import Vehicle from './simulator_management/Vehicle';
-import LanePointer from './simulator_management/LanePointer';
 import DragablePoint from './DragablePoint';
 import mappingBGTexture from './intersection1.png';
 import * as tsData from './TSLocalData';

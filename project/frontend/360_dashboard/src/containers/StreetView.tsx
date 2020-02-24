@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import SideDrawer from '../components/SideDrawer';
 import NorthChart from '../components/NorthChart';
-import AvgWaitTimeChart from '../components/AvgWaitTimeChart';
 import {
   STATE as intersectionState,
   getExistingIntersection,

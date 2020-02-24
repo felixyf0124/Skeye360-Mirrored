@@ -184,7 +184,7 @@ export function dirAdapter(from: string, to: string): LanePointer {
     // to
     if (to.includes('north')) {
       // lPointer.setLaneId(0);
-      console.log('N to N, not match video condition');
+      // console.log('N to N, not match video condition');
     }
     if (to.includes('east')) {
       lPointer.setLaneId(0);
@@ -239,7 +239,7 @@ export async function tlRealTimeData(url: string): Promise<any> {
  * adapter for arima data
  * @param filtered
  */
-export function tlArimaDataAdapter(filtered: any) {
+export function tlArimaDataAdapter(filtered: any): Array<any> {
   const adapted = new Array<any>();
   const tl0 = { id: 0, count: 0 };
   const tl1 = { id: 1, count: 0 };

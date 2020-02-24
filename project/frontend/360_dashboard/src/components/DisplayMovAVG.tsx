@@ -60,8 +60,6 @@ function getDateLastYear() {
 }
 
 const datesLastYear = getDateLastYear();
-const date1 = datesLastYear[0];
-const date2 = datesLastYear[1];
 
 /* Function that retrieves specific key-pair value of data:
   Input: array of different time entries for a specific direction.
