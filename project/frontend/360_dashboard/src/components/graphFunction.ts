@@ -1,4 +1,4 @@
-export default function splitIntoTwo(values: any) {
+export default function splitIntoTwo(values: any): any {
   // console.log(values);
   const data1x = [];
   const data1y = [];
