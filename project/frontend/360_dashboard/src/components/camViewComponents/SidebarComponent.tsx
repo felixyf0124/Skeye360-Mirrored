@@ -186,7 +186,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         <text style={skeyeStyles.Header}> Simulator </text>
         <Divider classes={{ root: classes.dividerGrey }} />
 
-        <Button variant="contained" style={skeyeStyles.OfflineButton}>ON</Button>
+        <Button variant="contained" style={skeyeStyles.OfflineButton}>START</Button>
 
         <Divider classes={{ root: classes.dividerWhite }} />
         <text style={skeyeStyles.Header}> Stop all traffic lights </text>
