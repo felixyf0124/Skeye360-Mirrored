@@ -121,7 +121,7 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
     resetCurrentIntersection();
   }
 
-  async getData(cameraId: string) {
+  async getData(cameraId: string): Promise<any> {
     getCamera(cameraId).then((data) => {
       const { getExistingIntersection } = this.props;
       getExistingIntersection((data.intersection_id).toString());

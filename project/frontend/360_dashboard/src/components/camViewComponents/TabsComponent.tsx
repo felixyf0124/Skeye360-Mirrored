@@ -37,7 +37,7 @@ interface TabPanelProps {
 }
 
 // Used simple tabs example from the reference mentioned above
-function TabPanel(props: TabPanelProps) {
+function TabPanel(props: TabPanelProps): JSX.Element {
   const {
     children, value, index, ...other
   } = props;
@@ -56,7 +56,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function props(index: any) {
+function props(index: any): any {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,

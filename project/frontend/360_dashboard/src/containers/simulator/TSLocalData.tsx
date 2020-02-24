@@ -211,7 +211,8 @@ export async function retrieve(url: string, endP: string): Promise<any> {
   fetch(`http://${url}/${endP}/`)
     .then((response) => response.json())
     // .then(result => console.log(result))
-    .catch((error) => console.log('error', error));
+    .catch((error) => `ERROR:${error}`);
+    // .catch((error) => console.log('error', error));
   // console.log(result);
   return result;
 }
@@ -287,7 +288,7 @@ export function tlArimaDataAdapter(filtered: any): Array<any> {
  * calculate tl distribution based on the adapeted data
  * @param adaptedData
  */
-export function tlArimaDataToTimeDistribution(adaptedData: any) {
+export function tlArimaDataToTimeDistribution(adaptedData: any): any {
   // total time period = 90s
   const tTime = 90.0;
   let tCount = 0;

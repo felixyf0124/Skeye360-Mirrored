@@ -90,7 +90,7 @@ const skeyeStyles = {
   },
 };
 
-export default function SettingsComponent() {
+export default function SettingsComponent(): any {
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: false,
