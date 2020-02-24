@@ -17,6 +17,7 @@ import {
   STATE as cameraState,
   getExistingCamera,
 } from '../../contexts/camera';
+import { getCamera } from '../../api/camera';
 
 const Body = styled.div`
   margin-left: 5rem;
@@ -109,10 +110,15 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
   // component mount will fetch existing intersection
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
+    const { cameraId } = this.props;
+    this.getData(cameraId);
+  }
+
+  async getData(cameraId:string) {
+    var data = getCamera(cameraId).then((data) => {
     const { getExistingIntersection } = this.props;
-    getExistingIntersection('2');
-    const { cameraId, getExistingCamera } = this.props;
-    getExistingCamera(cameraId);
+        getExistingIntersection((data.intersection_id).toString());
+    });
   }
 
   // component unmount resets the loaded data
@@ -124,7 +130,7 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
 
   public render(): JSX.Element {
     const {
-      intersectionId, intersectionLat, intersectionLng,
+      intersectionId, intersectionLat, intersectionLng, cameraId, intersectionName
     } = this.props;
 
     return (
@@ -169,7 +175,6 @@ const mapStateToProps = (state: RootState): StateProps => ({
   cameraId: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
   ),
-  // cameraId: '2',
   camera: state.camera,
   intersectionId: state.camera.intersection_id.toString(),
   intersectionName: state.intersection.intersection_name,

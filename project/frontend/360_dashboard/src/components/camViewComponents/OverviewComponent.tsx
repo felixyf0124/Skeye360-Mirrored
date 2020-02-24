@@ -64,7 +64,6 @@ const HorizontalFlexBox = styled.div`
 // Single Container Horizontal
 const InnerDivHorizon = styled.div`
   display: flex;
-//   width: 100vw;
   flex-direction: row;
   color: white;
   margin-left: 10vw;
@@ -80,9 +79,6 @@ const InnerDivVertical = styled.div`
 
 // Container for the simulator
 const SimContainer = styled.div`
-//   width: 10vw;
-//   height: 10vw;
-//   margin-left: 20rem;
   width: 10%;
   height: 10%;
   display: flex;
