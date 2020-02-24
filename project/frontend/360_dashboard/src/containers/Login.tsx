@@ -3,8 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
-import { makeStyles } from '@material-ui/core/styles';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
 import Grid from '@material-ui/core/Grid';
 import PersonIcon from '@material-ui/icons/Person';
 import LockIcon from '@material-ui/icons/Lock';
@@ -121,6 +121,13 @@ const useStyles = makeStyles(() => ({
     verticalAlign: 'middle',
     paddingLeft: '0.5rem',
   },
+
+  texts: {
+    fontSize: '0.8rem',
+    color: 'grey',
+    verticalAlign: 'middle',
+    font: 'roboto',
+  },
 }));
 
 const loginTheme = createMuiTheme({
@@ -135,37 +142,37 @@ const loginTheme = createMuiTheme({
   overrides: {
     MuiInput: {
       underline: {
-        "&:before": {
-          borderBottom: '1px solid grey'
+        '&:before': {
+          borderBottom: '1px solid grey',
         },
-        "&:hover:not($disabled):before": {
-          borderBottom: '1px solid grey'
-        }
-      }
+        '&:hover:not($disabled):before': {
+          borderBottom: '1px solid grey',
+        },
+      },
     },
     MuiInputLabel: {
       root: {
-        color: 'grey'
-      }
+        color: 'grey',
+      },
     },
     MuiFormLabel: {
       root: {
-        color: 'grey'
-      }
+        color: 'grey',
+      },
     },
     MuiInputBase: {
       root: {
-        color: 'white'
-      }
+        color: 'white',
+      },
     },
     MuiGrid: {
       item: {
-        color: 'grey'
+        color: 'grey',
       },
       container: {
-        paddingBottom: '2rem'
-      }
-    }
+        paddingBottom: '2rem',
+      },
+    },
   },
 });
 
@@ -253,8 +260,8 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
                   <div className={classes.invalid}>{error}</div>
                 </div>
               ) : (
-                  <div />
-                )}
+                <div />
+              )}
               <div className="classes.margin">
                 <Grid container spacing={1} alignItems="flex-end" justify="center">
                   <Grid item>
@@ -291,17 +298,20 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               </div>
               <div className="form-group">
                 <div>
-                  <input name="remMe" checked={state.remMe} onChange={handleChange} type="checkbox" style={{ height: '1rem', width: '1rem', verticalAlign: 'middle', }} />
-                  <label className={classes.checkBox}>Remember me</label>
+                  <input name="remMe" checked={state.remMe} onChange={handleChange} type="checkbox" style={{ height: '1rem', width: '1rem', verticalAlign: 'middle' }} />
+                  <label htmlFor="" className={classes.checkBox}>Remember me</label>
                 </div>
               </div>
               <div className="form-group">
                 <button className={classes.loginButton} type="submit">
                   Login
-              </button>
+                </button>
               </div>
               <div>
-                <p style={{ color: 'grey', textAlign: 'center', paddingTop: '1rem', font: 'roboto' }}>Don't have an account? <a style={{ color: 'white' }} href="/register">Sign up</a></p>
+                <p className={classes.texts} style={{ textAlign: 'center' }}>
+                  Don&apos;t have an account?
+                  <a style={{ color: 'white', paddingLeft: '0.25rem' }} href="/register">Sign up</a>
+                </p>
               </div>
             </form>
           </div>
