@@ -181,7 +181,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.app.stage.addChild(this.mapContainer);
     this.app.stage.addChild(this.objectContainer);
     this.app.stage.addChild(this.displayPlaneContainer);
-    this.app.stage.addChild(this.controlPanelContainer); // CONTROLPANEL
+    // this.app.stage.addChild(this.controlPanelContainer); // CONTROLPANEL
     this.backGroundG = new PIXI.Graphics();
     this.roadG = new PIXI.Graphics();
     this.trafficLightG = new PIXI.Graphics();
@@ -603,7 +603,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     // the following two sequence matters, will affect the listeners;
     this.isControlPanelShown = false;
     this.isCPAnimating = true;
-    this.updateControlPanelDisplayState(0);
+    // this.updateControlPanelDisplayState(0);
     this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
     this.drawRoad();
     this.renderObjects();
@@ -810,14 +810,14 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * must bind with ticker
    */
   animation = (): void => {
-    if (this.btnShowCP.isPressed()) {
-      if (!this.isCPAnimating) {
-        this.isControlPanelShown = !this.isControlPanelShown;
-        this.isCPAnimating = true;
-      }
-    }
-    this.updateControlPanelDisplayState(8);
-    this.updateTLCountDownDisplayPanel();
+    // if (this.btnShowCP.isPressed()) {
+    //   if (!this.isCPAnimating) {
+    //     this.isControlPanelShown = !this.isControlPanelShown;
+    //     this.isCPAnimating = true;
+    //   }
+    // }
+    // this.updateControlPanelDisplayState(8);
+    // this.updateTLCountDownDisplayPanel();
     // update outer display
     this.updateTLDisplayState();
     const { tlStop } = this.props;
