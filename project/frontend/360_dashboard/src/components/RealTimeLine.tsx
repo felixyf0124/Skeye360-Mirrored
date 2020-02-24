@@ -1,6 +1,5 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
-import NorthDataBefore from '../PostData/carsNorth.json';
 
 //Static code and data generator retrieved from: 
 //https://github.com/apexcharts/apexcharts.js/blob/master/samples/react/line/realtime.html
@@ -11,8 +10,64 @@ import NorthDataBefore from '../PostData/carsNorth.json';
 var LASTDATE = 0;
 var DATA: any[] = [];
 var data2: any[] = [];
+
+var arima_dataset: any[] = [];
+var mavg_dataset: any[] = [];
+var current_mavg: any[] = [];
+
+var COUNT = 0; 
+
 var TICKINTERVAL = 86400000; //number of milliseconds in a day
 let XAXISRANGE = 777600000;
+
+arima_dataset = [
+  [0, 35],
+  [1, 23],
+  [2, 24],
+  [3, 35],
+  [4, 23],
+  [5, 24],
+  [6, 35],
+  [7, 23],
+  [8, 24],
+  [9, 35],
+  [10, 23],
+  [11, 24],
+  [12, 35]
+]
+
+mavg_dataset = [
+  [0, 30],
+  [1, 25],
+  [2, 20],
+  [3, 39],
+  [4, 19],
+  [5, 30],
+  [6, 30],
+  [7, 20],
+  [8, 21],
+  [9, 34],
+  [10, 25],
+  [11, 29],
+  [12, 34]
+]
+
+const getArima = () => {
+  //Logic to be implemented: 
+  //Check the current time, if the time is equal to 12:00 AM, then do the GET request via async fetch, retrieve ALL the dataset for the day. 
+}
+const getMovAvg = () => {
+  //Logic to be implemented: 
+  //Check the current time, if the minutes are equal to 00, then retrieve the new data for the current hour. 
+  //Check if the values in the graph are populated or not
+
+  if(COUNT < 13){
+    current_mavg.push(mavg_dataset[COUNT]);
+  }
+
+
+}
+
 function getDayWiseTimeSeries(baseval: any, count: any, yrange: any) {
   var i = 0;
   while (i < count) {
@@ -22,7 +77,7 @@ function getDayWiseTimeSeries(baseval: any, count: any, yrange: any) {
     DATA.push({
       x, y
     });
-    y = 50;
+    y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
     data2.push({
       x, y
     })
@@ -110,49 +165,47 @@ class RealTimeLine extends React.Component<{}, ChartState> {
           curve: 'smooth'
         },
         title: {
-          text: 'Moving Average'
+          text: 'Moving Average and Prediction'
         },
         markers: {
           size: 0
         },
         xaxis: {
-          type: 'datetime',
-          range: XAXISRANGE
-        },
-        yaxis: {
-          max: 90
+          range: 10
         },
         legend: {
           show: false
         }
       },
-      series:[{
+      series:[
+      {
         name: 'Prediction',
-        data: DATA.slice(),
+        data: arima_dataset,
       },
-    {
-      name: 'Moving Average',
-      data: data2.slice(),
-    }]
+      {
+        name: 'Moving Average',
+        data: current_mavg,
+      }
+      ]
     }
   }
   componentDidMount() {
     window.setInterval(() => {
-      getNewSeries(LASTDATE, {
-        min: 10,
-        max: 100
-      })
+      getMovAvg();
 
+  
       ApexCharts.exec('realtime', 'updateSeries', [
         {
-          data: DATA
+          data: current_mavg,
         },
         {
-          data: data2,
+          data: arima_dataset,
         }
     ]);
-      
-    }, 10000)
+
+    COUNT++; 
+
+    }, 1000)
   }
   render(){
     return(
