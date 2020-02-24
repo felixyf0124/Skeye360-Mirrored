@@ -9,8 +9,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import LaunchIcon from '@material-ui/icons/Launch';
 import { Link } from 'react-router-dom';
@@ -20,6 +18,7 @@ import DeleteIntersectionButton from './DeleteIntersectionButton';
 import TrafficIntensity from './TrafficIntensity';
 import CameraConnectionStatus from './CameraConnectionStatus';
 import { Response as cameraResponse } from '../api/camera';
+import AddIntersection from '../containers/AddIntersection';
 
 // Generic flexboxes styling
 const VerticalFlexBox = styled.div`
@@ -155,11 +154,7 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
         </Table>
       </TableContainer>
       {isStaff ? (
-        <Link to="/intersection/add">
-          <Fab className={classes.addButton} aria-label="add">
-            <AddIcon className={classes.plusIcon} />
-          </Fab>
-        </Link>
+        <AddIntersection />
       ) : (
         <div />
       )}
