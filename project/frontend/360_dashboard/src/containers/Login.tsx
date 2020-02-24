@@ -299,7 +299,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               <div className="form-group">
                 <div>
                   <input name="remMe" checked={state.remMe} onChange={handleChange} type="checkbox" style={{ height: '1rem', width: '1rem', verticalAlign: 'middle' }} />
-                  <label htmlFor="" className={classes.checkBox}>Remember me</label>
+                  <div className={classes.checkBox}>Remember me</div>
                 </div>
               </div>
               <div className="form-group">
