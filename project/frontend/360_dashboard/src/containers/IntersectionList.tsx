@@ -11,7 +11,7 @@ import {
   STATE as districtState,
   GetDistrictsAction,
   getDistricts,
-  resetIntersection,
+  resetDistricts,
   ResetDistrictAction,
 } from '../contexts/districts';
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
@@ -73,7 +73,7 @@ interface StateProps {
 
 interface DispatchProps {
   getDistricts(): GetDistrictsAction;
-  resetIntersection(): ResetDistrictAction;
+  resetDistricts(): ResetDistrictAction;
   deleteExistingIntersection: (id: string) => DeleteIntersectionAction;
   logClick: (log_message: string, user_id: number) => LogAction;
 }
@@ -97,8 +97,8 @@ class IntersectionList extends React.Component<StateProps & DispatchProps, {}> {
 
   // public componentWillUnmount(): void {
   //   // eslint-disable-next-line no-shadow
-  //   const { resetIntersection } = this.props;
-  //   resetIntersection();
+  //   const { resetDistricts } = this.props;
+  //   resetDistricts();
   // }
 
   public render(): JSX.Element {
@@ -132,6 +132,6 @@ const mapDispatchToProps: DispatchProps = {
   getDistricts,
   deleteExistingIntersection,
   logClick,
-  resetIntersection,
+  resetDistricts,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(IntersectionList);

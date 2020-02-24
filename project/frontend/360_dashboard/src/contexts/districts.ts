@@ -25,11 +25,11 @@ export interface STATE {
 const initState: STATE = {
   0: {
     id: 1,
-    district_name: 'Montreal',
+    district_name: 'Loading...',
     intersections: [
       {
         id: 1,
-        intersection_name: 'Guy/St-Cath',
+        intersection_name: 'Loading...',
         latitude: 123,
         cameras: [
           {
@@ -85,7 +85,7 @@ export interface ResetDistrictAction {
 }
 
 // reset district state
-export const resetIntersection = (): ResetDistrictAction => ({
+export const resetDistricts = (): ResetDistrictAction => ({
   type: RESET_INTERSECTION,
 });
 

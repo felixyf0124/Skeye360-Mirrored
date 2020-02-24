@@ -3,23 +3,13 @@ import { expect } from 'chai';
 
 import reducer, {
   initState,
-  addNewIntersection,
   addIntersectionSuccess,
   addIntersectionFail,
-  getExistingIntersection,
   getIntersectionSuccess,
-  GetIntersectionFail,
-  editExistingIntersection,
   editIntersectionSuccess,
   editIntersectionFail,
-  deleteExistingIntersection,
   deleteIntersectionSuccess,
   deleteIntersectionFail,
-  handleAddIntersection,
-  handleGetIntersection,
-  handleEditIntersection,
-  handleDeleteIntersection,
-  AddIntersectionAction,
   getIntersectionFail,
   resetIntersection,
 } from '../../contexts/intersection';
@@ -37,10 +27,7 @@ describe('intersection redux', () => {
   describe('reducer', () => {
     // RESET
     it('should reset intersection state', () => {
-      const result = reducer(
-        initState,
-        resetIntersection(),
-      );
+      const result = reducer(initState, resetIntersection());
       expect(result).to.include({
         intersection_id: '',
         latitude: '',
@@ -54,10 +41,7 @@ describe('intersection redux', () => {
     // SUCCESS
     // CREATE
     it('should add new intersection successfully', () => {
-      const result = reducer(
-        initState,
-        addIntersectionSuccess(data),
-      );
+      const result = reducer(initState, addIntersectionSuccess(data));
       expect(result).to.include({
         intersection_id: '',
         latitude: '',
@@ -70,10 +54,7 @@ describe('intersection redux', () => {
     });
     // READ
     it('should get intersection successfully', () => {
-      const result = reducer(
-        initState,
-        getIntersectionSuccess(data),
-      );
+      const result = reducer(initState, getIntersectionSuccess(data));
       expect(result).to.include({
         intersection_id: '1',
         latitude: '123',
@@ -86,10 +67,7 @@ describe('intersection redux', () => {
     });
     // UPDATE
     it('should edit intersection successfully', () => {
-      const result = reducer(
-        initState,
-        editIntersectionSuccess(data),
-      );
+      const result = reducer(initState, editIntersectionSuccess(data));
       expect(result).to.include({
         intersection_id: '',
         latitude: '',
@@ -102,10 +80,7 @@ describe('intersection redux', () => {
     });
     // DELETE
     it('should delete intersection successfully', () => {
-      const result = reducer(
-        initState,
-        deleteIntersectionSuccess('1'),
-      );
+      const result = reducer(initState, deleteIntersectionSuccess('1'));
       expect(result).to.include({
         intersection_id: '',
         latitude: '',
@@ -119,10 +94,7 @@ describe('intersection redux', () => {
     // FAIL
     // CREATE
     it('should fail to add intersection', () => {
-      const result = reducer(
-        initState,
-        addIntersectionFail(),
-      );
+      const result = reducer(initState, addIntersectionFail());
       expect(result).to.include({
         intersection_id: '',
         latitude: '',
@@ -135,10 +107,7 @@ describe('intersection redux', () => {
     });
     // READ
     it('should fail to get intersection', () => {
-      const result = reducer(
-        initState,
-        getIntersectionFail(),
-      );
+      const result = reducer(initState, getIntersectionFail());
       expect(result).to.include({
         intersection_id: '',
         latitude: '',
@@ -151,10 +120,7 @@ describe('intersection redux', () => {
     });
     // UPDATE
     it('should fail to edit intersection', () => {
-      const result = reducer(
-        initState,
-        editIntersectionFail(),
-      );
+      const result = reducer(initState, editIntersectionFail());
       expect(result).to.include({
         intersection_id: '',
         latitude: '',
@@ -167,10 +133,7 @@ describe('intersection redux', () => {
     });
     // DELETE
     it('should fail to delete intersection', () => {
-      const result = reducer(
-        initState,
-        deleteIntersectionFail(),
-      );
+      const result = reducer(initState, deleteIntersectionFail());
       expect(result).to.include({
         intersection_id: '',
         latitude: '',
