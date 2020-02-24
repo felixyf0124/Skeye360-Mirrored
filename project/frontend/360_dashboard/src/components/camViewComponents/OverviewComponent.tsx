@@ -23,12 +23,7 @@ interface SimProps {
         totalTime: string; // G+Y
         totalTime2: string; // G+Y
       }>;
-    //   tlStates2: Array<{
-    //     direction: string,
-    //     state:string,
-    //     countDown:string,
-    //     totalTime: string, //G+Y
-    //   }>;
+
     onTLUpdate: any;
 }
 

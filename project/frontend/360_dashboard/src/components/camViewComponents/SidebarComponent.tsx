@@ -27,12 +27,7 @@ interface SimProps {
     totalTime: string; // G+Y
     totalTime2: string; // G+Y
   }>;
-  // tlStates2: Array<{
-  //   direction: string,
-  //   state:string,
-  //   countDown:string,
-  //   totalTime: string, //G+Y
-  // }>;
+
 }
 
 const width = 10;
@@ -85,12 +80,13 @@ const useStyles = makeStyles(() => createStyles({
     marginTop: 0,
     marginBottom: 0,
     // width: `100%`,
+    display: 'block',
   },
 
   tlTRow: {
     margin: 'auto',
     // width: `100%`,
-    // display: `flex`,
+    display: 'table-row',
   },
 
 }));
@@ -169,16 +165,19 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
       color: SKEYE_WHITE,
       fontSize: '0.8em',
       margin: 'auto',
+      display: 'table-cell',
     };
     const tlDataCol = {
       color: SKEYE_WHITE,
       fontSize: '0.8em',
       margin: 'auto',
+      display: 'table-cell',
     };
     const tlDataCol2 = {
       color: SKEYE_WHITE,
       fontSize: '0.8em',
       margin: 'auto',
+      display: 'table-cell',
     };
 
     if (tlCombState.state === 'red') {
@@ -197,7 +196,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
       tlDataCol2.color = '#f5c842';
     }
     return (
-      <div key={tlCombState.direction}>
+      <div key={tlCombState.direction} style={{ display: 'table-row-group' }}>
         <tr className={classes.tlTRow}>
           <td style={tlData}>Direction</td>
           <td style={tlData} colSpan={3}>{tlCombState.direction}</td>
@@ -283,7 +282,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
 
         <br />
         {/* TO DO ADD TRAFFIC LIGHT DATA HERE */}
-        <table>
+        <table style={{ display: 'block' }}>
           <tbody className={classes.tlTable}>
             {tlDiv}
           </tbody>

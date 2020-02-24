@@ -1139,7 +1139,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         CD = Math.round(tlQueue[i].getCountDown()).toString();
       }
       const tlState = {
-        direction: 'Directions',
+        direction: tsData.getDirs(tlQueue[i].getId()),
         state: tlQueue[i].getStatus(),
         countDown: CD,
         totalTime: ttime, // G+Y
