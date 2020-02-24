@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
@@ -22,7 +22,8 @@ interface SimProps {
 
 const width = 10;
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+// Create styles for the sidebar
+const useStyles = makeStyles(() => createStyles({
   root: {
     '&$selected': {
       backgroundColor: SKEYE_LIGHT_DARK_GREY,
@@ -67,6 +68,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 }));
 
+// Personalized styles based on our UI
 const skeyeStyles = {
   ListItemStyle: {
     color: SKEYE_WHITE,
@@ -106,19 +108,22 @@ const skeyeStyles = {
   },
 };
 
+// Creates and returns a component for the sidebar that will be used in the simulator
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const { tlMode, onChangeTLMode, onClickTLStop } = props;
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
 
+  // OnClick it will the variable to the selected item (Arima, Pedestrians or Real-Time)
   const onClickListItem = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number,
-  ) => {
+  ): void => {
     setSelectedIndex(index);
     onChangeTLMode(index);
   };
 
+  // Returns the UI for the sidebar
   return (
     <div className={classes.sidebar}>
       <div className={classes.content}>
@@ -132,7 +137,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             button
             selected={selectedIndex === 0}
             classes={{ root: classes.root, selected: classes.selected }}
-            onClick={(event) => onClickListItem(event, 0)}
+            onClick={(event): void => onClickListItem(event, 0)}
           >
             <ListItemIcon style={skeyeStyles.IconStyle}>
               <TrendingUpIcon />
@@ -146,7 +151,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             button
             selected={selectedIndex === 1}
             classes={{ root: classes.root, selected: classes.selected }}
-            onClick={(event) => onClickListItem(event, 1)}
+            onClick={(event): void => onClickListItem(event, 1)}
           >
             <ListItemIcon style={skeyeStyles.IconStyle}>
               <DirectionsWalkIcon />
@@ -160,7 +165,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             button
             selected={selectedIndex === 2}
             classes={{ root: classes.root, selected: classes.selected }}
-            onClick={(event) => onClickListItem(event, 2)}
+            onClick={(event): void => onClickListItem(event, 2)}
           >
             <ListItemIcon style={skeyeStyles.IconStyle}>
               <TrackChangesIcon />

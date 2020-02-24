@@ -26,12 +26,9 @@ import {
   SKEYE_GREY, SKEYE_DARK_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_WHITE, SKEYE_GREEN,
 } from '../../css/custom';
 
-
 interface SimProps {
   tl_mode: number;
-
 }
-
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -39,6 +36,7 @@ interface TabPanelProps {
   value: any;
 }
 
+// Used simple tabs example from the reference mentioned above
 function TabPanel(props: TabPanelProps) {
   const {
     children, value, index, ...other
@@ -224,19 +222,19 @@ const TabsComponents = (): JSX.Element => {
     setTlStop(!tlStop);
   };
 
-  const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (): void => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false);
   };
 
-  const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [name]: event.target.checked });
   };
 

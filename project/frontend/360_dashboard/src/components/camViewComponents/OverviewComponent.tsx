@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import Box from '@material-ui/core/Box';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { RootState } from '../../reducers/rootReducer';
 import SidebarComponent from './SidebarComponent';
@@ -175,7 +174,6 @@ class OverviewComponent extends React.Component<SimProps
       intersectionName, camera_url, tlMode, onChangeTLMode, toggles,
       tlStop, onClickTLStop,
     } = this.props;
-    // console.log(this.props.toggles);
     // eslint-disable-next-line consistent-return
     return (
       <div>

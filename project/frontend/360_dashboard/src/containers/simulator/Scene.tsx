@@ -3,7 +3,7 @@
 
 import React from 'react';
 // pixi.js-legacy for VM
-import * as PIXI from 'pixi.js-legacy';
+import * as PIXI from 'pixi.js';
 import { connect } from 'react-redux';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry';
@@ -623,51 +623,53 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * resize
    */
   resize = (): void => {
-    if (window.innerWidth < this.windowMin) {
-      this.windowW = this.windowMin;
-      this.coordinateOffset.x = this.windowW / 2;
-    } else {
-      this.windowW = window.innerWidth * this.windowScaleRatio;
-      this.coordinateOffset.x = this.windowW / 2;
-    }
-    if (window.innerHeight < this.windowMin) {
-      this.windowH = this.windowMin;
-      this.coordinateOffset.y = this.windowH / 2;
-    } else {
-      this.windowH = window.innerHeight * this.windowScaleRatio;
-      this.coordinateOffset.y = this.windowH / 2;
-    }
-    this.app.renderer.resize(this.windowW, this.windowH);
-    this.app.stage.x = this.windowW / 2;
-    this.app.stage.y = this.windowH / 2;
+    if (window.innerWidth !== undefined && window.innerHeight !== undefined) {
+      if (window.innerWidth < this.windowMin) {
+        this.windowW = this.windowMin;
+        this.coordinateOffset.x = this.windowW / 2;
+      } else {
+        this.windowW = window.innerWidth * this.windowScaleRatio;
+        this.coordinateOffset.x = this.windowW / 2;
+      }
+      if (window.innerHeight < this.windowMin) {
+        this.windowH = this.windowMin;
+        this.coordinateOffset.y = this.windowH / 2;
+      } else {
+        this.windowH = window.innerHeight * this.windowScaleRatio;
+        this.coordinateOffset.y = this.windowH / 2;
+      }
+      this.app.renderer.resize(this.windowW, this.windowH);
+      this.app.stage.x = this.windowW / 2;
+      this.app.stage.y = this.windowH / 2;
 
-    this.controlPanelG.clear();
-    this.controlPanelG.beginFill(0x51BCD8, 0.3);
-    this.controlPanelG.lineStyle(1, 0x51BCD8, 0.5);
-    this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
-    this.controlPanelG.endFill();
+      this.controlPanelG.clear();
+      this.controlPanelG.beginFill(0x51BCD8, 0.3);
+      this.controlPanelG.lineStyle(1, 0x51BCD8, 0.5);
+      this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
+      this.controlPanelG.endFill();
 
-    if (this.isControlPanelShown) {
-      this.controlPanelContainer.x = -this.coordinateOffset.x;
-      this.controlPanelContainer.y = -this.coordinateOffset.y;
-    } else {
-      this.controlPanelContainer.x = -this.controlPanelG.width - this.coordinateOffset.x;
-      this.controlPanelContainer.y = -this.coordinateOffset.y;
-    }
+      if (this.isControlPanelShown) {
+        this.controlPanelContainer.x = -this.coordinateOffset.x;
+        this.controlPanelContainer.y = -this.coordinateOffset.y;
+      } else {
+        this.controlPanelContainer.x = -this.controlPanelG.width - this.coordinateOffset.x;
+        this.controlPanelContainer.y = -this.coordinateOffset.y;
+      }
 
-    this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
-    this.drawRoad();
-    this.initialButtons();
-    this.roadIntersection.updateVehiclePosV2();
+      this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
+      this.drawRoad();
+      this.initialButtons();
+      this.roadIntersection.updateVehiclePosV2();
 
-    this.laneAreaContainer.x = -this.coordinateOffset.x;
-    this.laneAreaContainer.y = -this.coordinateOffset.y;
-    for (let i = 0; i < this.dragablePoints.length; i += 1) {
-      for (let j = 0; j < this.dragablePoints[i].length; j += 1) {
-        const pos = this.dragablePoints[i][j].absolutPos;
+      this.laneAreaContainer.x = -this.coordinateOffset.x;
+      this.laneAreaContainer.y = -this.coordinateOffset.y;
+      for (let i = 0; i < this.dragablePoints.length; i += 1) {
+        for (let j = 0; j < this.dragablePoints[i].length; j += 1) {
+          const pos = this.dragablePoints[i][j].absolutPos;
 
-        this.dragablePoints[i][j].x = pos.x * this.windowW;
-        this.dragablePoints[i][j].y = pos.y * this.windowH;
+          this.dragablePoints[i][j].x = pos.x * this.windowW;
+          this.dragablePoints[i][j].y = pos.y * this.windowH;
+        }
       }
     }
   }
