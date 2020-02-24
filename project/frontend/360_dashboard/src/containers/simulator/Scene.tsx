@@ -619,51 +619,53 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * resize
    */
   resize = (): void => {
-    if (window.innerWidth < this.windowMin) {
-      this.windowW = this.windowMin;
-      this.coordinateOffset.x = this.windowW / 2;
-    } else {
-      this.windowW = window.innerWidth * this.windowScaleRatio;
-      this.coordinateOffset.x = this.windowW / 2;
-    }
-    if (window.innerHeight < this.windowMin) {
-      this.windowH = this.windowMin;
-      this.coordinateOffset.y = this.windowH / 2;
-    } else {
-      this.windowH = window.innerHeight * this.windowScaleRatio;
-      this.coordinateOffset.y = this.windowH / 2;
-    }
-    this.app.renderer.resize(this.windowW, this.windowH);
-    this.app.stage.x = this.windowW / 2;
-    this.app.stage.y = this.windowH / 2;
+    if (window.innerWidth !== undefined && window.innerHeight !== undefined) {
+      if (window.innerWidth < this.windowMin) {
+        this.windowW = this.windowMin;
+        this.coordinateOffset.x = this.windowW / 2;
+      } else {
+        this.windowW = window.innerWidth * this.windowScaleRatio;
+        this.coordinateOffset.x = this.windowW / 2;
+      }
+      if (window.innerHeight < this.windowMin) {
+        this.windowH = this.windowMin;
+        this.coordinateOffset.y = this.windowH / 2;
+      } else {
+        this.windowH = window.innerHeight * this.windowScaleRatio;
+        this.coordinateOffset.y = this.windowH / 2;
+      }
+      this.app.renderer.resize(this.windowW, this.windowH);
+      this.app.stage.x = this.windowW / 2;
+      this.app.stage.y = this.windowH / 2;
 
-    this.controlPanelG.clear();
-    this.controlPanelG.beginFill(0x51BCD8, 0.3);
-    this.controlPanelG.lineStyle(1, 0x51BCD8, 0.5);
-    this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
-    this.controlPanelG.endFill();
+      this.controlPanelG.clear();
+      this.controlPanelG.beginFill(0x51BCD8, 0.3);
+      this.controlPanelG.lineStyle(1, 0x51BCD8, 0.5);
+      this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
+      this.controlPanelG.endFill();
 
-    if (this.isControlPanelShown) {
-      this.controlPanelContainer.x = -this.coordinateOffset.x;
-      this.controlPanelContainer.y = -this.coordinateOffset.y;
-    } else {
-      this.controlPanelContainer.x = -this.controlPanelG.width - this.coordinateOffset.x;
-      this.controlPanelContainer.y = -this.coordinateOffset.y;
-    }
+      if (this.isControlPanelShown) {
+        this.controlPanelContainer.x = -this.coordinateOffset.x;
+        this.controlPanelContainer.y = -this.coordinateOffset.y;
+      } else {
+        this.controlPanelContainer.x = -this.controlPanelG.width - this.coordinateOffset.x;
+        this.controlPanelContainer.y = -this.coordinateOffset.y;
+      }
 
-    this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
-    this.drawRoad();
-    this.initialButtons();
-    this.roadIntersection.updateVehiclePosV2();
+      this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
+      this.drawRoad();
+      this.initialButtons();
+      this.roadIntersection.updateVehiclePosV2();
 
-    this.laneAreaContainer.x = -this.coordinateOffset.x;
-    this.laneAreaContainer.y = -this.coordinateOffset.y;
-    for (let i = 0; i < this.dragablePoints.length; i += 1) {
-      for (let j = 0; j < this.dragablePoints[i].length; j += 1) {
-        const pos = this.dragablePoints[i][j].absolutPos;
+      this.laneAreaContainer.x = -this.coordinateOffset.x;
+      this.laneAreaContainer.y = -this.coordinateOffset.y;
+      for (let i = 0; i < this.dragablePoints.length; i += 1) {
+        for (let j = 0; j < this.dragablePoints[i].length; j += 1) {
+          const pos = this.dragablePoints[i][j].absolutPos;
 
-        this.dragablePoints[i][j].x = pos.x * this.windowW;
-        this.dragablePoints[i][j].y = pos.y * this.windowH;
+          this.dragablePoints[i][j].x = pos.x * this.windowW;
+          this.dragablePoints[i][j].y = pos.y * this.windowH;
+        }
       }
     }
   }
@@ -829,9 +831,10 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
     // toggle btn
     this.updateToggleBtnState();
+    this.featureToggling();
     // menu
-    this.updateMenuState();
-    this.drawMenu();
+    // this.updateMenuState();
+    // this.drawMenu();
     // tl case
     this.updateTLCase();
 
@@ -847,9 +850,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       if (this.trafficData[this.caseId].length !== 0
         && !this.dataReady[this.caseId].imported
         && !this.dataReady[this.caseId].sorted) {
-        // console.log(this.trafficData[this.caseId]);
-
-        // this.normData[interSec] =
         tsData.sortDataByTime(this.trafficData[this.caseId]);
         this.dataReady[this.caseId].imported = true;
       }
@@ -858,9 +858,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       if (this.trafficData[this.caseId].length !== 0
         && this.dataReady[this.caseId].imported
         && !this.dataReady[this.caseId].sorted) {
-        // console.log('loop sorted');
-        // console.log(this.trafficData[this.caseId]);
-
         this.dataReady[this.caseId].sorted = true;
       }
 
@@ -889,7 +886,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         } else
         if (this.atIndex < this.caseData.length) {
           let currentCD = 0;
-          // const interSec = this.intersectionId;
           for (let i = 0; i < this.atIndex + 1; i += 1) {
             currentCD = this.caseData[this.atIndex].tLine
               - this.caseData[0].tLine;
@@ -1309,6 +1305,26 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         labelG.y = pos.y - labelG.height / 2;
         this.labelGroup.push(labelG);
       }
+    }
+  }
+
+  /**
+   * replacement for drawMenu after moving toggles out
+   * update toggled features
+   */
+  featureToggling(): void{
+    if (this.laneAreaContainer.parent !== null
+      && !this.toggleGroup[3].state) {
+      this.mapContainer.removeChild(this.laneAreaContainer);
+    }
+    if (this.laneAreaContainer.parent == null
+      && this.toggleGroup[3].state) {
+      this.mapContainer.addChild(this.laneAreaContainer);
+    }
+    if (this.toggleGroup[5].state) {
+      this.mappingBGContainer.alpha = 1;
+    } else {
+      this.mappingBGContainer.alpha = 0;
     }
   }
 
