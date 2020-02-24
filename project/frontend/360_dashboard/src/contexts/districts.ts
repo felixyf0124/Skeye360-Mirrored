@@ -85,7 +85,7 @@ export interface ResetDistrictAction {
 }
 
 // reset district state
-export const resetIntersection = (): ResetDistrictAction => ({
+export const resetDistricts = (): ResetDistrictAction => ({
   type: RESET_INTERSECTION,
 });
 
