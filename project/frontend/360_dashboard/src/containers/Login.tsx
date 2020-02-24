@@ -39,6 +39,52 @@ interface DispatchProps {
   getUserData: () => GetUserDataAction;
 }
 
+const loginTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#808080',
+    },
+    secondary: {
+      main: '#808080',
+    },
+  },
+  overrides: {
+    MuiInput: {
+      underline: {
+        '&:before': {
+          borderBottom: '1px solid grey',
+        },
+        '&:hover:not($disabled):before': {
+          borderBottom: '1px solid grey',
+        },
+      },
+    },
+    MuiInputLabel: {
+      root: {
+        color: 'grey',
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        color: 'grey',
+      },
+    },
+    MuiInputBase: {
+      root: {
+        color: 'white',
+      },
+    },
+    MuiGrid: {
+      item: {
+        color: 'grey',
+      },
+      container: {
+        paddingBottom: '2rem',
+      },
+    },
+  },
+});
+
 const useStyles = makeStyles(() => ({
   margin: {
     margin: loginTheme.spacing(1),
@@ -129,52 +175,6 @@ const useStyles = makeStyles(() => ({
     font: 'roboto',
   },
 }));
-
-const loginTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#808080',
-    },
-    secondary: {
-      main: '#808080',
-    },
-  },
-  overrides: {
-    MuiInput: {
-      underline: {
-        '&:before': {
-          borderBottom: '1px solid grey',
-        },
-        '&:hover:not($disabled):before': {
-          borderBottom: '1px solid grey',
-        },
-      },
-    },
-    MuiInputLabel: {
-      root: {
-        color: 'grey',
-      },
-    },
-    MuiFormLabel: {
-      root: {
-        color: 'grey',
-      },
-    },
-    MuiInputBase: {
-      root: {
-        color: 'white',
-      },
-    },
-    MuiGrid: {
-      item: {
-        color: 'grey',
-      },
-      container: {
-        paddingBottom: '2rem',
-      },
-    },
-  },
-});
 
 const Logo = styled.img`
   height: 5rem;
