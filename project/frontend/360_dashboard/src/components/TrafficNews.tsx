@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import AnnouncementIcon from '@material-ui/icons/Announcement';
 import { SKEYE_WHITE, LOW_RES } from '../css/custom';
 
 // MapQuest API is used to retrieve traffic news
@@ -116,23 +117,41 @@ class TrafficNews extends React.Component<{}, StateProps> {
               <CardStyle key={incident.id}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h5">
-                      Traffic Type: &nbsp;
+                    <div style={{ display: 'flex' }}>
+                      <Typography variant="h5">
+                        Traffic Type: &nbsp;
+                        {(() => {
+                          switch (incident.type) {
+                            case 1:
+                              return 'Construction';
+                            case 2:
+                              return 'Event';
+                            case 3:
+                              return 'Congestion/Flow';
+                            case 4:
+                              return 'Incident/Accident';
+                            default:
+                              return 'Traffic';
+                          }
+                        })()}
+                        &nbsp;
+                      </Typography>
+
                       {(() => {
                         switch (incident.type) {
                           case 1:
-                            return 'Construction';
+                            return <AnnouncementIcon style={{ color: 'orange' }} />;
                           case 2:
-                            return 'Event';
+                            return <AnnouncementIcon style={{ color: 'purple' }} />;
                           case 3:
-                            return 'Congestion/Flow';
+                            return <AnnouncementIcon style={{ color: '#d62f2f' }} />;
                           case 4:
-                            return 'Incident/Accident';
+                            return <AnnouncementIcon style={{ color: 'red' }} />;
                           default:
-                            return 'Traffic';
+                            return <AnnouncementIcon />;
                         }
                       })()}
-                    </Typography>
+                    </div>
                     <Typography variant="h6">{incident.shortDesc}</Typography>
                     <Typography variant="subtitle1">
                       {incident.fullDesc}
