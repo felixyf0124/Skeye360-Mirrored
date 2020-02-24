@@ -36,6 +36,7 @@ interface TabPanelProps {
   value: any;
 }
 
+// Used simple tabs example from the reference mentioned above
 function TabPanel(props: TabPanelProps) {
   const {
     children, value, index, ...other

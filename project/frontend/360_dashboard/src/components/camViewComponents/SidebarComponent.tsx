@@ -21,6 +21,7 @@ interface SimProps {
 
 const width = 10;
 
+// Create styles for the sidebar
 const useStyles = makeStyles(() => createStyles({
   root: {
     '&$selected': {
@@ -66,6 +67,7 @@ const useStyles = makeStyles(() => createStyles({
 
 }));
 
+// Personalized styles based on our UI
 const skeyeStyles = {
   ListItemStyle: {
     color: SKEYE_WHITE,
@@ -105,11 +107,13 @@ const skeyeStyles = {
   },
 };
 
+// Creates and returns a component for the sidebar that will be used in the simulator
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const { tlMode, onChangeTLMode } = props;
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
 
+  // OnClick it will the variable to the selected item (Arima, Pedestrians or Real-Time)
   const onClickListItem = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number,
@@ -118,6 +122,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
     onChangeTLMode(index);
   };
 
+  // Returns the UI for the sidebar
   return (
     <div className={classes.sidebar}>
       <div className={classes.content}>
