@@ -1,24 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { makeStyles, Theme } from '@material-ui/core';
-import { RootState } from '../../reducers/rootReducer';
 import SidebarComponent from './SidebarComponent';
 import Simulator from '../../containers/simulator/Scene';
 import { SKEYE_WHITE } from '../../css/custom';
-
 
 interface SimProps {
   tlMode: number;
   onChangeTLMode: any;
   toggles: any;
 }
-
-// DIV inside the sideDrawer
-const Body = styled.div`
-//   margin-left: 10rem;
-  margin-top: 5rem;
-`;
 
 // Horizontal flexbox styling
 const HorizontalFlexBox = styled.div`

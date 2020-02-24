@@ -10,7 +10,6 @@ export const SKEYE_LIGHT_BLACK = '#212121';
 export const SKEYE_RED = '#ED1C24';
 export const SKEYE_BRIGHT_GREEN = '#1AFF00';
 
-
 // MOBILE THRESHOLD WIDTH
 export const TABLET_DEVICE_MAX_WIDTH = 1024;
 export const MOBILE_DEVICE_MAX_WIDTH = 676;

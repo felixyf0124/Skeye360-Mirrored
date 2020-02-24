@@ -6,7 +6,6 @@ import NorthChart from '../NorthChart';
 import SouthChart from '../SouthChart';
 import GoogleMiniMap from '../GoogleMiniMap';
 import PieChart from '../PieChart';
-import DisplayCount from '../DisplayMovAVG';
 import { RootState } from '../../reducers/rootReducer';
 import {
   STATE as intersectionState,
@@ -29,16 +28,6 @@ const MapContainer = styled.div`
   height: 30vh;
   width: 90vw;
   margin: 1rem;
-`;
-
-const AverageMetricChartsContainer = styled.div`
-  background-color: ${SKEYE_WHITE};
-  height: 13vh;
-  width: 20vw;
-  position: relative;
-  margin: 1rem;
-  vertical-align: middle;
-  text-align: center;
 `;
 
 // Smaller charts for the bottom left side charts.
@@ -120,7 +109,7 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
   // component mount will fetch existing intersection
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
-    const { intersectionId, getExistingIntersection } = this.props;
+    const { getExistingIntersection } = this.props;
     getExistingIntersection('2');
     const { cameraId, getExistingCamera } = this.props;
     getExistingCamera(cameraId);
@@ -135,15 +124,8 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
 
   public render(): JSX.Element {
     const {
-      intersectionId, intersectionName, intersectionLat, intersectionLng, cameraId,
+      intersectionId, intersectionLat, intersectionLng,
     } = this.props;
-
-    console.log('-----------DATA--------------');
-    console.log(`camera id:${cameraId}`);
-    console.log(`Intersection id:${intersectionId}`);
-    console.log(`Intersection name:${intersectionName}`);
-    console.log(`intersection lat and long : ${intersectionLat} | ${intersectionLng}`);
-    console.log('----------------------------------');
 
     return (
       <div>
@@ -180,7 +162,6 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
     );
   }
 }
-
 
 // state mapping
 const mapStateToProps = (state: RootState): StateProps => ({

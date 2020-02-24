@@ -55,7 +55,7 @@ class CameraComponent extends React.Component<StateProps & DispatchProps> {
   }
 
   public render(): JSX.Element {
-    const { intersectionName, camera_url } = this.props;
+    const { camera_url } = this.props;
 
     // eslint-disable-next-line consistent-return
     return (
