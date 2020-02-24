@@ -3,7 +3,7 @@
 
 import React from 'react';
 // pixi.js-legacy for VM
-import * as PIXI from 'pixi.js-legacy';
+import * as PIXI from 'pixi.js';
 import { connect } from 'react-redux';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry';
