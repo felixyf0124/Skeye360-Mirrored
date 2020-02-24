@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
@@ -21,7 +21,7 @@ interface SimProps {
 
 const width = 10;
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles(() => createStyles({
   root: {
     '&$selected': {
       backgroundColor: SKEYE_LIGHT_DARK_GREY,
@@ -113,7 +113,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const onClickListItem = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number,
-  ) => {
+  ): void => {
     setSelectedIndex(index);
     onChangeTLMode(index);
   };
@@ -131,7 +131,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             button
             selected={selectedIndex === 0}
             classes={{ root: classes.root, selected: classes.selected }}
-            onClick={(event) => onClickListItem(event, 0)}
+            onClick={(event): void => onClickListItem(event, 0)}
           >
             <ListItemIcon style={skeyeStyles.IconStyle}>
               <TrendingUpIcon />
@@ -145,7 +145,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             button
             selected={selectedIndex === 1}
             classes={{ root: classes.root, selected: classes.selected }}
-            onClick={(event) => onClickListItem(event, 1)}
+            onClick={(event): void => onClickListItem(event, 1)}
           >
             <ListItemIcon style={skeyeStyles.IconStyle}>
               <DirectionsWalkIcon />
@@ -159,7 +159,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             button
             selected={selectedIndex === 2}
             classes={{ root: classes.root, selected: classes.selected }}
-            onClick={(event) => onClickListItem(event, 2)}
+            onClick={(event): void => onClickListItem(event, 2)}
           >
             <ListItemIcon style={skeyeStyles.IconStyle}>
               <TrackChangesIcon />

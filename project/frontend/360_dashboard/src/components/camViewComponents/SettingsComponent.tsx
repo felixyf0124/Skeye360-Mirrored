@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-  makeStyles, Theme, withStyles, Switch, FormGroup, FormControlLabel,
+  withStyles, Switch, FormGroup, FormControlLabel,
 } from '@material-ui/core';
 import { SKEYE_WHITE, SKEYE_GREEN, SKEYE_GREY } from '../../css/custom';
 
@@ -98,7 +98,7 @@ export default function SettingsComponent() {
     checkedD: false,
   });
 
-  const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [name]: event.target.checked });
   };
     // eslint-disable-next-line consistent-return
@@ -107,9 +107,6 @@ export default function SettingsComponent() {
       <HorizontalFlexBox>
         <BoxMain>
           <text style={skeyeStyles.Title}>Settings for the simulators</text>
-          {/* <text style={ skeyeStyles.Message }>
-            All your preferences for the simulators will be saved here
-          </text> */}
         </BoxMain>
         <BoxHorizontal>
           <BoxSettings>
