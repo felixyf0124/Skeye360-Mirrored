@@ -22,6 +22,9 @@ import { SKEYE_WHITE, LOW_RES } from '../css/custom';
   2 = Event
   3 = Congestion/Flow
   4 = Incident/accident
+
+  Severity Ranges from 0-4, which is an indicator for delay,
+  0 being the lowest, 4 being the highest.
 */
 
 const API_KEY = '24jtUJNMCXQg4pLgMchaC7p6Flihs7wO';
@@ -159,7 +162,22 @@ class TrafficNews extends React.Component<{}, StateProps> {
                       <br />
                       <b>Severity:</b>
                       {' '}
-                      {incident.severity}
+                      {(() => {
+                        switch (incident.severity) {
+                          case 0:
+                            return 'Very Low Delay';
+                          case 1:
+                            return 'Low Delay';
+                          case 2:
+                            return 'Normal Delay';
+                          case 3:
+                            return 'Medium Delay';
+                          case 4:
+                            return 'High Delay';
+                          default:
+                            return 'Normal Delay';
+                        }
+                      })()}
                       {' '}
                       <br />
                       <b>Start Time:</b>
