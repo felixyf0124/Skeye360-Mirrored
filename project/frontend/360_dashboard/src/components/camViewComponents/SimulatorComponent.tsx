@@ -11,6 +11,22 @@ interface SimProps {
   toggles: any;
   tlStop: boolean;
   onClickTLStop: any;
+  tlCombStates: Array<{
+    direction: string;
+    state: string;
+    state2: string;
+    countDown: string;
+    countDown2: string;
+    totalTime: string; // G+Y
+    totalTime2: string; // G+Y
+  }>;
+  // tlStates2: Array<{
+  //   direction: string,
+  //   state:string,
+  //   countDown:string,
+  //   totalTime: string, //G+Y
+  // }>;
+  onTLUpdate: any;
 }
 
 // Horizontal flexbox styling
@@ -80,13 +96,20 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
   // eslint-disable-next-line consistent-return
   const {
     tlMode, onChangeTLMode, toggles, tlStop, onClickTLStop,
+    tlCombStates, onTLUpdate,
   } = props;
 
   return (
     <div>
       <text style={skeyeStyles.Title}>Simulation of Traffic</text>
       <HorizontalFlexBox>
-        <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode} onClickTLStop={onClickTLStop} />
+        <SidebarComponent
+          tlMode={tlMode}
+          onChangeTLMode={onChangeTLMode}
+          onClickTLStop={onClickTLStop}
+          tlCombStates={tlCombStates}
+        // tlStates2={tlStates2}
+        />
         <InnerDivHorizon>
           <InnerDivVerticalFirstSim>
             <text style={skeyeStyles.Header}>Optimized Traffic Light Setting</text>
@@ -96,6 +119,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 tl_mode={tlMode}
                 toggles={toggles}
                 tlStop={tlStop}
+                onTLUpdate={onTLUpdate}
               />
             </SimContainer>
           </InnerDivVerticalFirstSim>
@@ -107,6 +131,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 tl_mode={tlMode}
                 toggles={toggles}
                 tlStop={tlStop}
+                onTLUpdate={onTLUpdate}
               />
             </SimContainer>
           </InnerDivVerticalSecondSim>

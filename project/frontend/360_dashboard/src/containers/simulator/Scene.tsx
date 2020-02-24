@@ -28,6 +28,7 @@ interface Props {
   tl_mode: any;
   toggles: any;
   tlStop: boolean;
+  onTLUpdate: any;
 }
 
 interface StateProps {
@@ -817,6 +818,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
     this.updateControlPanelDisplayState(8);
     this.updateTLCountDownDisplayPanel();
+    // update outer display
+    this.updateTLDisplayState();
     const { tlStop } = this.props;
     if (true) {
       // this.isStopClicked = !this.isStopClicked;
@@ -1112,6 +1115,38 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     delete this.tlDefaultDistribution;
     delete this.trafficLightCounter;
     delete this.trafficLightCounterOffset;
+  }
+
+  /**
+   * update outer TL display
+   */
+  updateTLDisplayState(): void{
+    const { isSmartTL, onTLUpdate } = this.props;
+    const tlQueue = this.roadIntersection.getTrafficLightQueue();
+    const newTLStates = new Array<{
+      direction: string;
+      state: string;
+      countDown: string;
+      totalTime: string; // G+Y
+    }>();
+    // newTLStates.push(tlStates[0]);
+
+    for (let i = 0; i < tlQueue.length; i += 1) {
+      let CD = 'N/A';
+      const ttime = (Math.round(tlQueue[i].getTotalTime() * 10)
+      / 10).toString();
+      if (!Number.isNaN(tlQueue[i].getCountDown())) {
+        CD = Math.round(tlQueue[i].getCountDown()).toString();
+      }
+      const tlState = {
+        direction: 'Directions',
+        state: tlQueue[i].getStatus(),
+        countDown: CD,
+        totalTime: ttime, // G+Y
+      };
+      newTLStates.push(tlState);
+    }
+    onTLUpdate(newTLStates, isSmartTL);
   }
 
   /**

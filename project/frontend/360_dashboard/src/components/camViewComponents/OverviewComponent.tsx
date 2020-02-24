@@ -14,6 +14,22 @@ interface SimProps {
     toggles: any;
     tlStop: boolean;
     onClickTLStop: any;
+    tlCombStates: Array<{
+        direction: string;
+        state: string;
+        state2: string;
+        countDown: string;
+        countDown2: string;
+        totalTime: string; // G+Y
+        totalTime2: string; // G+Y
+      }>;
+    //   tlStates2: Array<{
+    //     direction: string,
+    //     state:string,
+    //     countDown:string,
+    //     totalTime: string, //G+Y
+    //   }>;
+    onTLUpdate: any;
 }
 
 interface StateProps {
@@ -172,7 +188,7 @@ class OverviewComponent extends React.Component<SimProps
   public render(): JSX.Element {
     const {
       intersectionName, camera_url, tlMode, onChangeTLMode, toggles,
-      tlStop, onClickTLStop,
+      tlStop, onClickTLStop, tlCombStates, onTLUpdate,
     } = this.props;
     // eslint-disable-next-line consistent-return
     return (
@@ -182,6 +198,7 @@ class OverviewComponent extends React.Component<SimProps
             tlMode={tlMode}
             onChangeTLMode={onChangeTLMode}
             onClickTLStop={onClickTLStop}
+            tlCombStates={tlCombStates}
           />
           <VerticalFlexBox>
             <InnerDivVertical>
@@ -196,6 +213,7 @@ class OverviewComponent extends React.Component<SimProps
                   tl_mode={tlMode}
                   toggles={toggles}
                   tlStop={tlStop}
+                  onTLUpdate={onTLUpdate}
                 />
               </SimContainer>
             </InnerDivVertical>
@@ -243,6 +261,7 @@ class OverviewComponent extends React.Component<SimProps
                   tl_mode={tlMode}
                   toggles={toggles}
                   tlStop={tlStop}
+                  onTLUpdate={onTLUpdate}
                 />
               </SimContainer>
             </InnerDivVertical>
