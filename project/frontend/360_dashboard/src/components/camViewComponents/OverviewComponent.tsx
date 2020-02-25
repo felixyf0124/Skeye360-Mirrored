@@ -9,34 +9,34 @@ import { getExistingCamera } from '../../contexts/camera';
 import Simulator from '../../containers/simulator/Scene';
 
 interface SimProps {
-    tlMode: number;
-    onChangeTLMode: any;
-    toggles: any;
-    tlStop: boolean;
-    onClickTLStop: any;
-    tlCombStates: Array<{
-        direction: string;
-        state: string;
-        state2: string;
-        countDown: string;
-        countDown2: string;
-        totalTime: string; // G+Y
-        totalTime2: string; // G+Y
-      }>;
+  tlMode: number;
+  onChangeTLMode: any;
+  toggles: any;
+  tlStop: boolean;
+  onClickTLStop: any;
+  tlCombStates: Array<{
+    direction: string;
+    state: string;
+    state2: string;
+    countDown: string;
+    countDown2: string;
+    totalTime: string; // G+Y
+    totalTime2: string; // G+Y
+  }>;
 
-    onTLUpdate: any;
+  onTLUpdate: any;
 }
 
 interface StateProps {
-    camera_id: string;
-    camera_url: string;
-    intersectionName: string;
-    error: string;
-    user_id: number;
-  }
+  camera_id: string;
+  camera_url: string;
+  intersectionName: string;
+  error: string;
+  user_id: number;
+}
 
 interface DispatchProps {
-    getExistingCamera: (id: string) => any;
+  getExistingCamera: (id: string) => any;
 }
 
 // Empty camera feed container
@@ -129,7 +129,6 @@ const skeyeStyles = {
     backgroundColor: SKEYE_LIGHT_BLACK,
     marginLeft: '-8.2vw',
     marginTop: '2.5vw',
-
   },
   BoxRight: {
     width: '18vw',
@@ -137,7 +136,6 @@ const skeyeStyles = {
     backgroundColor: SKEYE_LIGHT_BLACK,
     marginLeft: '2vw',
     marginTop: '2.5vw',
-
   },
   BoxTextTitle: {
     color: SKEYE_WHITE,
@@ -181,8 +179,10 @@ const skeyeStyles = {
   },
 };
 
-class OverviewComponent extends React.Component<SimProps
-& StateProps & DispatchProps, {tlMode: number }> {
+class OverviewComponent extends React.Component<
+  SimProps & StateProps & DispatchProps,
+  { tlMode: number }
+> {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { camera_id, getExistingCamera } = this.props;
@@ -191,8 +191,14 @@ class OverviewComponent extends React.Component<SimProps
 
   public render(): JSX.Element {
     const {
-      intersectionName, camera_url, tlMode, onChangeTLMode, toggles,
-      tlStop, onClickTLStop, tlCombStates, onTLUpdate,
+      camera_url,
+      tlMode,
+      onChangeTLMode,
+      toggles,
+      tlStop,
+      onClickTLStop,
+      tlCombStates,
+      onTLUpdate,
     } = this.props;
     // eslint-disable-next-line consistent-return
     return (

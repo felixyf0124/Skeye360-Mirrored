@@ -77,6 +77,13 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
         <Table className={classes.table} aria-label="intersection table">
           <TableHead>
             <TableRow>
+              <TableCell align="center" colSpan={10} style={{ fontSize: '20px' }}>
+                Intersection List
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableHead>
+            <TableRow>
               <TableCell align="center">Intersection Name</TableCell>
               <TableCell align="center">District</TableCell>
               <TableCell align="center">Streetview</TableCell>

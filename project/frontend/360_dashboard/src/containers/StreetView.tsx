@@ -15,7 +15,8 @@ import { logClick } from '../contexts/LogClicks';
 import SouthChart from '../components/SouthChart';
 import GoogleMiniMap from '../components/GoogleMiniMap';
 import { SKEYE_WHITE, LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
-import DisplayCount from '../components/DisplayMovAVG';
+// import DisplayCount from '../components/DisplayMovAVG';
+import RealTimeLine from '../components/RealTimeLine';
 
 // styled-component for map, chart and flexboxes
 const Body = styled.div`
@@ -126,11 +127,11 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
   }
 
   // component unmount resets the loaded data
-  public componentWillUnmount(): void {
-    // eslint-disable-next-line no-shadow
-    const { resetCurrentIntersection } = this.props;
-    resetCurrentIntersection();
-  }
+  // public componentWillUnmount(): void {
+  //   // eslint-disable-next-line no-shadow
+  //   const { resetCurrentIntersection } = this.props;
+  //   resetCurrentIntersection();
+  // }
 
   public render(): JSX.Element {
     const {
@@ -155,22 +156,8 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
                   />
                 )}
               </MapContainer>
-              <AverageMetricChartsContainer>
-                <h5>Average Cars</h5>
-                <h3>N/A</h3>
-              </AverageMetricChartsContainer>
-              <AverageMetricChartsContainer>
-                <h6>Average Gas Consumption</h6>
-                <h5>N/A L/100km</h5>
-              </AverageMetricChartsContainer>
               <BigChartContainer>
-                <NorthChart />
-              </BigChartContainer>
-              <BigChartContainer>
-                <SouthChart />
-              </BigChartContainer>
-              <BigChartContainer>
-                <DisplayCount />
+                <RealTimeLine />
               </BigChartContainer>
             </ChartVerticalFlexBox>
           </Body>
@@ -182,16 +169,6 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
         <SideDrawer headerTitle={intersectionName} />
         <Body>
           <ChartHorizontalFlexBox>
-            <ChartVerticalFlexBox>
-              <AverageMetricChartsContainer>
-                <h5>Average Cars</h5>
-                <h3>N/A</h3>
-              </AverageMetricChartsContainer>
-              <AverageMetricChartsContainer>
-                <h5>Average Gas Consumption</h5>
-                <h3>N/A L/100km</h3>
-              </AverageMetricChartsContainer>
-            </ChartVerticalFlexBox>
             <MapContainer>
               {intersectionLat === '' ? (
                 <p>Loading...</p>
@@ -205,16 +182,8 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
             </MapContainer>
           </ChartHorizontalFlexBox>
           <ChartHorizontalFlexBox>
-            <ChartVerticalFlexBox>
-              <SmallChartContainer>
-                <NorthChart />
-              </SmallChartContainer>
-              <SmallChartContainer>
-                <SouthChart />
-              </SmallChartContainer>
-            </ChartVerticalFlexBox>
             <BigChartContainer>
-              <DisplayCount />
+              <RealTimeLine />
             </BigChartContainer>
           </ChartHorizontalFlexBox>
         </Body>
