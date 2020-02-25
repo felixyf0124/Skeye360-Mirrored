@@ -1,16 +1,17 @@
+/* eslint-disable  @typescript-eslint/camelcase */
 import React from 'react';
 import Chart from 'react-apexcharts';
 
-//Realtime graph from the ApexCharts Documentation Website
-//https://apexcharts.com/react-chart-demos/line-charts/realtime/
-//https://github.com/apexcharts/apexcharts.js/blob/master/samples/react/line/realtime.html
+// Realtime graph from the ApexCharts Documentation Website
+// https://apexcharts.com/react-chart-demos/line-charts/realtime/
+// https://github.com/apexcharts/apexcharts.js/blob/master/samples/react/line/realtime.html
 
-var arima_dataset: any[] = [];
-var mavg_dataset: any[] = [];
-var current_mavg: any[] = [];
-var current_arima: any[] = [];
+let arima_dataset: any[] = [];
+let mavg_dataset: any[] = [];
+const current_mavg: any[] = [];
+const current_arima: any[] = [];
 
-var COUNT = 0; 
+let COUNT = 0;
 
 arima_dataset = [
   [0, 35],
@@ -37,7 +38,7 @@ arima_dataset = [
   [21, 24],
   [22, 35],
   [23, 23],
-]
+];
 
 mavg_dataset = [
   [0, 30],
@@ -64,28 +65,31 @@ mavg_dataset = [
   [21, 24],
   [22, 34],
   [23, 22],
-]
+];
 
-//Logic to be implemented: 
-//Check the current time, if the minutes are equal to 00, then retrieve the new data for the current hour. 
-//Check if the values in the graph are populated or not
+// Logic to be implemented:
+// Check the current time, if the minutes are equal to 00,
+// then retrieve the new data for the current hour.
+// Check if the values in the graph are populated or not
 const getMovAvg = () => {
-  if(COUNT == 0){
-    for(var i = 0; i<arima_dataset.length; i++){
+  if (COUNT === 0) {
+    /* eslint-disable no-plusplus */
+    for (let i = 0; i < arima_dataset.length; i++) {
       current_arima.push(arima_dataset[i]);
     }
   }
-  if(COUNT < 24){
+  if (COUNT < 24) {
     current_mavg.push(mavg_dataset[COUNT]);
   }
-}
+};
 
 interface ChartState{
-  options: any,
-  series: any
+  options: any;
+  series: any;
 }
+
 class RealTimeLine extends React.Component<{}, ChartState> {
-  constructor(props: any){
+  constructor(props: any) {
     super(props);
     this.state = {
       options: {
@@ -97,79 +101,82 @@ class RealTimeLine extends React.Component<{}, ChartState> {
             enabled: true,
             easing: 'linear',
             dynamicAnimation: {
-              speed: 1000
-            }
+              speed: 1000,
+            },
           },
           toolbar: {
-            show: false
+            show: false,
           },
           zoom: {
-            enabled: false
-          }
+            enabled: false,
+          },
         },
         dataLabels: {
-          enabled: false
+          enabled: false,
         },
         stroke: {
-          curve: 'smooth'
+          curve: 'smooth',
         },
         title: {
           align: 'center',
-          text: 'Prediction vs Moving Average'
+          text: 'Prediction vs Moving Average',
         },
         markers: {
-          size: 0
+          size: 0,
         },
         xaxis: {
           range: 23,
           title: {
-            text: "Hours",
-            align: "center"
-          }
+            text: 'Hours',
+            align: 'center',
+          },
         },
         yaxis: {
           min: 10,
           max: 50,
           title: {
-            text: "Cars",
-          }
+            text: 'Cars',
+          },
         },
         legend: {
-          show: true
-        }
+          show: true,
+        },
       },
-      series:[
-      {
-        name: 'Prediction',
-        data: current_arima,
-      },
-      {
-        name: 'Moving Average',
-        data: current_mavg,
-      }
-      ]
-    }
+      series: [
+        {
+          name: 'Prediction',
+          data: current_arima,
+        },
+        {
+          name: 'Moving Average',
+          data: current_mavg,
+        },
+      ],
+    };
   }
 
-  //The data gets retrieved here, in future implementations: Use async fetch from the database
+  // The data gets retrieved here, in future implementations: Use async fetch from the database
   componentDidMount() {
     window.setInterval(() => {
-      //Data gets populated here
-      //Datasets current_arima and current_mavg get updated here
+      // Data gets populated here
+      // Datasets current_arima and current_mavg get updated here
       getMovAvg();
 
-      //Execute the realtime function here, using the two below data arrays as datasets
+      // Execute the realtime function here, using the two below data arrays as datasets
+      /* eslint-disable no-undef */
       ApexCharts.exec('realtime', 'updateSeries', [
-        {data: current_arima},
-        {data: current_mavg},
-    ]);
-    COUNT++; 
-    }, 1000) 
+        { data: current_arima },
+        { data: current_mavg },
+      ]);
+      COUNT++;
+    }, 1000);
   }
-  render(){
-    return(
-      <Chart options = {this.state.options} series={this.state.series} type="line"/>
-    )
+
+  /* eslint-disable react/destructuring-assignment */
+  render() {
+    return (
+      <Chart options={this.state.options} series={this.state.series} type="line" />
+    );
   }
 }
-export default RealTimeLine; 
+export default RealTimeLine;
