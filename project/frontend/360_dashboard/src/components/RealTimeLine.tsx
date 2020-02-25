@@ -157,7 +157,7 @@ class RealTimeLine extends React.Component<{}, ChartState> {
   }
 
   // The data gets retrieved here, in future implementations: Use async fetch from the database
-  componentDidMount(): void {
+  public componentDidMount(): void {
     window.setInterval((): any => {
       // Data gets populated here
       // Datasets current_arima and current_mavg get updated here
