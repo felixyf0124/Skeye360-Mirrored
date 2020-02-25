@@ -623,7 +623,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * resize
    */
   resize = (): void => {
-    if (window.innerWidth !== undefined && window.innerHeight !== undefined) {
+    if (window.innerWidth !== undefined && window.innerHeight !== undefined
+      && this.coordinateOffset !== undefined) {
       if (window.innerWidth < this.windowMin) {
         this.windowW = this.windowMin;
         this.coordinateOffset.x = this.windowW / 2;
@@ -818,6 +819,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     // this.updateControlPanelDisplayState(8);
     // this.updateTLCountDownDisplayPanel();
     // update outer display
+    const deltaTime = Date.now() - this.timeLastMoment;
     this.updateTLDisplayState();
     const { tlStop } = this.props;
     if (true) {
@@ -851,7 +853,9 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     // const interSec = 0;
 
     if (this.toggleGroup[0].state) {
-      this.vehicleUpdate(852, 478);
+      if (Math.round(this.fpsCounter % (this.fps / 10)) === 0) {
+        this.vehicleUpdate(852, 478);
+      }
       this.sectionAreaCounter();
     } else {
       // wait
@@ -934,7 +938,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         .removeChild(child);
       child.destroy();
     }
-    const deltaTime = Date.now() - this.timeLastMoment;
     this.fpsCounter += 1;
     if (deltaTime > 1000) {
       this.fps = this.fpsCounter;
@@ -1634,33 +1637,34 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     const formedData = new Array<{id: number;position: Vec2}>();
     let startIndex = -1;
     let endIndex = -1;
-    this.roadIntersection.initSimpleVehicles();
+    if (this.objRawData !== null && this.objRawData !== undefined) {
+      this.roadIntersection.initSimpleVehicles();
 
-    for (let i = 0; i < this.objRawData.length; i += 1) {
-      if (this.objRawData.charAt(i) === '(') {
-        startIndex = i;
-      } else if (this.objRawData.charAt(i) === ')' && startIndex > -1) {
-        endIndex = i;
+      for (let i = 0; i < this.objRawData.length; i += 1) {
+        if (this.objRawData.charAt(i) === '(') {
+          startIndex = i;
+        } else if (this.objRawData.charAt(i) === ')' && startIndex > -1) {
+          endIndex = i;
 
-        const substr = this.objRawData.substring(startIndex + 1, endIndex);
-        const simpleVehicleFormat = /\d+(\.\d+)?/g;
+          const substr = this.objRawData.substring(startIndex + 1, endIndex);
+          const simpleVehicleFormat = /\d+(\.\d+)?/g;
 
-        const matchesArray = substr.match(simpleVehicleFormat);
-        if (matchesArray != null) {
-          const id = parseInt(matchesArray[0], 10);
-          const x = (parseInt(matchesArray[1], 10) / videoW)
-          * this.windowW - this.coordinateOffset.x;
-          const y = (parseInt(matchesArray[2], 10) / videoH)
-          * this.windowH - this.coordinateOffset.y;
-          const pos = ts.tsVec2(x, y);
-          const simpleVehicleData = { id, position: pos };
-          formedData.push(simpleVehicleData);
+          const matchesArray = substr.match(simpleVehicleFormat);
+          if (matchesArray != null) {
+            const id = parseInt(matchesArray[0], 10);
+            const x = (parseInt(matchesArray[1], 10) / videoW)
+            * this.windowW - this.coordinateOffset.x;
+            const y = (parseInt(matchesArray[2], 10) / videoH)
+            * this.windowH - this.coordinateOffset.y;
+            const pos = ts.tsVec2(x, y);
+            const simpleVehicleData = { id, position: pos };
+            formedData.push(simpleVehicleData);
 
-          this.roadIntersection.tryAddSimpleVehicle(id, pos);
+            this.roadIntersection.tryAddSimpleVehicle(id, pos);
+          }
         }
       }
     }
-
     this.numberOfCars = this.roadIntersection.getSimpleVehicles().length;
   }
 
