@@ -1,24 +1,16 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 
-//Static code and data generator retrieved from: 
-//https://github.com/apexcharts/apexcharts.js/blob/master/samples/react/line/realtime.html
-//From the ApexCharts Documentation Website
+//Realtime graph from the ApexCharts Documentation Website
 //https://apexcharts.com/react-chart-demos/line-charts/realtime/
-//To be modified for future usage
-
-var LASTDATE = 0;
-var DATA: any[] = [];
-var data2: any[] = [];
+//https://github.com/apexcharts/apexcharts.js/blob/master/samples/react/line/realtime.html
 
 var arima_dataset: any[] = [];
 var mavg_dataset: any[] = [];
 var current_mavg: any[] = [];
+var current_arima: any[] = [];
 
 var COUNT = 0; 
-
-var TICKINTERVAL = 86400000; //number of milliseconds in a day
-let XAXISRANGE = 777600000;
 
 arima_dataset = [
   [0, 35],
@@ -33,7 +25,18 @@ arima_dataset = [
   [9, 35],
   [10, 23],
   [11, 24],
-  [12, 35]
+  [12, 35],
+  [13, 35],
+  [14, 23],
+  [15, 24],
+  [16, 35],
+  [17, 23],
+  [18, 24],
+  [19, 35],
+  [20, 23],
+  [21, 24],
+  [22, 35],
+  [23, 23],
 ]
 
 mavg_dataset = [
@@ -49,88 +52,34 @@ mavg_dataset = [
   [9, 34],
   [10, 25],
   [11, 29],
-  [12, 34]
+  [12, 34],
+  [13, 39],
+  [14, 23],
+  [15, 25],
+  [16, 30],
+  [17, 22],
+  [18, 21],
+  [19, 35],
+  [20, 25],
+  [21, 24],
+  [22, 34],
+  [23, 22],
 ]
 
-const getArima = () => {
-  //Logic to be implemented: 
-  //Check the current time, if the time is equal to 12:00 AM, then do the GET request via async fetch, retrieve ALL the dataset for the day. 
-}
+//Logic to be implemented: 
+//Check the current time, if the minutes are equal to 00, then retrieve the new data for the current hour. 
+//Check if the values in the graph are populated or not
 const getMovAvg = () => {
-  //Logic to be implemented: 
-  //Check the current time, if the minutes are equal to 00, then retrieve the new data for the current hour. 
-  //Check if the values in the graph are populated or not
-
-  if(COUNT < 13){
+  if(COUNT == 0){
+    for(var i = 0; i<arima_dataset.length; i++){
+      current_arima.push(arima_dataset[i]);
+    }
+  }
+  if(COUNT < 24){
     current_mavg.push(mavg_dataset[COUNT]);
   }
-
-
 }
 
-function getDayWiseTimeSeries(baseval: any, count: any, yrange: any) {
-  var i = 0;
-  while (i < count) {
-    var x = baseval;
-    var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-
-    DATA.push({
-      x, y
-    });
-    y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-    data2.push({
-      x, y
-    })
-    LASTDATE = baseval;
-    baseval += TICKINTERVAL; //baseval = baseval + tickinterval
-    i++;
-  }
-}
-
-//populate the initial first 10 values of x and y starting with this date, with range
-
-getDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 10, {
-  min: 10,
-  max: 90
-}) 
-
-function tryTime(baseval: any, count: any, yrange: any){
-  var i = 0;
-  while(i < count){
-    var x = baseval - (15 * TICKINTERVAL); 
-    //for var y, we would need to fetch some data. 
-    //
-  }
-}
-
-function getNewSeries(baseval: any, yrange: any) {
-  var newDate = baseval + TICKINTERVAL;
-  LASTDATE = newDate;
-
-  for(var i = 0; i< DATA.length - 10; i++) {
-    DATA[i].x = newDate - XAXISRANGE - TICKINTERVAL;
-    DATA[i].y = 0;
-    data2[i].x = newDate - XAXISRANGE - TICKINTERVAL;
-    data2[i].y = 0;
-  }
-
-  //Pushes values into the first array (data1)
-  DATA.push({
-    x: newDate,
-    y: Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
-  })
-
-  //Pushes values into the second array (data2)
-  data2.push({
-    x: newDate,
-    y: Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min,
-  })
-}
-
-function resetDATA(){
-  // Alternatively, you can also reset the DATA at certain intervals to prevent creating a huge series 
-  DATA = DATA.slice(DATA.length - 10, DATA.length);
-}
 interface ChartState{
   options: any,
   series: any
@@ -165,22 +114,34 @@ class RealTimeLine extends React.Component<{}, ChartState> {
           curve: 'smooth'
         },
         title: {
-          text: 'Moving Average and Prediction'
+          align: 'center',
+          text: 'Prediction vs Moving Average'
         },
         markers: {
           size: 0
         },
         xaxis: {
-          range: 10
+          range: 23,
+          title: {
+            text: "Hours",
+            align: "center"
+          }
+        },
+        yaxis: {
+          min: 10,
+          max: 50,
+          title: {
+            text: "Cars",
+          }
         },
         legend: {
-          show: false
+          show: true
         }
       },
       series:[
       {
         name: 'Prediction',
-        data: arima_dataset,
+        data: current_arima,
       },
       {
         name: 'Moving Average',
@@ -189,23 +150,21 @@ class RealTimeLine extends React.Component<{}, ChartState> {
       ]
     }
   }
+
+  //The data gets retrieved here, in future implementations: Use async fetch from the database
   componentDidMount() {
     window.setInterval(() => {
+      //Data gets populated here
+      //Datasets current_arima and current_mavg get updated here
       getMovAvg();
 
-  
+      //Execute the realtime function here, using the two below data arrays as datasets
       ApexCharts.exec('realtime', 'updateSeries', [
-        {
-          data: current_mavg,
-        },
-        {
-          data: arima_dataset,
-        }
+        {data: current_arima},
+        {data: current_mavg},
     ]);
-
     COUNT++; 
-
-    }, 1000)
+    }, 1000) 
   }
   render(){
     return(
