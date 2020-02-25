@@ -13,10 +13,7 @@ import {
   resetIntersection as resetCurrentIntersection,
   ResetIntersectionAction,
 } from '../../contexts/intersection';
-import {
-  STATE as cameraState,
-  getExistingCamera,
-} from '../../contexts/camera';
+import { STATE as cameraState, getExistingCamera } from '../../contexts/camera';
 import { getCamera } from '../../api/camera';
 
 const Body = styled.div`
@@ -115,23 +112,21 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
   }
 
   // component unmount resets the loaded data
-  public componentWillUnmount(): void {
-    // eslint-disable-next-line no-shadow
-    const { resetCurrentIntersection } = this.props;
-    resetCurrentIntersection();
-  }
+  // public componentWillUnmount(): void {
+  //   // eslint-disable-next-line no-shadow
+  //   const { resetCurrentIntersection } = this.props;
+  //   resetCurrentIntersection();
+  // }
 
   async getData(cameraId: string): Promise<any> {
     getCamera(cameraId).then((data) => {
       const { getExistingIntersection } = this.props;
-      getExistingIntersection((data.intersection_id).toString());
+      getExistingIntersection(data.intersection_id.toString());
     });
   }
 
   public render(): JSX.Element {
-    const {
-      intersectionId, intersectionLat, intersectionLng,
-    } = this.props;
+    const { intersectionId, intersectionLat, intersectionLng } = this.props;
 
     return (
       <div>

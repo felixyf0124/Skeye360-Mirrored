@@ -1,6 +1,7 @@
 /* eslint-disable  @typescript-eslint/camelcase */
 import React from 'react';
 import Chart from 'react-apexcharts';
+import ApexCharts from 'apexcharts';
 
 // Realtime graph from the ApexCharts Documentation Website
 // https://apexcharts.com/react-chart-demos/line-charts/realtime/
@@ -71,7 +72,7 @@ mavg_dataset = [
 // Check the current time, if the minutes are equal to 00,
 // then retrieve the new data for the current hour.
 // Check if the values in the graph are populated or not
-const getMovAvg = () => {
+const getMovAvg = (): void => {
   if (COUNT === 0) {
     /* eslint-disable no-plusplus */
     for (let i = 0; i < arima_dataset.length; i++) {
@@ -83,7 +84,7 @@ const getMovAvg = () => {
   }
 };
 
-interface ChartState{
+interface ChartState {
   options: any;
   series: any;
 }
@@ -156,8 +157,8 @@ class RealTimeLine extends React.Component<{}, ChartState> {
   }
 
   // The data gets retrieved here, in future implementations: Use async fetch from the database
-  componentDidMount() {
-    window.setInterval(() => {
+  public componentDidMount(): void {
+    window.setInterval((): any => {
       // Data gets populated here
       // Datasets current_arima and current_mavg get updated here
       getMovAvg();
@@ -173,10 +174,8 @@ class RealTimeLine extends React.Component<{}, ChartState> {
   }
 
   /* eslint-disable react/destructuring-assignment */
-  render() {
-    return (
-      <Chart options={this.state.options} series={this.state.series} type="line" />
-    );
+  public render(): JSX.Element {
+    return <Chart options={this.state.options} series={this.state.series} type="line" />;
   }
 }
 export default RealTimeLine;

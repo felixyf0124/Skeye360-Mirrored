@@ -127,11 +127,11 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
   }
 
   // component unmount resets the loaded data
-  public componentWillUnmount(): void {
-    // eslint-disable-next-line no-shadow
-    const { resetCurrentIntersection } = this.props;
-    resetCurrentIntersection();
-  }
+  // public componentWillUnmount(): void {
+  //   // eslint-disable-next-line no-shadow
+  //   const { resetCurrentIntersection } = this.props;
+  //   resetCurrentIntersection();
+  // }
 
   public render(): JSX.Element {
     const {
@@ -156,20 +156,6 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
                   />
                 )}
               </MapContainer>
-              <AverageMetricChartsContainer>
-                <h5>Average Cars</h5>
-                <h3>N/A</h3>
-              </AverageMetricChartsContainer>
-              <AverageMetricChartsContainer>
-                <h6>Average Gas Consumption</h6>
-                <h5>N/A L/100km</h5>
-              </AverageMetricChartsContainer>
-              <BigChartContainer>
-                <NorthChart />
-              </BigChartContainer>
-              <BigChartContainer>
-                <SouthChart />
-              </BigChartContainer>
               <BigChartContainer>
                 <RealTimeLine />
               </BigChartContainer>
@@ -183,16 +169,6 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
         <SideDrawer headerTitle={intersectionName} />
         <Body>
           <ChartHorizontalFlexBox>
-            <ChartVerticalFlexBox>
-              <AverageMetricChartsContainer>
-                <h5>Average Cars</h5>
-                <h3>N/A</h3>
-              </AverageMetricChartsContainer>
-              <AverageMetricChartsContainer>
-                <h5>Average Gas Consumption</h5>
-                <h3>N/A L/100km</h3>
-              </AverageMetricChartsContainer>
-            </ChartVerticalFlexBox>
             <MapContainer>
               {intersectionLat === '' ? (
                 <p>Loading...</p>
@@ -206,14 +182,6 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
             </MapContainer>
           </ChartHorizontalFlexBox>
           <ChartHorizontalFlexBox>
-            <ChartVerticalFlexBox>
-              <SmallChartContainer>
-                <NorthChart />
-              </SmallChartContainer>
-              <SmallChartContainer>
-                <SouthChart />
-              </SmallChartContainer>
-            </ChartVerticalFlexBox>
             <BigChartContainer>
               <RealTimeLine />
             </BigChartContainer>
