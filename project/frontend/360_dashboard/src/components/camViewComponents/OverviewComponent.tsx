@@ -80,6 +80,7 @@ const InnerDivHorizon = styled.div`
   flex-direction: row;
   color: white;
   margin-left: 10vw;
+  margin-top: -20vh;
 `;
 
 // Single Container Vertical
@@ -88,6 +89,15 @@ const InnerDivVertical = styled.div`
   flex-direction: column;
   align-items: center;
   color: white;
+`;
+
+// Single Container Vertical
+const InnerDivVerticalCam = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  margin-top: -20vh;
 `;
 
 // Container for the simulator
@@ -166,6 +176,9 @@ const skeyeStyles = {
     paddingBottom: 9,
     marginRight: -15,
   },
+  SimDiv: {
+    marginTop: -400,
+  },
 };
 
 class OverviewComponent extends React.Component<SimProps
@@ -192,11 +205,11 @@ class OverviewComponent extends React.Component<SimProps
             tlCombStates={tlCombStates}
           />
           <VerticalFlexBox>
-            <InnerDivVertical>
+            <InnerDivVerticalCam>
               <text style={skeyeStyles.Header}>Live Camera Feed</text>
               <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
-            </InnerDivVertical>
-            <InnerDivVertical>
+            </InnerDivVerticalCam>
+            <InnerDivVertical style={skeyeStyles.SimDiv}>
               <text style={skeyeStyles.Header}>Default Traffic Light</text>
               <SimContainer>
                 <Simulator
@@ -244,7 +257,7 @@ class OverviewComponent extends React.Component<SimProps
                 </InnerDivVertical>
               </div>
             </InnerDivHorizon>
-            <InnerDivVertical>
+            <InnerDivVertical style={skeyeStyles.SimDiv}>
               <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
               <SimContainer>
                 <Simulator
