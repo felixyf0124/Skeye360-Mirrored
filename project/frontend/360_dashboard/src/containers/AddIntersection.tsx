@@ -157,7 +157,6 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
     logClick('Added Intersection', user_id);
   };
 
-  const title = 'Add Intersection';
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -174,13 +173,13 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
     <ThemeProvider theme={addIntTheme}>
       <Body>
         <div>
-          <IconButton style={{ color: 'white', backgroundColor: '#04A777', marginTop: '1rem' }} onClick={handleClickOpen}>
+          <IconButton
+            style={{ color: 'white', backgroundColor: '#04A777', marginTop: '1rem' }}
+            onClick={handleClickOpen}
+          >
             <AddIcon />
           </IconButton>
-          <Dialog
-            open={open}
-            onClose={handleClose}
-          >
+          <Dialog open={open} onClose={handleClose}>
             <DialogContent>
               <div className={classes.content}>
                 {error !== '' ? (
@@ -247,7 +246,9 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                       />
                     </div>
                     <div className={classes.centeredBox}>
-                      <button className={classes.addButton} onClick={handleClose} type="submit">Add</button>
+                      <button className={classes.addButton} onClick={handleClose} type="submit">
+                        Add
+                      </button>
                     </div>
                   </div>
                 </form>

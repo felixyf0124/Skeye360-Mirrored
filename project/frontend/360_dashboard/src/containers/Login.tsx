@@ -185,7 +185,7 @@ const Logo = styled.img`
 const Login = (props: StateProps & DispatchProps): JSX.Element => {
   // state
   const [state, setState] = React.useState(props);
-  const { username, password, remMe } = state;
+  const { username, password } = state;
   const classes = useStyles();
   const history = useHistory();
 
@@ -298,7 +298,13 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               </div>
               <div className="form-group">
                 <div>
-                  <input name="remMe" checked={state.remMe} onChange={handleChange} type="checkbox" style={{ height: '1rem', width: '1rem', verticalAlign: 'middle' }} />
+                  <input
+                    name="remMe"
+                    checked={state.remMe}
+                    onChange={handleChange}
+                    type="checkbox"
+                    style={{ height: '1rem', width: '1rem', verticalAlign: 'middle' }}
+                  />
                   <div className={classes.checkBox}>Remember me</div>
                 </div>
               </div>
@@ -310,7 +316,9 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
               <div>
                 <p className={classes.texts} style={{ textAlign: 'center' }}>
                   Don&apos;t have an account?
-                  <a style={{ color: 'white', paddingLeft: '0.25rem' }} href="/register">Sign up</a>
+                  <a style={{ color: 'white', paddingLeft: '0.25rem' }} href="/register">
+                    Sign up
+                  </a>
                 </p>
               </div>
             </form>

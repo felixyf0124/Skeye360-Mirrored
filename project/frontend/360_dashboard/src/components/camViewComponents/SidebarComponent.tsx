@@ -11,7 +11,7 @@ import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
 import {
-  SKEYE_WHITE, SKEYE_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_RED, SKEYE_LIGHT_BLACK, SKEYE_GREEN,
+  SKEYE_WHITE, SKEYE_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_RED, SKEYE_LIGHT_BLACK,
 } from '../../css/custom';
 
 interface SimProps {
