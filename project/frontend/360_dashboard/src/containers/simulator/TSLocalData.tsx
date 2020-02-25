@@ -342,3 +342,49 @@ export async function tlArimaData(url: string): Promise<any> {
 
   return distribution;
 }
+
+/**
+ * hard coded string directions
+ * @param tlId
+ */
+export function getDirs(tlId: number): string {
+  // tl id 0
+  // e->w
+  // w->e
+  if (tlId === 0) {
+    return 'e<=>w';
+  }
+
+  // tl id 1
+  // e->w
+  // w->e
+  if (tlId === 1) {
+    return 'e->e,e->s,w->w,w->n';
+  }
+
+  // tl id 2
+  // e->n
+  // w->s
+  if (tlId === 2) {
+    return 'e->n,w->s';
+  }
+
+  // tl id 3
+  // s->w
+  // s->s
+  // s->n
+  // n->e
+  // n->s
+  // n->w
+  if (tlId === 3) {
+    return 's<=>n,s->w,s->s,n->e,n->w';
+  }
+
+  // tl id 4
+  // s->e
+  if (tlId === 4) {
+    return 's->e';
+  }
+
+  return '';
+}

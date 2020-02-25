@@ -12,6 +12,19 @@ interface SimProps {
     tlMode: number;
     onChangeTLMode: any;
     toggles: any;
+    tlStop: boolean;
+    onClickTLStop: any;
+    tlCombStates: Array<{
+        direction: string;
+        state: string;
+        state2: string;
+        countDown: string;
+        countDown2: string;
+        totalTime: string; // G+Y
+        totalTime2: string; // G+Y
+      }>;
+
+    onTLUpdate: any;
 }
 
 interface StateProps {
@@ -165,13 +178,19 @@ class OverviewComponent extends React.Component<SimProps
 
   public render(): JSX.Element {
     const {
-      camera_url, tlMode, onChangeTLMode, toggles,
+      intersectionName, camera_url, tlMode, onChangeTLMode, toggles,
+      tlStop, onClickTLStop, tlCombStates, onTLUpdate,
     } = this.props;
     // eslint-disable-next-line consistent-return
     return (
       <div>
         <HorizontalFlexBox>
-          <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode} />
+          <SidebarComponent
+            tlMode={tlMode}
+            onChangeTLMode={onChangeTLMode}
+            onClickTLStop={onClickTLStop}
+            tlCombStates={tlCombStates}
+          />
           <VerticalFlexBox>
             <InnerDivVertical>
               <text style={skeyeStyles.Header}>Live Camera Feed</text>
@@ -180,7 +199,13 @@ class OverviewComponent extends React.Component<SimProps
             <InnerDivVertical>
               <text style={skeyeStyles.Header}>Default Traffic Light Setting</text>
               <SimContainer>
-                <Simulator isSmartTL={false} tl_mode={tlMode} toggles={toggles} />
+                <Simulator
+                  isSmartTL={false}
+                  tl_mode={tlMode}
+                  toggles={toggles}
+                  tlStop={tlStop}
+                  onTLUpdate={onTLUpdate}
+                />
               </SimContainer>
             </InnerDivVertical>
           </VerticalFlexBox>
@@ -222,7 +247,13 @@ class OverviewComponent extends React.Component<SimProps
             <InnerDivVertical>
               <text style={skeyeStyles.Header}>Optimized Traffic Light Setting</text>
               <SimContainer>
-                <Simulator isSmartTL tl_mode={tlMode} toggles={toggles} />
+                <Simulator
+                  isSmartTL
+                  tl_mode={tlMode}
+                  toggles={toggles}
+                  tlStop={tlStop}
+                  onTLUpdate={onTLUpdate}
+                />
               </SimContainer>
             </InnerDivVertical>
           </VerticalFlexBox>

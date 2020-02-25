@@ -26,9 +26,6 @@ import {
   SKEYE_GREY, SKEYE_DARK_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_WHITE, SKEYE_GREEN,
 } from '../../css/custom';
 
-interface SimProps {
-  tl_mode: number;
-}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -212,8 +209,83 @@ const TabsComponents = (): JSX.Element => {
   });
   const [tlMode, setTlMode] = React.useState(0);
 
-  const onChangeTLMode = (index: number): void => {
+  const [tlStop, setTlStop] = React.useState(false);
+
+  const [tlStates, setTlStates] = React.useState([
+    {
+      direction: 'Directions',
+      state: 'State',
+      countDown: 'CD',
+      totalTime: 't(G+Y)', // G+Y
+    },
+  ]);
+  const [tlStates2, setTlStates2] = React.useState([
+    {
+      direction: 'Directions',
+      state: 'State',
+      countDown: 'CD',
+      totalTime: 't(G+Y)', // G+Y
+    },
+  ]);
+
+  const [tlCombStates, setTLCombStates] = React.useState([
+    {
+      direction: '',
+      state: '',
+      state2: '',
+      countDown: '',
+      countDown2: '',
+      totalTime: '', // G+Y
+      totalTime2: '', // G+Y
+    },
+  ]);
+
+  const onChangeTLMode = (index: number) => {
     setTlMode(index);
+  };
+
+  const onClickTLStop = () => {
+    setTlStop(!tlStop);
+  };
+
+  const onTLUpdate = (tls: Array<{
+    direction: string;
+    state: string;
+    countDown: string;
+    totalTime: string; // G+Y
+  }>, isSmartTL: boolean) => {
+    if (isSmartTL) {
+      setTlStates2(tls);
+    } else {
+      setTlStates(tls);
+    }
+    const newTLCombStates = new Array<{
+      direction: string;
+      state: string;
+      state2: string;
+      countDown: string;
+      countDown2: string;
+      totalTime: string; // G+Y
+      totalTime2: string; // G+Y
+    }>();
+    if (tlStates.length === tlStates2.length) {
+      for (let i = 0; i < tlStates.length; i += 1) {
+        const tlCombState = {
+          direction: tlStates[i].direction,
+          state: tlStates[i].state,
+          state2: tlStates2[i].state,
+          countDown: tlStates[i].countDown,
+          countDown2: tlStates2[i].countDown,
+          totalTime: tlStates[i].totalTime, // G+Y
+          totalTime2: tlStates2[i].totalTime, // G+Y
+        };
+        newTLCombStates.push(tlCombState);
+      }
+    }
+
+    setTLCombStates(newTLCombStates);
+
+    // console.log(tlCombStates);
   };
 
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number): void => {
@@ -249,7 +321,16 @@ const TabsComponents = (): JSX.Element => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <OverviewComponent toggles={state} tlMode={tlMode} onChangeTLMode={onChangeTLMode} key="1" />
+        <OverviewComponent
+          toggles={state}
+          tlMode={tlMode}
+          onChangeTLMode={onChangeTLMode}
+          tlStop={tlStop}
+          onClickTLStop={onClickTLStop}
+          tlCombStates={tlCombStates}
+          onTLUpdate={onTLUpdate}
+          key="1"
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <DataAnalyticsComponent />
@@ -258,7 +339,16 @@ const TabsComponents = (): JSX.Element => {
         <CameraComponent />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <SimulatorComponent toggles={state} tlMode={tlMode} onChangeTLMode={onChangeTLMode} key="2" />
+        <SimulatorComponent
+          toggles={state}
+          tlMode={tlMode}
+          onChangeTLMode={onChangeTLMode}
+          tlStop={tlStop}
+          onClickTLStop={onClickTLStop}
+          tlCombStates={tlCombStates}
+          onTLUpdate={onTLUpdate}
+          key="2"
+        />
       </TabPanel>
 
       <Modal

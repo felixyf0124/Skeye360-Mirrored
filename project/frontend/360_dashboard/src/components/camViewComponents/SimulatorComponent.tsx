@@ -9,6 +9,19 @@ interface SimProps {
   tlMode: number;
   onChangeTLMode: any;
   toggles: any;
+  tlStop: boolean;
+  onClickTLStop: any;
+  tlCombStates: Array<{
+    direction: string;
+    state: string;
+    state2: string;
+    countDown: string;
+    countDown2: string;
+    totalTime: string; // G+Y
+    totalTime2: string; // G+Y
+  }>;
+
+  onTLUpdate: any;
 }
 
 // Horizontal flexbox styling
@@ -76,24 +89,45 @@ const skeyeStyles = {
 
 const SimulatorComponent = (props: SimProps | any): JSX.Element => {
   // eslint-disable-next-line consistent-return
-  const { tlMode, onChangeTLMode, toggles } = props;
+  const {
+    tlMode, onChangeTLMode, toggles, tlStop, onClickTLStop,
+    tlCombStates, onTLUpdate,
+  } = props;
 
   return (
     <div>
       <text style={skeyeStyles.Title}>Simulation of Traffic</text>
       <HorizontalFlexBox>
-        <SidebarComponent tlMode={tlMode} onChangeTLMode={onChangeTLMode} />
+        <SidebarComponent
+          tlMode={tlMode}
+          onChangeTLMode={onChangeTLMode}
+          onClickTLStop={onClickTLStop}
+          tlCombStates={tlCombStates}
+        // tlStates2={tlStates2}
+        />
         <InnerDivHorizon>
           <InnerDivVerticalFirstSim>
             <text style={skeyeStyles.Header}>Optimized Traffic Light Setting</text>
             <SimContainer>
-              <Simulator isSmartTL tl_mode={tlMode} toggles={toggles} />
+              <Simulator
+                isSmartTL
+                tl_mode={tlMode}
+                toggles={toggles}
+                tlStop={tlStop}
+                onTLUpdate={onTLUpdate}
+              />
             </SimContainer>
           </InnerDivVerticalFirstSim>
           <InnerDivVerticalSecondSim>
             <text style={skeyeStyles.Header}>Default Traffic Light Setting</text>
             <SimContainer>
-              <Simulator isSmartTL={false} tl_mode={tlMode} toggles={toggles} />
+              <Simulator
+                isSmartTL={false}
+                tl_mode={tlMode}
+                toggles={toggles}
+                tlStop={tlStop}
+                onTLUpdate={onTLUpdate}
+              />
             </SimContainer>
           </InnerDivVerticalSecondSim>
         </InnerDivHorizon>

@@ -26,6 +26,8 @@ interface Props {
   isSmartTL: boolean;
   tl_mode: any;
   toggles: any;
+  tlStop: boolean;
+  onTLUpdate: any;
 }
 
 interface StateProps {
@@ -125,6 +127,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
   isStopClicked: boolean;
 
+  isTLStop: boolean;
+
   lastBlinkState: boolean;
 
   numberOfCars: number;
@@ -176,7 +180,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.app.stage.addChild(this.mapContainer);
     this.app.stage.addChild(this.objectContainer);
     this.app.stage.addChild(this.displayPlaneContainer);
-    this.app.stage.addChild(this.controlPanelContainer); // CONTROLPANEL
+    // this.app.stage.addChild(this.controlPanelContainer); // CONTROLPANEL
     this.backGroundG = new PIXI.Graphics();
     this.roadG = new PIXI.Graphics();
     this.trafficLightG = new PIXI.Graphics();
@@ -332,6 +336,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.isControlPanelShown = true;
     this.isCPAnimating = false;
     this.isStopClicked = false;
+    this.isTLStop = false;
     this.btnShowCP = new Btn(26, 26, '<', 0x51BCD8);
     this.btnStop = new Btn(160, 26, 'FORCE STOP', 0x51BCD8, 0.5);
     this.lastBlinkState = false;
@@ -597,7 +602,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     // the following two sequence matters, will affect the listeners;
     this.isControlPanelShown = false;
     this.isCPAnimating = true;
-    this.updateControlPanelDisplayState(0);
+    // this.updateControlPanelDisplayState(0);
     this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
     this.drawRoad();
     this.renderObjects();
@@ -804,17 +809,21 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * must bind with ticker
    */
   animation = (): void => {
-    if (this.btnShowCP.isPressed()) {
-      if (!this.isCPAnimating) {
-        this.isControlPanelShown = !this.isControlPanelShown;
-        this.isCPAnimating = true;
-      }
-    }
-    this.updateControlPanelDisplayState(8);
-    this.updateTLCountDownDisplayPanel();
-    if (this.btnStop.isPressed()) {
-      this.isStopClicked = !this.isStopClicked;
-      if (this.isStopClicked) {
+    // if (this.btnShowCP.isPressed()) {
+    //   if (!this.isCPAnimating) {
+    //     this.isControlPanelShown = !this.isControlPanelShown;
+    //     this.isCPAnimating = true;
+    //   }
+    // }
+    // this.updateControlPanelDisplayState(8);
+    // this.updateTLCountDownDisplayPanel();
+    // update outer display
+    this.updateTLDisplayState();
+    const { tlStop } = this.props;
+    if (true) {
+      // this.isStopClicked = !this.isStopClicked;
+      if (tlStop !== null || tlStop !== undefined) this.isTLStop = tlStop;
+      if (this.isTLStop) {
         for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
           this.roadIntersection.forceTLState(this.roadIntersection.getTrafficLightQueue()[i].getId(), 'red');
         }
@@ -1105,6 +1114,38 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     delete this.tlDefaultDistribution;
     delete this.trafficLightCounter;
     delete this.trafficLightCounterOffset;
+  }
+
+  /**
+   * update outer TL display
+   */
+  updateTLDisplayState(): void{
+    const { isSmartTL, onTLUpdate } = this.props;
+    const tlQueue = this.roadIntersection.getTrafficLightQueue();
+    const newTLStates = new Array<{
+      direction: string;
+      state: string;
+      countDown: string;
+      totalTime: string; // G+Y
+    }>();
+    // newTLStates.push(tlStates[0]);
+
+    for (let i = 0; i < tlQueue.length; i += 1) {
+      let CD = 'N/A';
+      const ttime = (Math.round(tlQueue[i].getTotalTime() * 10)
+      / 10).toString();
+      if (!Number.isNaN(tlQueue[i].getCountDown())) {
+        CD = Math.round(tlQueue[i].getCountDown()).toString();
+      }
+      const tlState = {
+        direction: tsData.getDirs(tlQueue[i].getId()),
+        state: tlQueue[i].getStatus(),
+        countDown: CD,
+        totalTime: ttime, // G+Y
+      };
+      newTLStates.push(tlState);
+    }
+    onTLUpdate(newTLStates, isSmartTL);
   }
 
   /**
