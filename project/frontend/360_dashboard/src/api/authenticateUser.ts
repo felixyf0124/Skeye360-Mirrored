@@ -3,6 +3,7 @@ const { REACT_APP_API_URL } = process.env;
 export interface Response {
   username: string;
   user_id: number;
+  is_staff: boolean;
 }
 
 const APIDomain = REACT_APP_API_URL;

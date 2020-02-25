@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from mixer.backend.django import mixer
 from rest_framework import status
 import pytest
@@ -43,11 +44,14 @@ class YourTestClass(TestCase):
         logging.info('test_intersection')
         # Create district
         district = mixer.blend('djangosite_api.District', district_name='Montreal_East', id=1)
+        user1 = User.objects.create_user(id=1, username="test_user_1", password="test_password")
+        user2 = User.objects.create_user(id=2, username="test_user_2", password="test_password")
         # Test post request
-        intersection1 = mixer.blend('djangosite_api.Intersection', intersection_name='Guy', district_id=district, id=1)
+        intersection1 = mixer.blend('djangosite_api.Intersection', intersection_name='Guy', district_id=district,
+                                    user_id=user1, id=1)
         self.assertEqual(intersection1.intersection_name, 'Guy')
         intersection2 = mixer.blend('djangosite_api.Intersection', intersection_name='Dupuis', district_id=district,
-                                    id=2)
+                                    user_id=user2, id=2)
         self.assertEqual(intersection2.intersection_name, 'Dupuis')
         # Test get request
         response = self.client.get('/api/intersection/?intersection_name=Guy')

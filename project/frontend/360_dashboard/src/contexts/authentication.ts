@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/camelcase */
 import { call, put, takeLatest } from 'redux-saga/effects';
 import authenticateUser, { Response as authResponse } from '../api/authenticateUser';
@@ -8,6 +9,7 @@ export interface STATE {
   timestamp: string;
   error: string;
   user_id: number;
+  is_staff: boolean;
 }
 
 // initState
@@ -17,6 +19,7 @@ export const initState: STATE = {
   timestamp: '',
   error: '',
   user_id: 0,
+  is_staff: false,
 };
 
 // actions
@@ -74,7 +77,12 @@ export const getUserData = (): GetUserDataAction => ({
 });
 
 // selector
+
+// check for authentication
 export const authenticated = (state: { authentication: STATE }): boolean => getUserData() && state.authentication.user_id !== 0 && state.authentication.username !== '';
+
+// check for staff privilege status
+export const isStaff = (state: { authentication: STATE }): boolean => state.authentication.is_staff === true;
 
 // logout
 export const logout = (): LogoutAction => ({
@@ -127,6 +135,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         timestamp: d.toUTCString(),
         error: '',
         user_id: data.user_id,
+        is_staff: data.is_staff,
       };
     }
     case AUTHENTICATE_FAIL: {
@@ -136,6 +145,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         timestamp: initState.timestamp,
         error: 'Invalid credentials.',
         user_id: initState.user_id,
+        is_staff: false,
       };
     }
     case GET_USER_DATA: {
@@ -149,6 +159,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
           timestamp: d.toUTCString(),
           error: '',
           user_id: JSON.parse(data).user_id,
+          is_staff: JSON.parse(data).is_staff,
         };
       }
       return initState;
@@ -161,6 +172,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         timestamp: initState.timestamp,
         error: initState.error,
         user_id: initState.user_id,
+        is_staff: initState.is_staff,
       };
     }
     default:

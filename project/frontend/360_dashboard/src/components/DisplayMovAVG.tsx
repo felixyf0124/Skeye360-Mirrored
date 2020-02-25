@@ -33,36 +33,33 @@ export const getCountMAvgNS = async (intersection_id: string): Promise<Response>
   return data;
 };
 
-
 // Function that generates the exact date last year to retrieve based on today's date as well as the day after it.
-function getDateLastYear() {
-  // create a new date object based on today and convert to ISO string
-  const today = new Date();
-  const todayToISO = today.toISOString();
+// function getDateLastYear(): any {
+//   // create a new date object based on today and convert to ISO string
+//   const today = new Date();
+//   const todayToISO = today.toISOString();
 
-  // Retrieve the year, month, day
-  const thisYear = parseInt(todayToISO.substring(0, 4), 10);
-  const thisMonth = parseInt(todayToISO.substring(5, 7), 10);
-  const thisDate = parseInt(todayToISO.substring(8, 10), 10);
+//   // Retrieve the year, month, day
+//   const thisYear = parseInt(todayToISO.substring(0, 4), 10);
+//   const thisMonth = parseInt(todayToISO.substring(5, 7), 10);
+//   const thisDate = parseInt(todayToISO.substring(8, 10), 10);
 
-  // Create a date object last year based on today and create one for the next day
-  const lastYearDate = new Date(thisYear - 1, thisMonth - 1, thisDate);
-  const lastYearNextDay = new Date(thisYear - 1, thisMonth - 1, thisDate + 1);
+//   // Create a date object last year based on today and create one for the next day
+//   const lastYearDate = new Date(thisYear - 1, thisMonth - 1, thisDate);
+//   const lastYearNextDay = new Date(thisYear - 1, thisMonth - 1, thisDate + 1);
 
-  // Convert the dates to ISO
-  const lastYearToISO = lastYearDate.toISOString();
-  const lastYearNextDayToISO = lastYearNextDay.toISOString();
+//   // Convert the dates to ISO
+//   const lastYearToISO = lastYearDate.toISOString();
+//   const lastYearNextDayToISO = lastYearNextDay.toISOString();
 
-  // Retrieve the date string in the YYYY/MM/DD format
-  const getLastYearDateFormat = lastYearToISO.substring(0, 10);
-  const getLastYearNextDayFormat = lastYearNextDayToISO.substring(0, 10);
+//   // Retrieve the date string in the YYYY/MM/DD format
+//   const getLastYearDateFormat = lastYearToISO.substring(0, 10);
+//   const getLastYearNextDayFormat = lastYearNextDayToISO.substring(0, 10);
 
-  return [getLastYearDateFormat, getLastYearNextDayFormat];
-}
+//   return [getLastYearDateFormat, getLastYearNextDayFormat];
+// }
 
-const datesLastYear = getDateLastYear();
-const date1 = datesLastYear[0];
-const date2 = datesLastYear[1];
+// const datesLastYear = getDateLastYear();
 
 /* Function that retrieves specific key-pair value of data:
   Input: array of different time entries for a specific direction.
@@ -80,15 +77,12 @@ class DisplayCount extends React.Component<{} & Props, StateProps> {
 
   public componentDidMount(): void {
     const { intersection_id } = this.props;
-    getCountMAvgNS(intersection_id)
-      .then(
-        (data: any) => {
-          this.setState({
-            isLoaded: true,
-            dataNS: splitIntoTwo(data),
-          });
-        },
-      );
+    getCountMAvgNS(intersection_id).then((data: any) => {
+      this.setState({
+        isLoaded: true,
+        dataNS: splitIntoTwo(data),
+      });
+    });
   }
 
   public render(): JSX.Element {

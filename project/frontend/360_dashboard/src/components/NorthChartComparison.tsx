@@ -67,7 +67,7 @@ const NorthChart = (): JSX.Element => {
 
   return (
     <div className="bar-chart">
-      <Chart options={state.options} series={state.series} type="line" width="500" height="" />
+      <Chart options={state.options} series={state.series} type="line" width="850" height="" />
     </div>
   );
 };

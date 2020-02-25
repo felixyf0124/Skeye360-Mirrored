@@ -4,21 +4,21 @@ import {
 } from 'react-router-dom';
 
 interface Props extends RouteComponentProps {
-  authenticated: boolean;
+  isStaff: boolean;
   children?: React.ReactNode;
 }
 
-// Handles and checks authentication to see if the user is logged in
-const SessionRoutes = (props: Props): JSX.Element => {
+// Handles and checks authentication to see if the logged in user is a staff
+const AdminRoutes = (props: Props): JSX.Element => {
   const {
-    authenticated, location, children, ...rest
+    isStaff, location, children, ...rest
   } = props;
-  if (authenticated) {
+  if (isStaff) {
     // eslint-disable-next-line react/jsx-props-no-spreading
     return <Route {...rest} render={(): React.ReactNode => children} />;
   }
 
-  return <Redirect to={{ pathname: '/login', search: location && location.search }} />;
+  return <Redirect to={{ pathname: '/', search: location && location.search }} />;
 };
 
-export default withRouter(SessionRoutes);
+export default withRouter(AdminRoutes);
