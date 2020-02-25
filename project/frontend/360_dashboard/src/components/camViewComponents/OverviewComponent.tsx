@@ -197,7 +197,7 @@ class OverviewComponent extends React.Component<SimProps
               <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
             </InnerDivVertical>
             <InnerDivVertical>
-              <text style={skeyeStyles.Header}>Default Traffic Light Setting</text>
+              <text style={skeyeStyles.Header}>Default Traffic Light</text>
               <SimContainer>
                 <Simulator
                   isSmartTL={false}
@@ -245,7 +245,7 @@ class OverviewComponent extends React.Component<SimProps
               </div>
             </InnerDivHorizon>
             <InnerDivVertical>
-              <text style={skeyeStyles.Header}>Optimized Traffic Light Setting</text>
+              <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
               <SimContainer>
                 <Simulator
                   isSmartTL

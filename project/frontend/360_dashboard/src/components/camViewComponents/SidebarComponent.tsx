@@ -203,9 +203,9 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
           <td style={tlData}>Type</td>
-          <td style={tlData}>{' State '}</td>
-          <td style={tlData}>{' CD '}</td>
-          <td style={tlData}>t(G+Y)</td>
+          <td style={tlData}>State</td>
+          <td style={tlData}>Count</td>
+          <td style={tlData}>Time</td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
           <td style={tlData}>non-smart</td>

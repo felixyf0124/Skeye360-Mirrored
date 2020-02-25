@@ -436,7 +436,8 @@ const TabsComponents = (): JSX.Element => {
                       label=""
                       style={skeyeStyles.ControlLabel}
                     />
-                    <Button
+                    {/* Do we need this save button? */}
+                    {/* <Button
                       variant="contained"
                       color="primary"
                       size="large"
@@ -444,7 +445,7 @@ const TabsComponents = (): JSX.Element => {
                       startIcon={<SaveIcon />}
                     >
                       Save
-                    </Button>
+                    </Button> */}
                   </BoxSettings>
                 </FormGroup>
               </BoxHorizontal>

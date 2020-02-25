@@ -107,7 +107,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
         />
         <InnerDivHorizon>
           <InnerDivVerticalFirstSim>
-            <text style={skeyeStyles.Header}>Optimized Traffic Light Setting</text>
+            <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
             <SimContainer>
               <Simulator
                 isSmartTL
@@ -119,7 +119,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
             </SimContainer>
           </InnerDivVerticalFirstSim>
           <InnerDivVerticalSecondSim>
-            <text style={skeyeStyles.Header}>Default Traffic Light Setting</text>
+            <text style={skeyeStyles.Header}>Default Traffic Light</text>
             <SimContainer>
               <Simulator
                 isSmartTL={false}
