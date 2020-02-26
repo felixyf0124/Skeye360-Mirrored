@@ -89,7 +89,8 @@ const Header = (props: StateProps & DispatchProps): JSX.Element => {
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  authenticated: authenticated(),
+  ...state,
+  authenticated: authenticated(state),
   user_id: state.authentication.user_id,
   log_message: '',
 });

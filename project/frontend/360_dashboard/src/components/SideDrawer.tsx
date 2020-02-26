@@ -247,7 +247,8 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  authenticated: authenticated(),
+  ...state,
+  authenticated: authenticated(state),
   user_id: state.authentication.user_id,
   log_message: '',
 });

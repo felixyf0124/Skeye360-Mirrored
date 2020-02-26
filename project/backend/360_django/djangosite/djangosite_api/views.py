@@ -18,35 +18,34 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 # For /api purpose
-
-
+# Ref: https://docs.djangoproject.com/en/3.0/topics/auth/default/
 # Register API
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
+    # fix django.request.log_response: Method Not Allowed:
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
         try:
-            raw_data = json.loads(request.body)
-
-            username = raw_data['username']
-            password = raw_data['password']
+            username = request.data.get('username')
+            password = request.data.get('password')
+            email = request.data.get('email')
+            is_staff = True if request.data.get('is_staff') == 'true' else False
 
             if User.objects.filter(username=username).exists():
-                return JsonResponse({'error': 'Username already exists'}, status=400)
+                return JsonResponse({'error': 'Username already exists'})
 
             created_user = User.objects.create_user(
-                username=username, password=password)
+                username=username, password=password, email=email, is_staff=is_staff)
 
             created_user.save()
 
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(username=username, password=password)
             login(request, user)
-
-            return JsonResponse({'username': username, 'user_id': user.id}, status=201)
+            return JsonResponse({'username': username, 'user_id': user.id, 'is_staff': user.is_staff}, status=201)
 
         except BaseException as error:
             print(repr(error))
@@ -57,26 +56,26 @@ class RegisterAPI(generics.GenericAPIView):
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
+    # fix django.request.log_response: Method Not Allowed:
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
         try:
-            raw_data = json.loads(request.body)
-            username = raw_data['username']
-            password = raw_data['password']
-
-            user = authenticate(request, username=username, password=password)
-
+            # return a list
+            username = request.data.get("username")
+            password = request.data.get("password")
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return JsonResponse({'username': username, 'user_id': user.id}, status=200)
+                return JsonResponse(
+                    {'username': username, 'user_id': user.id, 'is_staff': user.is_staff},
+                    status=200)
 
             return JsonResponse({'error': 'Wrong username and/or password'}, status=400)
 
         except BaseException as error:
-            print(str(error))
             return JsonResponse({'error': repr(error)}, status=400)
 
 
@@ -103,6 +102,7 @@ class TrafficLightViewSet(viewsets.ModelViewSet):
     queryset = Trafficlight.objects.all()
     serializer_class = TrafficLightSerializer
 
+
 # Ref: https://sam.hooke.me/note/2019/07/migrating-from-tastypie-to-django-rest-framework/
 class CountFilter(filters.FilterSet):
     time = filters.IsoDateTimeFilter(field_name='time')
@@ -111,7 +111,8 @@ class CountFilter(filters.FilterSet):
 
     class Meta:
         model = Count
-        fields = ['count_type', 'count_direction','intersection_id']
+        fields = ['count_type', 'count_direction', 'intersection_id']
+
 
 class CountViewSet(viewsets.ModelViewSet):
     queryset = Count.objects.all()
@@ -149,3 +150,9 @@ class UserlogViewSet(viewsets.ModelViewSet):
 class CameraViewSet(viewsets.ModelViewSet):
     queryset = Camera.objects.all()
     serializer_class = CameraSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    filter_fields = ('id', 'is_staff')

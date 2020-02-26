@@ -22,7 +22,7 @@ vm:
     # - [ "host_dir1", "vm_dir1" ]
     # - [ "host_dir2", "vm_dir2" ]
   ports:
-    # - [ vm_port, host_port ]
+     - [8000, 8000 ]
 
 ssh:
   dir: C:/users/vince/.ssh/

@@ -15,5 +15,6 @@ router.register('api/vehicle', VehicleViewSet, 'vehicle')
 router.register('api/pedestrian', PedestrianViewSet, 'pedestrian')
 router.register('api/userlog', UserlogViewSet, 'userlog')
 router.register('api/camera', CameraViewSet, 'camera')
+router.register('api/user', UserViewSet, 'user')
 
 urlpatterns = router.urls

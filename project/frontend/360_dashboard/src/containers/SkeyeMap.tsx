@@ -8,7 +8,7 @@ import {
   STATE as districtState,
   GetDistrictsAction,
   getDistricts,
-  resetIntersection,
+  resetDistricts,
   ResetDistrictAction,
 } from '../contexts/districts';
 
@@ -18,7 +18,7 @@ interface StateProps {
 
 interface DispatchProps {
   getDistricts(): GetDistrictsAction;
-  resetIntersection(): ResetDistrictAction;
+  resetDistricts(): ResetDistrictAction;
 }
 
 class SkeyeMap extends React.Component<(StateProps & DispatchProps) | any> {
@@ -34,11 +34,11 @@ class SkeyeMap extends React.Component<(StateProps & DispatchProps) | any> {
     getDistricts();
   }
 
-  public componentWillUnmount(): void {
-    // eslint-disable-next-line no-shadow
-    const { resetIntersection } = this.props;
-    resetIntersection();
-  }
+  // public componentWillUnmount(): void {
+  //   // eslint-disable-next-line no-shadow
+  //   const { resetDistricts } = this.props;
+  //   resetDistricts();
+  // }
 
   public render(): JSX.Element {
     const { districts } = this.props;
@@ -60,7 +60,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 const mapDispatchToProps: DispatchProps = {
   getDistricts,
-  resetIntersection,
+  resetDistricts,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SkeyeMap);

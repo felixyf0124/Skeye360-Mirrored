@@ -1,9 +1,11 @@
 """These classes are used to serialize data to send them in a JSON format"""
 from rest_framework import serializers
 from rest_meets_djongo.serializers import DjongoModelSerializer
+from django.contrib.auth.models import User
 from .models import *
 
-#https://github.com/nesdis/djongo/issues/298
+
+# https://github.com/nesdis/djongo/issues/298
 
 class CitySerializer(DjongoModelSerializer):
     class Meta:
@@ -18,10 +20,11 @@ class CameraSerializer(DjongoModelSerializer):
         model = Camera
         fields = ['id', 'camera_url', 'intersection_id']
 
+
 class CountSerializer(DjongoModelSerializer):
     class Meta:
         model = Count
-        fields = ['count_type', 'count_direction','count', 'time', 'intersection_id']
+        fields = ['count_type', 'count_direction', 'count', 'time', 'intersection_id']
 
 
 class IntersectionSerializer(DjongoModelSerializer):
@@ -30,12 +33,11 @@ class IntersectionSerializer(DjongoModelSerializer):
 
     class Meta:
         model = Intersection
-        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'counts', 'longitude', 'district_id']
+        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'counts', 'longitude', 'district_id', 'user_id']
 
 
 class DistrictSerializer(DjongoModelSerializer):
     intersections = IntersectionSerializer(many=True, read_only=True)
-    #id = serializers.IntegerField(read_only=True)
     district_name = serializers.CharField(required=True)
 
     class Meta:
@@ -47,6 +49,7 @@ class TrafficLightSerializer(DjongoModelSerializer):
     class Meta:
         model = Trafficlight
         fields = ['green_time', 'yellow_time', 'red_time']
+
 
 class TimeSerializer(DjongoModelSerializer):
     class Meta:
@@ -75,16 +78,33 @@ class PedestrianSerializer(DjongoModelSerializer):
 class UserlogSerializer(DjongoModelSerializer):
     class Meta:
         model = Userlog
-        fields = ['log_message', 'log_time', 'user_id']
+        fields = ['log_message', 'log_time']
 
 
 class RegisterSerializer(DjongoModelSerializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+    email = serializers.EmailField()
+    is_staff = serializers.BooleanField(initial=False, required=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'email', 'is_staff']
+
+
+class LoginSerializer(DjongoModelSerializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
     class Meta:
         model = User
         fields = ['username', 'password']
 
 
-class LoginSerializer(DjongoModelSerializer):
+class UserSerializer(DjongoModelSerializer):
+    user_logs = UserlogSerializer(many=True, read_only=True)
+    intersections = IntersectionSerializer(many=True, read_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'password']
+        fields = ['id', 'username', 'is_staff', 'user_logs', 'intersections']

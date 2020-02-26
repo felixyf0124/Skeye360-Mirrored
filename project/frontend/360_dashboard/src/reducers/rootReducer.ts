@@ -7,6 +7,7 @@ import districts, { STATE as districtState } from '../contexts/districts';
 import intersection, { STATE as intersectionState } from '../contexts/intersection';
 import count, { STATE as countState } from '../contexts/vehicleCounts';
 import camera, { STATE as cameraState } from '../contexts/camera';
+import traffic, { STATE as trafficState } from '../contexts/traffic';
 
 export interface RootState {
   authentication: authState;
@@ -15,6 +16,7 @@ export interface RootState {
   intersection: intersectionState;
   count: countState;
   camera: cameraState;
+  traffic: trafficState;
   router: RouterState;
 }
 
@@ -25,5 +27,6 @@ export default (history: History): any => combineReducers({
   intersection,
   count,
   camera,
+  traffic,
   router: connectRouter(history),
 });

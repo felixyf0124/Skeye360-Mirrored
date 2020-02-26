@@ -1,54 +1,31 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { RootState } from '../reducers/rootReducer';
-import SideDrawer from '../components/SideDrawer';
-import NorthChart from '../components/NorthChart';
+import { SKEYE_WHITE } from '../../css/custom';
+import NorthChart from '../NorthChart';
+import SouthChart from '../SouthChart';
+import GoogleMiniMap from '../GoogleMiniMap';
+import NorthChartComparison from '../NorthChartComparison';
+import { RootState } from '../../reducers/rootReducer';
 import {
   STATE as intersectionState,
   getExistingIntersection,
   resetIntersection as resetCurrentIntersection,
   ResetIntersectionAction,
-} from '../contexts/intersection';
-import { logClick } from '../contexts/LogClicks';
-import SouthChart from '../components/SouthChart';
-import GoogleMiniMap from '../components/GoogleMiniMap';
-import { SKEYE_WHITE, LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
-// import DisplayCount from '../components/DisplayMovAVG';
-import RealTimeLine from '../components/RealTimeLine';
+} from '../../contexts/intersection';
+import { STATE as cameraState, getExistingCamera } from '../../contexts/camera';
+import { getCamera } from '../../api/camera';
 
-// styled-component for map, chart and flexboxes
 const Body = styled.div`
   margin-left: 5rem;
-  margin-top: 5rem;
-  @media only screen and (max-width: ${MOBILE_DEVICE_MAX_WIDTH}px) {
-    & {
-      margin-left: 3rem;
-    }
-  }
+  margin-top: 2rem;
 `;
 
 const MapContainer = styled.div`
   position: relative;
   height: 30vh;
-  width: 80vw;
+  width: 90vw;
   margin: 1rem;
-`;
-
-const AverageMetricChartsContainer = styled.div`
-  background-color: ${SKEYE_WHITE};
-  height: 13vh;
-  width: 20vw;
-  position: relative;
-  margin: 1rem;
-  vertical-align: middle;
-  text-align: center;
-  @media only screen and (max-width: ${LOW_RES}px) {
-    & {
-      width: 80vw;
-    }
-  }
 `;
 
 // Smaller charts for the bottom left side charts.
@@ -62,15 +39,14 @@ const SmallChartContainer = styled.div`
 // Bigger chart on the bottom right side chart.
 const BigChartContainer = styled.div`
   background-color: ${SKEYE_WHITE};
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
   width: 70vw;
   margin: 1rem;
-
-  @media only screen and (max-width: ${LOW_RES}px) {
-    & {
-      width: 80vw;
-    }
-  }
 `;
 
 // Generic flexboxes styling
@@ -90,40 +66,49 @@ const ChartHorizontalFlexBox = styled.div`
   justify-content: center;
   align-items: stretch;
   align-content: stretch;
-  @media only screen and (max-width: ${LOW_RES}px) {
-    & {
-      justify-content: space-around;
-      align-items: space-around;
-      align-content: space-around;
-      width: 80vw;
-    }
   }
 `;
+
+const skeyeStyles = {
+  Title: {
+    color: SKEYE_WHITE,
+    fontSize: 28,
+    marginBottom: 4,
+    fontWeight: 900,
+  },
+  Header: {
+    color: SKEYE_WHITE,
+    fontSize: 20,
+    marginBottom: 4,
+    fontWeight: 900,
+  },
+};
 
 // state & props
 interface StateProps {
   intersection: intersectionState;
+  camera: cameraState;
   intersectionId: string;
   intersectionName: string;
   intersectionLat: string;
   intersectionLng: string;
+  cameraId: string;
   error: string;
   user_id: number;
 }
 
 interface DispatchProps {
   getExistingIntersection: (id: string) => any;
+  getExistingCamera: (id: string) => any;
   resetCurrentIntersection(): ResetIntersectionAction;
-  logClick: (log_message: string, user_id: number) => any;
 }
 
-// StreetView class
-class StreetView extends React.Component<StateProps & DispatchProps> {
+class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps> {
   // component mount will fetch existing intersection
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
-    const { intersectionId, getExistingIntersection } = this.props;
-    getExistingIntersection(intersectionId);
+    const { cameraId } = this.props;
+    this.getData(cameraId);
   }
 
   // component unmount resets the loaded data
@@ -133,40 +118,19 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
   //   resetCurrentIntersection();
   // }
 
-  public render(): JSX.Element {
-    const {
-      intersectionId, intersectionName, intersectionLat, intersectionLng,
-    } = this.props;
+  async getData(cameraId: string): Promise<any> {
+    getCamera(cameraId).then((data) => {
+      const { getExistingIntersection } = this.props;
+      getExistingIntersection(data.intersection_id.toString());
+    });
+  }
 
-    // components render
-    if (window.innerWidth < LOW_RES) {
-      return (
-        <div>
-          <SideDrawer headerTitle={intersectionName} />
-          <Body>
-            <ChartVerticalFlexBox>
-              <MapContainer>
-                {intersectionLat === '' ? (
-                  <p>Loading...</p>
-                ) : (
-                  <GoogleMiniMap
-                    intersectionId={intersectionId}
-                    intersectionLat={intersectionLat}
-                    intersectionLng={intersectionLng}
-                  />
-                )}
-              </MapContainer>
-              <BigChartContainer>
-                <RealTimeLine />
-              </BigChartContainer>
-            </ChartVerticalFlexBox>
-          </Body>
-        </div>
-      );
-    }
+  public render(): JSX.Element {
+    const { intersectionId, intersectionLat, intersectionLng } = this.props;
+
     return (
       <div>
-        <SideDrawer headerTitle={intersectionName} />
+        <text style={skeyeStyles.Title}>Data Analytics</text>
         <Body>
           <ChartHorizontalFlexBox>
             <MapContainer>
@@ -182,8 +146,16 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
             </MapContainer>
           </ChartHorizontalFlexBox>
           <ChartHorizontalFlexBox>
+            <ChartVerticalFlexBox>
+              <SmallChartContainer>
+                <NorthChart />
+              </SmallChartContainer>
+              <SmallChartContainer>
+                <SouthChart />
+              </SmallChartContainer>
+            </ChartVerticalFlexBox>
             <BigChartContainer>
-              <RealTimeLine />
+              <NorthChartComparison />
             </BigChartContainer>
           </ChartHorizontalFlexBox>
         </Body>
@@ -195,9 +167,11 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
 // state mapping
 const mapStateToProps = (state: RootState): StateProps => ({
   intersection: state.intersection,
-  intersectionId: state.router.location.pathname.substring(
+  cameraId: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
   ),
+  camera: state.camera,
+  intersectionId: state.camera.intersection_id.toString(),
   intersectionName: state.intersection.intersection_name,
   intersectionLat: state.intersection.latitude,
   intersectionLng: state.intersection.longitude,
@@ -208,8 +182,8 @@ const mapStateToProps = (state: RootState): StateProps => ({
 // props dispatching
 const mapDispatchToProps: DispatchProps = {
   getExistingIntersection,
+  getExistingCamera,
   resetCurrentIntersection,
-  logClick,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(StreetView);
+export default connect(mapStateToProps, mapDispatchToProps)(DataAnalyticsComponent);

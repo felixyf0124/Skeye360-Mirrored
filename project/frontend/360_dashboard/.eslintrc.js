@@ -50,7 +50,9 @@ module.exports = {
         "allow": "single-child"
       }
     ],
+    "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/camelcase": "off",
     "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
     '@typescript-eslint/no-var-requires': 'off',
     "linebreak-style": 0,
