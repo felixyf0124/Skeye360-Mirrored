@@ -11,7 +11,10 @@ import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
 import {
-  SKEYE_WHITE, SKEYE_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_RED, SKEYE_LIGHT_BLACK, SKEYE_GREEN, SKEYE_DARK_GREY,
+  SKEYE_WHITE, SKEYE_GREY,
+  SKEYE_LIGHT_DARK_GREY, SKEYE_RED,
+  SKEYE_LIGHT_BLACK, SKEYE_GREEN,
+  SKEYE_DARK_GREY,
 } from '../../css/custom';
 
 interface SimProps {
@@ -104,9 +107,8 @@ const useStyles = makeStyles(() => createStyles({
     '*::-webkit-scrollbar-thumb': {
       backgroundColor: SKEYE_GREEN,
       borderRadius: '10px',
-    }
+    },
   },
-
 }));
 
 // Personalized styles based on our UI

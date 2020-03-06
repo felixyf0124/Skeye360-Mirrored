@@ -11,13 +11,12 @@ import Box from '@material-ui/core/Box';
 import SettingsIcon from '@material-ui/icons/Settings';
 import styled from 'styled-components';
 import {
-  Button, FormControlLabel, Switch, withStyles, FormGroup,
+  FormControlLabel, Switch, withStyles, FormGroup,
 } from '@material-ui/core';
 
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import SaveIcon from '@material-ui/icons/Save';
 import DataAnalyticsComponent from './DataAnalyticsComponent';
 import SimulatorComponent from './SimulatorComponent';
 import CameraComponent from './CameraComponent';
@@ -240,11 +239,11 @@ const TabsComponents = (): JSX.Element => {
     },
   ]);
 
-  const onChangeTLMode = (index: number) => {
+  const onChangeTLMode = (index: number): any => {
     setTlMode(index);
   };
 
-  const onClickTLStop = () => {
+  const onClickTLStop = (): any => {
     setTlStop(!tlStop);
   };
 
@@ -253,7 +252,7 @@ const TabsComponents = (): JSX.Element => {
     state: string;
     countDown: string;
     totalTime: string; // G+Y
-  }>, isSmartTL: boolean) => {
+  }>, isSmartTL: boolean): any => {
     if (isSmartTL) {
       setTlStates2(tls);
     } else {
