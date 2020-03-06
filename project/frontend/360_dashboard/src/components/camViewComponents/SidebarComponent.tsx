@@ -1,3 +1,5 @@
+// References for the collapsable component: https://material-ui.com/components/expansion-panels/#SimpleExpansionPanel.tsx
+
 import React from 'react';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -10,12 +12,15 @@ import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import {
   SKEYE_WHITE, SKEYE_GREY,
   SKEYE_LIGHT_DARK_GREY, SKEYE_RED,
   SKEYE_LIGHT_BLACK, SKEYE_GREEN,
   SKEYE_DARK_GREY,
 } from '../../css/custom';
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 interface SimProps {
   tlMode: number;
@@ -45,6 +50,7 @@ const useStyles = makeStyles(() => createStyles({
   sidebar: {
     backgroundColor: SKEYE_LIGHT_BLACK,
     width: `${width}vw`,
+    minHeight: '22vw',
     maxHeight: '47vw',
   },
   content: {
@@ -149,6 +155,16 @@ const skeyeStyles = {
   StopIcon: {
     marginRight: 10,
   },
+  Expansion: {
+    backgroundColor: SKEYE_LIGHT_BLACK,
+  },
+  ExpansionIcon: {
+    color: SKEYE_WHITE,
+  },
+  SimMenuIcon: {
+    color: SKEYE_GREEN,
+    marginRight: 10,
+  }
 
 };
 
@@ -251,85 +267,135 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         <div className={classes.titleBox}>
           <text style={skeyeStyles.Title}> Options for Simulator</text>
         </div>
-        <text style={skeyeStyles.Header}> Modes </text>
-        <Divider classes={{ root: classes.dividerGrey }} />
-        <List>
-          <ListItem
-            button
-            selected={selectedIndex === 0}
-            classes={{ root: classes.root, selected: classes.selected }}
-            onClick={(event): void => onClickListItem(event, 0)}
-          >
-            <ListItemIcon style={skeyeStyles.IconStyle}>
-              <TrendingUpIcon />
-            </ListItemIcon>
-            <ListItemText style={skeyeStyles.ListItemStyle}>
-              Arima
-            </ListItemText>
-          </ListItem>
-
-          <ListItem
-            button
-            selected={selectedIndex === 1}
-            classes={{ root: classes.root, selected: classes.selected }}
-            onClick={(event): void => onClickListItem(event, 1)}
-          >
-            <ListItemIcon style={skeyeStyles.IconStyle}>
-              <DirectionsWalkIcon />
-            </ListItemIcon>
-            <ListItemText style={skeyeStyles.ListItemStyle}>
-              Pedestrians
-            </ListItemText>
-          </ListItem>
-
-          <ListItem
-            button
-            selected={selectedIndex === 2}
-            classes={{ root: classes.root, selected: classes.selected }}
-            onClick={(event): void => onClickListItem(event, 2)}
-          >
-            <ListItemIcon style={skeyeStyles.IconStyle}>
-              <TrackChangesIcon />
-            </ListItemIcon>
-            <ListItemText style={skeyeStyles.ListItemStyle}>
-              Real-Time
-            </ListItemText>
-          </ListItem>
-        </List>
+        
         <Divider classes={{ root: classes.dividerWhite }} />
-        <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
-        <Divider classes={{ root: classes.dividerGrey }} />
 
-        <br />
-        {/* TO DO ADD TRAFFIC LIGHT DATA HERE */}
-        <table style={{ display: 'block' }}>
-          <tbody className={classes.tlTable}>
-            {tlDiv}
-          </tbody>
-        </table>
+        {/* For the modes options */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.ExpansionIcon}/>}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <text style={skeyeStyles.Header}> Modes </text>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <List>
+              <ListItem
+                button
+                selected={selectedIndex === 0}
+                classes={{ root: classes.root, selected: classes.selected }}
+                onClick={(event): void => onClickListItem(event, 0)}
+              >
+                <ListItemIcon style={skeyeStyles.IconStyle}>
+                  <TrendingUpIcon />
+                </ListItemIcon>
+                <ListItemText style={skeyeStyles.ListItemStyle}>
+                  Arima
+                </ListItemText>
+              </ListItem>
 
-        <br />
+              <ListItem
+                button
+                selected={selectedIndex === 1}
+                classes={{ root: classes.root, selected: classes.selected }}
+                onClick={(event): void => onClickListItem(event, 1)}
+              >
+                <ListItemIcon style={skeyeStyles.IconStyle}>
+                  <DirectionsWalkIcon />
+                </ListItemIcon>
+                <ListItemText style={skeyeStyles.ListItemStyle}>
+                  Pedestrians
+                </ListItemText>
+              </ListItem>
 
-        <Divider classes={{ root: classes.dividerWhite }} />
-        <text style={skeyeStyles.Header}> Simulator </text>
-        <Divider classes={{ root: classes.dividerGrey }} />
-
-        <Button variant="contained" style={skeyeStyles.OfflineButton}>START</Button>
+              <ListItem
+                button
+                selected={selectedIndex === 2}
+                classes={{ root: classes.root, selected: classes.selected }}
+                onClick={(event): void => onClickListItem(event, 2)}
+              >
+                <ListItemIcon style={skeyeStyles.IconStyle}>
+                  <TrackChangesIcon />
+                </ListItemIcon>
+                <ListItemText style={skeyeStyles.ListItemStyle}>
+                  Real-Time
+                </ListItemText>
+              </ListItem>
+            </List>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
 
         <Divider classes={{ root: classes.dividerWhite }} />
-        <text style={skeyeStyles.Header}> Stop all traffic lights </text>
-        <Divider classes={{ root: classes.dividerGrey }} />
 
-        <Button
-          variant="contained"
-          style={skeyeStyles.EmergencyButton}
-          onClick={onClickTLStop}
-        >
-          {' '}
-          <ReportIcon style={skeyeStyles.StopIcon} />
-          {' '}
-          STOP
-        </Button>
+        {/* For the Traffic Light Comparison */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.ExpansionIcon}/>}
+            aria-controls="panel2a-content"
+            id="panel2a-header"
+          >
+            
+            <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <table style={{ display: 'block' }}>
+              <tbody className={classes.tlTable}>
+                {tlDiv}
+              </tbody>
+            </table>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+
+        <Divider classes={{ root: classes.dividerWhite }} />
+
+        {/* For the simulator options */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.ExpansionIcon}/>}
+            aria-controls="panel3a-content"
+            id="panel3a-header"
+          >
+            <text style={skeyeStyles.Header}> Simulator </text>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Button variant="contained" style={skeyeStyles.OfflineButton}>
+              <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon}/>
+              START
+            </Button>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+
+        <Divider classes={{ root: classes.dividerWhite }} />
+
+        {/* For the emergency option */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.ExpansionIcon}/>}
+            aria-controls="panel4a-content"
+            id="panel4a-header"
+          >
+              <text style={skeyeStyles.Header}> Emergency Mode </text>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Button
+              variant="contained"
+              style={skeyeStyles.EmergencyButton}
+              onClick={onClickTLStop}
+            >
+              {' '}
+              <ReportIcon style={skeyeStyles.StopIcon} />
+              {' '}
+              STOP
+            </Button>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+
+        <Divider classes={{ root: classes.dividerWhite }} />
       </div>
     </div>
   );
