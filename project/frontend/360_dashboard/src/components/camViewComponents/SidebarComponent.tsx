@@ -42,12 +42,15 @@ const useStyles = makeStyles(() => createStyles({
   sidebar: {
     backgroundColor: SKEYE_LIGHT_BLACK,
     width: `${width}vw`,
+    maxHeight: '47vw',
   },
   content: {
     textAlign: 'left',
     marginLeft: 10,
     marginTop: 10,
     paddingTop: 8,
+    overflowY: 'scroll',
+    maxHeight: '45vw',
   },
   titleBox: {
     backgroundColor: SKEYE_GREY,
