@@ -13,14 +13,17 @@ import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import SettingsIcon from '@material-ui/icons/Settings';
 import {
   SKEYE_WHITE, SKEYE_GREY,
   SKEYE_LIGHT_DARK_GREY, SKEYE_RED,
   SKEYE_LIGHT_BLACK, SKEYE_GREEN,
   SKEYE_DARK_GREY,
+  SKEYE_BRIGHT_GREEN,
 } from '../../css/custom';
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import styled from 'styled-components';
 
 interface SimProps {
   tlMode: number;
@@ -37,6 +40,12 @@ interface SimProps {
   }>;
 
 }
+
+// Horizontal box for the entire component
+const DivVertical = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
 
 const width = 10;
 
@@ -135,7 +144,7 @@ const skeyeStyles = {
     color: SKEYE_GREY,
     fontSize: 15,
   },
-  OfflineButton: {
+  ButtonStyle: {
     backgroundColor: SKEYE_LIGHT_DARK_GREY,
     color: SKEYE_WHITE,
     marginTop: 8,
@@ -157,15 +166,23 @@ const skeyeStyles = {
   },
   Expansion: {
     backgroundColor: SKEYE_LIGHT_BLACK,
+    marginLeft: `-1vw`,
   },
-  ExpansionIcon: {
-    color: SKEYE_WHITE,
+  ExpansionDetails: {
+    marginLeft: `-0.25vw`,
   },
   SimMenuIcon: {
-    color: SKEYE_GREEN,
+    color: SKEYE_BRIGHT_GREEN,
     marginRight: 10,
-  }
-
+  },
+  SettingsMenuIcon: {
+    color: SKEYE_WHITE,
+    marginRight: 10,
+  },
+  TextMessage: {
+    color: SKEYE_WHITE,
+    fontSize: 12,
+  },
 };
 
 // Creates and returns a component for the sidebar that will be used in the simulator
@@ -273,14 +290,14 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         {/* For the modes options */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.ExpansionIcon}/>}
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle}/>}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
             <text style={skeyeStyles.Header}> Modes </text>
             <Divider classes={{ root: classes.dividerGrey }} />
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
             <List>
               <ListItem
                 button
@@ -332,7 +349,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         {/* For the Traffic Light Comparison */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.ExpansionIcon}/>}
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle}/>}
             aria-controls="panel2a-content"
             id="panel2a-header"
           >
@@ -340,7 +357,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
             <Divider classes={{ root: classes.dividerGrey }} />
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
             <table style={{ display: 'block' }}>
               <tbody className={classes.tlTable}>
                 {tlDiv}
@@ -354,18 +371,24 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         {/* For the simulator options */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.ExpansionIcon}/>}
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle}/>}
             aria-controls="panel3a-content"
             id="panel3a-header"
           >
             <text style={skeyeStyles.Header}> Simulator </text>
             <Divider classes={{ root: classes.dividerGrey }} />
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Button variant="contained" style={skeyeStyles.OfflineButton}>
-              <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon}/>
-              START
-            </Button>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+            <DivVertical>
+              <Button variant="contained" style={skeyeStyles.ButtonStyle}>
+                <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon}/>
+                START
+              </Button>
+              <Button variant="contained" style={skeyeStyles.ButtonStyle}>
+                <SettingsIcon style={skeyeStyles.SettingsMenuIcon}/>
+                SETTINGS
+              </Button>
+            </DivVertical>
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
@@ -374,24 +397,27 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         {/* For the emergency option */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.ExpansionIcon}/>}
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle}/>}
             aria-controls="panel4a-content"
             id="panel4a-header"
           >
               <text style={skeyeStyles.Header}> Emergency Mode </text>
             <Divider classes={{ root: classes.dividerGrey }} />
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Button
-              variant="contained"
-              style={skeyeStyles.EmergencyButton}
-              onClick={onClickTLStop}
-            >
-              {' '}
-              <ReportIcon style={skeyeStyles.StopIcon} />
-              {' '}
-              STOP
-            </Button>
+          </ExpansionPanelSummary >
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+            <DivVertical>
+              <text style={skeyeStyles.TextMessage}> To change all traffic lights to red for emergency operations </text>
+              <Button
+                variant="contained"
+                style={skeyeStyles.EmergencyButton}
+                onClick={onClickTLStop}
+              >
+                {' '}
+                <ReportIcon style={skeyeStyles.StopIcon} />
+                {' '}
+                STOP
+              </Button>
+            </DivVertical>
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
