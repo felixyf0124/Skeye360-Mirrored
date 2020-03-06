@@ -384,10 +384,10 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
                 <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon}/>
                 START
               </Button>
-              <Button variant="contained" style={skeyeStyles.ButtonStyle}>
+              {/* <Button variant="contained" style={skeyeStyles.ButtonStyle}>
                 <SettingsIcon style={skeyeStyles.SettingsMenuIcon}/>
                 SETTINGS
-              </Button>
+              </Button> */}
             </DivVertical>
           </ExpansionPanelDetails>
         </ExpansionPanel>
