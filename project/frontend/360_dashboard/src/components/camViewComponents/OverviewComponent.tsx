@@ -80,7 +80,8 @@ const InnerDivHorizon = styled.div`
   flex-direction: row;
   color: white;
   margin-left: 10vw;
-  margin-top: -20vh;
+  // margin-top: -20vh;
+  margin-top: -0.4vh;
 `;
 
 // Single Container Vertical
@@ -97,7 +98,8 @@ const InnerDivVerticalCam = styled.div`
   flex-direction: column;
   align-items: center;
   color: white;
-  margin-top: -20vh;
+  // margin-top: -10vh;
+  // margin-top: -20vh;
 `;
 
 // Container for the simulator
@@ -175,7 +177,7 @@ const skeyeStyles = {
     marginRight: -15,
   },
   SimDiv: {
-    marginTop: -400,
+    // marginTop: -400,
   },
 };
 
