@@ -11,7 +11,7 @@ import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
 import {
-  SKEYE_WHITE, SKEYE_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_RED, SKEYE_LIGHT_BLACK,
+  SKEYE_WHITE, SKEYE_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_RED, SKEYE_LIGHT_BLACK, SKEYE_GREEN, SKEYE_DARK_GREY,
 } from '../../css/custom';
 
 interface SimProps {
@@ -51,6 +51,7 @@ const useStyles = makeStyles(() => createStyles({
     paddingTop: 8,
     overflowY: 'scroll',
     maxHeight: '45vw',
+
   },
   titleBox: {
     backgroundColor: SKEYE_GREY,
@@ -90,6 +91,20 @@ const useStyles = makeStyles(() => createStyles({
     margin: 'auto',
     // width: `100%`,
     display: 'table-row',
+  },
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0.3em',
+    },
+    '*::-webkit-scrollbar-track': {
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.5)',
+      backgroundColor: SKEYE_DARK_GREY,
+      borderRadius: '0.5em',
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: SKEYE_GREEN,
+      borderRadius: '10px',
+    }
   },
 
 }));
