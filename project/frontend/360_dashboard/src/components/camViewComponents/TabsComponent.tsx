@@ -313,11 +313,13 @@ const TabsComponents = (): JSX.Element => {
           <Tab label="Camera" {...props(2)} style={skeyeStyles.TabOnly} />
           <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
 
+          {value === 0 || value === 3 ? 
           <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
             <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
               <SettingsIcon />
             </button>
           </BoxSettingsMenu>
+          : null }
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
