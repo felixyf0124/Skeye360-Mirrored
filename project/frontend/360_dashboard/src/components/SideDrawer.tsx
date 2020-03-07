@@ -49,7 +49,7 @@ interface DispatchProps {
 
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
-const drawerWidth = 240;
+const drawerWidth = 185;
 
 // CSS for the drawer and header
 // Uses useStyles and makeStyles which is integrated in material-UI
@@ -193,9 +193,6 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
         }}
       >
         <div className={classes.toolbar} style={{ justifyContent: 'space-between' }}>
-          <h6 style={{ paddingLeft: '65px' }}>
-            <Logo src="/emblem.png" alt="LOGO" />
-          </h6>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon className={classes.iconStyle} />
