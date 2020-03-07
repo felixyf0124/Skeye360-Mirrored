@@ -308,7 +308,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
                   <TrendingUpIcon />
                 </ListItemIcon>
                 <ListItemText style={skeyeStyles.ListItemStyle}>
-                  Arima
+                  SkeYe AI
                 </ListItemText>
               </ListItem>
 
@@ -326,7 +326,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
                 </ListItemText>
               </ListItem>
 
-              <ListItem
+              {/* <ListItem
                 button
                 selected={selectedIndex === 2}
                 classes={{ root: classes.root, selected: classes.selected }}
@@ -338,7 +338,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
                 <ListItemText style={skeyeStyles.ListItemStyle}>
                   Real-Time
                 </ListItemText>
-              </ListItem>
+              </ListItem> */}
             </List>
           </ExpansionPanelDetails>
         </ExpansionPanel>

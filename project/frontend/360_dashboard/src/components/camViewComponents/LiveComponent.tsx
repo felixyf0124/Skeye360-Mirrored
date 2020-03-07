@@ -236,7 +236,7 @@ class LiveComponent extends React.Component<
               </CamContainer>
             </InnerDivVerticalCam>
             <InnerDivVerticalSim>
-              <text style={skeyeStyles.Header}>Default Traffic Light</text>
+              <text style={skeyeStyles.Header}>Simulator with Live Feed</text>
               <SimContainer>
                 <Simulator
                   isSmartTL={false}
