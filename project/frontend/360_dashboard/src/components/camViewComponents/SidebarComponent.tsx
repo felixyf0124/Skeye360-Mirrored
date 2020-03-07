@@ -69,15 +69,14 @@ const useStyles = makeStyles(() => createStyles({
     paddingTop: 8,
     overflowY: 'scroll',
     maxHeight: '45vw',
-
   },
   titleBox: {
-    backgroundColor: SKEYE_GREY,
+    backgroundColor: SKEYE_LIGHT_DARK_GREY,
     marginRight: 10,
     marginTop: 10,
     marginBottom: 10,
-    paddingTop: 2,
-    paddingBottom: 2,
+    paddingTop: 4,
+    paddingBottom: 4,
   },
   dividerWhite: {
     backgroundColor: SKEYE_WHITE,
