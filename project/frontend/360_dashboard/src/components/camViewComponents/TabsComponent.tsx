@@ -11,17 +11,17 @@ import Box from '@material-ui/core/Box';
 import SettingsIcon from '@material-ui/icons/Settings';
 import styled from 'styled-components';
 import {
-  Button, FormControlLabel, Switch, withStyles, FormGroup,
+  FormControlLabel, Switch, withStyles, FormGroup,
 } from '@material-ui/core';
 
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import SaveIcon from '@material-ui/icons/Save';
 import DataAnalyticsComponent from './DataAnalyticsComponent';
 import SimulatorComponent from './SimulatorComponent';
 import CameraComponent from './CameraComponent';
-import OverviewComponent from './OverviewComponent';
+// import OverviewComponent from './OverviewComponent';
+import LiveComponent from './LiveComponent';
 import {
   SKEYE_GREY, SKEYE_DARK_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_WHITE, SKEYE_GREEN,
 } from '../../css/custom';
@@ -240,11 +240,11 @@ const TabsComponents = (): JSX.Element => {
     },
   ]);
 
-  const onChangeTLMode = (index: number) => {
+  const onChangeTLMode = (index: number): any => {
     setTlMode(index);
   };
 
-  const onClickTLStop = () => {
+  const onClickTLStop = (): any => {
     setTlStop(!tlStop);
   };
 
@@ -253,7 +253,7 @@ const TabsComponents = (): JSX.Element => {
     state: string;
     countDown: string;
     totalTime: string; // G+Y
-  }>, isSmartTL: boolean) => {
+  }>, isSmartTL: boolean): any => {
     if (isSmartTL) {
       setTlStates2(tls);
     } else {
@@ -308,20 +308,24 @@ const TabsComponents = (): JSX.Element => {
     <div className={classes.root}>
       <AppBar position="static" style={skeyeStyles.TabBar}>
         <Tabs value={value} onChange={handleChangeTab} TabIndicatorProps={{ style: { backgroundColor: 'white' } }}>
-          <Tab label="Overview" {...props(0)} style={skeyeStyles.TabOnly} />
+          <Tab label="Live Feed" {...props(0)} style={skeyeStyles.TabOnly} />
           <Tab label="Data Analytics" {...props(1)} style={skeyeStyles.TabOnly} />
           <Tab label="Camera" {...props(2)} style={skeyeStyles.TabOnly} />
           <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
 
-          <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
-            <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
-              <SettingsIcon />
-            </button>
-          </BoxSettingsMenu>
+          {value === 0 || value === 3
+            ? (
+              <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
+                <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
+                  <SettingsIcon />
+                </button>
+              </BoxSettingsMenu>
+            )
+            : null }
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <OverviewComponent
+        <LiveComponent
           toggles={state}
           tlMode={tlMode}
           onChangeTLMode={onChangeTLMode}
