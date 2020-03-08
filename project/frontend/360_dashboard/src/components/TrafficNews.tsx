@@ -5,8 +5,10 @@ import styled from 'styled-components';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import AnnouncementIcon from '@material-ui/icons/Announcement';
 import { SKEYE_WHITE, LOW_RES } from '../css/custom';
+import { parse } from '@babel/core';
+
+const { REACT_APP_API_URL } = process.env;
 
 // MapQuest API is used to retrieve traffic news
 // https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -22,9 +24,6 @@ import { SKEYE_WHITE, LOW_RES } from '../css/custom';
   2 = Event
   3 = Congestion/Flow
   4 = Incident/accident
-
-  Severity Ranges from 0-4, which is an indicator for delay,
-  0 being the lowest, 4 being the highest.
 */
 
 const API_KEY = '24jtUJNMCXQg4pLgMchaC7p6Flihs7wO';
@@ -36,6 +35,7 @@ interface StateProps {
   error: any;
   isLoaded: boolean;
   incidents: any;
+  intersections: any;
 }
 
 const OuterContainer = styled.div`
@@ -64,6 +64,26 @@ const CardStyle = styled.div`
   }
 `;
 
+const API_DOMAIN = REACT_APP_API_URL;
+const DISTRICT_CALL = `//${API_DOMAIN}/api/district/`
+
+var intersectionResponse: any[] = [];
+//Fetches the intersections of the district
+const createBoundingBox = (latitude: number, longitude: number): string => {
+  const upperBoundLatitude = latitude + 0.001;
+  const upperBoundLongitude = longitude + 0.001; 
+
+  const lowerBoundLatitude = latitude - 0.001;
+  const lowerBoundLongitude = longitude - 0.001; 
+
+
+  console.log(lowerBoundLatitude);
+
+  return upperBoundLatitude.toString() + ',' + upperBoundLongitude.toString() + ','  + lowerBoundLatitude.toString() + ',' + lowerBoundLongitude.toString(); 
+
+
+}
+
 class TrafficNews extends React.Component<{}, StateProps> {
   constructor(props: any) {
     super(props);
@@ -71,27 +91,71 @@ class TrafficNews extends React.Component<{}, StateProps> {
       error: null,
       isLoaded: false,
       incidents: [],
+      intersections: [],
     };
   }
 
+  
   componentDidMount(): void {
+    var latitude: number;
+    var longitude: number;
+    var boundingBox: string;
+    const districtFetch = (): any => {
+      const url = DISTRICT_CALL;
+      const settings = {
+        method: 'GET',
+        headers: {},
+      };
+      fetch(url, settings).then(async (response) => {
+        const data = await response.json();
+        //console.log(data[0].intersections);
+        var CALL = ``;
+  
+        for(let i = 0; i < data[0].intersections.length; i++){
+          //1. Retrieve the intersection's latitude & longitude
+          latitude = data[0].intersections[i].latitude;
+          longitude = data[0].intersections[i].longitude;
+
+          //2. Bounding Box
+          boundingBox = createBoundingBox(latitude, longitude);
+          //console.log(boundingBox);
+          var theResults: any[] = [];
+          //3. Fetch from API & Append to State
+
+          CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${boundingBox}`;
+          //console.log(CALL);
+          var copydata: any[] = [];
+          fetch(CALL)
+            .then((results) => results.json())
+            .then(
+              (data) => {
+                copydata = data.incidents;
+                if(copydata.length !== 0){
+                  theResults.push(data.incidents);
+                }
+                
+                console.log(theResults)
+                //console.log('the results' + theResults);
+                this.setState({
+                  isLoaded: true,
+                  incidents: theResults
+                });
+              },
+              (error) => {
+                this.setState({
+                  isLoaded: true,
+                  error,
+                })
+              }
+            )
+      }
+        return data[0].intersections;
+      });
+    }
+    districtFetch();
+    
+    //console.log(districtFetch);
     // eslint-disable-next-line no-shadow
-    fetch(API_CALL)
-      .then((results) => results.json())
-      .then(
-        (data) => {
-          this.setState({
-            isLoaded: true,
-            incidents: data.incidents,
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error,
-          });
-        },
-      );
   }
 
   render(): JSX.Element {
@@ -120,41 +184,23 @@ class TrafficNews extends React.Component<{}, StateProps> {
               <CardStyle key={incident.id}>
                 <Card>
                   <CardContent>
-                    <div style={{ display: 'flex' }}>
-                      <Typography variant="h5">
-                        Traffic Type: &nbsp;
-                        {(() => {
-                          switch (incident.type) {
-                            case 1:
-                              return 'Construction';
-                            case 2:
-                              return 'Event';
-                            case 3:
-                              return 'Congestion/Flow';
-                            case 4:
-                              return 'Incident/Accident';
-                            default:
-                              return 'Traffic';
-                          }
-                        })()}
-                        &nbsp;
-                      </Typography>
-
+                    <Typography variant="h5">
+                      Traffic Type: &nbsp;
                       {(() => {
                         switch (incident.type) {
                           case 1:
-                            return <AnnouncementIcon style={{ color: 'orange' }} />;
+                            return 'Construction';
                           case 2:
-                            return <AnnouncementIcon style={{ color: 'purple' }} />;
+                            return 'Event';
                           case 3:
-                            return <AnnouncementIcon style={{ color: '#d62f2f' }} />;
+                            return 'Congestion/Flow';
                           case 4:
-                            return <AnnouncementIcon style={{ color: 'red' }} />;
+                            return 'Incident/Accident';
                           default:
-                            return <AnnouncementIcon />;
+                            return 'Traffic';
                         }
                       })()}
-                    </div>
+                    </Typography>
                     <Typography variant="h6">{incident.shortDesc}</Typography>
                     <Typography variant="subtitle1">
                       {incident.fullDesc}
@@ -162,22 +208,7 @@ class TrafficNews extends React.Component<{}, StateProps> {
                       <br />
                       <b>Severity:</b>
                       {' '}
-                      {(() => {
-                        switch (incident.severity) {
-                          case 0:
-                            return 'Very Low Delay';
-                          case 1:
-                            return 'Low Delay';
-                          case 2:
-                            return 'Normal Delay';
-                          case 3:
-                            return 'Medium Delay';
-                          case 4:
-                            return 'High Delay';
-                          default:
-                            return 'Normal Delay';
-                        }
-                      })()}
+                      {incident.severity}
                       {' '}
                       <br />
                       <b>Start Time:</b>
