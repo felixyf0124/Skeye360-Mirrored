@@ -308,7 +308,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
                       <TrendingUpIcon />
                     </ListItemIcon>
                     <ListItemText style={skeyeStyles.ListItemStyle}>
-                      SkeYe AI
+                      Live Feed
                     </ListItemText>
                   </ListItem>
 
