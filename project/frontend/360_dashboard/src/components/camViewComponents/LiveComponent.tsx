@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { RootState } from '../../reducers/rootReducer';
 import SidebarComponent from './SidebarComponent';
 import { SKEYE_WHITE, SKEYE_LIGHT_BLACK, SKEYE_BRIGHT_GREEN } from '../../css/custom';
@@ -25,6 +24,7 @@ interface SimProps {
   }>;
 
   onTLUpdate: any;
+  key: any;
 }
 
 interface StateProps {
@@ -52,16 +52,6 @@ const CamFeed = styled.img`
   align-items: center;
 `;
 
-// Vertical flexbox styling
-const VerticalFlexBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  align-items: space-around;
-  align-content: stretch;
-`;
-
 // Horizontal flexbox styling
 const HorizontalFlexBox = styled.div`
   display: flex;
@@ -82,14 +72,6 @@ const InnerDivHorizon = styled.div`
 //   margin-left: 10vw;
   // margin-top: -20vh;
   margin-top: -0.4vh;
-`;
-
-// Single Container Vertical
-const InnerDivVertical = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
 `;
 
 // Single Container Vertical
@@ -227,6 +209,7 @@ class LiveComponent extends React.Component<
             onChangeTLMode={onChangeTLMode}
             onClickTLStop={onClickTLStop}
             tlCombStates={tlCombStates}
+            keyValue="1"
           />
           <InnerDivHorizon>
             <InnerDivVerticalCam>

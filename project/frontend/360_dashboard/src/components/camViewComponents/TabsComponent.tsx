@@ -20,7 +20,7 @@ import Fade from '@material-ui/core/Fade';
 import DataAnalyticsComponent from './DataAnalyticsComponent';
 import SimulatorComponent from './SimulatorComponent';
 import CameraComponent from './CameraComponent';
-import OverviewComponent from './OverviewComponent';
+// import OverviewComponent from './OverviewComponent';
 import LiveComponent from './LiveComponent';
 import {
   SKEYE_GREY, SKEYE_DARK_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_WHITE, SKEYE_GREEN,
@@ -313,13 +313,15 @@ const TabsComponents = (): JSX.Element => {
           <Tab label="Camera" {...props(2)} style={skeyeStyles.TabOnly} />
           <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
 
-          {value === 0 || value === 3 ? 
-          <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
-            <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
-              <SettingsIcon />
-            </button>
-          </BoxSettingsMenu>
-          : null }
+          {value === 0 || value === 3
+            ? (
+              <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
+                <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
+                  <SettingsIcon />
+                </button>
+              </BoxSettingsMenu>
+            )
+            : null }
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>

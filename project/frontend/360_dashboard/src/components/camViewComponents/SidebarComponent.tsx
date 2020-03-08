@@ -9,11 +9,12 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
-import TrackChangesIcon from '@material-ui/icons/TrackChanges';
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-import SettingsIcon from '@material-ui/icons/Settings';
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import styled from 'styled-components';
 import {
   SKEYE_WHITE, SKEYE_GREY,
   SKEYE_LIGHT_DARK_GREY, SKEYE_RED,
@@ -21,9 +22,6 @@ import {
   SKEYE_DARK_GREY,
   SKEYE_BRIGHT_GREEN,
 } from '../../css/custom';
-import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import styled from 'styled-components';
 
 interface SimProps {
   tlMode: number;
@@ -38,7 +36,6 @@ interface SimProps {
     totalTime: string; // G+Y
     totalTime2: string; // G+Y
   }>;
-
 }
 
 // Horizontal box for the entire component
@@ -165,10 +162,10 @@ const skeyeStyles = {
   },
   Expansion: {
     backgroundColor: SKEYE_LIGHT_BLACK,
-    marginLeft: `-1vw`,
+    marginLeft: '-1vw',
   },
   ExpansionDetails: {
-    marginLeft: `-0.25vw`,
+    marginLeft: '-0.25vw',
   },
   SimMenuIcon: {
     color: SKEYE_BRIGHT_GREEN,
@@ -187,7 +184,7 @@ const skeyeStyles = {
 // Creates and returns a component for the sidebar that will be used in the simulator
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const {
-    tlMode, onChangeTLMode, onClickTLStop, tlCombStates,
+    tlMode, onChangeTLMode, onClickTLStop, tlCombStates, keyValue,
   } = props;
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
@@ -283,76 +280,82 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         <div className={classes.titleBox}>
           <text style={skeyeStyles.Title}> Options for Simulator</text>
         </div>
-        
+
         <Divider classes={{ root: classes.dividerWhite }} />
 
         {/* For the modes options */}
-        <ExpansionPanel style={skeyeStyles.Expansion}>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle}/>}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <text style={skeyeStyles.Header}> Modes </text>
-            <Divider classes={{ root: classes.dividerGrey }} />
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
-            <List>
-              <ListItem
-                button
-                selected={selectedIndex === 0}
-                classes={{ root: classes.root, selected: classes.selected }}
-                onClick={(event): void => onClickListItem(event, 0)}
+        {/* {console.log(keyPassed)} */}
+        { keyValue === '1'
+          ? (
+            <ExpansionPanel style={skeyeStyles.Expansion}>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
               >
-                <ListItemIcon style={skeyeStyles.IconStyle}>
-                  <TrendingUpIcon />
-                </ListItemIcon>
-                <ListItemText style={skeyeStyles.ListItemStyle}>
-                  SkeYe AI
-                </ListItemText>
-              </ListItem>
+                <text style={skeyeStyles.Header}> Modes </text>
+                <Divider classes={{ root: classes.dividerGrey }} />
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+                <List>
+                  <ListItem
+                    button
+                    selected={selectedIndex === 0}
+                    classes={{ root: classes.root, selected: classes.selected }}
+                    onClick={(event): void => onClickListItem(event, 0)}
+                  >
+                    <ListItemIcon style={skeyeStyles.IconStyle}>
+                      <TrendingUpIcon />
+                    </ListItemIcon>
+                    <ListItemText style={skeyeStyles.ListItemStyle}>
+                      SkeYe AI
+                    </ListItemText>
+                  </ListItem>
 
-              <ListItem
-                button
-                selected={selectedIndex === 1}
-                classes={{ root: classes.root, selected: classes.selected }}
-                onClick={(event): void => onClickListItem(event, 1)}
-              >
-                <ListItemIcon style={skeyeStyles.IconStyle}>
-                  <DirectionsWalkIcon />
-                </ListItemIcon>
-                <ListItemText style={skeyeStyles.ListItemStyle}>
-                  Pedestrians
-                </ListItemText>
-              </ListItem>
+                  <ListItem
+                    button
+                    selected={selectedIndex === 1}
+                    classes={{ root: classes.root, selected: classes.selected }}
+                    onClick={(event): void => onClickListItem(event, 1)}
+                  >
+                    <ListItemIcon style={skeyeStyles.IconStyle}>
+                      <DirectionsWalkIcon />
+                    </ListItemIcon>
+                    <ListItemText style={skeyeStyles.ListItemStyle}>
+                      Pedestrians
+                    </ListItemText>
+                  </ListItem>
 
-              {/* <ListItem
-                button
-                selected={selectedIndex === 2}
-                classes={{ root: classes.root, selected: classes.selected }}
-                onClick={(event): void => onClickListItem(event, 2)}
-              >
-                <ListItemIcon style={skeyeStyles.IconStyle}>
-                  <TrackChangesIcon />
-                </ListItemIcon>
-                <ListItemText style={skeyeStyles.ListItemStyle}>
-                  Real-Time
-                </ListItemText>
-              </ListItem> */}
-            </List>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+                  {/* <ListItem
+                    button
+                    selected={selectedIndex === 2}
+                    classes={{ root: classes.root, selected: classes.selected }}
+                    onClick={(event): void => onClickListItem(event, 2)}
+                  >
+                    <ListItemIcon style={skeyeStyles.IconStyle}>
+                      <TrackChangesIcon />
+                    </ListItemIcon>
+                    <ListItemText style={skeyeStyles.ListItemStyle}>
+                      Real-Time
+                    </ListItemText>
+                  </ListItem> */}
+                </List>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          )
+          : null }
 
-        <Divider classes={{ root: classes.dividerWhite }} />
+        {keyValue === '1'
+          ? <Divider classes={{ root: classes.dividerWhite }} />
+          : null}
 
         {/* For the Traffic Light Comparison */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle}/>}
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
             aria-controls="panel2a-content"
             id="panel2a-header"
           >
-            
             <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
             <Divider classes={{ root: classes.dividerGrey }} />
           </ExpansionPanelSummary>
@@ -370,7 +373,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         {/* For the simulator options */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle}/>}
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
             aria-controls="panel3a-content"
             id="panel3a-header"
           >
@@ -380,7 +383,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
             <DivVertical>
               <Button variant="contained" style={skeyeStyles.ButtonStyle}>
-                <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon}/>
+                <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon} />
                 START
               </Button>
               {/* <Button variant="contained" style={skeyeStyles.ButtonStyle}>
@@ -396,16 +399,20 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         {/* For the emergency option */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle}/>}
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
             aria-controls="panel4a-content"
             id="panel4a-header"
           >
-              <text style={skeyeStyles.Header}> Emergency Mode </text>
-            <Divider classes={{ root: classes.dividerGrey }} />
-          </ExpansionPanelSummary >
+            <text style={skeyeStyles.Header}> Emergency Mode </text>
+            <Divider
+              classes={{ root: classes.dividerGrey }}
+            />
+          </ExpansionPanelSummary>
           <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
             <DivVertical>
-              <text style={skeyeStyles.TextMessage}> To change all traffic lights to red for emergency operations </text>
+              <text style={skeyeStyles.TextMessage}>
+                To change all traffic lights to red for emergency operations
+              </text>
               <Button
                 variant="contained"
                 style={skeyeStyles.EmergencyButton}
