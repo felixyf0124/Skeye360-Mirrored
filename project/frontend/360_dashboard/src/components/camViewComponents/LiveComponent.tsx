@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { RootState } from '../../reducers/rootReducer';
 import SidebarComponent from './SidebarComponent';
 import { SKEYE_WHITE, SKEYE_LIGHT_BLACK, SKEYE_BRIGHT_GREEN } from '../../css/custom';
@@ -25,6 +24,7 @@ interface SimProps {
   }>;
 
   onTLUpdate: any;
+  key: any;
 }
 
 interface StateProps {
@@ -42,24 +42,14 @@ interface DispatchProps {
 // Empty camera feed container
 // To be modified when the camera feed is added
 const CamFeed = styled.img`
-  width: 40vw;
-  height: 20vw;
+  width: 38vw;
+  height: 19.5vw;
   margin: 1rem;
   background-color: #212121;
   display: flex;
   justify-content: center;
   justify-content: center;
   align-items: center;
-`;
-
-// Vertical flexbox styling
-const VerticalFlexBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  align-items: space-around;
-  align-content: stretch;
 `;
 
 // Horizontal flexbox styling
@@ -79,17 +69,9 @@ const InnerDivHorizon = styled.div`
   display: flex;
   flex-direction: row;
   color: white;
-  margin-left: 10vw;
+//   margin-left: 10vw;
   // margin-top: -20vh;
   margin-top: -0.4vh;
-`;
-
-// Single Container Vertical
-const InnerDivVertical = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
 `;
 
 // Single Container Vertical
@@ -104,11 +86,27 @@ const InnerDivVerticalCam = styled.div`
 
 // Container for the simulator
 const SimContainer = styled.div`
-  width: 10%;
-  height: 10%;
+//   width: 11%;
+//   height: 11%;
   display: flex;
   justify-content: center;
   margin: 1rem;
+`;
+
+// Single Container Vertical for the simulator
+const InnerDivVerticalSim = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+`;
+
+const CamContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    color: white;
+    height: 9vw;
+
 `;
 
 // Custom styling
@@ -176,12 +174,12 @@ const skeyeStyles = {
     paddingBottom: 9,
     marginRight: -15,
   },
-  SimDiv: {
-    // marginTop: -400,
+  Simulator: {
+    paddingTop: 50,
   },
 };
 
-class OverviewComponent extends React.Component<
+class LiveComponent extends React.Component<
   SimProps & StateProps & DispatchProps,
   { tlMode: number }
 > {
@@ -211,14 +209,17 @@ class OverviewComponent extends React.Component<
             onChangeTLMode={onChangeTLMode}
             onClickTLStop={onClickTLStop}
             tlCombStates={tlCombStates}
+            keyValue="1"
           />
-          <VerticalFlexBox>
+          <InnerDivHorizon>
             <InnerDivVerticalCam>
               <text style={skeyeStyles.Header}>Live Camera Feed</text>
-              <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
+              <CamContainer>
+                <CamFeed src={`http://${camera_url}/cam`} alt="Loading..." />
+              </CamContainer>
             </InnerDivVerticalCam>
-            <InnerDivVertical style={skeyeStyles.SimDiv}>
-              <text style={skeyeStyles.Header}>Default Traffic Light</text>
+            <InnerDivVerticalSim>
+              <text style={skeyeStyles.Header}>Simulator with Live Feed</text>
               <SimContainer>
                 <Simulator
                   isSmartTL={false}
@@ -228,56 +229,8 @@ class OverviewComponent extends React.Component<
                   onTLUpdate={onTLUpdate}
                 />
               </SimContainer>
-            </InnerDivVertical>
-          </VerticalFlexBox>
-          <VerticalFlexBox>
-            <InnerDivHorizon>
-              <div style={skeyeStyles.BoxLeft}>
-                <InnerDivVertical>
-                  <text style={skeyeStyles.BoxTextTitle}>Gas Consumption</text>
-                  <br />
-                  <text style={skeyeStyles.BoxTextValue}>18</text>
-                  <br />
-                  <text style={skeyeStyles.BoxTextUnit}>Liters / Hour</text>
-                  <br />
-                  <div>
-                    <ArrowDropDownIcon style={skeyeStyles.GreenArrow} />
-                    <text style={skeyeStyles.BoxTextPercentage}>8,88%</text>
-                  </div>
-                  <br />
-                  <text style={skeyeStyles.BoxTextUpdated}>Last updated: 1 day ago</text>
-                </InnerDivVertical>
-              </div>
-              <div style={skeyeStyles.BoxRight}>
-                <InnerDivVertical>
-                  <text style={skeyeStyles.BoxTextTitle}>Average Wait Time</text>
-                  <br />
-                  <text style={skeyeStyles.BoxTextValue}>23.2</text>
-                  <br />
-                  <text style={skeyeStyles.BoxTextUnit}>Seconds</text>
-                  <br />
-                  <div>
-                    <ArrowDropDownIcon style={skeyeStyles.GreenArrow} />
-                    <text style={skeyeStyles.BoxTextPercentage}>28,88%</text>
-                  </div>
-                  <br />
-                  <text style={skeyeStyles.BoxTextUpdated}>Last updated: 5 min ago</text>
-                </InnerDivVertical>
-              </div>
-            </InnerDivHorizon>
-            <InnerDivVertical style={skeyeStyles.SimDiv}>
-              <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
-              <SimContainer>
-                <Simulator
-                  isSmartTL
-                  tl_mode={tlMode}
-                  toggles={toggles}
-                  tlStop={tlStop}
-                  onTLUpdate={onTLUpdate}
-                />
-              </SimContainer>
-            </InnerDivVertical>
-          </VerticalFlexBox>
+            </InnerDivVerticalSim>
+          </InnerDivHorizon>
         </HorizontalFlexBox>
       </div>
     );
@@ -298,4 +251,4 @@ const mapDispatchToProps: DispatchProps = {
   getExistingCamera,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(OverviewComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(LiveComponent);
