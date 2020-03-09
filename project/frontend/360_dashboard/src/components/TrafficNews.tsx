@@ -29,32 +29,29 @@ import { SKEYE_WHITE, LOW_RES } from '../css/custom';
 const { REACT_APP_API_URL } = process.env;
 const API_KEY = '24jtUJNMCXQg4pLgMchaC7p6Flihs7wO';
 
-const BOUNDING_BOX = '45.7047897,-73.47429525,45.41007553,-73.97290173';
-const API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${BOUNDING_BOX}`;
+// const BOUNDING_BOX = '45.7047897,-73.47429525,45.41007553,-73.97290173';
+// const API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${BOUNDING_BOX}`;
 
 const API_DOMAIN = REACT_APP_API_URL;
-const DISTRICT_CALL = `//${API_DOMAIN}/api/district/`
+const DISTRICT_CALL = `//${API_DOMAIN}/api/district/`;
 
-var incidentsArray: any[] = [];
+const incidentsArray: any[] = [];
 
 interface StateProps {
-  error: any;
   isLoaded: boolean;
   incidents: any;
 }
 const createBoundingBox = (latitude: number, longitude: number): string => {
   const upperBoundLatitude = latitude + 0.1;
-  const upperBoundLongitude = longitude + 0.1; 
+  const upperBoundLongitude = longitude + 0.1;
 
   const lowerBoundLatitude = latitude - 0.1;
-  const lowerBoundLongitude = longitude - 0.1; 
+  const lowerBoundLongitude = longitude - 0.1;
 
-  return upperBoundLatitude.toString() + ',' + upperBoundLongitude.toString() + ','  + lowerBoundLatitude.toString() + ',' + lowerBoundLongitude.toString(); 
-}
+  return `${upperBoundLatitude.toString()},${upperBoundLongitude.toString()},${lowerBoundLatitude.toString()},${lowerBoundLongitude.toString()}`;
+};
 
-
-
-//Styled Components 
+// Styled Components
 const OuterContainer = styled.div`
   overflow: scroll;
   height: 88vh;
@@ -85,7 +82,6 @@ class TrafficNews extends React.Component<{}, StateProps> {
   constructor(props: any) {
     super(props);
     this.state = {
-      error: null,
       isLoaded: false,
       incidents: [],
     };
@@ -93,9 +89,9 @@ class TrafficNews extends React.Component<{}, StateProps> {
 
   componentDidMount(): void {
     // eslint-disable-next-line no-shadow
-    var latitude: number;
-    var longitude: number;
-    var boundingBox: string;
+    let latitude: number;
+    let longitude: number;
+    let boundingBox: string;
     const districtFetch = () => {
       const url = DISTRICT_CALL;
       const settings = {
@@ -104,43 +100,39 @@ class TrafficNews extends React.Component<{}, StateProps> {
       };
       fetch(url, settings).then(async (response) => {
         const data = await response.json();
-        var CALL = ``;
-
-        for(let i = 0; i < data[0].intersections.length; i++){
-          //1. Retrieve intersection's latitude and longitude
+        let CALL = '';
+        let tempData: any[] = [];
+        /* eslint-disable no-plusplus */
+        /* eslint-disable no-loop-func */
+        for (let i = 0; i < data[0].intersections.length; i++) {
+          // 1. Retrieve intersection's latitude and longitude
           latitude = data[0].intersections[i].latitude;
           longitude = data[0].intersections[i].longitude;
 
-          //2. Create a bounding box
+          // 2. Create a bounding box
           boundingBox = createBoundingBox(latitude, longitude);
 
-          //3. Fetch traffic news from API and append it to state
+          // 3. Fetch traffic news from API and append it to state
           CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${boundingBox}`;
-          var tempData: any[] = [];
+
           fetch(CALL)
             .then((results) => results.json())
             .then(
               (data) => {
                 tempData = data.incidents;
-                
-                if(tempData.length !== 0){
-                  incidentsArray.push(...tempData);
+
+                if (tempData.length !== 0) {
+                  incidentsArray.push(...data.incidents);
                 }
                 this.setState({
                   isLoaded: true,
-                  incidents: incidentsArray
+                  incidents: incidentsArray,
                 });
               },
-              (error) => {
-                this.setState({
-                  isLoaded: true,
-                  error,
-                })
-              }
-            )
+            );
         }
       });
-    }
+    };
     districtFetch();
   }
 
