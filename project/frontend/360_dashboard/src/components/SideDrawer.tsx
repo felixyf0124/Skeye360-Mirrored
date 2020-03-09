@@ -35,6 +35,7 @@ import Weather from './Weather';
 interface StateProps {
   authenticated: boolean;
   user_id: number;
+  username: string;
   log_message: string;
 }
 
@@ -49,8 +50,9 @@ interface DispatchProps {
 
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
-const drawerWidth = 240;
+const drawerWidth = 185;
 
+const date = new Date().toLocaleDateString();
 // CSS for the drawer and header
 // Uses useStyles and makeStyles which is integrated in material-UI
 const useStyles = makeStyles((theme) => ({
@@ -123,6 +125,16 @@ const useStyles = makeStyles((theme) => ({
   iconStyle: {
     color: '#FFFFFF',
   },
+  smallIcon: {
+    height: '1.2rem',
+    width: '1.2rem',
+    color: '#FFFFFF',
+    paddingBottom: '0.2rem',
+  },
+  whiteStyle: {
+    position: 'absolute',
+    color: '#FFFFFF',
+  },
 }));
 
 const Logo = styled.img`
@@ -144,7 +156,9 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
     setOpen(false);
   };
 
-  const { user_id, logout, headerTitle } = props;
+  const {
+    user_id, logout, headerTitle, username,
+  } = props;
 
   const handleLogout = (): void => {
     const { logClick } = props;
@@ -177,6 +191,21 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             {headerTitle}
           </Typography>
           <Weather />
+          <p className={classes.whiteStyle} style={{ right: 225 }}>
+            Hi,
+            {username}
+            !
+          </p>
+          <a className={classes.whiteStyle} style={{ right: 145, paddingTop: 1.3 }} href="/">
+            <PersonIcon className={classes.smallIcon} />
+            Profile
+          </a>
+          <a className={classes.whiteStyle} style={{ right: 85 }} href="/" onClick={handleLogout}>Logout</a>
+          <p className={classes.whiteStyle} style={{ right: 10 }}>
+            {' '}
+            {date}
+            {' '}
+          </p>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -193,9 +222,6 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
         }}
       >
         <div className={classes.toolbar} style={{ justifyContent: 'space-between' }}>
-          <h6 style={{ paddingLeft: '65px' }}>
-            <Logo src="/emblem.png" alt="LOGO" />
-          </h6>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon className={classes.iconStyle} />
@@ -223,24 +249,8 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
               <ListItemText className={classes.listItem} primary="View Map" />
             </ListItem>
           </Link>
-          <Link to="/">
-            <ListItem button key="Profile">
-              <ListItemIcon>
-                <PersonIcon className={classes.iconStyle} />
-              </ListItemIcon>
-              <ListItemText className={classes.listItem} primary="Profile" />
-            </ListItem>
-          </Link>
         </List>
         <Divider />
-        <List className={classes.listItem}>
-          <ListItem button key="Logout" href="/" onClick={handleLogout}>
-            <ListItemIcon>
-              <ExitToAppIcon className={classes.iconStyle} />
-            </ListItemIcon>
-            <ListItemText primary="Log Out" />
-          </ListItem>
-        </List>
       </Drawer>
     </div>
   );
@@ -250,6 +260,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
   authenticated: authenticated(state),
   user_id: state.authentication.user_id,
+  username: state.authentication.username,
   log_message: '',
 });
 
