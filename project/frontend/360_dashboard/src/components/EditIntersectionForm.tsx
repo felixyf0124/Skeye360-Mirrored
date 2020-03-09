@@ -13,6 +13,7 @@ interface StateProps {
   longitude: string;
   intersection_name: string;
   district_id: string;
+  assigned_user_id: string;
   error: string;
   user_id: number;
 }
@@ -24,6 +25,7 @@ interface DispatchProps {
     latitude: string,
     longitude: string,
     district_id: string,
+    assigned_user_id: string,
   ) => EditIntersectionAction;
   logClick: (log_message: string, user_id: number) => any;
 }
@@ -60,7 +62,7 @@ const useStyles = makeStyles(() => ({
     margin: 'auto',
     marginBottom: '2rem',
     width: '25rem',
-    height: '30rem',
+    height: '40rem',
     border: '1px solid grey',
     borderRadius: '15px',
     zIndex: 1,
@@ -104,6 +106,7 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
       state.latitude,
       state.longitude,
       state.district_id,
+      state.assigned_user_id,
     );
     props.logClick('Edited Intersection', user_id);
   };
@@ -124,9 +127,13 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
           onSubmit={(e): void => {
             e.preventDefault();
             handleSubmit();
-            history.push(`/streetview/${state.intersection_id}`);
+            history.push('/');
           }}
         >
+          <div className="form-group" style={{ justifyContent: 'center', marginTop: '1rem' }}>
+            <h6 style={{ color: '#FFFFFF' }}>Edit Intersection</h6>
+            <h5 style={{ color: '#FFFFFF' }}>{state.intersection_name}</h5>
+          </div>
           <div className={classes.innerBox}>
             <div className="form-group">
               <div className={classes.textEntry}>District ID</div>
@@ -168,6 +175,16 @@ const EditIntersectionForm = (props: StateProps & DispatchProps): JSX.Element =>
                 onChange={handleChange}
               />
             </div>
+            <div className="form-group">
+              <div className={classes.textEntry}>Assigned User</div>
+              <input
+                type="text"
+                name="assigned_user_id"
+                className={classes.textField}
+                value={state.assigned_user_id}
+                onChange={handleChange}
+              />
+            </div>
             <div className={classes.centeredBox}>
               <button className={classes.addButton} type="submit">
                 Edit
@@ -186,6 +203,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   latitude: state.intersection.latitude,
   longitude: state.intersection.longitude,
   intersection_name: state.intersection.intersection_name,
+  assigned_user_id: String(state.intersection.user_id),
   error: state.intersection.error,
   user_id: state.authentication.user_id,
 });

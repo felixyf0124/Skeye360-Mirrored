@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import styled from 'styled-components';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { RootState } from '../reducers/rootReducer';
 import {
   getExistingIntersection,
@@ -50,10 +51,16 @@ const HorizontalFlexBox = styled.div`
   }
 `;
 
+const Loader = styled.div`
+  margin-top: 4rem;
+  text-align: center;
+`;
+
 interface StateProps {
   username: string;
 
   intersection_id: string;
+  loaded_id: string;
   latitude: string;
   longitude: string;
   intersection_name: string;
@@ -93,12 +100,12 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
 
   public render(): JSX.Element {
     const {
-      success, intersection_name, cameras, intersection_id,
+      success, intersection_name, cameras, intersection_id, loaded_id,
     } = this.props;
     // if (district_id === '') return <Redirect to="/" />;
     const headerTitle = `${intersection_name}`;
 
-    if (success) {
+    if (success && intersection_id === loaded_id) {
       return (
         <Content>
           <SideDrawer headerTitle={headerTitle} />
@@ -123,9 +130,13 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
         </Content>
       );
     }
+
     return (
       <div>
         <SideDrawer headerTitle="Edit" />
+        <Loader>
+          <LinearProgress />
+        </Loader>
       </div>
     );
   }
@@ -139,6 +150,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   intersection_id: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
   ),
+  loaded_id: state.intersection.intersection_id,
   latitude: state.intersection.latitude,
   longitude: state.intersection.longitude,
   district_id: state.intersection.district_id,
