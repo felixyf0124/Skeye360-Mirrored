@@ -19,10 +19,9 @@ import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
@@ -137,11 +136,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Logo = styled.img`
-  height: 5rem;
-  width: 5rem;
-  position: relative;
-`;
+// const Logo = styled.img`
+//   height: 5rem;
+//   width: 5rem;
+//   position: relative;
+// `;
 
 const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Element => {
   const classes = useStyles();
@@ -200,7 +199,9 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             <PersonIcon className={classes.smallIcon} />
             Profile
           </a>
-          <a className={classes.whiteStyle} style={{ right: 85 }} href="/" onClick={handleLogout}>Logout</a>
+          <a className={classes.whiteStyle} style={{ right: 85 }} href="/" onClick={handleLogout}>
+            Logout
+          </a>
           <p className={classes.whiteStyle} style={{ right: 10 }}>
             {' '}
             {date}
