@@ -35,6 +35,7 @@ import Weather from './Weather';
 interface StateProps {
   authenticated: boolean;
   user_id: number;
+  username: string;
   log_message: string;
 }
 
@@ -129,6 +130,10 @@ const useStyles = makeStyles((theme) => ({
     width: '1.25rem',
     color: '#FFFFFF',
   },
+  whiteStyle: {
+    position: 'absolute',
+    color: '#FFFFFF',
+  }
 }));
 
 const Logo = styled.img`
@@ -150,7 +155,7 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
     setOpen(false);
   };
 
-  const { user_id, logout, headerTitle } = props;
+  const { user_id, logout, headerTitle, username } = props;
 
   const handleLogout = (): void => {
     const { logClick } = props;
@@ -183,13 +188,10 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             {headerTitle}
           </Typography>
           <Weather />
-          <div style={{position: 'absolute', right: 90}}>
-            <a style={{color: 'white'}} href="/"><PersonIcon className={classes.smallIcon} />Profile</a>
-            <a style={{color: 'white', paddingLeft: 8}} href="/" onClick={handleLogout}>Logout</a>
-          </div>
-          <div style={{position: 'absolute', right: 10, verticalAlign: 'center', marginTop: 8}}>
-            <p> {date} </p>
-          </div>
+          <p className={classes.whiteStyle} style={{right: 225}} >Hi, {username}!</p>
+          <a className={classes.whiteStyle} style={{right: 145}} href="/"><PersonIcon className={classes.smallIcon} />Profile</a>
+          <a className={classes.whiteStyle} style={{right: 85}} href="/" onClick={handleLogout}>Logout</a>
+          <p className={classes.whiteStyle} style={{right: 10}}> {date} </p>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -244,6 +246,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
   authenticated: authenticated(state),
   user_id: state.authentication.user_id,
+  username: state.authentication.username,
   log_message: '',
 });
 
