@@ -18,7 +18,6 @@ import DeleteIntersectionButton from './DeleteIntersectionButton';
 import TrafficIntensity from './TrafficIntensity';
 import CameraConnectionStatus from './CameraConnectionStatus';
 import { Response as cameraResponse } from '../api/camera';
-import AddIntersection from '../containers/AddIntersection';
 
 // Generic flexboxes styling
 const VerticalFlexBox = styled.div`
@@ -160,11 +159,6 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
           </TableBody>
         </Table>
       </TableContainer>
-      {isStaff ? (
-        <AddIntersection />
-      ) : (
-        <div />
-      )}
     </main>
   );
 };

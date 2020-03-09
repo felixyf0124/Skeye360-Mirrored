@@ -12,37 +12,20 @@ import DialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
 import { logClick } from '../contexts/LogClicks';
+import { getUsers, STATE as userState } from '../contexts/users';
+import { SKEYE_GREY } from '../css/custom';
 
 const Body = styled.div`
   overflow-y: none;
 `;
-
-interface StateProps {
-  path: string;
-  username: string;
-
-  latitude: string;
-  longitude: string;
-  intersection_name: string;
-  district_id: string;
-
-  error: string;
-  user_id: number;
-}
-
-interface DispatchProps {
-  historyPush: (url: string) => void;
-  addNewIntersection: (
-    intersection_name: string,
-    latitude: string,
-    longitude: string,
-    district_id: string,
-  ) => any;
-  logClick: (log_message: string, user_id: number) => any;
-}
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -54,6 +37,12 @@ const useStyles = makeStyles(() => ({
   centeredBox: {
     display: 'flex',
     justifyContent: 'center',
+  },
+
+  dropdownMenu: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: `${SKEYE_GREY}`,
   },
 
   textEntry: {
@@ -75,7 +64,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#212121',
     margin: 'auto',
     width: '25rem',
-    height: '30rem',
+    height: '40rem',
     border: '1px solid grey',
     borderRadius: '15px',
     zIndex: 1,
@@ -131,14 +120,48 @@ const addIntTheme = createMuiTheme({
   },
 });
 
-const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
+// Passed Props
+interface Props {
+  users: userState;
+}
+
+// StateProps
+interface StateProps {
+  path: string;
+  username: string;
+
+  latitude: string;
+  longitude: string;
+  intersection_name: string;
+  district_id: string;
+  assigned_user_id: string;
+
+  error: string;
+  user_id: number;
+}
+
+// DispatchProps
+interface DispatchProps {
+  addNewIntersection: (
+    intersection_name: string,
+    latitude: string,
+    longitude: string,
+    district_id: string,
+    user_id: string,
+  ) => any;
+  getUsers: (userType: string) => any;
+  historyPush: (url: string) => void;
+  logClick: (log_message: string, user_id: number) => any;
+}
+
+// Component
+const AddIntersection = (props: Props & StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
   const {
-    latitude, longitude, intersection_name, district_id, error,
+    district_id, intersection_name, latitude, longitude, error,
   } = state;
 
-  const { user_id } = props;
-
+  const { user_id, users } = props;
   const history = useHistory();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -153,20 +176,47 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
       state.latitude,
       state.longitude,
       state.district_id,
+      state.assigned_user_id,
     );
-    logClick('Added Intersection', user_id);
+    logClick(
+      `Added Intersection: ${state.intersection_name}, ${state.latitude}, ${state.longitude}, ${state.district_id}, ${state.assigned_user_id}`,
+      user_id,
+    );
   };
 
   const classes = useStyles();
 
+  // Hovering AddIntersection Form
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (): void => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false);
+  };
+
+  // User List Dropdown List
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+  const handleClickListItem = (event: React.MouseEvent<HTMLElement>): void => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (
+    event: React.MouseEvent<HTMLElement>,
+    index: number,
+    assigned_user_id: string,
+  ): void => {
+    setSelectedIndex(index);
+    setAnchorEl(null);
+    setState({ ...state, assigned_user_id });
+  };
+
+  const handleAnchorClose = (): void => {
+    setAnchorEl(null);
   };
 
   return (
@@ -202,7 +252,13 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                         <CloseIcon />
                       </IconButton>
                     </div>
-                    <div className="form-group" style={{ paddingLeft: '3rem' }}>
+                    <div
+                      className="form-group"
+                      style={{ paddingLeft: '3rem', justifyContent: 'center' }}
+                    >
+                      <h6 style={{ color: '#FFFFFF' }}>Add Intersection</h6>
+                    </div>
+                    <div className="form-group">
                       <div className={classes.textEntry}>District ID</div>
                       <input
                         type="text"
@@ -245,6 +301,43 @@ const AddIntersection = (props: StateProps & DispatchProps): JSX.Element => {
                         onChange={handleChange}
                       />
                     </div>
+                    {/* Dropdown Menu for user list */}
+                    <div className="form-group">
+                      <div className={classes.dropdownMenu}>
+                        <List component="nav" aria-label="User List">
+                          <ListItem
+                            button
+                            aria-haspopup="true"
+                            aria-controls="lock-menu"
+                            aria-label="Assigned Operator"
+                            onClick={handleClickListItem}
+                          >
+                            <ListItemText
+                              primary="Assigned Operator"
+                              secondary={`${users[0][selectedIndex].id} - ${users[0][selectedIndex].username}`}
+                            />
+                          </ListItem>
+                        </List>
+                        <Menu
+                          id="assigned_user_id"
+                          anchorEl={anchorEl}
+                          keepMounted
+                          open={Boolean(anchorEl)}
+                          onClose={handleAnchorClose}
+                        >
+                          {users[0].map((user: any, index: number) => (
+                            <MenuItem
+                              key={user.id}
+                              selected={index === selectedIndex}
+                              onClick={(event): void => handleMenuItemClick(event, index, user.id)}
+                            >
+                              {`${user.id} - ${user.username}`}
+                            </MenuItem>
+                          ))}
+                        </Menu>
+                      </div>
+                    </div>
+                    {/* Submit Button */}
                     <div className={classes.centeredBox}>
                       <button className={classes.addButton} onClick={handleClose} type="submit">
                         Add
@@ -265,18 +358,20 @@ const mapStateToProps = (state: RootState): StateProps => ({
   path: '/intersection/add',
   username: state.authentication.username,
 
-  latitude: '',
-  longitude: '',
   district_id: '1',
   intersection_name: '',
+  latitude: '',
+  longitude: '',
+  assigned_user_id: '',
 
   error: state.intersection.error,
   user_id: state.authentication.user_id,
 });
 
 const mapDispatchToProps: DispatchProps = {
-  historyPush: push,
   addNewIntersection,
+  getUsers,
+  historyPush: push,
   logClick,
 };
 

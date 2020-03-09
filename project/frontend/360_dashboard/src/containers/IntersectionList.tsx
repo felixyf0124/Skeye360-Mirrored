@@ -18,6 +18,8 @@ import { deleteExistingIntersection, DeleteIntersectionAction } from '../context
 import { logClick, LogAction } from '../contexts/LogClicks';
 import TrafficNews from '../components/TrafficNews';
 import { LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
+import AddIntersection from './AddIntersection';
+import { getUsers, STATE as userState, GetUsersAction } from '../contexts/users';
 
 // Generic flexboxes styling
 const ContentFlexBox = styled.div`
@@ -64,34 +66,44 @@ const TrafficDiv = styled.div`
   }
 `;
 
+const AddButton = styled.div`
+  float: right;
+`;
+
 const title = 'Montreal';
 interface StateProps {
   districts: districtState;
   isStaff: boolean;
+  users: userState;
   user_id: number;
 }
 
 interface DispatchProps {
-  getDistricts(): GetDistrictsAction;
-  resetDistricts(): ResetDistrictAction;
   deleteExistingIntersection: (id: string) => DeleteIntersectionAction;
+  getDistricts(): GetDistrictsAction;
+  getUsers(): GetUsersAction;
+  resetDistricts(): ResetDistrictAction;
   logClick: (log_message: string, user_id: number) => LogAction;
 }
 
 class IntersectionList extends React.Component<StateProps & DispatchProps, {}> {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
-    const { getDistricts } = this.props;
+    const { getDistricts, getUsers } = this.props;
     getDistricts();
+    getUsers();
   }
 
   public componentDidUpdate(prevProps: StateProps): void {
-    const { districts: prevDistricts } = prevProps;
+    const { districts: prevDistricts, users: prevUsers } = prevProps;
     // eslint-disable-next-line no-shadow
-    const { getDistricts } = this.props;
-    const { districts } = this.props;
+    const { getDistricts, getUsers } = this.props;
+    const { districts, users } = this.props;
     if (districts !== prevDistricts) {
       getDistricts();
+    }
+    if (users !== prevUsers) {
+      getUsers();
     }
   }
 
@@ -102,7 +114,7 @@ class IntersectionList extends React.Component<StateProps & DispatchProps, {}> {
   // }
 
   public render(): JSX.Element {
-    const { districts, isStaff } = this.props;
+    const { districts, isStaff, users } = this.props;
     // const districtsProps = {
     //   // eslint-disable-next-line object-shorthand
     //   districts: districts,
@@ -113,6 +125,7 @@ class IntersectionList extends React.Component<StateProps & DispatchProps, {}> {
         <ContentFlexBox>
           <TableDiv>
             <IntersectionTable districts={districts} isStaff={isStaff} />
+            <AddButton>{isStaff ? <AddIntersection users={users} /> : <div />}</AddButton>
           </TableDiv>
           <TrafficDiv>
             <TrafficNews />
@@ -125,12 +138,14 @@ class IntersectionList extends React.Component<StateProps & DispatchProps, {}> {
 const mapStateToProps = (state: RootState): StateProps => ({
   districts: state.districts,
   isStaff: isStaff(state),
+  users: state.users,
   user_id: state.authentication.user_id,
 });
 
 const mapDispatchToProps: DispatchProps = {
-  getDistricts,
   deleteExistingIntersection,
+  getDistricts,
+  getUsers,
   logClick,
   resetDistricts,
 };
