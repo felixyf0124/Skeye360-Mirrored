@@ -126,9 +126,10 @@ const useStyles = makeStyles((theme) => ({
     color: '#FFFFFF',
   },
   smallIcon: {
-    height: '1.25rem',
-    width: '1.25rem',
+    height: '1.2rem',
+    width: '1.2rem',
     color: '#FFFFFF',
+    paddingBottom: '0.2rem'
   },
   whiteStyle: {
     position: 'absolute',
@@ -195,7 +196,7 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             {username}
             !
           </p>
-          <a className={classes.whiteStyle} style={{ right: 145 }} href="/">
+          <a className={classes.whiteStyle} style={{ right: 145, paddingTop: 1.3 }} href="/">
             <PersonIcon className={classes.smallIcon} />
             Profile
           </a>
