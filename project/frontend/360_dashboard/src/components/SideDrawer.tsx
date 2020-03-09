@@ -52,7 +52,7 @@ const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
 const drawerWidth = 185;
 
-let date = new Date().toLocaleDateString();
+const date = new Date().toLocaleDateString();
 // CSS for the drawer and header
 // Uses useStyles and makeStyles which is integrated in material-UI
 const useStyles = makeStyles((theme) => ({
@@ -133,7 +133,7 @@ const useStyles = makeStyles((theme) => ({
   whiteStyle: {
     position: 'absolute',
     color: '#FFFFFF',
-  }
+  },
 }));
 
 const Logo = styled.img`
@@ -155,7 +155,9 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
     setOpen(false);
   };
 
-  const { user_id, logout, headerTitle, username } = props;
+  const {
+    user_id, logout, headerTitle, username,
+  } = props;
 
   const handleLogout = (): void => {
     const { logClick } = props;
@@ -188,10 +190,21 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             {headerTitle}
           </Typography>
           <Weather />
-          <p className={classes.whiteStyle} style={{right: 225}} >Hi, {username}!</p>
-          <a className={classes.whiteStyle} style={{right: 145}} href="/"><PersonIcon className={classes.smallIcon} />Profile</a>
-          <a className={classes.whiteStyle} style={{right: 85}} href="/" onClick={handleLogout}>Logout</a>
-          <p className={classes.whiteStyle} style={{right: 10}}> {date} </p>
+          <p className={classes.whiteStyle} style={{ right: 225 }}>
+            Hi,
+            {username}
+            !
+          </p>
+          <a className={classes.whiteStyle} style={{ right: 145 }} href="/">
+            <PersonIcon className={classes.smallIcon} />
+            Profile
+          </a>
+          <a className={classes.whiteStyle} style={{ right: 85 }} href="/" onClick={handleLogout}>Logout</a>
+          <p className={classes.whiteStyle} style={{ right: 10 }}>
+            {' '}
+            {date}
+            {' '}
+          </p>
         </Toolbar>
       </AppBar>
       <Drawer
