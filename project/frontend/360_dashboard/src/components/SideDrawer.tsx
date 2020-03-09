@@ -51,6 +51,7 @@ const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
 const drawerWidth = 185;
 
+let date = new Date().toLocaleDateString();
 // CSS for the drawer and header
 // Uses useStyles and makeStyles which is integrated in material-UI
 const useStyles = makeStyles((theme) => ({
@@ -123,6 +124,11 @@ const useStyles = makeStyles((theme) => ({
   iconStyle: {
     color: '#FFFFFF',
   },
+  smallIcon: {
+    height: '1.25rem',
+    width: '1.25rem',
+    color: '#FFFFFF',
+  },
 }));
 
 const Logo = styled.img`
@@ -177,6 +183,13 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             {headerTitle}
           </Typography>
           <Weather />
+          <div style={{position: 'absolute', right: 90}}>
+            <a style={{color: 'white'}} href="/"><PersonIcon className={classes.smallIcon} />Profile</a>
+            <a style={{color: 'white', paddingLeft: 8}} href="/" onClick={handleLogout}>Logout</a>
+          </div>
+          <div style={{position: 'absolute', right: 10, verticalAlign: 'center', marginTop: 8}}>
+            <p> {date} </p>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -220,24 +233,8 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
               <ListItemText className={classes.listItem} primary="View Map" />
             </ListItem>
           </Link>
-          <Link to="/">
-            <ListItem button key="Profile">
-              <ListItemIcon>
-                <PersonIcon className={classes.iconStyle} />
-              </ListItemIcon>
-              <ListItemText className={classes.listItem} primary="Profile" />
-            </ListItem>
-          </Link>
         </List>
         <Divider />
-        <List className={classes.listItem}>
-          <ListItem button key="Logout" href="/" onClick={handleLogout}>
-            <ListItemIcon>
-              <ExitToAppIcon className={classes.iconStyle} />
-            </ListItemIcon>
-            <ListItemText primary="Log Out" />
-          </ListItem>
-        </List>
       </Drawer>
     </div>
   );
