@@ -158,6 +158,8 @@ class TrafficNews extends React.Component<{}, StateProps> {
               shortDesc: string;
               fullDesc: string;
               severity: any;
+              startTime: any;
+              endTime: any;
             }) => (
               <CardStyle key={incident.id}>
                 <Card>
@@ -220,6 +222,16 @@ class TrafficNews extends React.Component<{}, StateProps> {
                             return 'Normal Delay';
                         }
                       })()}
+                      {' '}
+                      <br />
+                      <b>Start Time:</b>
+                      {' '}
+                      {incident.startTime}
+                      {' '}
+                      <br />
+                      <b>End Time:</b>
+                      {' '}
+                      {incident.endTime}
                     </Typography>
                   </CardContent>
                 </Card>
