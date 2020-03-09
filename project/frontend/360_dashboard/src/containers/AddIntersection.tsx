@@ -20,7 +20,7 @@ import Menu from '@material-ui/core/Menu';
 import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
 import { logClick } from '../contexts/LogClicks';
-import { getUsers, STATE as userState } from '../contexts/users';
+import { STATE as userState } from '../contexts/users';
 import { SKEYE_GREY } from '../css/custom';
 
 const Body = styled.div`
@@ -149,7 +149,6 @@ interface DispatchProps {
     district_id: string,
     user_id: string,
   ) => any;
-  getUsers: (userType: string) => any;
   historyPush: (url: string) => void;
   logClick: (log_message: string, user_id: number) => any;
 }
@@ -176,7 +175,7 @@ const AddIntersection = (props: Props & StateProps & DispatchProps): JSX.Element
       state.latitude,
       state.longitude,
       state.district_id,
-      state.assigned_user_id,
+      String(state.assigned_user_id),
     );
     logClick(
       `Added Intersection: ${state.intersection_name}, ${state.latitude}, ${state.longitude}, ${state.district_id}, ${state.assigned_user_id}`,
@@ -370,7 +369,6 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 const mapDispatchToProps: DispatchProps = {
   addNewIntersection,
-  getUsers,
   historyPush: push,
   logClick,
 };

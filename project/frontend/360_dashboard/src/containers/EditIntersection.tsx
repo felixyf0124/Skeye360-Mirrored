@@ -15,6 +15,7 @@ import { Response as cameraResponse } from '../api/camera';
 import SideDrawer from '../components/SideDrawer';
 import EditCameraForm from '../components/EditCameraForm';
 import AddCameraForm from '../components/AddCameraForm';
+import { getUsers, STATE as userState, GetUsersAction } from '../contexts/users';
 import { LOW_RES } from '../css/custom';
 
 const Content = styled.div`
@@ -67,6 +68,7 @@ interface StateProps {
   district_id: string;
 
   cameras: [cameraResponse] | any;
+  users: userState;
 
   error: string;
   success: boolean;
@@ -74,6 +76,7 @@ interface StateProps {
 
 interface DispatchProps {
   getExistingIntersection: (id: string) => any;
+  getUsers: () => GetUsersAction;
   historyPush: (url: string) => void;
   resetCurrentIntersection(): ResetIntersectionAction;
 }
@@ -82,14 +85,16 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
   // component mount will fetch existing intersection
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
-    const { intersection_id, getExistingIntersection } = this.props;
+    const { intersection_id, getExistingIntersection, getUsers } = this.props;
     getExistingIntersection(intersection_id);
+    getUsers();
   }
 
   public componentDidUpdate(): void {
     // eslint-disable-next-line no-shadow
-    const { intersection_id, getExistingIntersection } = this.props;
+    const { intersection_id, getExistingIntersection, getUsers } = this.props;
     getExistingIntersection(intersection_id);
+    getUsers();
   }
 
   // public componentWillUnmount(): void {
@@ -100,7 +105,7 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
 
   public render(): JSX.Element {
     const {
-      success, intersection_name, cameras, intersection_id, loaded_id,
+      success, intersection_name, cameras, intersection_id, loaded_id, users,
     } = this.props;
     // if (district_id === '') return <Redirect to="/" />;
     const headerTitle = `${intersection_name}`;
@@ -110,7 +115,7 @@ class EditIntersection extends React.Component<StateProps & DispatchProps> {
         <Content>
           <SideDrawer headerTitle={headerTitle} />
           <HorizontalFlexBox>
-            {intersection_name === '' ? <div /> : <EditIntersectionForm />}
+            {intersection_name === '' ? <div /> : <EditIntersectionForm users={users} />}
             <VerticalFlexBox>
               {cameras === undefined ? (
                 <div />
@@ -158,6 +163,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
   // cameras
   cameras: state.intersection.cameras,
+  users: state.users,
 
   error: state.intersection.error,
   success: state.intersection.success,
@@ -165,6 +171,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 const mapDispatchToProps: DispatchProps = {
   getExistingIntersection,
+  getUsers,
   resetCurrentIntersection,
   historyPush: push,
 };
