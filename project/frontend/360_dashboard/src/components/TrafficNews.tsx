@@ -26,18 +26,35 @@ import { SKEYE_WHITE, LOW_RES } from '../css/custom';
   Severity Ranges from 0-4, which is an indicator for delay,
   0 being the lowest, 4 being the highest.
 */
-
+const { REACT_APP_API_URL } = process.env;
 const API_KEY = '24jtUJNMCXQg4pLgMchaC7p6Flihs7wO';
 
-const BOUNDING_BOX = '45.7047897,-73.47429525,45.41007553,-73.97290173';
-const API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${BOUNDING_BOX}`;
+// const BOUNDING_BOX = '45.7047897,-73.47429525,45.41007553,-73.97290173';
+// const API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${BOUNDING_BOX}`;
+
+const API_DOMAIN = REACT_APP_API_URL;
+const DISTRICT_CALL = `//${API_DOMAIN}/api/district/`;
+
+const incidentsArray: any[] = [];
 
 interface StateProps {
-  error: any;
   isLoaded: boolean;
   incidents: any;
 }
+// Function that creates a bounding box based on latitude and longitude provided
+const createBoundingBox = (latitude: number, longitude: number): string => {
+  // For now, the values are +0.1 and -0.1 for sake of demo.
+  // Normally they would be +-0.001 but there are no traffic news retrieved.
+  const upperBoundLatitude = latitude + 0.1;
+  const upperBoundLongitude = longitude + 0.1;
 
+  const lowerBoundLatitude = latitude - 0.1;
+  const lowerBoundLongitude = longitude - 0.1;
+
+  return `${upperBoundLatitude.toString()},${upperBoundLongitude.toString()},${lowerBoundLatitude.toString()},${lowerBoundLongitude.toString()}`;
+};
+
+// Styled Components
 const OuterContainer = styled.div`
   overflow: scroll;
   height: 88vh;
@@ -68,7 +85,6 @@ class TrafficNews extends React.Component<{}, StateProps> {
   constructor(props: any) {
     super(props);
     this.state = {
-      error: null,
       isLoaded: false,
       incidents: [],
     };
@@ -76,29 +92,57 @@ class TrafficNews extends React.Component<{}, StateProps> {
 
   componentDidMount(): void {
     // eslint-disable-next-line no-shadow
-    fetch(API_CALL)
-      .then((results) => results.json())
-      .then(
-        (data) => {
-          this.setState({
-            isLoaded: true,
-            incidents: data.incidents,
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error,
-          });
-        },
-      );
+    let latitude: number;
+    let longitude: number;
+    let boundingBox: string;
+    const districtFetch = () => {
+      const url = DISTRICT_CALL;
+      const settings = {
+        method: 'GET',
+        headers: {},
+      };
+      // Fetch the list of intersections
+      fetch(url, settings).then(async (response) => {
+        const data = await response.json();
+        let CALL = '';
+        let tempData: any[] = [];
+        /* eslint-disable no-plusplus */
+        /* eslint-disable no-loop-func */
+        for (let i = 0; i < data[0].intersections.length; i++) {
+          // 1. Retrieve intersection's latitude and longitude
+          latitude = data[0].intersections[i].latitude;
+          longitude = data[0].intersections[i].longitude;
+
+          // 2. Create a bounding box
+          boundingBox = createBoundingBox(latitude, longitude);
+
+          // 3. Fetch traffic news from API
+          CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${boundingBox}`;
+
+          // 4. Append to state
+          fetch(CALL)
+            .then((results) => results.json())
+            .then(
+              (data) => {
+                tempData = data.incidents;
+
+                if (tempData.length !== 0) {
+                  incidentsArray.push(...data.incidents);
+                }
+                this.setState({
+                  isLoaded: true,
+                  incidents: incidentsArray,
+                });
+              },
+            );
+        }
+      });
+    };
+    districtFetch();
   }
 
   render(): JSX.Element {
-    const { error, isLoaded, incidents } = this.state;
-    if (error) {
-      return <div>Error</div>;
-    }
+    const { isLoaded, incidents } = this.state;
     if (!isLoaded) {
       return <CircularProgress />;
     }
