@@ -67,6 +67,7 @@ export interface AddIntersectionAction extends Action {
   latitude: string;
   longitude: string;
   district_id: string;
+  user_id: string;
 }
 
 // base case
@@ -75,12 +76,14 @@ export const addNewIntersection = (
   latitude: string,
   longitude: string,
   district_id: string,
+  user_id: string,
 ): AddIntersectionAction => ({
   type: ADD_INTERSECTION,
   intersection_name,
   latitude,
   longitude,
   district_id,
+  user_id,
 });
 
 export interface AddIntersectionSuccessAction {
@@ -225,9 +228,17 @@ export function* handleAddIntersection({
   latitude,
   longitude,
   district_id,
+  user_id,
 }: AddIntersectionAction): Iterator<any> {
   try {
-    const data = yield call(addIntersection, intersection_name, latitude, longitude, district_id);
+    const data = yield call(
+      addIntersection,
+      intersection_name,
+      latitude,
+      longitude,
+      district_id,
+      user_id,
+    );
     if (data !== undefined) {
       yield put(addIntersectionSuccess(data));
     }

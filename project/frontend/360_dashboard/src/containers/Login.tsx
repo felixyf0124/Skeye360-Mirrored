@@ -268,7 +268,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
                     <PersonIcon />
                   </Grid>
                   <Grid item>
-                    {console.log(state.username)}
                     <TextField
                       name="username"
                       label="Usename"

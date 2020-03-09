@@ -18,6 +18,7 @@ export const addIntersection = async (
   latitude: string,
   longitude: string,
   district_id: string,
+  user_id: string,
 ): Promise<Response> => {
   // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/intersection/`;
@@ -26,6 +27,7 @@ export const addIntersection = async (
     latitude,
     longitude,
     district_id,
+    user_id,
   };
   const settings = {
     method: 'POST',
