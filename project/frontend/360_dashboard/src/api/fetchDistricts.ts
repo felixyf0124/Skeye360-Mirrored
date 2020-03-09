@@ -15,6 +15,7 @@ export interface Response {
       }[];
       longitude: number;
       district_id: number;
+      user_id: number;
     }[];
   };
 }

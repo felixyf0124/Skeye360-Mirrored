@@ -114,7 +114,9 @@ class IntersectionList extends React.Component<StateProps & DispatchProps, {}> {
   // }
 
   public render(): JSX.Element {
-    const { districts, isStaff, users } = this.props;
+    const {
+      districts, isStaff, user_id, users,
+    } = this.props;
     // const districtsProps = {
     //   // eslint-disable-next-line object-shorthand
     //   districts: districts,
@@ -124,7 +126,7 @@ class IntersectionList extends React.Component<StateProps & DispatchProps, {}> {
         <SideDrawer headerTitle={title} />
         <ContentFlexBox>
           <TableDiv>
-            <IntersectionTable districts={districts} isStaff={isStaff} />
+            <IntersectionTable districts={districts} isStaff={isStaff} user_id={user_id} />
             <AddButton>{isStaff ? <AddIntersection users={users} /> : <div />}</AddButton>
           </TableDiv>
           <TrafficDiv>

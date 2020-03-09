@@ -17,6 +17,7 @@ export interface STATE {
       }[];
       longitude: number;
       district_id: number;
+      user_id: number;
     }[];
   };
 }
@@ -40,6 +41,7 @@ const initState: STATE = {
         ],
         longitude: 456,
         district_id: 0,
+        user_id: 0,
       },
     ],
   },
