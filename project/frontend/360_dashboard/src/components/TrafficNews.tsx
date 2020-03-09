@@ -41,7 +41,10 @@ interface StateProps {
   isLoaded: boolean;
   incidents: any;
 }
+// Function that creates a bounding box based on latitude and longitude provided
 const createBoundingBox = (latitude: number, longitude: number): string => {
+  // For now, the values are +0.1 and -0.1 for sake of demo.
+  // Normally they would be +-0.001 but there are no traffic news retrieved.
   const upperBoundLatitude = latitude + 0.1;
   const upperBoundLongitude = longitude + 0.1;
 
@@ -98,6 +101,7 @@ class TrafficNews extends React.Component<{}, StateProps> {
         method: 'GET',
         headers: {},
       };
+      // Fetch the list of intersections
       fetch(url, settings).then(async (response) => {
         const data = await response.json();
         let CALL = '';
@@ -112,9 +116,10 @@ class TrafficNews extends React.Component<{}, StateProps> {
           // 2. Create a bounding box
           boundingBox = createBoundingBox(latitude, longitude);
 
-          // 3. Fetch traffic news from API and append it to state
+          // 3. Fetch traffic news from API
           CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${boundingBox}`;
 
+          // 4. Append to state
           fetch(CALL)
             .then((results) => results.json())
             .then(
