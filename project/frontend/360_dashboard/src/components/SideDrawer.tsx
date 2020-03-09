@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme) => ({
     height: '1.2rem',
     width: '1.2rem',
     color: '#FFFFFF',
-    paddingBottom: '0.2rem'
+    paddingBottom: '0.2rem',
   },
   whiteStyle: {
     position: 'absolute',
