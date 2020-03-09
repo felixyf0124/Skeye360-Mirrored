@@ -2,6 +2,7 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 import ApexCharts from 'apexcharts';
+import { truncate } from 'fs';
 
 // Realtime graph from the ApexCharts Documentation Website
 // https://apexcharts.com/react-chart-demos/line-charts/realtime/
@@ -85,15 +86,21 @@ const getMovAvg = (): void => {
 };
 
 interface ChartState {
-  options: any;
-  series: any;
+  line1Options: any;
+  line2Options: any;
+
+  line1Series: any;
+  line2Series: any;
+
+  barOptions: any;
+  barSeries: any;
 }
 
 class RealTimeLine extends React.Component<{}, ChartState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      options: {
+      line1Options: {
         chart: {
           id: 'realtime',
           height: 350,
@@ -143,7 +150,7 @@ class RealTimeLine extends React.Component<{}, ChartState> {
           show: true,
         },
       },
-      series: [
+      line1Series: [
         {
           name: 'Prediction',
           data: current_arima,
@@ -153,6 +160,69 @@ class RealTimeLine extends React.Component<{}, ChartState> {
           data: current_mavg,
         },
       ],
+      line2Options: {
+        chart: {
+          id: 'line2',
+          height: 350,
+          type: 'line',
+          animations: {
+            enabled: true,
+            easing: 'linear',
+            dynamicAnimation: {
+              speed: 1000,
+            },
+          },
+          toolbar: {
+            show: false,
+          },
+          zoom: {
+            enabled: false,
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: 'smooth',
+        },
+        title: {
+          align: 'center',
+          text: 'Prediction vs Moving Average',
+        },
+        markers: {
+          size: 0,
+        },
+        xaxis: {
+          range: 23,
+          title: {
+            text: 'Hours',
+            align: 'center',
+          },
+        },
+        yaxis: {
+          min: 10,
+          max: 50,
+          title: {
+            text: 'Cars',
+          },
+        },
+        legend: {
+          show: true,
+        },
+      },
+      line2Series: [
+        {
+          name: 'Prediction',
+          data: current_arima,
+        },
+        {
+          name: 'Moving Average',
+          data: current_mavg,
+        }
+      ],
+
+      barOptions: {},
+      barSeries: [],
     };
   }
 
@@ -169,13 +239,24 @@ class RealTimeLine extends React.Component<{}, ChartState> {
         { data: current_arima },
         { data: current_mavg },
       ]);
+      ApexCharts.exec('line2', 'updateSeries', [
+        { data: current_arima },
+        { data: current_mavg },
+      ])
       COUNT++;
     }, 1000);
   }
 
   /* eslint-disable react/destructuring-assignment */
   public render(): JSX.Element {
-    return <Chart options={this.state.options} series={this.state.series} type="line" />;
+    
+    return (
+      <div>
+        <Chart options={this.state.line1Options} series={this.state.line1Series} type="line" />;
+        <Chart options={this.state.line2Options} series={this.state.line2Series} type="line" />;
+
+      </div>
+    )
   }
 }
 export default RealTimeLine;
