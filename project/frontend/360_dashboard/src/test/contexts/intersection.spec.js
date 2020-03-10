@@ -21,6 +21,7 @@ const data = {
   cameras: [],
   longitude: '321',
   district_id: '1',
+  user_id: 0,
 };
 
 describe('intersection redux', () => {
@@ -48,6 +49,7 @@ describe('intersection redux', () => {
         longitude: '',
         intersection_name: '',
         district_id: '',
+        user_id: 0,
         error: 'New intersection created.',
         success: true,
       });
@@ -61,6 +63,7 @@ describe('intersection redux', () => {
         longitude: '321',
         intersection_name: 'Concordia',
         district_id: '1',
+        user_id: 0,
         error: '',
         success: true,
       });
@@ -74,6 +77,7 @@ describe('intersection redux', () => {
         longitude: '',
         intersection_name: '',
         district_id: '',
+        user_id: 0,
         error: 'Intersection updated.',
         success: true,
       });
@@ -87,6 +91,7 @@ describe('intersection redux', () => {
         longitude: '',
         intersection_name: '',
         district_id: '',
+        user_id: 0,
         error: 'Intersection deleted.',
         success: true,
       });
@@ -101,6 +106,7 @@ describe('intersection redux', () => {
         longitude: '',
         intersection_name: '',
         district_id: '',
+        user_id: 0,
         error: 'Error while adding new intersection.',
         success: false,
       });
@@ -114,6 +120,7 @@ describe('intersection redux', () => {
         longitude: '',
         intersection_name: '',
         district_id: '',
+        user_id: 0,
         error: 'Error while getting existing intersection.',
         success: false,
       });
@@ -127,6 +134,7 @@ describe('intersection redux', () => {
         longitude: '',
         intersection_name: '',
         district_id: '',
+        user_id: 0,
         error: 'Error while editing existing intersection.',
         success: false,
       });
@@ -140,6 +148,7 @@ describe('intersection redux', () => {
         longitude: '',
         intersection_name: '',
         district_id: '',
+        user_id: 0,
         error: 'Error while deleting existing intersection.',
         success: false,
       });

@@ -17,6 +17,7 @@ export interface STATE {
   intersection_name: string;
   district_id: string;
   cameras: [cameraResponse] | [];
+  user_id: number;
   error: string;
   success: boolean;
 }
@@ -29,6 +30,7 @@ const initState: STATE = {
   intersection_name: '',
   district_id: '',
   cameras: [],
+  user_id: 0,
   error: '',
   success: false,
 };
@@ -67,6 +69,7 @@ export interface AddIntersectionAction extends Action {
   latitude: string;
   longitude: string;
   district_id: string;
+  user_id: string;
 }
 
 // base case
@@ -75,12 +78,14 @@ export const addNewIntersection = (
   latitude: string,
   longitude: string,
   district_id: string,
+  user_id: string,
 ): AddIntersectionAction => ({
   type: ADD_INTERSECTION,
   intersection_name,
   latitude,
   longitude,
   district_id,
+  user_id,
 });
 
 export interface AddIntersectionSuccessAction {
@@ -146,6 +151,7 @@ export interface EditIntersectionAction extends Action {
   latitude: string;
   longitude: string;
   district_id: string;
+  user_id: string;
 }
 
 // base case
@@ -155,6 +161,7 @@ export const editExistingIntersection = (
   latitude: string,
   longitude: string,
   district_id: string,
+  user_id: string,
 ): EditIntersectionAction => ({
   type: EDIT_INTERSECTION,
   intersection_id,
@@ -162,6 +169,7 @@ export const editExistingIntersection = (
   latitude,
   longitude,
   district_id,
+  user_id,
 });
 
 export interface EditIntersectionSuccessAction {
@@ -225,9 +233,17 @@ export function* handleAddIntersection({
   latitude,
   longitude,
   district_id,
+  user_id,
 }: AddIntersectionAction): Iterator<any> {
   try {
-    const data = yield call(addIntersection, intersection_name, latitude, longitude, district_id);
+    const data = yield call(
+      addIntersection,
+      intersection_name,
+      latitude,
+      longitude,
+      district_id,
+      user_id,
+    );
     if (data !== undefined) {
       yield put(addIntersectionSuccess(data));
     }
@@ -255,6 +271,7 @@ export function* handleEditIntersection({
   latitude,
   longitude,
   district_id,
+  user_id,
 }: EditIntersectionAction): Iterator<any> {
   try {
     const data = yield call(
@@ -264,6 +281,7 @@ export function* handleEditIntersection({
       latitude,
       longitude,
       district_id,
+      user_id,
     );
     if (data !== undefined) {
       yield put(editIntersectionSuccess(data));
@@ -303,6 +321,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         intersection_name: '',
         district_id: '',
         cameras: [],
+        user_id: 0,
         error: '',
         success: false,
       };
@@ -324,6 +343,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         district_id: String(data.district_id),
         intersection_id: String(data.id),
         cameras: data.cameras,
+        user_id: data.user_id,
         error: '',
         success: true,
       };

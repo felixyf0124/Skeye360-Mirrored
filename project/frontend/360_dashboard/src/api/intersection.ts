@@ -8,6 +8,7 @@ export interface Response {
   cameras: [];
   longitude: number;
   district_id: number;
+  user_id: number;
 }
 
 const APIDomain = REACT_APP_API_URL;
@@ -18,6 +19,7 @@ export const addIntersection = async (
   latitude: string,
   longitude: string,
   district_id: string,
+  user_id: string,
 ): Promise<Response> => {
   // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/intersection/`;
@@ -26,6 +28,7 @@ export const addIntersection = async (
     latitude,
     longitude,
     district_id,
+    user_id,
   };
   const settings = {
     method: 'POST',
@@ -65,6 +68,7 @@ export const editIntersection = async (
   latitude: string,
   longitude: string,
   district_id: string,
+  user_id: string,
 ): Promise<Response> => {
   // ENDPOINT, PARAMS
   const url = `//${APIDomain}/api/intersection/${intersection_id}/`;
@@ -73,6 +77,7 @@ export const editIntersection = async (
     latitude,
     longitude,
     district_id,
+    user_id,
   };
   const settings = {
     method: 'PUT',

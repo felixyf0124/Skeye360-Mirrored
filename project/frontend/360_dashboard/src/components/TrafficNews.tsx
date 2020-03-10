@@ -95,7 +95,7 @@ class TrafficNews extends React.Component<{}, StateProps> {
     let latitude: number;
     let longitude: number;
     let boundingBox: string;
-    const districtFetch = () => {
+    const districtFetch = (): void => {
       const url = DISTRICT_CALL;
       const settings = {
         method: 'GET',
@@ -122,19 +122,17 @@ class TrafficNews extends React.Component<{}, StateProps> {
           // 4. Append to state
           fetch(CALL)
             .then((results) => results.json())
-            .then(
-              (data) => {
-                tempData = data.incidents;
+            .then((data) => {
+              tempData = data.incidents;
 
-                if (tempData.length !== 0) {
-                  incidentsArray.push(...data.incidents);
-                }
-                this.setState({
-                  isLoaded: true,
-                  incidents: incidentsArray,
-                });
-              },
-            );
+              if (tempData.length !== 0) {
+                incidentsArray.push(...data.incidents);
+              }
+              this.setState({
+                isLoaded: true,
+                incidents: incidentsArray,
+              });
+            });
         }
       });
     };

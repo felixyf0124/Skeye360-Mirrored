@@ -18,7 +18,6 @@ import DeleteIntersectionButton from './DeleteIntersectionButton';
 import TrafficIntensity from './TrafficIntensity';
 import CameraConnectionStatus from './CameraConnectionStatus';
 import { Response as cameraResponse } from '../api/camera';
-import AddIntersection from '../containers/AddIntersection';
 
 // Generic flexboxes styling
 const VerticalFlexBox = styled.div`
@@ -64,13 +63,24 @@ const useStyles = makeStyles((theme) => ({
 interface StateProps {
   districts: districtState;
   isStaff: boolean;
+  user_id: number;
 }
+
+const filterList = (isStaff: boolean, user_id: number, assigned_user_id: number): boolean => {
+  if (isStaff) {
+    return true;
+  }
+  if (user_id === assigned_user_id) {
+    return true;
+  }
+  return false;
+};
 
 const IntersectionTable = (props: StateProps): JSX.Element => {
   // Intersection Table that retrieves all of the intersections of a district
   // And displays their information in the table.
   const classes = useStyles();
-  const { districts, isStaff } = props;
+  const { districts, isStaff, user_id } = props;
   return (
     <main className={classes.content}>
       <TableContainer component={Paper}>
@@ -106,7 +116,8 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
                 <TableCell />
               </TableRow>
             ) : (
-              districts[0].intersections.map((intersection) => (
+              // eslint-disable-next-line max-len
+              districts[0].intersections.map((intersection) => (filterList(isStaff, user_id, intersection.user_id) ? (
                 <TableRow key={intersection.id}>
                   <TableCell component="th" scope="row" align="center">
                     {intersection.intersection_name}
@@ -155,16 +166,13 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
                     <div />
                   )}
                 </TableRow>
-              ))
+              ) : (
+                <div />
+              )))
             )}
           </TableBody>
         </Table>
       </TableContainer>
-      {isStaff ? (
-        <AddIntersection />
-      ) : (
-        <div />
-      )}
     </main>
   );
 };
