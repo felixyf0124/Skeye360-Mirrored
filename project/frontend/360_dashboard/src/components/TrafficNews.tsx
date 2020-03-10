@@ -54,14 +54,14 @@ const createBoundingBox = (latitude: number, longitude: number): string => {
   return `${upperBoundLatitude.toString()},${upperBoundLongitude.toString()},${lowerBoundLatitude.toString()},${lowerBoundLongitude.toString()}`;
 };
 
-//Function that converts ISO date into yyyy-mm-dd format
+// Function that converts ISO date into yyyy-mm-dd format
 const toNormalDate = (retrievedDate: string) => {
-  let date = new Date(retrievedDate);
-  let year = date.getFullYear();
-  let month = date.getMonth();
-  let day = date.getDate();
+  const date = new Date(retrievedDate);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
   return `${year}-${month}-${day}`;
-}
+};
 // Styled Components
 const OuterContainer = styled.div`
   overflow: scroll;
