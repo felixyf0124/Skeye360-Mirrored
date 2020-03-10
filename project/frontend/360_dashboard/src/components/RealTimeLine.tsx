@@ -15,6 +15,7 @@ const current_arima: any[] = [];
 
 let COUNT = 0;
 
+//Static arima dataset
 arima_dataset = [
   [0, 35],
   [1, 23],
@@ -42,6 +43,7 @@ arima_dataset = [
   [23, 23],
 ];
 
+//Static moving average dataset
 mavg_dataset = [
   [0, 30],
   [1, 25],
@@ -76,15 +78,20 @@ mavg_dataset = [
 const getMovAvg = (): void => {
   if (COUNT === 0) {
     /* eslint-disable no-plusplus */
+    //Populate the entire arima dataset if count is equal to zero
     for (let i = 0; i < arima_dataset.length; i++) {
       current_arima.push(arima_dataset[i]);
     }
   }
+  //Populate the moving average displayed on graph one by one 
   if (COUNT < 24) {
     current_mavg.push(mavg_dataset[COUNT]);
   }
 };
 
+//For every graph, there needs to be options and series
+//Options represents the type of chart with all its options
+//Series represents the given data to the graph
 interface ChartState {
   line1Options: any;
   line2Options: any;
@@ -102,7 +109,7 @@ class RealTimeLine extends React.Component<{}, ChartState> {
     this.state = {
       line1Options: {
         chart: {
-          id: 'realtime',
+          id: 'line1',
           height: 350,
           type: 'line',
           animations: {
@@ -127,7 +134,7 @@ class RealTimeLine extends React.Component<{}, ChartState> {
         },
         title: {
           align: 'center',
-          text: 'Prediction vs Moving Average',
+          text: 'Prediction vs Moving Average in North-South',
         },
         markers: {
           size: 0,
@@ -187,7 +194,7 @@ class RealTimeLine extends React.Component<{}, ChartState> {
         },
         title: {
           align: 'center',
-          text: 'Prediction vs Moving Average',
+          text: 'Prediction vs Moving Average in East-West',
         },
         markers: {
           size: 0,
@@ -221,8 +228,28 @@ class RealTimeLine extends React.Component<{}, ChartState> {
         }
       ],
 
-      barOptions: {},
-      barSeries: [],
+      barOptions: {
+        chart: {
+          type: 'bar',
+          height: 350
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: ['North-South', 'East-West']
+        }
+      },
+      barSeries: [
+        {
+          data: [50, 40]
+        }
+      ],
     };
   }
 
@@ -234,11 +261,15 @@ class RealTimeLine extends React.Component<{}, ChartState> {
       getMovAvg();
 
       // Execute the realtime function here, using the two below data arrays as datasets
+      // ApexCharts.exec() takes in chart ID, method, and data as parameters
       /* eslint-disable no-undef */
-      ApexCharts.exec('realtime', 'updateSeries', [
+      // Update Line Chart 1
+      ApexCharts.exec('line1', 'updateSeries', [
         { data: current_arima },
         { data: current_mavg },
       ]);
+
+      // Update Line Chart 2
       ApexCharts.exec('line2', 'updateSeries', [
         { data: current_arima },
         { data: current_mavg },
@@ -254,7 +285,7 @@ class RealTimeLine extends React.Component<{}, ChartState> {
       <div>
         <Chart options={this.state.line1Options} series={this.state.line1Series} type="line" />;
         <Chart options={this.state.line2Options} series={this.state.line2Series} type="line" />;
-
+        <Chart options={this.state.barOptions} series={this.state.barSeries} type="bar" />
       </div>
     )
   }
