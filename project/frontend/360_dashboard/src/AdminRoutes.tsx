@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 
 interface Props extends RouteComponentProps {
+  authenticated: boolean;
   isStaff: boolean;
   children?: React.ReactNode;
 }
@@ -11,9 +12,9 @@ interface Props extends RouteComponentProps {
 // Handles and checks authentication to see if the logged in user is a staff
 const AdminRoutes = (props: Props): JSX.Element => {
   const {
-    isStaff, location, children, ...rest
+    authenticated, isStaff, location, children, ...rest
   } = props;
-  if (isStaff) {
+  if (authenticated && isStaff) {
     // eslint-disable-next-line react/jsx-props-no-spreading
     return <Route {...rest} render={(): React.ReactNode => children} />;
   }

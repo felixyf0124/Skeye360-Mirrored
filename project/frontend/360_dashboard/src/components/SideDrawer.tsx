@@ -19,7 +19,7 @@ import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -27,7 +27,7 @@ import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
 import Weather from './Weather';
-import { MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
+// import { MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 
 /*
   Template for Material-UI Drawer found at:
@@ -168,7 +168,7 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
     logout();
   };
 
-  const isMobile = useMediaQuery(`(max-width:${MOBILE_DEVICE_MAX_WIDTH}px)`);
+  // const isMobile = useMediaQuery(`(max-width:${MOBILE_DEVICE_MAX_WIDTH}px)`);
 
   return (
     <div>
