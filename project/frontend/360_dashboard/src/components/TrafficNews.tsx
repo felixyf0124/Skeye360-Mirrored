@@ -1,11 +1,10 @@
 import React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
-import styled from 'styled-components';
-
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
+import styled from 'styled-components';
 import { SKEYE_WHITE, LOW_RES } from '../css/custom';
 
 // MapQuest API is used to retrieve traffic news
@@ -37,10 +36,12 @@ const DISTRICT_CALL = `//${API_DOMAIN}/api/district/`;
 
 const incidentsArray: any[] = [];
 
+// StateProps
 interface StateProps {
   isLoaded: boolean;
   incidents: any;
 }
+
 // Function that creates a bounding box based on latitude and longitude provided
 const createBoundingBox = (latitude: number, longitude: number): string => {
   // For now, the values are +0.1 and -0.1 for sake of demo.
@@ -79,6 +80,11 @@ const CardStyle = styled.div`
   :first-child {
     margin-top: 0;
   }
+`;
+
+const Loader = styled.div`
+  margin-top: 4rem;
+  text-align: center;
 `;
 
 class TrafficNews extends React.Component<{}, StateProps> {
@@ -142,7 +148,11 @@ class TrafficNews extends React.Component<{}, StateProps> {
   render(): JSX.Element {
     const { isLoaded, incidents } = this.state;
     if (!isLoaded) {
-      return <CircularProgress />;
+      return (
+        <Loader>
+          <CircularProgress />
+        </Loader>
+      );
     }
     /* eslint-disable max-len */
     /* eslint-disable @typescript-eslint/explicit-function-return-type */
