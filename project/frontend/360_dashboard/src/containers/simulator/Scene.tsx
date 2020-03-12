@@ -29,6 +29,8 @@ interface Props {
   toggles: any;
   tlStop: boolean;
   onTLUpdate: any;
+  simuWidthRatio: number;
+  resolutionRatio: number;
 }
 
 interface StateProps {
@@ -162,11 +164,14 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
   constructor(props: any) {
     super(props);
-    this.windowScaleRatio = 0.4;
+    this.windowScaleRatio = 0.38;
     this.pixiContent = null;
-    this.windowW = window.innerWidth * this.windowScaleRatio;
-    this.windowH = window.innerHeight * this.windowScaleRatio;
-    this.windowMin = 100;
+    const {simuWidthRatio,resolutionRatio,} = this.props;
+
+    this.windowW = window.innerWidth * simuWidthRatio ;
+    this.windowH = this.windowW / resolutionRatio;
+    this.windowH = this.windowW * 19.5/38;
+    this.windowMin = 1;
     const resolution = window.devicePixelRatio;
     const setting = { width: this.windowW, height: this.windowH, resolution };
     this.app = new PIXI.Application(setting);
@@ -637,6 +642,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * resize
    */
   resize = (): void => {
+    const {simuWidthRatio,resolutionRatio,} = this.props;
     if (
       window.innerWidth !== undefined
       && window.innerHeight !== undefined
@@ -646,33 +652,34 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.windowW = this.windowMin;
         this.coordinateOffset.x = this.windowW / 2;
       } else {
-        this.windowW = window.innerWidth * this.windowScaleRatio;
+        this.windowW = window.innerWidth * simuWidthRatio;
         this.coordinateOffset.x = this.windowW / 2;
       }
       if (window.innerHeight < this.windowMin) {
         this.windowH = this.windowMin;
         this.coordinateOffset.y = this.windowH / 2;
       } else {
-        this.windowH = window.innerHeight * this.windowScaleRatio;
+        this.windowH = this.windowW / resolutionRatio;
         this.coordinateOffset.y = this.windowH / 2;
       }
       this.app.renderer.resize(this.windowW, this.windowH);
       this.app.stage.x = this.windowW / 2;
       this.app.stage.y = this.windowH / 2;
 
-      this.controlPanelG.clear();
-      this.controlPanelG.beginFill(0x51bcd8, 0.3);
-      this.controlPanelG.lineStyle(1, 0x51bcd8, 0.5);
-      this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
-      this.controlPanelG.endFill();
+      // this.controlPanelG.clear();
+      // this.controlPanelG.beginFill(0x51bcd8, 0.3);
+      // this.controlPanelG.lineStyle(1, 0x51bcd8, 0.5);
+      // this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
+      // this.controlPanelG.endFill();
 
-      if (this.isControlPanelShown) {
-        this.controlPanelContainer.x = -this.coordinateOffset.x;
-        this.controlPanelContainer.y = -this.coordinateOffset.y;
-      } else {
-        this.controlPanelContainer.x = -this.controlPanelG.width - this.coordinateOffset.x;
-        this.controlPanelContainer.y = -this.coordinateOffset.y;
-      }
+      // if (this.isControlPanelShown) {
+      //   this.controlPanelContainer.x = -this.coordinateOffset.x;
+      //   this.controlPanelContainer.y = -this.coordinateOffset.y;
+      // } else {
+      //   this.controlPanelContainer.x = -this.controlPanelG.width - this.coordinateOffset.x;
+      //   this.controlPanelContainer.y = -this.coordinateOffset.y;
+      // }
+      this.laneW = 0.06 * Math.min(this.windowW, this.windowH);
 
       this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
       this.drawRoad();

@@ -118,6 +118,8 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 toggles={toggles}
                 tlStop={tlStop}
                 onTLUpdate={onTLUpdate}
+                simuWidthRatio = {0.38}
+                resolutionRatio = {38/19.5}
               />
             </SimContainer>
           </InnerDivVerticalFirstSim>
@@ -130,6 +132,8 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 toggles={toggles}
                 tlStop={tlStop}
                 onTLUpdate={onTLUpdate}
+                simuWidthRatio = {0.38}
+                resolutionRatio = {38/19.5}
               />
             </SimContainer>
           </InnerDivVerticalSecondSim>
