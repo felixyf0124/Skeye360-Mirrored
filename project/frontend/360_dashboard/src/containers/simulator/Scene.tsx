@@ -166,11 +166,10 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     super(props);
     this.windowScaleRatio = 0.38;
     this.pixiContent = null;
-    const {simuWidthRatio,resolutionRatio,} = this.props;
+    const { simuWidthRatio, resolutionRatio } = this.props;
 
-    this.windowW = window.innerWidth * simuWidthRatio ;
+    this.windowW = window.innerWidth * simuWidthRatio;
     this.windowH = this.windowW / resolutionRatio;
-    this.windowH = this.windowW * 19.5/38;
     this.windowMin = 1;
     const resolution = window.devicePixelRatio;
     const setting = { width: this.windowW, height: this.windowH, resolution };
@@ -227,8 +226,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     // #### hard code to initial road intersection data for first loading
     this.roadIntersection.addNewRoadSection(ts.tsVec2(0.5, 0.11));
     this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.5, -0.12));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2( -0.16, 0.5));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2( 0.16, -0.5));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.16, 0.5));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(0.16, -0.5));
 
     for (let i = 0; i < this.roadIntersection.getRoadSections().length; i += 1) {
       if (i === 3) {
@@ -642,7 +641,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * resize
    */
   resize = (): void => {
-    const {simuWidthRatio,resolutionRatio,} = this.props;
+    const { simuWidthRatio, resolutionRatio } = this.props;
     if (
       window.innerWidth !== undefined
       && window.innerHeight !== undefined
@@ -683,7 +682,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
       this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
       this.drawRoad();
-      this.initialButtons();
       this.roadIntersection.updateVehiclePosV2();
 
       this.laneAreaContainer.x = -this.coordinateOffset.x;
@@ -696,6 +694,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           this.dragablePoints[i][j].y = pos.y * this.windowH;
         }
       }
+      this.initialButtons();
     }
   };
 
@@ -740,7 +739,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         // this will draw from head to tail
         for (let k = 0; k < division; k += 1) {
           const topVertex = lane.getHead().minus(direction.multiply(this.laneW * 0.4 * k))
-          .multiply(this.windowW);
+            .multiply(this.windowW);
           const isForced = this.roadIntersection.isForced(lane.getTrafficLightId());
 
           if (isForced) {
@@ -772,7 +771,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         const division = ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4) + 1;
         for (let k = 1; k < division; k += 1) {
           const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k))
-          .multiply(this.windowW);
+            .multiply(this.windowW);
           const graphicObj = this.drawTriangle(topVertex, h, w, direction, color2);
           this.roadG.addChild(graphicObj);
         }
@@ -798,8 +797,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
     if (!(this.toggleGroup[0].state && this.toggleGroup[2].state && !this.toggleGroup[4].state)) {
       for (let i = 0; i < vehicles.length; i += 1) {
-          
-          const position = vehicles[i].getPosition().multiply(this.windowW);
+        const position = vehicles[i].getPosition().multiply(this.windowW);
         if (Number.isNaN(vehicles[i].getRoadSectionId())) {
           const spot = this.drawVehicleSpot(position);
           this.objectContainer.addChild(spot);
@@ -1360,25 +1358,44 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         const offset = new Vec2(this.coordinateOffset.x, this.coordinateOffset.y);
         const p1 = this.dragablePoints[i][1].absolutPos;
         const p2 = this.dragablePoints[i][2].absolutPos;
-        
-        let pos = p1.plus(p2).multiply(0.5);
+
+        let pos = p1;
 
         const labelG = new Btn(36, 36, 'car#', 0xc658fc);
         labelG.setTextStyle(textStyle3);
         labelG.interactive = false;
         labelG.buttonMode = false;
 
-        let verticalDir = ts.tsNormalize(ts
-        .tsRotateByOrigin(p1.minus(p2),Math.PI/2));
-        
-        pos = pos.plus(verticalDir.multiply(this.laneW*2.5));
-        pos.x*=this.windowW;
-        pos.y*=this.windowH;
+        const verticalDir = ts.tsNormalize(ts
+          .tsRotateByOrigin(p1.minus(p2), Math.PI / 2));
+
+        pos = pos.plus(verticalDir.multiply(this.laneW * 2.5));
+        pos.x *= this.windowW;
+        pos.y *= this.windowH;
         pos = pos.minus(offset);
 
-        labelG.x = pos.x - labelG.btnWidth/2;
-        labelG.y = pos.y - labelG.btnHeight/2;
+        labelG.x = pos.x - labelG.btnWidth / 2;
+        labelG.y = pos.y - labelG.btnHeight / 2;
         this.labelGroup.push(labelG);
+      }
+    } else {
+      for (let i = 0; i < this.dragablePoints.length; i += 1) {
+        const offset = new Vec2(this.coordinateOffset.x, this.coordinateOffset.y);
+        const p1 = this.dragablePoints[i][1].absolutPos;
+        const p2 = this.dragablePoints[i][2].absolutPos;
+
+        let pos = p1;
+
+        const verticalDir = ts.tsNormalize(ts
+          .tsRotateByOrigin(p1.minus(p2), Math.PI / 2));
+
+        pos = pos.plus(verticalDir.multiply(this.laneW * 2.5));
+        pos.x *= this.windowW;
+        pos.y *= this.windowH;
+        pos = pos.minus(offset);
+
+        this.labelGroup[i].x = pos.x - this.labelGroup[i].btnWidth / 2;
+        this.labelGroup[i].y = pos.y - this.labelGroup[i].btnHeight / 2;
       }
     }
     // will need this for later passed car number count
@@ -1694,7 +1711,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             const id = parseInt(matchesArray[0], 10);
             const x = (parseInt(matchesArray[1], 10) / videoW) * this.windowW - this.coordinateOffset.x;
             const y = (parseInt(matchesArray[2], 10) / videoH) * this.windowH - this.coordinateOffset.y;
-            const pos = ts.tsVec2(x, y).multiply(1/this.windowW);
+            const pos = ts.tsVec2(x, y).multiply(1 / this.windowW);
             const simpleVehicleData = { id, position: pos };
             formedData.push(simpleVehicleData);
 
@@ -1733,6 +1750,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           const x = pos.x / this.windowW;
           const y = pos.y / this.windowH;
           this.dragablePoints[i][j].absolutPos = new Vec2(x, y);
+          // console.log(this.dragablePoints[i][j].absolutPos);
         }
         const absPos = this.dragablePoints[i][j].absolutPos;
         this.dragablePoints[i][j].x = absPos.x * this.windowW;

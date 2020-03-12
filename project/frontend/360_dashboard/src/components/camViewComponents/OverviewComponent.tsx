@@ -226,8 +226,8 @@ class OverviewComponent extends React.Component<
                   toggles={toggles}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
-                  simuWidthRatio = {0.38}
-                  resolutionRatio = {38/19.5}
+                  simuWidthRatio={0.38}
+                  resolutionRatio={38 / 19.5}
                 />
               </SimContainer>
             </InnerDivVertical>
@@ -276,8 +276,8 @@ class OverviewComponent extends React.Component<
                   toggles={toggles}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
-                  simuWidthRatio = {0.38}
-                  resolutionRatio = {38/19.5}
+                  simuWidthRatio={0.38}
+                  resolutionRatio={38 / 19.5}
                 />
               </SimContainer>
             </InnerDivVertical>
