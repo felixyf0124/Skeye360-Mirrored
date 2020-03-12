@@ -21,6 +21,11 @@ import CameraConnectionStatus from './CameraConnectionStatus';
 import { Response as cameraResponse } from '../api/camera';
 import { MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 
+// Content Container
+const Content = styled.div`
+  margin-right: 1rem;
+`;
+
 // Generic flexboxes styling
 const VerticalFlexBox = styled.div`
   display: flex;
@@ -96,104 +101,101 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
   const isMobile = useMediaQuery(`(max-width:${MOBILE_DEVICE_MAX_WIDTH}px)`);
 
   return (
-    <main className={classes.content}>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="intersection table">
-          <TableHead>
-            <TableRow>
-              {isMobile ? (
-                <TableCell align="left" colSpan={10} style={{ fontSize: '20px' }}>
-                  <TableTitle>Intersection List</TableTitle>
-                </TableCell>
-              ) : (
-                <TableCell align="center" colSpan={10} style={{ fontSize: '20px' }}>
-                  <TableTitle>Intersection List</TableTitle>
-                </TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Intersection Name</TableCell>
-              <TableCell align="center">District</TableCell>
-              <TableCell align="center">Streetview</TableCell>
-              <TableCell align="center">Cameras</TableCell>
-              <TableCell align="center">Traffic Intensity</TableCell>
-              <TableCell align="center">Camera Status</TableCell>
-              {isStaff ? <TableCell align="center">Edit</TableCell> : <div />}
-              {isStaff ? <TableCell align="center">Delete</TableCell> : <div />}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {districts[0] === undefined ? (
+    <Content>
+      <main className={classes.content}>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="intersection table">
+            <TableHead>
               <TableRow>
-                <TableCell component="th" scope="row" />
-                <TableCell />
-                <TableCell />
-                <TableCell />
-                <TableCell />
-                <TableCell />
-                <TableCell />
+                {isMobile ? (
+                  <TableCell align="left" colSpan={10} style={{ fontSize: '20px' }}>
+                    <TableTitle>{`Intersection List: ${districts[0].district_name}`}</TableTitle>
+                  </TableCell>
+                ) : (
+                  <TableCell align="center" colSpan={10} style={{ fontSize: '20px' }}>
+                    <TableTitle>{`Intersection List: ${districts[0].district_name}`}</TableTitle>
+                  </TableCell>
+                )}
               </TableRow>
-            ) : (
-              // eslint-disable-next-line max-len
-              districts[0].intersections.map((intersection) => (filterList(isStaff, user_id, intersection.user_id) ? (
-                <TableRow key={intersection.id}>
-                  <TableCell component="th" scope="row" align="center">
-                    {intersection.intersection_name}
-                  </TableCell>
-                  <TableCell align="center">{districts[0].district_name}</TableCell>
-                  <TableCell align="center">
-                    <Link to={`/streetview/${intersection.id}`}>
-                      <LaunchIcon />
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">
-                    <VerticalFlexBox>
-                      {intersection.cameras.map((camera: cameraResponse) => (
-                        <Link key={camera.id} to={`/camview/${camera.id}`}>
-                          <LaunchIcon />
-                        </Link>
-                      ))}
-                    </VerticalFlexBox>
-                  </TableCell>
-                  <TableCell align="center">
-                    {intersection.cameras.map((camera: cameraResponse) => (
-                      <a key={camera.id} href={`http://${camera.camera_url}/los/`}>
-                        <TrafficIntensity camera_id={camera.id} camera_url={camera.camera_url} />
-                      </a>
-                    ))}
-                  </TableCell>
-                  <TableCell align="center">
-                    {intersection.cameras.map((camera: cameraResponse) => (
-                      <CameraConnectionStatus key={camera.id} camera_id={camera.id} />
-                    ))}
-                  </TableCell>
-                  {isStaff ? (
-                    <TableCell align="center">
-                      <Link to={`/intersection/edit/${intersection.id}`}>
-                        <EditIcon />
-                      </Link>
-                    </TableCell>
-                  ) : (
-                    <div />
-                  )}
-                  {isStaff ? (
-                    <TableCell align="center">
-                      <DeleteIntersectionButton intersection_id={intersection.id} />
-                    </TableCell>
-                  ) : (
-                    <div />
-                  )}
+            </TableHead>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Intersection Name</TableCell>
+                <TableCell align="center">Cameras</TableCell>
+                <TableCell align="center">Traffic Intensity</TableCell>
+                <TableCell align="center">Camera Status</TableCell>
+                {isStaff ? <TableCell align="center">Edit</TableCell> : <div />}
+                {isStaff ? <TableCell align="center">Delete</TableCell> : <div />}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {districts[0] === undefined ? (
+                <TableRow>
+                  <TableCell component="th" scope="row" />
+                  <TableCell />
+                  <TableCell />
+                  <TableCell />
+                  <TableCell />
                 </TableRow>
               ) : (
-                <div />
-              )))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </main>
+                // eslint-disable-next-line max-len
+                districts[0].intersections.map((intersection) => (filterList(isStaff, user_id, intersection.user_id) ? (
+                  <TableRow key={intersection.id}>
+                    <TableCell component="th" scope="row" align="center">
+                      <Link to={`/streetview/${intersection.id}`}>
+                        {intersection.intersection_name}
+                      </Link>
+                    </TableCell>
+                    <TableCell align="center">
+                      <VerticalFlexBox>
+                        {intersection.cameras.map((camera: cameraResponse) => (
+                          <Link key={camera.id} to={`/camview/${camera.id}`}>
+                            <LaunchIcon />
+                          </Link>
+                        ))}
+                      </VerticalFlexBox>
+                    </TableCell>
+                    <TableCell align="center">
+                      {intersection.cameras.map((camera: cameraResponse) => (
+                        <a key={camera.id} href={`http://${camera.camera_url}/los/`}>
+                          <TrafficIntensity
+                            camera_id={camera.id}
+                            camera_url={camera.camera_url}
+                          />
+                        </a>
+                      ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      {intersection.cameras.map((camera: cameraResponse) => (
+                        <CameraConnectionStatus key={camera.id} camera_id={camera.id} />
+                      ))}
+                    </TableCell>
+                    {isStaff ? (
+                      <TableCell align="center">
+                        <Link to={`/intersection/edit/${intersection.id}`}>
+                          <EditIcon />
+                        </Link>
+                      </TableCell>
+                    ) : (
+                      <div />
+                    )}
+                    {isStaff ? (
+                      <TableCell align="center">
+                        <DeleteIntersectionButton intersection_id={intersection.id} />
+                      </TableCell>
+                    ) : (
+                      <div />
+                    )}
+                  </TableRow>
+                ) : (
+                  <div />
+                )))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </main>
+    </Content>
   );
 };
 

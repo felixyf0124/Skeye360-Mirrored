@@ -79,7 +79,7 @@ const getMovAvg = (): void => {
       current_arima.push(arima_dataset[i]);
     }
   }
-  if (COUNT < 24) {
+  if (COUNT < mavg_dataset.length) {
     current_mavg.push(mavg_dataset[COUNT]);
   }
 };
@@ -170,7 +170,7 @@ class RealTimeLine extends React.Component<{}, ChartState> {
         { data: current_mavg },
       ]);
       COUNT++;
-    }, 1000);
+    }, 100);
   }
 
   /* eslint-disable react/destructuring-assignment */

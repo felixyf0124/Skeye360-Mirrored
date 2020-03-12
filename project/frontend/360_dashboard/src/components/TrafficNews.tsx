@@ -5,7 +5,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import styled from 'styled-components';
-import { SKEYE_WHITE, LOW_RES } from '../css/custom';
+import { SKEYE_WHITE } from '../css/custom';
 
 // MapQuest API is used to retrieve traffic news
 // https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -58,7 +58,7 @@ const createBoundingBox = (latitude: number, longitude: number): string => {
 // Styled Components
 const OuterContainer = styled.div`
   overflow: scroll;
-  height: 88vh;
+  height: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
 `;
@@ -68,11 +68,6 @@ const OuterDiv = styled.div`
   margin-top: 5rem;
   display: flex;
   flex-direction: column;
-  @media only screen and (max-width: ${LOW_RES}px) {
-    & {
-      margin: 1rem 1rem 1rem 0rem;
-    }
-  }
 `;
 
 const CardStyle = styled.div`
