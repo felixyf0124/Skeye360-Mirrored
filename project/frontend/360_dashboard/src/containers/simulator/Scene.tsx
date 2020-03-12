@@ -207,7 +207,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       [5, 5],
     ];
 
-    this.laneW = 0.06 * Math.min(this.windowW, this.windowH);
+    this.laneW = 0.03;
 
     this.timeLastMoment = Date.now();
     this.trafficLightCounterOffset = 0;
@@ -225,10 +225,10 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     };
 
     // #### hard code to initial road intersection data for first loading
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW / 2, this.windowH * 0.11));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(-this.windowW / 2, this.windowH * -0.12));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW * -0.16, this.windowH / 2));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW * 0.16, -this.windowH / 2));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(0.5, 0.11));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.5, -0.12));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2( -0.16, 0.5));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2( 0.16, -0.5));
 
     for (let i = 0; i < this.roadIntersection.getRoadSections().length; i += 1) {
       if (i === 3) {
@@ -679,7 +679,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       //   this.controlPanelContainer.x = -this.controlPanelG.width - this.coordinateOffset.x;
       //   this.controlPanelContainer.y = -this.coordinateOffset.y;
       // }
-      this.laneW = 0.06 * Math.min(this.windowW, this.windowH);
+      // this.laneW = 0.06 * Math.min(this.windowW, this.windowH);
 
       this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
       this.drawRoad();
@@ -720,8 +720,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     const sections = this.roadIntersection.getRoadSections();
     const startBlinkTime = 10;
 
-    const h = this.laneW * 0.3;
-    const w = this.laneW * 0.3;
+    const h = this.laneW * 0.3 * this.windowW;
+    const w = this.laneW * 0.3 * this.windowW;
     for (let i = 0; i < sections.length; i += 1) {
       const laneIn = sections[i].getLaneIn();
       const laneOut = sections[i].getLaneOut();
@@ -735,11 +735,12 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         color = parseInt(Scene.getColor(lightState), 16);
 
         const direction = ts.tsNormalize(lane.getHead().minus(lane.getTail()));
-        const division = ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4);
+        const division = (ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4));
 
         // this will draw from head to tail
         for (let k = 0; k < division; k += 1) {
-          const topVertex = lane.getHead().minus(direction.multiply(this.laneW * 0.4 * k));
+          const topVertex = lane.getHead().minus(direction.multiply(this.laneW * 0.4 * k))
+          .multiply(this.windowW);
           const isForced = this.roadIntersection.isForced(lane.getTrafficLightId());
 
           if (isForced) {
@@ -770,7 +771,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         const direction = ts.tsNormalize(lane.getHead().minus(lane.getTail()));
         const division = ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4) + 1;
         for (let k = 1; k < division; k += 1) {
-          const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k));
+          const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k))
+          .multiply(this.windowW);
           const graphicObj = this.drawTriangle(topVertex, h, w, direction, color2);
           this.roadG.addChild(graphicObj);
         }
@@ -796,7 +798,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
     if (!(this.toggleGroup[0].state && this.toggleGroup[2].state && !this.toggleGroup[4].state)) {
       for (let i = 0; i < vehicles.length; i += 1) {
-        const position = vehicles[i].getPosition();
+          
+          const position = vehicles[i].getPosition().multiply(this.windowW);
         if (Number.isNaN(vehicles[i].getRoadSectionId())) {
           const spot = this.drawVehicleSpot(position);
           this.objectContainer.addChild(spot);
@@ -1273,7 +1276,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       color = col;
     }
     spot.beginFill(color, 1);
-    spot.drawCircle(vertex.x, vertex.y, this.laneW * 0.3);
+    spot.drawCircle(vertex.x, vertex.y, this.laneW * 0.3 * this.windowW);
     spot.endFill();
     return spot;
   }
@@ -1351,23 +1354,51 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.menuBtns[1].y = this.menuBtns[0].y + this.menuBtns[0].width / 2 + this.menuBtns[1].width / 2 + 12;
     this.menuBtns[2].y = this.menuBtns[1].y + this.menuBtns[1].width / 2 + this.menuBtns[2].width / 2 + 6;
 
-    const rSections = this.roadIntersection.getRoadSections();
+    // this is for live feed mapping incoming section car count
     if (this.labelGroup.length === 0) {
-      for (let i = 0; i < rSections.length; i += 1) {
-        const lane = rSections[i].getLaneAt(0);
-        const pos = rSections[i]
-          .getTail()
-          .multiply(0.3)
-          .plus(lane.getHead());
+      for (let i = 0; i < this.dragablePoints.length; i += 1) {
+        const offset = new Vec2(this.coordinateOffset.x, this.coordinateOffset.y);
+        const p1 = this.dragablePoints[i][1].absolutPos;
+        const p2 = this.dragablePoints[i][2].absolutPos;
+        
+        let pos = p1.plus(p2).multiply(0.5);
+
         const labelG = new Btn(36, 36, 'car#', 0xc658fc);
         labelG.setTextStyle(textStyle3);
         labelG.interactive = false;
         labelG.buttonMode = false;
-        labelG.x = pos.x - labelG.btnWidth / 2;
-        labelG.y = pos.y - labelG.height / 2;
+
+        let verticalDir = ts.tsNormalize(ts
+        .tsRotateByOrigin(p1.minus(p2),Math.PI/2));
+        
+        pos = pos.plus(verticalDir.multiply(this.laneW*2.5));
+        pos.x*=this.windowW;
+        pos.y*=this.windowH;
+        pos = pos.minus(offset);
+
+        labelG.x = pos.x - labelG.btnWidth/2;
+        labelG.y = pos.y - labelG.btnHeight/2;
         this.labelGroup.push(labelG);
       }
     }
+    // will need this for later passed car number count
+    // const rSections = this.roadIntersection.getRoadSections();
+    // if (this.labelGroup.length === 0) {
+    //   for (let i = 0; i < rSections.length; i += 1) {
+    //     const lane = rSections[i].getLaneAt(0);
+    //     const pos = rSections[i]
+    //       .getTail().multiply(this.windowW)
+    //       .multiply(0.3)
+    //       .plus(lane.getHead());
+    //     const labelG = new Btn(36, 36, 'car#', 0xc658fc);
+    //     labelG.setTextStyle(textStyle3);
+    //     labelG.interactive = false;
+    //     labelG.buttonMode = false;
+    //     labelG.x = pos.x - labelG.btnWidth / 2;
+    //     labelG.y = pos.y - labelG.height / 2;
+    //     this.labelGroup.push(labelG);
+    //   }
+    // }
   }
 
   /**
@@ -1663,7 +1694,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             const id = parseInt(matchesArray[0], 10);
             const x = (parseInt(matchesArray[1], 10) / videoW) * this.windowW - this.coordinateOffset.x;
             const y = (parseInt(matchesArray[2], 10) / videoH) * this.windowH - this.coordinateOffset.y;
-            const pos = ts.tsVec2(x, y);
+            const pos = ts.tsVec2(x, y).multiply(1/this.windowW);
             const simpleVehicleData = { id, position: pos };
             formedData.push(simpleVehicleData);
 
@@ -1742,7 +1773,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         }
         let secCarNum = 0;
         for (let j = 0; j < vObj.length; j += 1) {
-          const pos = vObj[j].getPosition();
+          const pos = vObj[j].getPosition().multiply(this.windowW);
           const absPos = new Vec2(pos.x + this.coordinateOffset.x, pos.y + this.coordinateOffset.y);
           const isInside = ts.inside(absPos, poly);
           if (isInside != null && isInside) {
