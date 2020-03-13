@@ -2,7 +2,6 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 import ApexCharts from 'apexcharts';
-import { truncate } from 'fs';
 
 // Realtime graph from the ApexCharts Documentation Website
 // https://apexcharts.com/react-chart-demos/line-charts/realtime/
@@ -12,6 +11,8 @@ let arima_dataset: any[] = [];
 let mavg_dataset: any[] = [];
 const current_mavg: any[] = [];
 const current_arima: any[] = [];
+var current_bar: any[] = [];
+current_bar = [];
 
 let COUNT = 0;
 
@@ -71,6 +72,35 @@ mavg_dataset = [
   [23, 22],
 ];
 
+let bar_data: any[] = [];
+bar_data = [
+  [16, 33],
+  [34, 33],
+  [14, 32],
+  [32, 31],
+  [13, 30],
+  [18, 20],
+  [20, 30],
+  [14, 23],
+  [12, 30],
+  [18, 20],
+  [34, 20],
+  [23, 10],
+  [10, 60],
+  [10, 20],
+  [40, 36],
+  [10, 24],
+  [12, 32],
+  [25, 20],
+  [12, 30],
+  [34, 11],
+  [4, 18],
+  [12, 16],
+  [25, 9],
+  [13, 40],
+]
+
+
 // Logic to be implemented:
 // Check the current time, if the minutes are equal to 00,
 // then retrieve the new data for the current hour.
@@ -80,12 +110,18 @@ const getMovAvg = (): void => {
     /* eslint-disable no-plusplus */
     //Populate the entire arima dataset if count is equal to zero
     for (let i = 0; i < arima_dataset.length; i++) {
-      current_arima.push(arima_dataset[i]);
+      current_arima.push(arima_dataset[i]); 
     }
   }
   //Populate the moving average displayed on graph one by one 
   if (COUNT < 24) {
+    current_bar = [];
+    //populate the line chart
     current_mavg.push(mavg_dataset[COUNT]);
+
+    //populate the bar chart
+    current_bar.push(bar_data[COUNT][0]);
+    current_bar.push(bar_data[COUNT][1]);
   }
 };
 
@@ -230,6 +266,7 @@ class RealTimeLine extends React.Component<{}, ChartState> {
 
       barOptions: {
         chart: {
+          id: 'bar-chart',
           type: 'bar',
           height: 350
         },
@@ -243,11 +280,15 @@ class RealTimeLine extends React.Component<{}, ChartState> {
         },
         xaxis: {
           categories: ['North-South', 'East-West']
+        },
+        yaxis: {
+          min: 0,
+          max: 100
         }
       },
       barSeries: [
         {
-          data: [50, 40]
+          data: current_bar[0],
         }
       ],
     };
@@ -274,6 +315,9 @@ class RealTimeLine extends React.Component<{}, ChartState> {
         { data: current_arima },
         { data: current_mavg },
       ])
+      ApexCharts.exec('bar-chart', 'updateSeries',[
+        { data: current_bar }
+      ]);
       COUNT++;
     }, 1000);
   }
