@@ -24,6 +24,7 @@ import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
 // import 'pixi-text-input.js';
 
 interface Props {
+  isLiveFeed: boolean;
   isSmartTL: boolean;
   tl_mode: any;
   toggles: any;
@@ -359,7 +360,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.toggleGroup = new Array<{ name: string; state: boolean }>();
     this.labelGroup = new Array<Btn>();
     this.tlCaseBtnGroup = new Array<Btn>();
-
+    
     // toggle group
     const videoFeed = { name: 'enable video feed', state: false };
     const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
@@ -373,6 +374,13 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.toggleGroup.push(showSectionAreas);
     this.toggleGroup.push(showDirectVideoFeedMapping);
     this.toggleGroup.push(showVideoFeedBG);
+    const {isLiveFeed} = this.props;
+    if(isLiveFeed){
+      videoFeed.state = true;
+      uiV7.state = true;
+      showSectionAreas.state = true;
+      showDirectVideoFeedMapping.state = true;
+    }
 
     // btn group
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
@@ -865,7 +873,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.updateLaneArea();
 
     // toggle btn
-    this.updateToggleBtnState();
+    // this.updateToggleBtnState();
     this.featureToggling();
     // menu
     // this.updateMenuState();
@@ -949,10 +957,18 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
       this.numberOfCars = this.roadIntersection.getVehiclesNum();
     }
+    if(!this.toggleGroup[0].state){
+      // if(this.roadG.parent !== null){
+      //   this.mapContainer.addChild(this.roadG);
+      // }
 
-    if (this.isUpdate()) {
-      this.roadIntersection.tlCountingDown();
-      this.drawRoad();
+      if (this.isUpdate()) {
+        this.roadIntersection.tlCountingDown();
+        this.drawRoad();
+      }
+    }else{
+      this.roadG.clear();
+      this.roadG.removeChildren();
     }
     this.renderObjects();
     // this.displayPlaneContainer.removeChildren();
@@ -967,10 +983,10 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
 
-      const { isSmartTL, tl_mode } = this.props;
-
+      const { isLiveFeed, isSmartTL, tl_mode } = this.props;
+      
       this.tlCaseId = tl_mode + 1;
-      if (isSmartTL) {
+      if (!isLiveFeed && isSmartTL) {
         // real-time case
         if (this.tlCaseId === 3) {
           const tlQue = this.roadIntersection.getTrafficLightQueue();
@@ -1559,7 +1575,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * update toggle btn state when the btn is pressed
    */
   updateToggleBtnState(): void {
-    const { toggles } = this.props;
+    const { isLiveFeed, toggles } = this.props;
     let togValues = new Array<boolean>();
     if (toggles !== undefined && toggles !== null) {
       togValues = Object.values(toggles);
@@ -1573,6 +1589,17 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.toggleGroup[i].state = togValues[i];
       }
     }
+    // if (isLiveFeed){
+    //   this.toggleGroup[0].state = false;
+    //   this.toggleGroup[1].state = true;
+    //   this.toggleGroup[2].state = true;
+    //   this.toggleGroup[3].state = true;
+    // }else{
+    //   this.toggleGroup[0].state = true;
+    //   for (let i =1;i<this.toggleGroup.length;i+=1){
+    //     this.toggleGroup[i].state = false; 
+    //   }
+    // }
 
     const color = 0x51bcd8;
     for (let i = 0; i < this.toggleGroup.length; i += 1) {

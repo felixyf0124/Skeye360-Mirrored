@@ -221,6 +221,7 @@ class OverviewComponent extends React.Component<
               <text style={skeyeStyles.Header}>Default Traffic Light</text>
               <SimContainer>
                 <Simulator
+                  isLiveFeed={false}
                   isSmartTL={false}
                   tl_mode={tlMode}
                   toggles={toggles}
@@ -271,7 +272,8 @@ class OverviewComponent extends React.Component<
               <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
               <SimContainer>
                 <Simulator
-                  isSmartTL
+                  isLiveFeed={false}
+                  isSmartTL={false}
                   tl_mode={tlMode}
                   toggles={toggles}
                   tlStop={tlStop}
