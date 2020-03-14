@@ -313,7 +313,9 @@ const TabsComponents = (): JSX.Element => {
           <Tab label="Camera" {...props(2)} style={skeyeStyles.TabOnly} />
           <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
 
-          {value === 0 || value === 3
+          {/* this is a setting button. Due to UI modificationm we no need them for our design*/}
+          {/* KEEP this in case the stakeholder needs it */}
+          {/* {value === 0 || value === 3
             ? (
               <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
                 <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
@@ -321,7 +323,8 @@ const TabsComponents = (): JSX.Element => {
                 </button>
               </BoxSettingsMenu>
             )
-            : null }
+            : null } */}
+
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -354,8 +357,10 @@ const TabsComponents = (): JSX.Element => {
           key="2"
         />
       </TabPanel>
-
-      <Modal
+      
+      {/* The following is the setting toggle form  */}
+      {/* KEEP this in case the stakeholder need it */}
+      {/* <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
@@ -371,10 +376,10 @@ const TabsComponents = (): JSX.Element => {
           <div className={classes.paper}>
             <HorizontalFlexBox>
               <BoxMain>
-                <text id="transition-modal-title" style={skeyeStyles.Title}>Settings for the simulators</text>
+                <text id="transition-modal-title" style={skeyeStyles.Title}>Settings for the simulators</text> */}
                 {/* <text style={ skeyeStyles.Message }>
                 All your preferences for the simulators will be saved here</text> */}
-              </BoxMain>
+              {/* </BoxMain>
               <BoxHorizontal>
                 <BoxSettings>
                   <text style={skeyeStyles.SettingsHeader}>Enable video feed</text>
@@ -439,24 +444,15 @@ const TabsComponents = (): JSX.Element => {
                       )}
                       label=""
                       style={skeyeStyles.ControlLabel}
-                    />
-                    {/* Do we need this save button? */}
-                    {/* <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      className={classes.SaveButton}
-                      startIcon={<SaveIcon />}
-                    >
-                      Save
-                    </Button> */}
-                  </BoxSettings>
+                    /> */}
+                    
+                  {/* </BoxSettings>
                 </FormGroup>
               </BoxHorizontal>
             </HorizontalFlexBox>
           </div>
         </Fade>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
