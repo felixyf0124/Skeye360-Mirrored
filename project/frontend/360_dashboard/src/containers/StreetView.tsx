@@ -155,7 +155,16 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
                 )}
               </MapContainer>
               <BigChartContainer>
-                <RealTimeLine />
+                <RealTimeLine
+                  chartID="lineNS"
+                  title="Prediction vs Moving Average in North-South"
+                  countDirection="ns"
+                />
+                <RealTimeLine
+                  chartID="lineEW"
+                  title="Prediction vs Moving Average in East-West"
+                  countDirection="ew"
+                />
               </BigChartContainer>
             </ChartVerticalFlexBox>
           </Body>
@@ -181,7 +190,16 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
           </ChartHorizontalFlexBox>
           <ChartHorizontalFlexBox>
             <BigChartContainer>
-              <RealTimeLine />
+              <RealTimeLine
+                chartID="lineNS"
+                title="Prediction vs Moving Average in North-South"
+                countDirection="ns"
+              />
+              <RealTimeLine
+                chartID="lineEW"
+                title="Prediction vs Moving Average in East-West"
+                countDirection="ew"
+              />
             </BigChartContainer>
           </ChartHorizontalFlexBox>
         </Body>
