@@ -14,8 +14,7 @@ import { logClick } from '../contexts/LogClicks';
 import GoogleMiniMap from '../components/GoogleMiniMap';
 import { SKEYE_WHITE, LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 // import DisplayCount from '../components/DisplayMovAVG';
-import RealTimeLineChart from '../components/charts/RealTimeLineChart';
-import BarChartRT from '../components/charts/BarChartRT';
+import RealTimeLine from '../components/charts/RealTimeLineChart';
 
 // styled-component for map, chart and flexboxes
 const Body = styled.div`
@@ -156,22 +155,15 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
                 )}
               </MapContainer>
               <BigChartContainer>
-                <RealTimeLineChart
-                  chartID="lineNS"
+                <RealTimeLine
+                  chartID="RT-NS"
                   title="Prediction vs Moving Average in North-South"
                   countDirection="ns"
                 />
-                <RealTimeLineChart
-                  chartID="lineEW"
+                <RealTimeLine
+                  chartID="RT-EW"
                   title="Prediction vs Moving Average in East-West"
-                  countDirection="ew"
-                />
-                <BarChartRT
-                  chartID="barChart-NS-EW"
-                  title="Moving Average North-South VS East-West"
-                  categories={['North-South', 'East-West']}
-                  primaryDirection="ns"
-                  secondaryDirection="ew"
+                  countDirection="nw"
                 />
               </BigChartContainer>
             </ChartVerticalFlexBox>
@@ -198,23 +190,16 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
           </ChartHorizontalFlexBox>
           <ChartHorizontalFlexBox>
             <BigChartContainer>
-              <RealTimeLineChart
-                chartID="lineNS"
+              {/* <RealTimeLine
+                chartID="RT-NS"
                 title="Prediction vs Moving Average in North-South"
                 countDirection="ns"
               />
-              <RealTimeLineChart
-                chartID="lineEW"
+              <RealTimeLine
+                chartID="RT-EW"
                 title="Prediction vs Moving Average in East-West"
                 countDirection="ew"
-              />
-              <BarChartRT
-                chartID="barChart-NS-EW"
-                title="Moving Average North-South VS East-West"
-                categories={['North-South', 'East-West']}
-                primaryDirection="ns"
-                secondaryDirection="ew"
-              />
+              /> */}
             </BigChartContainer>
           </ChartHorizontalFlexBox>
         </Body>

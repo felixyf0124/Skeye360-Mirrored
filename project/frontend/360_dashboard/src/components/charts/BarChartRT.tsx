@@ -24,8 +24,8 @@ async function loadDataToChart(
   if (COUNT < date.getHours()) {
     current_bar = [];
     // populate the bar chart
-    current_bar.push(primaryDirection[COUNT].count);
-    current_bar.push(secondaryMovingAverageData[COUNT].count);
+    current_bar.push(primaryDirection[COUNT * 4].count);
+    current_bar.push(secondaryMovingAverageData[COUNT * 4].count);
   }
 }
 
@@ -89,9 +89,9 @@ class BarChartRT extends React.Component<{} & Props, ChartState> {
   public async componentDidMount(): Promise<void> {
     const { chartID, primaryDirection, secondaryDirection } = this.props;
     // const date = new Date().toISOString().split('T')[0];
-    const mockDate = '2020-01-31';
-    const primaryMovingAverageData = await fetchCount('MA', primaryDirection, mockDate);
-    const secondaryMovingAverageData = await fetchCount('MA', secondaryDirection, mockDate);
+    const date = '2020-01-31';
+    const primaryMovingAverageData = await fetchCount('MA', primaryDirection, date);
+    const secondaryMovingAverageData = await fetchCount('MA', secondaryDirection, date);
     window.setInterval((): any => {
       // Data gets populated here
       // Datasets current_arima and current_mavg get updated here

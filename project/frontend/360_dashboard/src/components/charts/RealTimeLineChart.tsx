@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable  @typescript-eslint/camelcase */
 import React from 'react';
 import Chart from 'react-apexcharts';
@@ -7,32 +8,55 @@ import { Response as countData, fetchCount } from '../../api/fetchCount';
 // Realtime graph from the ApexCharts Documentation Website
 // https://apexcharts.com/react-chart-demos/line-charts/realtime/
 // https://github.com/apexcharts/apexcharts.js/blob/master/samples/react/line/realtime.html
-
-const current_mavg: any[] = [];
-const current_arima: any[] = [];
-let COUNT = 0;
-
 // Logic to be implemented:
 // Check the current time, if the minutes are equal to 00,
 // then retrieve the new data for the current hour.
 // Check if the values in the graph are populated or not
-async function loadDataToChart(
-  predictionData: countData[],
-  movingAverageData: countData[],
-): Promise<void> {
-  const date = new Date();
-  /* eslint-disable no-plusplus */
-  // Populate the entire arima dataset if count is equal to zero
-  if (COUNT === 0) {
+async function loadArima(predictionData: countData[]): Promise<countData[]> {
+  const current_arima: any[] = [];
+  try {
+    /* eslint-disable no-plusplus */
+    // Populate the entire arima dataset if count is equal to zero
     for (let i = 0; i < predictionData.length; i++) {
       current_arima.push(predictionData[i].count);
+      current_arima.push(predictionData[i].count);
+      current_arima.push(predictionData[i].count);
+      current_arima.push(predictionData[i].count);
     }
+  } catch (error) {
+    console.log(error);
   }
-  // Populate the moving average displayed on graph one by one
-  if (COUNT < date.getHours()) {
-    // populate the line chart
-    current_mavg.push(movingAverageData[COUNT].count);
+  return current_arima;
+}
+
+async function loadMovingAverage(
+  prev_current_mavg: countData[],
+  movingAverageData: any,
+  COUNT: number,
+): Promise<countData[]> {
+  const date = new Date();
+  const current_mavg = prev_current_mavg;
+  try {
+    // Populate the moving average displayed on graph one by one
+    if (COUNT < date.getHours()) {
+      // populate the line chart
+      if (COUNT === 0) {
+        current_mavg.push(movingAverageData[COUNT].count);
+        current_mavg.push(movingAverageData[COUNT + 1].count);
+        current_mavg.push(movingAverageData[COUNT + 2].count);
+        current_mavg.push(movingAverageData[COUNT + 3].count);
+      } else {
+        current_mavg.push(movingAverageData[COUNT * 4 - 4].count);
+        current_mavg.push(movingAverageData[COUNT * 4 - 3].count);
+        current_mavg.push(movingAverageData[COUNT * 4 - 2].count);
+        current_mavg.push(movingAverageData[COUNT * 4 - 1].count);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    console.log(`COUNT AT: ${COUNT}`);
   }
+  return current_mavg;
 }
 
 interface Props {
@@ -87,10 +111,20 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
           size: 0,
         },
         xaxis: {
-          range: 23,
+          min: 0,
+          max: 95,
+          range: 95,
           title: {
             text: 'Hours',
             align: 'center',
+          },
+          labels: {
+            formatter(max: number): string {
+              if (max % 4 === 0) {
+                return String(`${max / 4}:00`);
+              }
+              return '';
+            },
           },
         },
         yaxis: {
@@ -107,11 +141,11 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
       lineSeries: [
         {
           name: 'Prediction',
-          data: current_arima,
+          data: [],
         },
         {
           name: 'Moving Average',
-          data: current_mavg,
+          data: [],
         },
       ],
     };
@@ -121,27 +155,34 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
   public async componentDidMount(): Promise<void> {
     const { chartID, countDirection } = this.props;
     // const date = new Date().toISOString().split('T')[0];
-    const mockDate = '2020-01-31';
-    const arimaData = await fetchCount('arima', countDirection, mockDate);
-    const movingAverageData = await fetchCount('MA', countDirection, mockDate);
-    window.setInterval((): any => {
+    const date = '2020-01-31';
+    const arimaData = await fetchCount('arima', countDirection, date);
+    const movingAverageData = await fetchCount('MA', countDirection, date);
+    let current_arima: countData[] = [];
+    let current_mavg: countData[] = [];
+
+    let COUNT = 0;
+    window.setInterval(async (): Promise<any> => {
       // Data gets populated here
       // Datasets current_arima and current_mavg get updated here
-      loadDataToChart(arimaData, movingAverageData);
-
+      current_arima = await loadArima(arimaData);
+      current_mavg = await loadMovingAverage(current_mavg, movingAverageData, COUNT);
       // Execute the realtime function here, using the two below data arrays as datasets
       // ApexCharts.exec() takes in chart ID, method, and data as parameters
       /* eslint-disable no-undef */
       ApexCharts.exec(chartID, 'updateSeries', [{ data: current_arima }, { data: current_mavg }]);
+      // console.log(chartID);
+      // console.log(current_arima);
+      // console.log(current_mavg);
       COUNT++;
-    }, 1000);
+    }, 360);
   }
 
   /* eslint-disable react/destructuring-assignment */
   public render(): JSX.Element {
     return (
       <div>
-        <Chart options={this.state.lineOptions} series={this.state.lineSeries} type="line" />
+        <Chart type="line" series={this.state.lineSeries} options={this.state.lineOptions} />
       </div>
     );
   }

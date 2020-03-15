@@ -177,7 +177,7 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
                 <RealTimeLineChart
                   chartID="lineEW"
                   title="Prediction vs Moving Average in East-West"
-                  countDirection="ew"
+                  countDirection="nw"
                 />
               </SmallContainer>
             </ChartVerticalFlexBox>
