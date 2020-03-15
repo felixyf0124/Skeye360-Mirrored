@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { SKEYE_WHITE, SKEYE_BLACK, SKEYE_DARK_GREY } from '../../css/custom';
+import { SKEYE_WHITE, SKEYE_DARK_GREY } from '../../css/custom';
 import GoogleMiniMap from '../GoogleMiniMap';
 import { RootState } from '../../reducers/rootReducer';
 import {
@@ -42,17 +42,17 @@ const SmallImgContainer = styled.img`
 `;
 
 // Bigger chart on the bottom right side chart.
-const BigContainer = styled.div`
-  background-color: ${SKEYE_BLACK};
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  width: 70vw;
-  margin: 1rem;
-`;
+// const BigContainer = styled.div`
+//   background-color: ${SKEYE_BLACK};
+//   display: flex;
+//   flex-direction: column;
+//   flex-wrap: nowrap;
+//   justify-content: center;
+//   align-items: center;
+//   align-content: center;
+//   width: 70vw;
+//   margin: 1rem;
+// `;
 
 // Generic flexboxes styling
 const ChartVerticalFlexBox = styled.div`

@@ -21,7 +21,7 @@ async function loadDataToChart(
 ): Promise<void> {
   const date = new Date();
   // Populate the moving average displayed on graph one by one
-  if (COUNT <= date.getHours()) {
+  if (COUNT < date.getHours()) {
     current_bar = [];
     // populate the bar chart
     current_bar.push(primaryDirection[COUNT].count);

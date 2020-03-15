@@ -29,7 +29,7 @@ async function loadDataToChart(
     }
   }
   // Populate the moving average displayed on graph one by one
-  if (COUNT <= date.getHours()) {
+  if (COUNT < date.getHours()) {
     // populate the line chart
     current_mavg.push(movingAverageData[COUNT].count);
   }
