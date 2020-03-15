@@ -20,6 +20,7 @@ async function loadDataToChart(
   predictionData: countData[],
   movingAverageData: countData[],
 ): Promise<void> {
+  const date = new Date();
   /* eslint-disable no-plusplus */
   // Populate the entire arima dataset if count is equal to zero
   if (COUNT === 0) {
@@ -27,9 +28,8 @@ async function loadDataToChart(
       current_arima.push(predictionData[i].count);
     }
   }
-
   // Populate the moving average displayed on graph one by one
-  if (COUNT < 24) {
+  if (COUNT <= date.getHours()) {
     // populate the line chart
     current_mavg.push(movingAverageData[COUNT].count);
   }

@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { SKEYE_WHITE } from '../../css/custom';
+import { SKEYE_WHITE, SKEYE_BLACK, SKEYE_DARK_GREY } from '../../css/custom';
 import GoogleMiniMap from '../GoogleMiniMap';
-import NorthChartComparison from '../charts/NorthChartComparison';
 import { RootState } from '../../reducers/rootReducer';
 import {
   STATE as intersectionState,
@@ -13,7 +12,8 @@ import {
 } from '../../contexts/intersection';
 import { STATE as cameraState, getExistingCamera } from '../../contexts/camera';
 import { getCamera } from '../../api/camera';
-import RealTimeLine from '../charts/RealTimeLine';
+import BarChartRT from '../charts/BarChartRT';
+import RealTimeLineChart from '../charts/RealTimeLineChart';
 
 const Body = styled.div`
   margin-left: 5rem;
@@ -22,22 +22,28 @@ const Body = styled.div`
 
 const MapContainer = styled.div`
   position: relative;
-  height: 30vh;
-  width: 90vw;
+  width: 30vw;
   margin: 1rem;
 `;
 
 // Smaller charts for the bottom left side charts.
-const SmallChartContainer = styled.div`
+const SmallContainer = styled.div`
   background-color: ${SKEYE_WHITE};
   width: 30vw;
   position: relative;
   margin: 1rem;
 `;
 
+const SmallImgContainer = styled.img`
+  background-color: ${SKEYE_DARK_GREY};
+  width: 30vw;
+  position: relative;
+  margin: 1rem;
+`;
+
 // Bigger chart on the bottom right side chart.
-const BigChartContainer = styled.div`
-  background-color: ${SKEYE_WHITE};
+const BigContainer = styled.div`
+  background-color: ${SKEYE_BLACK};
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -65,7 +71,6 @@ const ChartHorizontalFlexBox = styled.div`
   justify-content: center;
   align-items: stretch;
   align-content: stretch;
-  }
 `;
 
 const skeyeStyles = {
@@ -87,6 +92,7 @@ const skeyeStyles = {
 interface StateProps {
   intersection: intersectionState;
   camera: cameraState;
+  camera_url: string;
   intersectionId: string;
   intersectionName: string;
   intersectionLat: string;
@@ -125,7 +131,9 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
   }
 
   public render(): JSX.Element {
-    const { intersectionId, intersectionLat, intersectionLng } = this.props;
+    const {
+      camera_url, intersectionId, intersectionLat, intersectionLng,
+    } = this.props;
 
     return (
       <div>
@@ -143,27 +151,36 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
                 />
               )}
             </MapContainer>
-          </ChartHorizontalFlexBox>
-          <ChartHorizontalFlexBox>
             <ChartVerticalFlexBox>
-              <SmallChartContainer>
-                <RealTimeLine
+              <SmallContainer>
+                <SmallImgContainer src={`http://${camera_url}/cam`} alt="Loading..." />
+              </SmallContainer>
+              <SmallContainer>
+                <BarChartRT
+                  chartID="barChart-NS-EW"
+                  title="Moving Average North-South VS East-West"
+                  categories={['North-South', 'East-West']}
+                  primaryDirection="ns"
+                  secondaryDirection="ew"
+                />
+              </SmallContainer>
+            </ChartVerticalFlexBox>
+            <ChartVerticalFlexBox>
+              <SmallContainer>
+                <RealTimeLineChart
                   chartID="lineNS"
                   title="Prediction vs Moving Average in North-South"
                   countDirection="ns"
                 />
-              </SmallChartContainer>
-              <SmallChartContainer>
-                <RealTimeLine
+              </SmallContainer>
+              <SmallContainer>
+                <RealTimeLineChart
                   chartID="lineEW"
                   title="Prediction vs Moving Average in East-West"
                   countDirection="ew"
                 />
-              </SmallChartContainer>
+              </SmallContainer>
             </ChartVerticalFlexBox>
-            <BigChartContainer>
-              <NorthChartComparison />
-            </BigChartContainer>
           </ChartHorizontalFlexBox>
         </Body>
       </div>
@@ -177,6 +194,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   cameraId: state.router.location.pathname.substring(
     state.router.location.pathname.lastIndexOf('/') + 1,
   ),
+  camera_url: state.camera.camera_url,
   camera: state.camera,
   intersectionId: state.camera.intersection_id.toString(),
   intersectionName: state.intersection.intersection_name,
