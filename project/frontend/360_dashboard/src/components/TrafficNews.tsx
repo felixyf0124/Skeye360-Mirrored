@@ -55,7 +55,7 @@ const createBoundingBox = (latitude: number, longitude: number): string => {
 };
 
 // Function that converts ISO date into yyyy-mm-dd format
-const toNormalDate = (retrievedDate: string): String => {
+const toNormalDate = (retrievedDate: string): string => {
   const date = new Date(retrievedDate);
   const year = date.getFullYear();
   const month = date.getMonth();
