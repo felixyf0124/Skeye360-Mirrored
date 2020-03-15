@@ -2,21 +2,24 @@
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
-import createStore, { history } from './store';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import configureStore, { history } from './store';
 import './index.css';
 import App from './App';
 import './custom.scss';
 
-createStore().then((store) => {
-  ReactDOM.render(
-    <Provider store={store}>
+const { store, persistor } = configureStore();
+
+render(
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
       <ConnectedRouter history={history}>
         <App />
       </ConnectedRouter>
-    </Provider>,
-    document.getElementById('root'),
-  );
-});
+    </PersistGate>
+  </Provider>,
+  document.getElementById('root'),
+);

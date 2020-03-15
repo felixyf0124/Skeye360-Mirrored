@@ -19,34 +19,20 @@ import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
-// import styled from 'styled-components';
+import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
 import Weather from './Weather';
+// import { MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 
 /*
   Template for Material-UI Drawer found at:
   https://material-ui.com/components/drawers/
 */
-interface StateProps {
-  authenticated: boolean;
-  user_id: number;
-  username: string;
-  log_message: string;
-}
-
-interface HeaderProps {
-  headerTitle: string;
-}
-interface DispatchProps {
-  logout: () => any;
-  handleMapButton: () => void;
-  logClick: (log_message: string, user_id: number) => any;
-}
-
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
 const drawerWidth = 185;
@@ -136,11 +122,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const Logo = styled.img`
-//   height: 5rem;
-//   width: 5rem;
-//   position: relative;
-// `;
+const Logo = styled.img`
+  height: 5rem;
+  width: 5rem;
+  position: relative;
+`;
+
+// Props
+interface StateProps {
+  authenticated: boolean;
+  user_id: number;
+  username: string;
+  log_message: string;
+}
+
+interface HeaderProps {
+  headerTitle: string;
+}
+interface DispatchProps {
+  logout: () => any;
+  handleMapButton: () => void;
+  logClick: (log_message: string, user_id: number) => any;
+}
 
 const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Element => {
   const classes = useStyles();
@@ -164,6 +167,8 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
     logClick('Logged out', user_id);
     logout();
   };
+
+  // const isMobile = useMediaQuery(`(max-width:${MOBILE_DEVICE_MAX_WIDTH}px)`);
 
   return (
     <div>
@@ -223,6 +228,9 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
         }}
       >
         <div className={classes.toolbar} style={{ justifyContent: 'space-between' }}>
+          <h6 style={{ paddingLeft: '65px' }}>
+            <Logo src="/emblem.png" alt="LOGO" />
+          </h6>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon className={classes.iconStyle} />

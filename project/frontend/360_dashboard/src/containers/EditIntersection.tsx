@@ -18,6 +18,7 @@ import AddCameraForm from '../components/AddCameraForm';
 import { getUsers, STATE as userState, GetUsersAction } from '../contexts/users';
 import { LOW_RES } from '../css/custom';
 
+// Content Styling
 const Content = styled.div`
   margin-top: 8rem;
   @media only screen and (max-width: ${LOW_RES}px) {
