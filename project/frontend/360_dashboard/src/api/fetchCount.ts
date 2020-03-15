@@ -25,8 +25,7 @@ export const fetchCount = async (
 ): Promise<Response[]> => {
   const url = `//${APIDomain}/api/count/?count_type=${count_type}&count_direction=${count_direction}&timestamp__gte=${date}T00:00:00Z&timestamp__lte=${date}T23:59:59Z`;
   // GET REQUEST
-  console.log('asd');
-  console.log(count_direction);
+  // console.log(url);
   const response = await fetch(url);
 
   // DATA RESPONSE

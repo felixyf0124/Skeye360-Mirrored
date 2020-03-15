@@ -2,10 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { SKEYE_WHITE } from '../../css/custom';
-import NorthChart from '../NorthChart';
-import SouthChart from '../SouthChart';
 import GoogleMiniMap from '../GoogleMiniMap';
-import NorthChartComparison from '../NorthChartComparison';
+import NorthChartComparison from '../charts/NorthChartComparison';
 import { RootState } from '../../reducers/rootReducer';
 import {
   STATE as intersectionState,
@@ -15,6 +13,7 @@ import {
 } from '../../contexts/intersection';
 import { STATE as cameraState, getExistingCamera } from '../../contexts/camera';
 import { getCamera } from '../../api/camera';
+import RealTimeLine from '../charts/RealTimeLine';
 
 const Body = styled.div`
   margin-left: 5rem;
@@ -148,10 +147,18 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
           <ChartHorizontalFlexBox>
             <ChartVerticalFlexBox>
               <SmallChartContainer>
-                <NorthChart />
+                <RealTimeLine
+                  chartID="lineNS"
+                  title="Prediction vs Moving Average in North-South"
+                  countDirection="ns"
+                />
               </SmallChartContainer>
               <SmallChartContainer>
-                <SouthChart />
+                <RealTimeLine
+                  chartID="lineEW"
+                  title="Prediction vs Moving Average in East-West"
+                  countDirection="ew"
+                />
               </SmallChartContainer>
             </ChartVerticalFlexBox>
             <BigChartContainer>

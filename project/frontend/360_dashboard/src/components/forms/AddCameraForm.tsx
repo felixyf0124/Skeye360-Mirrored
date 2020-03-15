@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import { RootState } from '../reducers/rootReducer';
-import { addNewCamera } from '../contexts/camera';
-import { logClick } from '../contexts/LogClicks';
+import { RootState } from '../../reducers/rootReducer';
+import { addNewCamera } from '../../contexts/camera';
+import { logClick } from '../../contexts/LogClicks';
 
 const useStyles = makeStyles(() => ({
   root: {

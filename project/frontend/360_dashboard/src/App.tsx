@@ -10,7 +10,7 @@ import SkeyeMap from './containers/SkeyeMap';
 import AddIntersection from './containers/AddIntersection';
 import EditIntersection from './containers/EditIntersection';
 import StreetView from './containers/StreetView';
-import ChartsPrototype from './components/ChartsPrototype';
+import ChartsPrototype from './components/charts/ChartsPrototype';
 import SessionRoutes from './SessionRoutes';
 import { authenticated, isStaff } from './contexts/authentication';
 import Home from './containers/Home';

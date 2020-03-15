@@ -14,7 +14,7 @@ import { logClick } from '../contexts/LogClicks';
 import GoogleMiniMap from '../components/GoogleMiniMap';
 import { SKEYE_WHITE, LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 // import DisplayCount from '../components/DisplayMovAVG';
-import RealTimeLine from '../components/RealTimeLine';
+import RealTimeLine from '../components/charts/RealTimeLine';
 
 // styled-component for map, chart and flexboxes
 const Body = styled.div`
