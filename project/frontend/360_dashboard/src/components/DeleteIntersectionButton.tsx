@@ -73,11 +73,11 @@ const DeleteIntersectionButton = (props: Props & StateProps & DispatchProps): JS
 
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (): void => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false);
   };
 

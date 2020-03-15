@@ -17,6 +17,7 @@ export interface STATE {
       }[];
       longitude: number;
       district_id: number;
+      user_id: number;
     }[];
   };
 }
@@ -24,22 +25,23 @@ export interface STATE {
 // initState
 const initState: STATE = {
   0: {
-    id: 1,
+    id: 0,
     district_name: 'Loading...',
     intersections: [
       {
-        id: 1,
+        id: 0,
         intersection_name: 'Loading...',
         latitude: 123,
         cameras: [
           {
-            id: 1,
+            id: 0,
             camera_url: '0.0.0.0:8001',
             intersection_id: 1,
           },
         ],
         longitude: 456,
-        district_id: 1,
+        district_id: 0,
+        user_id: 0,
       },
     ],
   },

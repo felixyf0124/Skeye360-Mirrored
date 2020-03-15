@@ -130,8 +130,8 @@ const useStyles = makeStyles(() => ({
   loginBox: {
     backgroundColor: '#212121',
     margin: 'auto',
-    marginTop: '10rem',
-    width: '25rem',
+    marginTop: '2rem',
+    width: '22rem',
     height: '29rem',
     border: '1px solid grey',
     borderRadius: '15px',
@@ -268,7 +268,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
                     <PersonIcon />
                   </Grid>
                   <Grid item>
-                    {console.log(state.username)}
                     <TextField
                       name="username"
                       label="Usename"
@@ -303,6 +302,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
                     checked={state.remMe}
                     onChange={handleChange}
                     type="checkbox"
+                    value=""
                     style={{ height: '1rem', width: '1rem', verticalAlign: 'middle' }}
                   />
                   <div className={classes.checkBox}>Remember me</div>

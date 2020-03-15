@@ -22,6 +22,7 @@ interface SimProps {
   }>;
 
   onTLUpdate: any;
+  key: any;
 }
 
 // Horizontal flexbox styling
@@ -104,7 +105,9 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
           onClickTLStop={onClickTLStop}
           tlCombStates={tlCombStates}
         // tlStates2={tlStates2}
+          keyValue="2"
         />
+
         <InnerDivHorizon>
           <InnerDivVerticalFirstSim>
             <text style={skeyeStyles.Header}>Optimized Traffic Light</text>

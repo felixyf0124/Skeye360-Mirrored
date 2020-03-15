@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import SideDrawer from '../components/SideDrawer';
-import NorthChart from '../components/NorthChart';
 import {
   STATE as intersectionState,
   getExistingIntersection,
@@ -12,7 +11,6 @@ import {
   ResetIntersectionAction,
 } from '../contexts/intersection';
 import { logClick } from '../contexts/LogClicks';
-import SouthChart from '../components/SouthChart';
 import GoogleMiniMap from '../components/GoogleMiniMap';
 import { SKEYE_WHITE, LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 // import DisplayCount from '../components/DisplayMovAVG';
@@ -36,28 +34,28 @@ const MapContainer = styled.div`
   margin: 1rem;
 `;
 
-const AverageMetricChartsContainer = styled.div`
-  background-color: ${SKEYE_WHITE};
-  height: 13vh;
-  width: 20vw;
-  position: relative;
-  margin: 1rem;
-  vertical-align: middle;
-  text-align: center;
-  @media only screen and (max-width: ${LOW_RES}px) {
-    & {
-      width: 80vw;
-    }
-  }
-`;
+// const AverageMetricChartsContainer = styled.div`
+//   background-color: ${SKEYE_WHITE};
+//   height: 13vh;
+//   width: 20vw;
+//   position: relative;
+//   margin: 1rem;
+//   vertical-align: middle;
+//   text-align: center;
+//   @media only screen and (max-width: ${LOW_RES}px) {
+//     & {
+//       width: 80vw;
+//     }
+//   }
+// `;
 
 // Smaller charts for the bottom left side charts.
-const SmallChartContainer = styled.div`
-  background-color: ${SKEYE_WHITE};
-  width: 30vw;
-  position: relative;
-  margin: 1rem;
-`;
+// const SmallChartContainer = styled.div`
+//   background-color: ${SKEYE_WHITE};
+//   width: 30vw;
+//   position: relative;
+//   margin: 1rem;
+// `;
 
 // Bigger chart on the bottom right side chart.
 const BigChartContainer = styled.div`

@@ -19,7 +19,7 @@ import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -27,30 +27,17 @@ import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
 import Weather from './Weather';
+// import { MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 
 /*
   Template for Material-UI Drawer found at:
   https://material-ui.com/components/drawers/
 */
-interface StateProps {
-  authenticated: boolean;
-  user_id: number;
-  log_message: string;
-}
-
-interface HeaderProps {
-  headerTitle: string;
-}
-interface DispatchProps {
-  logout: () => any;
-  handleMapButton: () => void;
-  logClick: (log_message: string, user_id: number) => any;
-}
-
 const handleMapButton = (): JSX.Element => <Redirect push to="/" />;
 
-const drawerWidth = 240;
+const drawerWidth = 185;
 
+const date = new Date().toLocaleDateString();
 // CSS for the drawer and header
 // Uses useStyles and makeStyles which is integrated in material-UI
 const useStyles = makeStyles((theme) => ({
@@ -123,6 +110,16 @@ const useStyles = makeStyles((theme) => ({
   iconStyle: {
     color: '#FFFFFF',
   },
+  smallIcon: {
+    height: '1.2rem',
+    width: '1.2rem',
+    color: '#FFFFFF',
+    paddingBottom: '0.2rem',
+  },
+  whiteStyle: {
+    position: 'absolute',
+    color: '#FFFFFF',
+  },
 }));
 
 const Logo = styled.img`
@@ -130,6 +127,23 @@ const Logo = styled.img`
   width: 5rem;
   position: relative;
 `;
+
+// Props
+interface StateProps {
+  authenticated: boolean;
+  user_id: number;
+  username: string;
+  log_message: string;
+}
+
+interface HeaderProps {
+  headerTitle: string;
+}
+interface DispatchProps {
+  logout: () => any;
+  handleMapButton: () => void;
+  logClick: (log_message: string, user_id: number) => any;
+}
 
 const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Element => {
   const classes = useStyles();
@@ -144,13 +158,17 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
     setOpen(false);
   };
 
-  const { user_id, logout, headerTitle } = props;
+  const {
+    user_id, logout, headerTitle, username,
+  } = props;
 
   const handleLogout = (): void => {
     const { logClick } = props;
     logClick('Logged out', user_id);
     logout();
   };
+
+  // const isMobile = useMediaQuery(`(max-width:${MOBILE_DEVICE_MAX_WIDTH}px)`);
 
   return (
     <div>
@@ -177,6 +195,23 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             {headerTitle}
           </Typography>
           <Weather />
+          <p className={classes.whiteStyle} style={{ right: 225 }}>
+            Hi,
+            {username}
+            !
+          </p>
+          <a className={classes.whiteStyle} style={{ right: 145, paddingTop: 1.3 }} href="/">
+            <PersonIcon className={classes.smallIcon} />
+            Profile
+          </a>
+          <a className={classes.whiteStyle} style={{ right: 85 }} href="/" onClick={handleLogout}>
+            Logout
+          </a>
+          <p className={classes.whiteStyle} style={{ right: 10 }}>
+            {' '}
+            {date}
+            {' '}
+          </p>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -223,24 +258,8 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
               <ListItemText className={classes.listItem} primary="View Map" />
             </ListItem>
           </Link>
-          <Link to="/">
-            <ListItem button key="Profile">
-              <ListItemIcon>
-                <PersonIcon className={classes.iconStyle} />
-              </ListItemIcon>
-              <ListItemText className={classes.listItem} primary="Profile" />
-            </ListItem>
-          </Link>
         </List>
         <Divider />
-        <List className={classes.listItem}>
-          <ListItem button key="Logout" href="/" onClick={handleLogout}>
-            <ListItemIcon>
-              <ExitToAppIcon className={classes.iconStyle} />
-            </ListItemIcon>
-            <ListItemText primary="Log Out" />
-          </ListItem>
-        </List>
       </Drawer>
     </div>
   );
@@ -250,6 +269,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   ...state,
   authenticated: authenticated(state),
   user_id: state.authentication.user_id,
+  username: state.authentication.username,
   log_message: '',
 });
 
