@@ -31,6 +31,8 @@ export default class RoadIntersection {
 
     sectionAreas: Array<Array<Vec2>>;
 
+    passedVehicles: Array<{sectionId: number, passedNum: number}>;
+
     constructor(id: number, mapCoordinate: Vec2, TLManager?: TrafficLightManager) {
       this.id = id;
       this.mapCoordinate = mapCoordinate;
@@ -41,6 +43,7 @@ export default class RoadIntersection {
       this.simpleVehicles = new Array<Vehicle>();
       this.vehicleCount = 0;
       this.sectionAreas = new Array<Array<Vec2>>();
+      this.passedVehicles = new Array<{sectionId: number, passedNum: number}>();
     }
 
     // Getters
@@ -521,6 +524,7 @@ export default class RoadIntersection {
     addNewRoadSection(tailVec2: Vec2): void {
       const roadSection = new RoadSection(this.roadSections.length, this.id, tailVec2);
       this.roadSections.push(roadSection);
+      this.passedVehicles.push({sectionId:roadSection.getId(), passedNum:0});
     }
 
     /**
@@ -726,6 +730,7 @@ export default class RoadIntersection {
 
     /**
      * safely delete the vehicle & refresh the array
+     * only delete when it is leaving laneOut section
      * @param id
      * @param isLaneIn
      */
@@ -738,6 +743,10 @@ export default class RoadIntersection {
       }
     }
 
+    /**
+     * getVehicle index in the array
+     * @param id 
+     */
     getVehicleIndex(id: number): number {
       for (let i = 0; i < this.vehicles.length; i += 1) {
         if (this.vehicles[i].getId() === id) {
@@ -747,6 +756,16 @@ export default class RoadIntersection {
       return -1;
     }
 
+    /**
+     * get passed vehicles of each section
+     */
+    getPassedVehicles():Array<{sectionId:number,passedNum:number}>{
+      return this.passedVehicles;
+    }
+
+    /**
+     * check vehicle leaving state
+     */
     checkLeavingVehicle(): boolean {
       for (let i = 0; i < this.vehicles.length; i += 1) {
         if (this.vehicles[i].getIsGone()) {
@@ -757,6 +776,9 @@ export default class RoadIntersection {
       return false;
     }
 
+    /**
+     * check and update vehicle's state
+     */
     checkTransitionVehicle(): void {
       for (let i = 0; i < this.vehicles.length; i += 1) {
         if (this.vehicles[i].getIsInTransition()) {
@@ -770,6 +792,9 @@ export default class RoadIntersection {
 
             // vehicle has to gone first from the section before update their now section and lane
             this.vehicleGone(this.vehicles[i].getId());
+            // count passed vehicle
+            const secIndex = this.getRoadSectionIndex(sectionId);
+            this.passedVehicles[sectionId].passedNum += 1;
 
             this.vehicles[i].setRoadSectionId(sectionId);
             this.vehicles[i].setLaneId(laneId);

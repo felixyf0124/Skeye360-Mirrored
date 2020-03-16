@@ -24,11 +24,14 @@ import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
 // import 'pixi-text-input.js';
 
 interface Props {
+  isLiveFeed: boolean;
   isSmartTL: boolean;
   tl_mode: any;
   toggles: any;
   tlStop: boolean;
   onTLUpdate: any;
+  simuWidthRatio: number;
+  resolutionRatio: number;
 }
 
 interface StateProps {
@@ -162,11 +165,13 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
   constructor(props: any) {
     super(props);
-    this.windowScaleRatio = 0.4;
+    this.windowScaleRatio = 0.38;
     this.pixiContent = null;
-    this.windowW = window.innerWidth * this.windowScaleRatio;
-    this.windowH = window.innerHeight * this.windowScaleRatio;
-    this.windowMin = 100;
+    const { simuWidthRatio, resolutionRatio } = this.props;
+
+    this.windowW = window.innerWidth * simuWidthRatio;
+    this.windowH = this.windowW / resolutionRatio;
+    this.windowMin = 1;
     const resolution = window.devicePixelRatio;
     const setting = { width: this.windowW, height: this.windowH, resolution };
     this.app = new PIXI.Application(setting);
@@ -202,7 +207,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       [5, 5],
     ];
 
-    this.laneW = 0.06 * Math.min(this.windowW, this.windowH);
+    this.laneW = 0.03;
 
     this.timeLastMoment = Date.now();
     this.trafficLightCounterOffset = 0;
@@ -220,10 +225,10 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     };
 
     // #### hard code to initial road intersection data for first loading
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW / 2, this.windowH * 0.11));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(-this.windowW / 2, this.windowH * -0.12));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW * -0.16, this.windowH / 2));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(this.windowW * 0.16, -this.windowH / 2));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(0.5, 0.11));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.5, -0.12));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.16, 0.5));
+    this.roadIntersection.addNewRoadSection(ts.tsVec2(0.16, -0.5));
 
     for (let i = 0; i < this.roadIntersection.getRoadSections().length; i += 1) {
       if (i === 3) {
@@ -355,7 +360,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.toggleGroup = new Array<{ name: string; state: boolean }>();
     this.labelGroup = new Array<Btn>();
     this.tlCaseBtnGroup = new Array<Btn>();
-
+    
     // toggle group
     const videoFeed = { name: 'enable video feed', state: false };
     const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
@@ -369,6 +374,14 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.toggleGroup.push(showSectionAreas);
     this.toggleGroup.push(showDirectVideoFeedMapping);
     this.toggleGroup.push(showVideoFeedBG);
+    const {isLiveFeed} = this.props;
+    if(isLiveFeed){
+      videoFeed.state = true;
+      samplingVideoFeed.state = false;
+      uiV7.state = true;
+      showSectionAreas.state = true;
+      showDirectVideoFeedMapping.state = true;
+    }
 
     // btn group
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
@@ -637,6 +650,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * resize
    */
   resize = (): void => {
+    const { simuWidthRatio, resolutionRatio } = this.props;
     if (
       window.innerWidth !== undefined
       && window.innerHeight !== undefined
@@ -646,37 +660,37 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.windowW = this.windowMin;
         this.coordinateOffset.x = this.windowW / 2;
       } else {
-        this.windowW = window.innerWidth * this.windowScaleRatio;
+        this.windowW = window.innerWidth * simuWidthRatio;
         this.coordinateOffset.x = this.windowW / 2;
       }
       if (window.innerHeight < this.windowMin) {
         this.windowH = this.windowMin;
         this.coordinateOffset.y = this.windowH / 2;
       } else {
-        this.windowH = window.innerHeight * this.windowScaleRatio;
+        this.windowH = this.windowW / resolutionRatio;
         this.coordinateOffset.y = this.windowH / 2;
       }
       this.app.renderer.resize(this.windowW, this.windowH);
       this.app.stage.x = this.windowW / 2;
       this.app.stage.y = this.windowH / 2;
 
-      this.controlPanelG.clear();
-      this.controlPanelG.beginFill(0x51bcd8, 0.3);
-      this.controlPanelG.lineStyle(1, 0x51bcd8, 0.5);
-      this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
-      this.controlPanelG.endFill();
+      // this.controlPanelG.clear();
+      // this.controlPanelG.beginFill(0x51bcd8, 0.3);
+      // this.controlPanelG.lineStyle(1, 0x51bcd8, 0.5);
+      // this.controlPanelG.drawRect(0, 0, 220, this.windowH - 1);
+      // this.controlPanelG.endFill();
 
-      if (this.isControlPanelShown) {
-        this.controlPanelContainer.x = -this.coordinateOffset.x;
-        this.controlPanelContainer.y = -this.coordinateOffset.y;
-      } else {
-        this.controlPanelContainer.x = -this.controlPanelG.width - this.coordinateOffset.x;
-        this.controlPanelContainer.y = -this.coordinateOffset.y;
-      }
+      // if (this.isControlPanelShown) {
+      //   this.controlPanelContainer.x = -this.coordinateOffset.x;
+      //   this.controlPanelContainer.y = -this.coordinateOffset.y;
+      // } else {
+      //   this.controlPanelContainer.x = -this.controlPanelG.width - this.coordinateOffset.x;
+      //   this.controlPanelContainer.y = -this.coordinateOffset.y;
+      // }
+      // this.laneW = 0.06 * Math.min(this.windowW, this.windowH);
 
       this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
       this.drawRoad();
-      this.initialButtons();
       this.roadIntersection.updateVehiclePosV2();
 
       this.laneAreaContainer.x = -this.coordinateOffset.x;
@@ -689,6 +703,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           this.dragablePoints[i][j].y = pos.y * this.windowH;
         }
       }
+      this.initialButtons();
     }
   };
 
@@ -713,8 +728,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     const sections = this.roadIntersection.getRoadSections();
     const startBlinkTime = 10;
 
-    const h = this.laneW * 0.3;
-    const w = this.laneW * 0.3;
+    const h = this.laneW * 0.3 * this.windowW;
+    const w = this.laneW * 0.3 * this.windowW;
     for (let i = 0; i < sections.length; i += 1) {
       const laneIn = sections[i].getLaneIn();
       const laneOut = sections[i].getLaneOut();
@@ -728,11 +743,12 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         color = parseInt(Scene.getColor(lightState), 16);
 
         const direction = ts.tsNormalize(lane.getHead().minus(lane.getTail()));
-        const division = ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4);
+        const division = (ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4));
 
         // this will draw from head to tail
         for (let k = 0; k < division; k += 1) {
-          const topVertex = lane.getHead().minus(direction.multiply(this.laneW * 0.4 * k));
+          const topVertex = lane.getHead().minus(direction.multiply(this.laneW * 0.4 * k))
+            .multiply(this.windowW);
           const isForced = this.roadIntersection.isForced(lane.getTrafficLightId());
 
           if (isForced) {
@@ -763,7 +779,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         const direction = ts.tsNormalize(lane.getHead().minus(lane.getTail()));
         const division = ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4) + 1;
         for (let k = 1; k < division; k += 1) {
-          const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k));
+          const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k))
+            .multiply(this.windowW);
           const graphicObj = this.drawTriangle(topVertex, h, w, direction, color2);
           this.roadG.addChild(graphicObj);
         }
@@ -789,7 +806,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
     if (!(this.toggleGroup[0].state && this.toggleGroup[2].state && !this.toggleGroup[4].state)) {
       for (let i = 0; i < vehicles.length; i += 1) {
-        const position = vehicles[i].getPosition();
+        const position = vehicles[i].getPosition().multiply(this.windowW);
         if (Number.isNaN(vehicles[i].getRoadSectionId())) {
           const spot = this.drawVehicleSpot(position);
           this.objectContainer.addChild(spot);
@@ -857,7 +874,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.updateLaneArea();
 
     // toggle btn
-    this.updateToggleBtnState();
+    // this.updateToggleBtnState();
     this.featureToggling();
     // menu
     // this.updateMenuState();
@@ -866,6 +883,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.updateTLCase();
 
     this.roadIntersection.updateVehiclePosV2();
+    const passedCars = this.roadIntersection.getPassedVehicles();
+    // console.log(passedCars);
     // const interSec = 0;
 
     if (this.toggleGroup[0].state) {
@@ -941,10 +960,18 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
       this.numberOfCars = this.roadIntersection.getVehiclesNum();
     }
+    if(!this.toggleGroup[0].state){
+      // if(this.roadG.parent !== null){
+      //   this.mapContainer.addChild(this.roadG);
+      // }
 
-    if (this.isUpdate()) {
-      this.roadIntersection.tlCountingDown();
-      this.drawRoad();
+      if (this.isUpdate()) {
+        this.roadIntersection.tlCountingDown();
+        this.drawRoad();
+      }
+    }else{
+      this.roadG.clear();
+      this.roadG.removeChildren();
     }
     this.renderObjects();
     // this.displayPlaneContainer.removeChildren();
@@ -959,10 +986,10 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       this.timeLastMoment = Date.now();
       this.fpsCounter = 0;
 
-      const { isSmartTL, tl_mode } = this.props;
-
+      const { isLiveFeed, isSmartTL, tl_mode } = this.props;
+      
       this.tlCaseId = tl_mode + 1;
-      if (isSmartTL) {
+      if (!isLiveFeed && isSmartTL) {
         // real-time case
         if (this.tlCaseId === 3) {
           const tlQue = this.roadIntersection.getTrafficLightQueue();
@@ -1020,11 +1047,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       pCDText.y = -this.windowH / 2 + 40;
       this.displayPlaneContainer.addChild(pCDText);
     }
-
-    const url = window.location.href;
-    if (!url.includes('/camview/')) {
-      this.unmountDestroy();
-    }
+    
   };
 
   /**
@@ -1083,7 +1106,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
   }
 
   // unmount content destroy
-  unmountDestroy(): void {
+  componentWillUnmount(): void {
     this.app.ticker.remove(this.animation);
     this.app.ticker.stop();
     this.app.destroy();
@@ -1266,7 +1289,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       color = col;
     }
     spot.beginFill(color, 1);
-    spot.drawCircle(vertex.x, vertex.y, this.laneW * 0.3);
+    spot.drawCircle(vertex.x, vertex.y, this.laneW * 0.3 * this.windowW);
     spot.endFill();
     return spot;
   }
@@ -1344,23 +1367,70 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.menuBtns[1].y = this.menuBtns[0].y + this.menuBtns[0].width / 2 + this.menuBtns[1].width / 2 + 12;
     this.menuBtns[2].y = this.menuBtns[1].y + this.menuBtns[1].width / 2 + this.menuBtns[2].width / 2 + 6;
 
-    const rSections = this.roadIntersection.getRoadSections();
+    // this is for live feed mapping incoming section car count
     if (this.labelGroup.length === 0) {
-      for (let i = 0; i < rSections.length; i += 1) {
-        const lane = rSections[i].getLaneAt(0);
-        const pos = rSections[i]
-          .getTail()
-          .multiply(0.3)
-          .plus(lane.getHead());
+      for (let i = 0; i < this.dragablePoints.length; i += 1) {
+        const offset = new Vec2(this.coordinateOffset.x, this.coordinateOffset.y);
+        const p1 = this.dragablePoints[i][1].absolutPos;
+        const p2 = this.dragablePoints[i][2].absolutPos;
+
+        let pos = p1;
+
         const labelG = new Btn(36, 36, 'car#', 0xc658fc);
         labelG.setTextStyle(textStyle3);
         labelG.interactive = false;
         labelG.buttonMode = false;
+
+        const verticalDir = ts.tsNormalize(ts
+          .tsRotateByOrigin(p1.minus(p2), Math.PI / 2));
+
+        pos = pos.plus(verticalDir.multiply(this.laneW * 2.5));
+        pos.x *= this.windowW;
+        pos.y *= this.windowH;
+        pos = pos.minus(offset);
+
         labelG.x = pos.x - labelG.btnWidth / 2;
-        labelG.y = pos.y - labelG.height / 2;
+        labelG.y = pos.y - labelG.btnHeight / 2;
         this.labelGroup.push(labelG);
       }
+    } else {
+      for (let i = 0; i < this.dragablePoints.length; i += 1) {
+        const offset = new Vec2(this.coordinateOffset.x, this.coordinateOffset.y);
+        const p1 = this.dragablePoints[i][1].absolutPos;
+        const p2 = this.dragablePoints[i][2].absolutPos;
+
+        let pos = p1;
+
+        const verticalDir = ts.tsNormalize(ts
+          .tsRotateByOrigin(p1.minus(p2), Math.PI / 2));
+
+        pos = pos.plus(verticalDir.multiply(this.laneW * 2.5));
+        pos.x *= this.windowW;
+        pos.y *= this.windowH;
+        pos = pos.minus(offset);
+
+        this.labelGroup[i].x = pos.x - this.labelGroup[i].btnWidth / 2;
+        this.labelGroup[i].y = pos.y - this.labelGroup[i].btnHeight / 2;
+      }
     }
+    // will need this for later passed car number count
+    // const rSections = this.roadIntersection.getRoadSections();
+    // if (this.labelGroup.length === 0) {
+    //   for (let i = 0; i < rSections.length; i += 1) {
+    //     const lane = rSections[i].getLaneAt(0);
+    //     const pos = rSections[i]
+    //       .getTail().multiply(this.windowW)
+    //       .multiply(0.3)
+    //       .plus(lane.getHead());
+    //     const labelG = new Btn(36, 36, 'car#', 0xc658fc);
+    //     labelG.setTextStyle(textStyle3);
+    //     labelG.interactive = false;
+    //     labelG.buttonMode = false;
+    //     labelG.x = pos.x - labelG.btnWidth / 2;
+    //     labelG.y = pos.y - labelG.height / 2;
+    //     this.labelGroup.push(labelG);
+    //   }
+    // }
   }
 
   /**
@@ -1482,6 +1552,9 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
   }
 
+  /**
+   * update Traffic light smart mode type
+   */
   updateTLCase(): void {
     for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
       if (this.tlCaseBtnGroup[i].isPressed()) {
@@ -1504,7 +1577,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * update toggle btn state when the btn is pressed
    */
   updateToggleBtnState(): void {
-    const { toggles } = this.props;
+    const { isLiveFeed, toggles } = this.props;
     let togValues = new Array<boolean>();
     if (toggles !== undefined && toggles !== null) {
       togValues = Object.values(toggles);
@@ -1518,7 +1591,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.toggleGroup[i].state = togValues[i];
       }
     }
-
+    
     const color = 0x51bcd8;
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
       if (i === 1) {
@@ -1656,7 +1729,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             const id = parseInt(matchesArray[0], 10);
             const x = (parseInt(matchesArray[1], 10) / videoW) * this.windowW - this.coordinateOffset.x;
             const y = (parseInt(matchesArray[2], 10) / videoH) * this.windowH - this.coordinateOffset.y;
-            const pos = ts.tsVec2(x, y);
+            const pos = ts.tsVec2(x, y).multiply(1 / this.windowW);
             const simpleVehicleData = { id, position: pos };
             formedData.push(simpleVehicleData);
 
@@ -1695,6 +1768,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           const x = pos.x / this.windowW;
           const y = pos.y / this.windowH;
           this.dragablePoints[i][j].absolutPos = new Vec2(x, y);
+          // console.log(this.dragablePoints[i][j].absolutPos);
         }
         const absPos = this.dragablePoints[i][j].absolutPos;
         this.dragablePoints[i][j].x = absPos.x * this.windowW;
@@ -1735,7 +1809,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         }
         let secCarNum = 0;
         for (let j = 0; j < vObj.length; j += 1) {
-          const pos = vObj[j].getPosition();
+          const pos = vObj[j].getPosition().multiply(this.windowW);
           const absPos = new Vec2(pos.x + this.coordinateOffset.x, pos.y + this.coordinateOffset.y);
           const isInside = ts.inside(absPos, poly);
           if (isInside != null && isInside) {

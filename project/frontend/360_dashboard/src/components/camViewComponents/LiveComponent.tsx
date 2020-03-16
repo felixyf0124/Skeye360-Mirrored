@@ -222,11 +222,14 @@ class LiveComponent extends React.Component<
               <text style={skeyeStyles.Header}>Simulator with Live Feed</text>
               <SimContainer>
                 <Simulator
+                  isLiveFeed = {true}
                   isSmartTL={false}
                   tl_mode={tlMode}
                   toggles={toggles}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
+                  simuWidthRatio={0.38}
+                  resolutionRatio={38 / 19.5}
                 />
               </SimContainer>
             </InnerDivVerticalSim>

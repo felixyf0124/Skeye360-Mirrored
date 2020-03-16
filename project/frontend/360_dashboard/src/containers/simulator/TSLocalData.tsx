@@ -16,7 +16,7 @@ export function loadSectionAreas(): Array<Array<Vec2>> {
   const sectionArea3 = new Array<Vec2>();
   const sectionArea4 = new Array<Vec2>();
 
-  // north
+  // south
   sectionArea1.push(new Vec2(0.32044198895027626, 0.8322017458777885));
   sectionArea1.push(new Vec2(0.4718232044198895, 0.9194956353055286));
   sectionArea1.push(new Vec2(0.44419889502762433, 1.0));
@@ -28,9 +28,10 @@ export function loadSectionAreas(): Array<Array<Vec2>> {
   sectionArea2.push(new Vec2(0.0, 0.41125121241513096));
   sectionArea2.push(new Vec2(0.0, 0.3375363724539282));
 
-  // south
+  // north
   sectionArea3.push(new Vec2(0.6408839779005525, 0.3123181377303589));
   sectionArea3.push(new Vec2(0.5767955801104973, 0.2987390882638215));
+  sectionArea3.push(new Vec2(0.5904025795061979, 0.21486115236115236));
   sectionArea3.push(new Vec2(0.5900552486187846, 0.11251212415130941));
   sectionArea3.push(new Vec2(0.6696132596685083, 0.09311348205625607));
   sectionArea3.push(new Vec2(0.6983425414364641, 0.18040737148399613));
