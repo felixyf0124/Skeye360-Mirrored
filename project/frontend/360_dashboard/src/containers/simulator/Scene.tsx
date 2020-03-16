@@ -377,6 +377,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     const {isLiveFeed} = this.props;
     if(isLiveFeed){
       videoFeed.state = true;
+      samplingVideoFeed.state = false;
       uiV7.state = true;
       showSectionAreas.state = true;
       showDirectVideoFeedMapping.state = true;
