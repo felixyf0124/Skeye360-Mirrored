@@ -55,6 +55,14 @@ const createBoundingBox = (latitude: number, longitude: number): string => {
   return `${upperBoundLatitude.toString()},${upperBoundLongitude.toString()},${lowerBoundLatitude.toString()},${lowerBoundLongitude.toString()}`;
 };
 
+// Function that converts ISO date into yyyy-mm-dd format
+const toNormalDate = (retrievedDate: string): string => {
+  const date = new Date(retrievedDate);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  return `${year}-${month}-${day}`;
+};
 // Styled Components
 const OuterContainer = styled.div`
   overflow: scroll;
@@ -227,14 +235,14 @@ class TrafficNews extends React.Component<{}, StateProps> {
                       })()}
                       {' '}
                       <br />
-                      <b>Start Time:</b>
+                      <b>Start Date:</b>
                       {' '}
-                      {incident.startTime}
+                      {toNormalDate(incident.startTime)}
                       {' '}
                       <br />
-                      <b>End Time:</b>
+                      <b>End Date:</b>
                       {' '}
-                      {incident.endTime}
+                      {toNormalDate(incident.endTime)}
                     </Typography>
                   </CardContent>
                 </Card>
