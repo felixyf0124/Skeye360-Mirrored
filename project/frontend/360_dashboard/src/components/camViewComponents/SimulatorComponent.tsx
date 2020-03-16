@@ -75,11 +75,13 @@ const SimContainer = styled.div`
 const ContentBlock = styled.div`
   display: flex;
   width: 80vw;
+  margin:0vw;
+  flow: left;
 `;
 
 const VerticalBlock = styled.div`
   display:block;
-  width: 80%;
+  width: 100vw;
   height: auto;
   flex-direction:column;
 `;
@@ -97,8 +99,13 @@ const skeyeStyles = {
     fontSize: 20,
     marginBottom: 4,
     fontWeight: 600,
+    height:35,
   },
 };
+
+
+
+
 
 const SimulatorComponent = (props: SimProps | any): JSX.Element => {
   // eslint-disable-next-line consistent-return
@@ -106,6 +113,33 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
     tlMode, onChangeTLMode, toggles, tlStop, onClickTLStop,
     tlCombStates, onTLUpdate,
   } = props;
+
+  const [passedVehicles, setPassedVehicles] = React.useState([
+    {direction:"",passedNum:0},
+    {direction:"",passedNum:0},
+    {direction:"",passedNum:0},
+    {direction:"",passedNum:0},
+  ]);
+  
+  const [passedVehicles2, setPassedVehicles2] = React.useState([
+    {direction:"",passedNum:0},
+    {direction:"",passedNum:0},
+    {direction:"",passedNum:0},
+    {direction:"",passedNum:0},
+  ]);
+  
+  const updatePassedVehicles = 
+  (passedVehicles: Array<{direction:string,passedNum:number}>,
+    isSmartTL:boolean): 
+  void => {
+    if (isSmartTL) {
+      setPassedVehicles2(passedVehicles);
+      console.log(passedVehicles2);
+    } else {
+      setPassedVehicles(passedVehicles);
+      console.log(passedVehicles);
+    }
+  };
 
   return (
     <div>
@@ -123,8 +157,9 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
         <VerticalBlock>
         <InnerDivHorizon>
-          
+          <div style={{height:`20px`}}>
             <text style={skeyeStyles.Header}>Default Traffic Light</text>
+            </div>
             <SimContainer>
               <Simulator
                 isLiveFeed={false}
@@ -133,6 +168,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 toggles={toggles}
                 tlStop={tlStop}
                 onTLUpdate={onTLUpdate}
+                updatePassedVehicles={updatePassedVehicles}
                 simuWidthRatio={0.38}
                 resolutionRatio={38 / 19.5}
               />
@@ -151,6 +187,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 toggles={toggles}
                 tlStop={tlStop}
                 onTLUpdate={onTLUpdate}
+                updatePassedVehicles={updatePassedVehicles}
                 simuWidthRatio={0.38}
                 resolutionRatio={38 / 19.5}
               />
