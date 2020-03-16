@@ -65,11 +65,23 @@ const InnerDivVerticalSecondSim = styled.div`
 // Container for the simulator
 const SimContainer = styled.div`
   width: 20vw;
-  height: 15vw;
+  height: 20vw;
   margin-left: 20rem;
   display: flex;
   justify-content: center;
   margin: 1rem;
+`;
+
+const ContentBlock = styled.div`
+  display: flex;
+  width: 80vw;
+`;
+
+const VerticalBlock = styled.div`
+  display:block;
+  width: 80%;
+  height: auto;
+  flex-direction:column;
 `;
 
 // Custom styling
@@ -84,7 +96,7 @@ const skeyeStyles = {
     color: SKEYE_WHITE,
     fontSize: 20,
     marginBottom: 4,
-    fontWeight: 900,
+    fontWeight: 600,
   },
 };
 
@@ -107,9 +119,11 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
         // tlStates2={tlStates2}
           keyValue="2"
         />
+        <ContentBlock>
 
+        <VerticalBlock>
         <InnerDivHorizon>
-          <InnerDivVerticalFirstSim>
+          
             <text style={skeyeStyles.Header}>Default Traffic Light</text>
             <SimContainer>
               <Simulator
@@ -123,8 +137,11 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 resolutionRatio={38 / 19.5}
               />
             </SimContainer>
-          </InnerDivVerticalFirstSim>
-          <InnerDivVerticalSecondSim>
+         
+          
+        </InnerDivHorizon>
+        <InnerDivHorizon>
+          
             <text style={skeyeStyles.Header}>Smart Traffic Light</text>
             <SimContainer>
               <Simulator
@@ -138,8 +155,9 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 resolutionRatio={38 / 19.5}
               />
             </SimContainer>
-          </InnerDivVerticalSecondSim>
         </InnerDivHorizon>
+        </VerticalBlock>
+        </ContentBlock>
       </HorizontalFlexBox>
     </div>
   );

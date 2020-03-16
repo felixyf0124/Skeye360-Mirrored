@@ -884,7 +884,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
     this.roadIntersection.updateVehiclePosV2();
     const passedCars = this.roadIntersection.getPassedVehicles();
-    console.log(passedCars);
+    // console.log(passedCars);
     // const interSec = 0;
 
     if (this.toggleGroup[0].state) {
