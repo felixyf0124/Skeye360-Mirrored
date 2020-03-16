@@ -155,6 +155,9 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
         },
         legend: {
           show: true,
+          labels: {
+            colors: SKEYE_WHITE,
+          },
         },
       },
       lineSeries: [
