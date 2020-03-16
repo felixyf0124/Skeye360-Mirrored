@@ -23,9 +23,12 @@ import CameraComponent from './CameraComponent';
 // import OverviewComponent from './OverviewComponent';
 import LiveComponent from './LiveComponent';
 import {
-  SKEYE_GREY, SKEYE_DARK_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_WHITE, SKEYE_GREEN,
+  SKEYE_GREY,
+  SKEYE_DARK_GREY,
+  SKEYE_LIGHT_DARK_GREY,
+  SKEYE_WHITE,
+  SKEYE_GREEN,
 } from '../../css/custom';
-
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -71,23 +74,20 @@ const HorizontalFlexBox = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: left;
-  align-items: left;
   align-content: stretch;
   padding: 0px;
 `;
 
 // Title flexbox styling
 const BoxMain = styled.div`
-    top: 0px;
-    left: 0px;
+  top: 0px;
+  left: 0px;
 `;
 
 // Horizontal box for the entire component
 const BoxHorizontal = styled.div`
-    display: flex;
-    flex-direction: row;
-    margin-left: 5vw;
+  display: flex;
+  flex-direction: row;
 `;
 
 // Box for settings and toggles
@@ -248,12 +248,15 @@ const TabsComponents = (): JSX.Element => {
     setTlStop(!tlStop);
   };
 
-  const onTLUpdate = (tls: Array<{
-    direction: string;
-    state: string;
-    countDown: string;
-    totalTime: string; // G+Y
-  }>, isSmartTL: boolean): any => {
+  const onTLUpdate = (
+    tls: Array<{
+      direction: string;
+      state: string;
+      countDown: string;
+      totalTime: string; // G+Y
+    }>,
+    isSmartTL: boolean,
+  ): any => {
     if (isSmartTL) {
       setTlStates2(tls);
     } else {
@@ -307,21 +310,23 @@ const TabsComponents = (): JSX.Element => {
   return (
     <div className={classes.root}>
       <AppBar position="static" style={skeyeStyles.TabBar}>
-        <Tabs value={value} onChange={handleChangeTab} TabIndicatorProps={{ style: { backgroundColor: 'white' } }}>
+        <Tabs
+          value={value}
+          onChange={handleChangeTab}
+          TabIndicatorProps={{ style: { backgroundColor: 'white' } }}
+        >
           <Tab label="Live Feed" {...props(0)} style={skeyeStyles.TabOnly} />
           <Tab label="Data Analytics" {...props(1)} style={skeyeStyles.TabOnly} />
           <Tab label="Camera" {...props(2)} style={skeyeStyles.TabOnly} />
           <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
 
-          {value === 0 || value === 3
-            ? (
-              <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
-                <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
-                  <SettingsIcon />
-                </button>
-              </BoxSettingsMenu>
-            )
-            : null }
+          {value === 0 || value === 3 ? (
+            <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
+              <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
+                <SettingsIcon />
+              </button>
+            </BoxSettingsMenu>
+          ) : null}
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -371,7 +376,9 @@ const TabsComponents = (): JSX.Element => {
           <div className={classes.paper}>
             <HorizontalFlexBox>
               <BoxMain>
-                <text id="transition-modal-title" style={skeyeStyles.Title}>Settings for the simulators</text>
+                <text id="transition-modal-title" style={skeyeStyles.Title}>
+                  Settings for the simulators
+                </text>
                 {/* <text style={ skeyeStyles.Message }>
                 All your preferences for the simulators will be saved here</text> */}
               </BoxMain>

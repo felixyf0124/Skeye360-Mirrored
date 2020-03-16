@@ -4,10 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { editExistingCamera, EditCameraAction } from '../contexts/camera';
-import { RootState } from '../reducers/rootReducer';
-import { logClick } from '../contexts/LogClicks';
-import DeleteCameraButton from './DeleteCameraButton';
+import { editExistingCamera, EditCameraAction } from '../../contexts/camera';
+import { RootState } from '../../reducers/rootReducer';
+import { logClick } from '../../contexts/LogClicks';
+import DeleteCameraButton from '../DeleteCameraButton';
 
 // Generic flexboxes styling
 const HorizontalFlexBox = styled.div`
