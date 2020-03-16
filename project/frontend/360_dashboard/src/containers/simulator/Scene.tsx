@@ -883,6 +883,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.updateTLCase();
 
     this.roadIntersection.updateVehiclePosV2();
+    const passedCars = this.roadIntersection.getPassedVehicles();
+    console.log(passedCars);
     // const interSec = 0;
 
     if (this.toggleGroup[0].state) {
@@ -1554,6 +1556,9 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
   }
 
+  /**
+   * update Traffic light smart mode type
+   */
   updateTLCase(): void {
     for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
       if (this.tlCaseBtnGroup[i].isPressed()) {
@@ -1590,18 +1595,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.toggleGroup[i].state = togValues[i];
       }
     }
-    // if (isLiveFeed){
-    //   this.toggleGroup[0].state = false;
-    //   this.toggleGroup[1].state = true;
-    //   this.toggleGroup[2].state = true;
-    //   this.toggleGroup[3].state = true;
-    // }else{
-    //   this.toggleGroup[0].state = true;
-    //   for (let i =1;i<this.toggleGroup.length;i+=1){
-    //     this.toggleGroup[i].state = false; 
-    //   }
-    // }
-
+    
     const color = 0x51bcd8;
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
       if (i === 1) {
