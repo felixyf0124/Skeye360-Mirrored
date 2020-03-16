@@ -1047,11 +1047,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       pCDText.y = -this.windowH / 2 + 40;
       this.displayPlaneContainer.addChild(pCDText);
     }
-
-    const url = window.location.href;
-    if (!url.includes('/camview/')) {
-      this.unmountDestroy();
-    }
+    
   };
 
   /**
@@ -1110,7 +1106,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
   }
 
   // unmount content destroy
-  unmountDestroy(): void {
+  componentWillUnmount(): void {
     this.app.ticker.remove(this.animation);
     this.app.ticker.stop();
     this.app.destroy();
