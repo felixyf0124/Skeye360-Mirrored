@@ -4,6 +4,7 @@ import React from 'react';
 import Chart from 'react-apexcharts';
 import ApexCharts from 'apexcharts';
 import { Response as countData, fetchCount } from '../../api/fetchCount';
+import { SKEYE_WHITE, SKEYE_BLACK } from '../../css/custom';
 
 // Realtime graph from the ApexCharts Documentation Website
 // https://apexcharts.com/react-chart-demos/line-charts/realtime/
@@ -83,6 +84,7 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
           id: chartID,
           height: 350,
           type: 'line',
+          background: SKEYE_BLACK,
           animations: {
             enabled: true,
             easing: 'linear',
@@ -106,6 +108,9 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
         title: {
           align: 'center',
           text: title,
+          style: {
+            color: SKEYE_WHITE,
+          },
         },
         markers: {
           size: 0,
@@ -117,6 +122,9 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
           title: {
             text: 'Hours',
             align: 'center',
+            style: {
+              color: SKEYE_WHITE,
+            },
           },
           labels: {
             formatter(max: number): string {
@@ -125,6 +133,9 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
               }
               return '';
             },
+            style: {
+              colors: SKEYE_WHITE,
+            },
           },
         },
         yaxis: {
@@ -132,6 +143,14 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
           max: 200,
           title: {
             text: 'Cars',
+            style: {
+              color: SKEYE_WHITE,
+            },
+          },
+          labels: {
+            style: {
+              colors: SKEYE_WHITE,
+            },
           },
         },
         legend: {
@@ -155,6 +174,7 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
   public async componentDidMount(): Promise<void> {
     const { chartID, countDirection } = this.props;
     // const date = new Date().toISOString().split('T')[0];
+    const time = new Date();
     const date = '2020-01-31';
     const arimaData = await fetchCount('arima', countDirection, date);
     const movingAverageData = await fetchCount('MA', countDirection, date);
@@ -175,7 +195,7 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
       // console.log(current_arima);
       // console.log(current_mavg);
       COUNT++;
-    }, 360);
+    }, 1000 / time.getHours());
   }
 
   /* eslint-disable react/destructuring-assignment */

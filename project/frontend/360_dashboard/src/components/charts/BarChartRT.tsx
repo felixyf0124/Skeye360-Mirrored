@@ -1,8 +1,10 @@
+/* eslint-disable no-console */
 /* eslint-disable  @typescript-eslint/camelcase */
 import React from 'react';
 import Chart from 'react-apexcharts';
 import ApexCharts from 'apexcharts';
 import { Response as countData, fetchCount } from '../../api/fetchCount';
+import { SKEYE_BLACK, SKEYE_WHITE } from '../../css/custom';
 
 // Realtime graph from the ApexCharts Documentation Website
 // https://apexcharts.com/react-chart-demos/line-charts/realtime/
@@ -20,12 +22,16 @@ async function loadDataToChart(
   secondaryMovingAverageData: countData[],
 ): Promise<void> {
   const date = new Date();
-  // Populate the moving average displayed on graph one by one
-  if (COUNT < date.getHours()) {
-    current_bar = [];
-    // populate the bar chart
-    current_bar.push(primaryDirection[COUNT * 4].count);
-    current_bar.push(secondaryMovingAverageData[COUNT * 4].count);
+  try {
+    // Populate the moving average displayed on graph one by one
+    if (COUNT < date.getHours()) {
+      current_bar = [];
+      // populate the bar chart
+      current_bar.push(primaryDirection[COUNT * 4].count);
+      current_bar.push(secondaryMovingAverageData[COUNT * 4].count);
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -56,6 +62,7 @@ class BarChartRT extends React.Component<{} & Props, ChartState> {
           id: chartID,
           type: 'bar',
           height: 350,
+          background: SKEYE_BLACK,
         },
         plotOptions: {
           bar: {
@@ -65,16 +72,29 @@ class BarChartRT extends React.Component<{} & Props, ChartState> {
         title: {
           align: 'center',
           text: title,
+          style: {
+            color: SKEYE_WHITE,
+          },
         },
         dataLabels: {
           enabled: false,
         },
         xaxis: {
           categories,
+          labels: {
+            style: {
+              colors: SKEYE_WHITE,
+            },
+          },
         },
         yaxis: {
           min: 0,
           max: 200,
+          labels: {
+            style: {
+              colors: SKEYE_WHITE,
+            },
+          },
         },
       },
       barSeries: [
@@ -89,6 +109,7 @@ class BarChartRT extends React.Component<{} & Props, ChartState> {
   public async componentDidMount(): Promise<void> {
     const { chartID, primaryDirection, secondaryDirection } = this.props;
     // const date = new Date().toISOString().split('T')[0];
+    const time = new Date();
     const date = '2020-01-31';
     const primaryMovingAverageData = await fetchCount('MA', primaryDirection, date);
     const secondaryMovingAverageData = await fetchCount('MA', secondaryDirection, date);
@@ -102,7 +123,7 @@ class BarChartRT extends React.Component<{} & Props, ChartState> {
       ApexCharts.exec(chartID, 'updateSeries', [{ data: current_bar }]);
       // eslint-disable-next-line no-plusplus
       COUNT++;
-    }, 50);
+    }, 1000 / time.getHours());
   }
 
   /* eslint-disable react/destructuring-assignment */

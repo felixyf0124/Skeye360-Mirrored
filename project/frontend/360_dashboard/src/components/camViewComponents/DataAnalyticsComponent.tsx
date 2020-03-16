@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { SKEYE_WHITE, SKEYE_DARK_GREY } from '../../css/custom';
+import { SKEYE_WHITE, SKEYE_BLACK } from '../../css/custom';
 import GoogleMiniMap from '../GoogleMiniMap';
 import { RootState } from '../../reducers/rootReducer';
 import {
@@ -16,27 +16,26 @@ import BarChartRT from '../charts/BarChartRT';
 import RealTimeLineChart from '../charts/RealTimeLineChart';
 
 const Body = styled.div`
-  margin-left: 5rem;
   margin-top: 2rem;
 `;
 
 const MapContainer = styled.div`
   position: relative;
-  width: 30vw;
+  width: 20vw;
   margin: 1rem;
 `;
 
 // Smaller charts for the bottom left side charts.
 const SmallContainer = styled.div`
-  background-color: ${SKEYE_WHITE};
-  width: 30vw;
+  background-color: ${SKEYE_BLACK};
+  width: 25vw;
   position: relative;
   margin: 1rem;
 `;
 
 const SmallImgContainer = styled.img`
-  background-color: ${SKEYE_DARK_GREY};
-  width: 30vw;
+  background-color: ${SKEYE_BLACK};
+  width: 25vw;
   position: relative;
   margin: 1rem;
 `;

@@ -190,7 +190,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
           </ChartHorizontalFlexBox>
           <ChartHorizontalFlexBox>
             <BigChartContainer>
-              {/* <RealTimeLine
+              <RealTimeLine
                 chartID="RT-NS"
                 title="Prediction vs Moving Average in North-South"
                 countDirection="ns"
@@ -199,7 +199,7 @@ class StreetView extends React.Component<StateProps & DispatchProps> {
                 chartID="RT-EW"
                 title="Prediction vs Moving Average in East-West"
                 countDirection="ew"
-              /> */}
+              />
             </BigChartContainer>
           </ChartHorizontalFlexBox>
         </Body>
