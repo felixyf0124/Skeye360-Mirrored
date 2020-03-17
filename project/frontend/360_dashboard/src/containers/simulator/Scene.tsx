@@ -20,6 +20,7 @@ import edata1 from './traffic_edge_case.csv';
 import { RootState } from '../../reducers/rootReducer';
 import { logClick } from '../../contexts/LogClicks';
 import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
+import { stringify } from 'querystring';
 
 // import 'pixi-text-input.js';
 
@@ -30,6 +31,7 @@ interface Props {
   toggles: any;
   tlStop: boolean;
   onTLUpdate: any;
+  updatePassedVehicles: any ;
   simuWidthRatio: number;
   resolutionRatio: number;
 }
@@ -883,7 +885,35 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.updateTLCase();
 
     this.roadIntersection.updateVehiclePosV2();
-    const passedCars = this.roadIntersection.getPassedVehicles();
+    const {updatePassedVehicles, isSmartTL} = this.props;
+    if(updatePassedVehicles !== null){
+      const passedCars = this.roadIntersection.getPassedVehicles();
+      const adaptedCarNums = new Array<{direction:string, passedNum:number}>();
+      for(let i=0;i<passedCars.length;i+=1){
+        switch (passedCars[i].sectionId){
+          case 0:
+            adaptedCarNums.push({direction:"East", 
+              passedNum: passedCars[i].passedNum});
+            break;
+          case 1:
+            adaptedCarNums.push({direction:"West", 
+              passedNum: passedCars[i].passedNum});
+            break;
+          case 2:
+            adaptedCarNums.push({direction:"North", 
+              passedNum: passedCars[i].passedNum});
+            break;
+          case 3:
+            adaptedCarNums.push({direction:"South", 
+              passedNum: passedCars[i].passedNum});
+            break;
+        }
+      }
+
+      updatePassedVehicles(adaptedCarNums, isSmartTL);
+    }
+
+
     // console.log(passedCars);
     // const interSec = 0;
 

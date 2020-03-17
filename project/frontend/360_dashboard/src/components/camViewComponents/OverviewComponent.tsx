@@ -226,6 +226,7 @@ class OverviewComponent extends React.Component<
                   tl_mode={tlMode}
                   toggles={toggles}
                   tlStop={tlStop}
+                  updatePassedVehicles={()=>{}}
                   onTLUpdate={onTLUpdate}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
@@ -278,6 +279,7 @@ class OverviewComponent extends React.Component<
                   toggles={toggles}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
+                  updatePassedVehicles={()=>{}}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
                 />
