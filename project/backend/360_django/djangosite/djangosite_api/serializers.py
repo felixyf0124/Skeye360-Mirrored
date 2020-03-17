@@ -29,11 +29,11 @@ class CountSerializer(DjongoModelSerializer):
 
 class IntersectionSerializer(DjongoModelSerializer):
     cameras = CameraSerializer(many=True, read_only=True)
-    counts = CountSerializer(many=True, read_only=True)
+    #counts = CountSerializer(many=True, read_only=True)
 
     class Meta:
         model = Intersection
-        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'counts', 'longitude', 'district_id', 'user_id']
+        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'longitude', 'district_id', 'user_id']
 
 
 class DistrictSerializer(DjongoModelSerializer):
