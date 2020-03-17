@@ -9,6 +9,7 @@ import { SKEYE_WHITE } from '../css/custom';
 import { connect } from 'react-redux';
 import { isStaff } from '../contexts/authentication';
 import { RootState } from '../reducers/rootReducer';
+import { getUsers, STATE as userState, GetUsersAction } from '../contexts/users';
 
 // MapQuest API is used to retrieve traffic news
 // https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -35,7 +36,6 @@ const API_KEY = '24jtUJNMCXQg4pLgMchaC7p6Flihs7wO';
 // const API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${BOUNDING_BOX}`;
 
 const API_DOMAIN = REACT_APP_API_URL;
-const DISTRICT_CALL = `//${API_DOMAIN}/api/district/`;
 
 const incidentsArray: any[] = [];
 
@@ -47,17 +47,19 @@ interface StateProps {
 interface StaffProps {
   districts: any;
   isStaff: boolean;
+  users: any;
+  user_id: any; 
 }
 
 // Function that creates a bounding box based on latitude and longitude provided
 const createBoundingBox = (latitude: number, longitude: number): string => {
   // For now, the values are +0.1 and -0.1 for sake of demo.
   // Normally they would be +-0.001 but there are no traffic news retrieved.
-  const upperBoundLatitude = latitude + 0.1;
-  const upperBoundLongitude = longitude + 0.1;
+  const upperBoundLatitude = latitude + 0.02;
+  const upperBoundLongitude = longitude + 0.02;
 
-  const lowerBoundLatitude = latitude - 0.1;
-  const lowerBoundLongitude = longitude - 0.1;
+  const lowerBoundLatitude = latitude - 0.02;
+  const lowerBoundLongitude = longitude - 0.02;
 
   return `${upperBoundLatitude.toString()},${upperBoundLongitude.toString()},${lowerBoundLatitude.toString()},${lowerBoundLongitude.toString()}`;
 };
@@ -70,6 +72,15 @@ const toNormalDate = (retrievedDate: string): string => {
   const day = date.getDate();
   return `${year}-${month}-${day}`;
 };
+
+const filterList = (user_id: number, assigned_user_id: number): boolean => {
+  
+  if (user_id === assigned_user_id) {
+    return true;
+  }
+  return false;
+};
+
 // Styled Components
 const OuterContainer = styled.div`
   overflow: scroll;
@@ -111,46 +122,37 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     let latitude: number;
     let longitude: number;
     let boundingBox: string;
+    let tempData: any[] = [];
+    let TRAFFIC_API_CALL = '';
     const districtFetch = (): void => {
-      const url = DISTRICT_CALL;
-      const settings = {
-        method: 'GET',
-        headers: {},
-      };
+
       // Fetch the list of intersections
-      fetch(url, settings).then(async (response) => {
-        const data = await response.json();
-        let CALL = '';
-        let tempData: any[] = [];
-        /* eslint-disable no-plusplus */
-        /* eslint-disable no-loop-func */
-        for (let i = 0; i < data[0].intersections.length; i++) {
-          // 1. Retrieve intersection's latitude and longitude
-          latitude = data[0].intersections[i].latitude;
-          longitude = data[0].intersections[i].longitude;
-
-          // 2. Create a bounding box
+      for(let i = 0; i < this.props.districts[0].intersections.length; i++){
+        if(filterList(this.props.user_id,this.props.districts[0].intersections[i].user_id)){
+          latitude = this.props.districts[0].intersections[i].latitude;
+          longitude = this.props.districts[0].intersections[i].longitude;
+      
           boundingBox = createBoundingBox(latitude, longitude);
+      
+          TRAFFIC_API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${boundingBox}`;
+      
+          fetch(TRAFFIC_API_CALL)
+          .then((results) => results.json())
+          .then((data) => {
+            tempData = data.incidents;
+      
+            if (tempData.length !== 0) {
+              incidentsArray.push(...data.incidents);
+            }
 
-          // 3. Fetch traffic news from API
-          CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${boundingBox}`;
-
-          // 4. Append to state
-          fetch(CALL)
-            .then((results) => results.json())
-            .then((data) => {
-              tempData = data.incidents;
-
-              if (tempData.length !== 0) {
-                incidentsArray.push(...data.incidents);
-              }
-              this.setState({
-                isLoaded: true,
-                incidents: incidentsArray,
-              });
+            this.setState({
+              isLoaded: true,
+              incidents: incidentsArray,
             });
+          });
         }
-      });
+      }
+    
     };
     const adminFetch = (): void => {
       fetch(`http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=45.7047897,-73.47429525,45.41007553,-73.97290173`)
@@ -162,14 +164,12 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
           })
         })
     }
-    console.log(this.props.districts[0].intersections[0].latitude);
     if(this.props.isStaff){
-      //admin fetching!
-      console.log('Fetch for Admin')
+      console.log('is staff')
       adminFetch();
     }
     else{
-      console.log('Fetch for operator')
+      console.log('is not staff')
       districtFetch();
     }
   }
@@ -220,7 +220,6 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
                         })()}
                         &nbsp;
                       </Typography>
-
                       {(() => {
                         switch (incident.type) {
                           case 1:
@@ -283,5 +282,7 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
 const mapStateToProps = (state: RootState): StaffProps => ({
   districts: state.districts,
   isStaff: isStaff(state),
+  users: state.users,
+  user_id: state.authentication.user_id,
 }) 
 export default connect(mapStateToProps)(TrafficNews);
