@@ -5,11 +5,10 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import styled from 'styled-components';
-import { SKEYE_WHITE } from '../css/custom';
 import { connect } from 'react-redux';
+import { SKEYE_WHITE } from '../css/custom';
 import { isStaff } from '../contexts/authentication';
 import { RootState } from '../reducers/rootReducer';
-import { getUsers, STATE as userState, GetUsersAction } from '../contexts/users';
 
 // MapQuest API is used to retrieve traffic news
 // https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -29,13 +28,10 @@ import { getUsers, STATE as userState, GetUsersAction } from '../contexts/users'
   Severity Ranges from 0-4, which is an indicator for delay,
   0 being the lowest, 4 being the highest.
 */
-const { REACT_APP_API_URL } = process.env;
 const API_KEY = '24jtUJNMCXQg4pLgMchaC7p6Flihs7wO';
 
 // const BOUNDING_BOX = '45.7047897,-73.47429525,45.41007553,-73.97290173';
 // const API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${BOUNDING_BOX}`;
-
-const API_DOMAIN = REACT_APP_API_URL;
 
 const incidentsArray: any[] = [];
 
@@ -48,7 +44,7 @@ interface StaffProps {
   districts: any;
   isStaff: boolean;
   users: any;
-  user_id: any; 
+  user_id: any;
 }
 
 // Function that creates a bounding box based on latitude and longitude provided
@@ -74,7 +70,6 @@ const toNormalDate = (retrievedDate: string): string => {
 };
 
 const filterList = (user_id: number, assigned_user_id: number): boolean => {
-  
   if (user_id === assigned_user_id) {
     return true;
   }
@@ -122,54 +117,55 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     let latitude: number;
     let longitude: number;
     let boundingBox: string;
-    let tempData: any[] = [];
+
+    const { isStaff } = this.props;
     let TRAFFIC_API_CALL = '';
     const districtFetch = (): void => {
+      const { districts, user_id } = this.props;
 
       // Fetch the list of intersections
-      for(let i = 0; i < this.props.districts[0].intersections.length; i++){
-        if(filterList(this.props.user_id,this.props.districts[0].intersections[i].user_id)){
-          latitude = this.props.districts[0].intersections[i].latitude;
-          longitude = this.props.districts[0].intersections[i].longitude;
-      
-          boundingBox = createBoundingBox(latitude, longitude);
-      
-          TRAFFIC_API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${boundingBox}`;
-      
-          fetch(TRAFFIC_API_CALL)
-          .then((results) => results.json())
-          .then((data) => {
-            tempData = data.incidents;
-      
-            if (tempData.length !== 0) {
-              incidentsArray.push(...data.incidents);
-            }
+      /* eslint-disable no-plusplus */
+      for (let i = 0; i < districts[0].intersections.length; i++) {
+        if (filterList(user_id, districts[0].intersections[i].user_id)) {
+          latitude = districts[0].intersections[i].latitude;
+          longitude = districts[0].intersections[i].longitude;
 
-            this.setState({
-              isLoaded: true,
-              incidents: incidentsArray,
+          boundingBox = createBoundingBox(latitude, longitude);
+
+          TRAFFIC_API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${boundingBox}`;
+
+          fetch(TRAFFIC_API_CALL)
+            .then((results) => results.json())
+            .then((data) => {
+              const tempData = data.incidents;
+
+              if (tempData.length !== 0) {
+                incidentsArray.push(...data.incidents);
+              }
+
+              this.setState({
+                isLoaded: true,
+                incidents: incidentsArray,
+              });
             });
-          });
         }
       }
-    
     };
     const adminFetch = (): void => {
       fetch(`http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=45.7047897,-73.47429525,45.41007553,-73.97290173`)
         .then((results) => results.json())
-        .then((data) =>{
+        .then((data) => {
           this.setState({
             isLoaded: true,
             incidents: data.incidents,
-          })
-        })
-    }
-    if(this.props.isStaff){
-      console.log('is staff')
+          });
+        });
+    };
+    if (isStaff) {
+      console.log('is staff');
       adminFetch();
-    }
-    else{
-      console.log('is not staff')
+    } else {
+      console.log('is not staff');
       districtFetch();
     }
   }
@@ -284,5 +280,5 @@ const mapStateToProps = (state: RootState): StaffProps => ({
   isStaff: isStaff(state),
   users: state.users,
   user_id: state.authentication.user_id,
-}) 
+});
 export default connect(mapStateToProps)(TrafficNews);
