@@ -49,7 +49,7 @@ interface StaffProps {
 
 // Function that creates a bounding box based on latitude and longitude provided
 const createBoundingBox = (latitude: number, longitude: number): string => {
-  // For now, the values are +0.1 and -0.1 for sake of demo.
+  // For now, the values are +0.02 and -0.02 for sake of demo.
   // Normally they would be +-0.001 but there are no traffic news retrieved.
   const upperBoundLatitude = latitude + 0.02;
   const upperBoundLongitude = longitude + 0.02;
@@ -69,6 +69,7 @@ const toNormalDate = (retrievedDate: string): string => {
   return `${year}-${month}-${day}`;
 };
 
+// Function that filters intersections based on operator's assigned intersections
 const filterList = (user_id: number, assigned_user_id: number): boolean => {
   if (user_id === assigned_user_id) {
     return true;
@@ -79,9 +80,8 @@ const filterList = (user_id: number, assigned_user_id: number): boolean => {
 // Styled Components
 const OuterContainer = styled.div`
   overflow: scroll;
-  height: 100%;
+  height: 47rem;
   overflow-x: hidden;
-  overflow-y: hidden;
 `;
 
 const OuterDiv = styled.div`
@@ -117,21 +117,24 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     let latitude: number;
     let longitude: number;
     let boundingBox: string;
-
     const { isStaff } = this.props;
     let TRAFFIC_API_CALL = '';
-    const districtFetch = (): void => {
+
+    // Function that retrieves all the intersections based on the operator's assigned intersections
+    const operatorNewsFetch = (): void => {
       const { districts, user_id } = this.props;
 
-      // Fetch the list of intersections
       /* eslint-disable no-plusplus */
       for (let i = 0; i < districts[0].intersections.length; i++) {
+        // Filters list of all intersection based on assigned intersections
         if (filterList(user_id, districts[0].intersections[i].user_id)) {
           latitude = districts[0].intersections[i].latitude;
           longitude = districts[0].intersections[i].longitude;
 
+          // Creates a bounding box based on each intersection
           boundingBox = createBoundingBox(latitude, longitude);
 
+          // API call with created bounded box and appends all retrieved traffic news together
           TRAFFIC_API_CALL = `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=${boundingBox}`;
 
           fetch(TRAFFIC_API_CALL)
@@ -151,7 +154,9 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
         }
       }
     };
-    const adminFetch = (): void => {
+
+    // Function that fetches all traffic news of a city
+    const staffNewsFetch = (): void => {
       fetch(`http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=45.7047897,-73.47429525,45.41007553,-73.97290173`)
         .then((results) => results.json())
         .then((data) => {
@@ -161,12 +166,15 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
           });
         });
     };
+
+    // If the user is staff, all traffic news from the city will be retrieved
+    // Else, only operator's intersections traffic news will be retrieved
     if (isStaff) {
       console.log('is staff');
-      adminFetch();
+      staffNewsFetch();
     } else {
       console.log('is not staff');
-      districtFetch();
+      operatorNewsFetch();
     }
   }
 
