@@ -6,6 +6,9 @@ import CardContent from '@material-ui/core/CardContent';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import styled from 'styled-components';
 import { SKEYE_WHITE } from '../css/custom';
+import { connect } from 'react-redux';
+import { isStaff } from '../contexts/authentication';
+import { RootState } from '../reducers/rootReducer';
 
 // MapQuest API is used to retrieve traffic news
 // https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -40,6 +43,10 @@ const incidentsArray: any[] = [];
 interface StateProps {
   isLoaded: boolean;
   incidents: any;
+}
+interface StaffProps {
+  districts: any;
+  isStaff: boolean;
 }
 
 // Function that creates a bounding box based on latitude and longitude provided
@@ -90,7 +97,7 @@ const Loader = styled.div`
   text-align: center;
 `;
 
-class TrafficNews extends React.Component<{}, StateProps> {
+class TrafficNews extends React.Component<StaffProps, StateProps> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -145,7 +152,26 @@ class TrafficNews extends React.Component<{}, StateProps> {
         }
       });
     };
-    districtFetch();
+    const adminFetch = (): void => {
+      fetch(`http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=45.7047897,-73.47429525,45.41007553,-73.97290173`)
+        .then((results) => results.json())
+        .then((data) =>{
+          this.setState({
+            isLoaded: true,
+            incidents: data.incidents,
+          })
+        })
+    }
+    console.log(this.props.districts[0].intersections[0].latitude);
+    if(this.props.isStaff){
+      //admin fetching!
+      console.log('Fetch for Admin')
+      adminFetch();
+    }
+    else{
+      console.log('Fetch for operator')
+      districtFetch();
+    }
   }
 
   render(): JSX.Element {
@@ -254,5 +280,8 @@ class TrafficNews extends React.Component<{}, StateProps> {
     );
   }
 }
-
-export default TrafficNews;
+const mapStateToProps = (state: RootState): StaffProps => ({
+  districts: state.districts,
+  isStaff: isStaff(state),
+}) 
+export default connect(mapStateToProps)(TrafficNews);
