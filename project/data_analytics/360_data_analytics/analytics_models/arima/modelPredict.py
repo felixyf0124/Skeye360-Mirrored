@@ -31,10 +31,9 @@ class modelPredict:
 
         # Hardcoded datetime, to be removed when having the data flowing into the database every day
         startTrainDate = '2020-01-01 00:00:00.000'
-        endTrainDate = '2020-01-18 23:00:00.000'
-        startTestDate = '2020-01-19 00:00:00.000'
+        endTrainDate = '2020-01-25 23:00:00.000'
+        startTestDate = '2020-01-26 00:00:00.000'
         endTrainDate = '2020-01-26 23:00:00.000'
-        startTestDate = '2020-01-19 00:00:00.000'
 
         # Divide the data into train and test sets
         train = dataf.loc[startTrainDate : endTrainDate]
