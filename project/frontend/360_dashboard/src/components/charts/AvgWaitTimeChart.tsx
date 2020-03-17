@@ -1,16 +1,15 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
-import AvgWaitingTime from '../PostData/avgWaitingTime.json';
-import AvgWaitingTimeAfter from '../PostData/avgWaitingTimeAfter.json';
+import AvgWaitingTime from '../../PostData/avgWaitingTime.json';
+import AvgWaitingTimeAfter from '../../PostData/avgWaitingTimeAfter.json';
 
 // For more Line Chart information:
 // https://apexcharts.com/react-chart-demos/line-charts/basic/
-// TODO: Display percentages
 
 const data = AvgWaitingTime.WaitTime;
 const newData = AvgWaitingTimeAfter.WaitTime;
 const getX = data.map((value) => value.hour);
-const getY = data.map((value) => value.wait);
+// const getY = data.map((value) => value.wait);
 const getYAfter = newData.map((value) => value.wait);
 
 interface ChartState {
@@ -51,22 +50,16 @@ const AvgWaitTimeChart = (): JSX.Element => {
           text: 'Wait Time (seconds)',
         },
       },
-      colors: ['#c7382e', '#04a777'],
+      colors: ['#04a777'],
     },
-    series: [{
-      name: 'Avg Wait Time Before SkeYe',
-      data: getY,
-    }, {
-      name: 'Avg Wait Time After SkeYe',
-      data: getYAfter,
-    },
+    series: [
+      {
+        name: 'Avg Wait Time',
+        data: getYAfter,
+      },
     ],
   };
-  return (
-    <div>
-      <Chart options={state.options} series={state.series} type="line" width="500" height="" />
-    </div>
-  );
+  return <Chart options={state.options} series={state.series} type="line" />;
 };
 
 export default AvgWaitTimeChart;

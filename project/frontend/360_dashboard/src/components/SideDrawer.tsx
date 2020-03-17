@@ -13,7 +13,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MapIcon from '@material-ui/icons/Map';
-import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -22,7 +21,6 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
@@ -87,9 +85,9 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
+    width: 0,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
+      width: 0,
     },
   },
   toolbar: {
@@ -122,12 +120,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Logo = styled.img`
-  height: 5rem;
-  width: 5rem;
-  position: relative;
-`;
-
 // Props
 interface StateProps {
   authenticated: boolean;
@@ -150,9 +142,9 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = (): any => {
-    setOpen(true);
-  };
+  // const handleDrawerOpen = (): any => {
+  //   setOpen(true);
+  // };
 
   const handleDrawerClose = (): any => {
     setOpen(false);
@@ -180,7 +172,7 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
         })}
       >
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -190,16 +182,25 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             })}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography variant="h6" noWrap>
             {headerTitle}
           </Typography>
           <Weather />
-          <p className={classes.whiteStyle} style={{ right: 225 }}>
+          <p className={classes.whiteStyle} style={{ right: 480 }}>
+            {' '}
+            {date}
+            {' '}
+          </p>
+          <p className={classes.whiteStyle} style={{ right: 305 }}>
             Hi,
             {username}
             !
           </p>
+          <a className={classes.whiteStyle} style={{ right: 225, paddingTop: 1.3 }} href="/">
+            <HomeIcon className={classes.smallIcon} />
+            Home
+          </a>
           <a className={classes.whiteStyle} style={{ right: 145, paddingTop: 1.3 }} href="/">
             <PersonIcon className={classes.smallIcon} />
             Profile
@@ -207,11 +208,6 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
           <a className={classes.whiteStyle} style={{ right: 85 }} href="/" onClick={handleLogout}>
             Logout
           </a>
-          <p className={classes.whiteStyle} style={{ right: 10 }}>
-            {' '}
-            {date}
-            {' '}
-          </p>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -228,9 +224,6 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
         }}
       >
         <div className={classes.toolbar} style={{ justifyContent: 'space-between' }}>
-          <h6 style={{ paddingLeft: '65px' }}>
-            <Logo src="/emblem.png" alt="LOGO" />
-          </h6>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? (
               <ChevronRightIcon className={classes.iconStyle} />
