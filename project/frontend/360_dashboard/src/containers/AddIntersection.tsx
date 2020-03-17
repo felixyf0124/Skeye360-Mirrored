@@ -21,10 +21,14 @@ import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
 import { logClick } from '../contexts/LogClicks';
 import { STATE as userState } from '../contexts/users';
-import { SKEYE_GREY } from '../css/custom';
+import { SKEYE_GREY, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 
 const Body = styled.div`
-  overflow-y: none;
+  @media only screen and (min-width: ${MOBILE_DEVICE_MAX_WIDTH}px) {
+    & {
+      overflow-y: none;
+    }
+  }
 `;
 
 const useStyles = makeStyles(() => ({
@@ -63,8 +67,8 @@ const useStyles = makeStyles(() => ({
   content: {
     backgroundColor: '#212121',
     margin: 'auto',
-    width: '25rem',
-    height: '40rem',
+    width: '20rem',
+    height: '45rem',
     border: '1px solid grey',
     borderRadius: '15px',
     zIndex: 1,
