@@ -123,7 +123,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: SKEYE_DARK_GREY,
-    width: '94vw',
+    width: '98vw',
   },
   modal: {
     display: 'flex',

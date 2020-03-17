@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SidebarComponent from './SidebarComponent';
 import Simulator from '../../containers/simulator/Scene';
+import BarChartRT from '../charts/BarChartRT';
 import { SKEYE_WHITE } from '../../css/custom';
 
 interface SimProps {
@@ -66,7 +67,6 @@ const InnerDivVerticalSecondSim = styled.div`
 const SimContainer = styled.div`
   width: 20vw;
   height: 20vw;
-  margin-left: 20rem;
   display: flex;
   justify-content: center;
   margin: 1rem;
@@ -81,17 +81,24 @@ const ContentBlock = styled.div`
 
 const VerticalBlock = styled.div`
   display:block;
-  width: 100vw;
+  // width: 30vw;
   height: auto;
   flex-direction:column;
 `;
 
 const CarPassedBox = styled.div`
   display:block;
-  width: 20%;
-  height: auto;
+  width: 32vw;
+  // height: auto;
   flex-direction:column;
 `; 
+
+const BarChartContainer = styled.div`
+  // height: 25vh;
+  width: 32vw;
+  position: relative;
+  margin: 1rem;
+`;
 
 // Custom styling
 const skeyeStyles = {
@@ -115,10 +122,11 @@ const skeyeStyles = {
 
 
 const SimulatorComponent = (props: SimProps | any): JSX.Element => {
+
   // eslint-disable-next-line consistent-return
   const {
     tlMode, onChangeTLMode, toggles, tlStop, onClickTLStop,
-    tlCombStates, onTLUpdate,
+    tlCombStates, onTLUpdate, camera_url, intersectionId, intersectionLat, intersectionLng,
   } = props;
 
   const [passedVehicles, setPassedVehicles] = React.useState([
@@ -189,6 +197,15 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
               </VerticalBlock>
               <VerticalBlock>
               {/* TO INSERT GRAPH HERE */}
+              <BarChartContainer>
+                <BarChartRT
+                    chartID="barChart-NS-EW"
+                    title="Moving Average North-South VS East-West"
+                    categories={['North-South', 'East-West']}
+                    primaryDirection="ns"
+                    secondaryDirection="ew"
+                />
+              </BarChartContainer>
               </VerticalBlock>
             
               
