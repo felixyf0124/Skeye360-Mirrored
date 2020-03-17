@@ -84,6 +84,13 @@ const VerticalBlock = styled.div`
   flex-direction:column;
 `;
 
+const CarPassedBox = styled.div`
+  display:block;
+  width: 20%;
+  height: auto;
+  flex-direction:column;
+`; 
+
 // Custom styling
 const skeyeStyles = {
   Title: {
@@ -121,42 +128,62 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
         />
         <ContentBlock>
 
-        <VerticalBlock>
-        <InnerDivHorizon>
-          
-            <text style={skeyeStyles.Header}>Default Traffic Light</text>
-            <SimContainer>
-              <Simulator
-                isLiveFeed={false}
-                isSmartTL={false}
-                tl_mode={tlMode}
-                toggles={toggles}
-                tlStop={tlStop}
-                onTLUpdate={onTLUpdate}
-                simuWidthRatio={0.38}
-                resolutionRatio={38 / 19.5}
-              />
-            </SimContainer>
-         
-          
-        </InnerDivHorizon>
-        <InnerDivHorizon>
-          
-            <text style={skeyeStyles.Header}>Smart Traffic Light</text>
-            <SimContainer>
-              <Simulator
-                isLiveFeed={false}
-                isSmartTL={true}
-                tl_mode={tlMode}
-                toggles={toggles}
-                tlStop={tlStop}
-                onTLUpdate={onTLUpdate}
-                simuWidthRatio={0.38}
-                resolutionRatio={38 / 19.5}
-              />
-            </SimContainer>
-        </InnerDivHorizon>
-        </VerticalBlock>
+          <VerticalBlock>
+            <InnerDivHorizon>
+              <VerticalBlock>
+                <text style={skeyeStyles.Header}>Default Traffic Light</text>
+                <SimContainer>
+                  <Simulator
+                    isLiveFeed={false}
+                    isSmartTL={false}
+                    tl_mode={tlMode}
+                    toggles={toggles}
+                    tlStop={tlStop}
+                    onTLUpdate={onTLUpdate}
+                    simuWidthRatio={0.38}
+                    resolutionRatio={38 / 19.5}
+                  />
+                </SimContainer>
+              </VerticalBlock>
+              <VerticalBlock>
+                <CarPassedBox>
+                  <p>Number of car passed</p>
+                </CarPassedBox>
+              </VerticalBlock>
+              <VerticalBlock>
+              {/* TO INSERT GRAPH HERE */}
+              </VerticalBlock>
+            
+              
+            </InnerDivHorizon>
+
+            <InnerDivHorizon>
+              <VerticalBlock>
+                <text style={skeyeStyles.Header}>Smart Traffic Light</text>
+                <SimContainer>
+                  <Simulator
+                    isLiveFeed={false}
+                    isSmartTL={true}
+                    tl_mode={tlMode}
+                    toggles={toggles}
+                    tlStop={tlStop}
+                    onTLUpdate={onTLUpdate}
+                    simuWidthRatio={0.38}
+                    resolutionRatio={38 / 19.5}
+                  />
+                </SimContainer>
+              </VerticalBlock>
+              <VerticalBlock>
+                <CarPassedBox>
+                  <p>Number of car passed</p>
+                </CarPassedBox>
+              </VerticalBlock>
+              <VerticalBlock>
+              {/* TO INSERT GRAPH HERE */}
+              </VerticalBlock>
+            </InnerDivHorizon>
+          </VerticalBlock>
+
         </ContentBlock>
       </HorizontalFlexBox>
     </div>
