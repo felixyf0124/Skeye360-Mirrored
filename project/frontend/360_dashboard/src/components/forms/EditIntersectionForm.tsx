@@ -8,11 +8,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { editExistingIntersection, EditIntersectionAction } from '../contexts/intersection';
-import { RootState } from '../reducers/rootReducer';
-import { logClick } from '../contexts/LogClicks';
-import { getUsers, STATE as userState } from '../contexts/users';
-import { SKEYE_GREY } from '../css/custom';
+import { editExistingIntersection, EditIntersectionAction } from '../../contexts/intersection';
+import { RootState } from '../../reducers/rootReducer';
+import { logClick } from '../../contexts/LogClicks';
+import { getUsers, STATE as userState } from '../../contexts/users';
+import { SKEYE_GREY } from '../../css/custom';
 
 const useStyles = makeStyles(() => ({
   root: {

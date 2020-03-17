@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { CircularProgress } from '@material-ui/core';
-import { RootState } from '../reducers/rootReducer';
+import { RootState } from '../../reducers/rootReducer';
 import MovingAvgChart from './MovingAvgChart';
 import splitIntoTwo from './graphFunction';
 

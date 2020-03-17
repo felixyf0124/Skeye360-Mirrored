@@ -4,7 +4,7 @@ import BarChart from './BarChart';
 import PieChart from './PieChart';
 import LineChart from './LineChart';
 import MixedChart from './MixedChart';
-import Header from './Header';
+import Header from '../Header';
 import NorthChartComparison from './NorthChartComparison';
 import AvgWaitTimeChartComparison from './AvgWaitTimeChartComparison';
 

@@ -69,7 +69,7 @@ const InnerDivHorizon = styled.div`
   display: flex;
   flex-direction: row;
   color: white;
-//   margin-left: 10vw;
+  //   margin-left: 10vw;
   // margin-top: -20vh;
   margin-top: -0.4vh;
 `;
@@ -86,8 +86,8 @@ const InnerDivVerticalCam = styled.div`
 
 // Container for the simulator
 const SimContainer = styled.div`
-//   width: 11%;
-//   height: 11%;
+  //   width: 11%;
+  //   height: 11%;
   display: flex;
   justify-content: center;
   margin: 1rem;
@@ -102,11 +102,10 @@ const InnerDivVerticalSim = styled.div`
 `;
 
 const CamContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    color: white;
-    height: 9vw;
-
+  display: flex;
+  justify-content: center;
+  color: white;
+  height: 9vw;
 `;
 
 // Custom styling
