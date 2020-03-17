@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SidebarComponent from './SidebarComponent';
 import Simulator from '../../containers/simulator/Scene';
-import BarChartRT from '../charts/BarChartRT';
+import BarChartDirections from '../charts/BarChartDirections';
 import { SKEYE_WHITE } from '../../css/custom';
 
 interface SimProps {
@@ -196,16 +196,15 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 </CarPassedBox>
               </VerticalBlock>
               <VerticalBlock>
-              {/* TO INSERT GRAPH HERE */}
-              <BarChartContainer>
-                <BarChartRT
-                    chartID="barChart-NS-EW"
-                    title="Moving Average North-South VS East-West"
-                    categories={['North-South', 'East-West']}
-                    primaryDirection="ns"
-                    secondaryDirection="ew"
-                />
-              </BarChartContainer>
+                <BarChartContainer>
+                  {/* Add real data into the bar charts */}
+                  <BarChartDirections
+                      chartID="barChart-default"
+                      title="Number Of Car Passed Per Direction"
+                      categories={['North', 'East', 'West', 'South']}
+                      directionData={[50, 80, 25, 65]}
+                  />
+                </BarChartContainer>
               </VerticalBlock>
             
               
@@ -234,7 +233,15 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 </CarPassedBox>
               </VerticalBlock>
               <VerticalBlock>
-              {/* TO INSERT GRAPH HERE */}
+                <BarChartContainer>
+                  {/* Add real data into the bar charts */}
+                  <BarChartDirections
+                      chartID="barChart-smart"
+                      title="Number Of Car Passed Per Direction"
+                      categories={['North', 'East', 'West', 'South']}
+                      directionData={[60, 90, 35, 75]}
+                  />
+                </BarChartContainer>
               </VerticalBlock>
             </InnerDivHorizon>
           </VerticalBlock>
