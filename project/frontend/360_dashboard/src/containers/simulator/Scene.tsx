@@ -1017,9 +1017,49 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       this.fpsCounter = 0;
 
       const { isLiveFeed, isSmartTL, tl_mode } = this.props;
+      if (isLiveFeed){
+        this.tlCaseId = tl_mode + 1;
+        // live feed
+        if (this.tlCaseId === 1) {
+          this.toggleGroup[0].state = true;
+          this.toggleGroup[1].state = false;
+          this.toggleGroup[2].state = true;
+          this.toggleGroup[3].state = true;
+          this.toggleGroup[4].state = true;
+        }else{
+          for(let i=0 ;i<this.toggleGroup.length;i+=1){
+            this.toggleGroup[i].state = false;
+          }
+          // this.toggleGroup[0].state = false;
+          // this.toggleGroup[1].state = false;
+          // this.toggleGroup[2].state = false;
+          // this.toggleGroup[3].state = false;
+          // this.toggleGroup[4].state = false;
+          // this.toggleGroup[5].state = false;
+          
+          // pedestrian case
+          this.getPedestrianTLInfo();
+          // this.pedestrianCaseTLUpdate();
+          tlUpdateHelper.updateCasePedestrian(
+            this.pAiDataTL,
+            this.roadIntersection,
+            this.forceHelper,
+          );
+        }
+
+      }else{
+        if(isSmartTL){
+          // new smart mode type
+          // arima + realtime
+          this.tlCaseId = 4;
+
+        }
+      }
       
-      this.tlCaseId = tl_mode + 1;
-      if (!isLiveFeed && isSmartTL) {
+      // old cases toggle format
+      // no need after the UI changed
+      // keep the code in case of reuse
+      if (false) {
         // real-time case
         if (this.tlCaseId === 3) {
           const tlQue = this.roadIntersection.getTrafficLightQueue();
@@ -1049,6 +1089,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           );
         }
       }
+
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -1059,8 +1100,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
-
-    if (this.tlCaseId === 2) {
+    const {isLiveFeed,} = this.props;
+    if (isLiveFeed && this.tlCaseId === 2) {
       const pCD = Math.round((Date.now() - this.forceHelper.startT) / 1000);
       const pCDText = new PIXI.Text('Pedestrian Time: N/A', this.textStyle);
       if (this.forceHelper.isForced === true) {
