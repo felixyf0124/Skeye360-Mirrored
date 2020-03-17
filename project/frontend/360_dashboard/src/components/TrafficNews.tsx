@@ -170,10 +170,8 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     // If the user is staff, all traffic news from the city will be retrieved
     // Else, only operator's intersections traffic news will be retrieved
     if (isStaff) {
-      console.log('is staff');
       staffNewsFetch();
     } else {
-      console.log('is not staff');
       operatorNewsFetch();
     }
   }
