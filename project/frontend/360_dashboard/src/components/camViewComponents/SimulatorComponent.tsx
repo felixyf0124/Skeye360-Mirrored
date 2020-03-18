@@ -30,20 +30,19 @@ interface SimProps {
 const HorizontalFlexBox = styled.div`
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  // flex-wrap: nowrap;
   justify-content: space-around;
   align-items: space-around;
-  align-content: stretch;
-  padding: 0px;
+  // align-content: stretch;
+  // padding: 0px;
 `;
 
 // Single Container Horizontal
 const InnerDivHorizon = styled.div`
   display: flex;
-  width: 100vw;
   flex-direction: row;
   color: white;
-  margin-left: 10vw;
+  margin-left: 4.5vw;
 `;
 
 // Single Container Vertical for the first simulator
@@ -63,6 +62,14 @@ const InnerDivVerticalSecondSim = styled.div`
   margin-left: 20vw;
 `;
 
+// Single Container Vertical
+const InnerDivVertical = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+`;
+
 // Container for the simulator
 const SimContainer = styled.div`
   width: 20vw;
@@ -70,6 +77,7 @@ const SimContainer = styled.div`
   display: flex;
   justify-content: center;
   margin: 1rem;
+  margin-bottom: -1rem;
 `;
 
 const ContentBlock = styled.div`
@@ -82,22 +90,25 @@ const ContentBlock = styled.div`
 const VerticalBlock = styled.div`
   display:block;
   // width: 30vw;
-  height: auto;
+  // height: auto;
   flex-direction:column;
 `;
 
 const CarPassedBox = styled.div`
-  display:block;
-  width: 32vw;
-  // height: auto;
-  flex-direction:column;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flow: center;
+    width: 20vw;
+    color: white;
+    margin-left: 5.5vw;
 `; 
 
 const BarChartContainer = styled.div`
-  // height: 25vh;
-  width: 32vw;
+  // height: 60vh;
+  width: 27vw;
   position: relative;
-  margin: 1rem;
+  margin: 2rem;
 `;
 
 // Custom styling
@@ -114,12 +125,25 @@ const skeyeStyles = {
     marginBottom: 4,
     fontWeight: 600,
     height:35,
+    marginLeft: -100,
   },
+  HeaderCar: {
+    color: SKEYE_WHITE,
+    fontSize: 20,
+    marginTop: 100,
+    marginBottom: 4,
+    fontWeight: 600,
+    height:35,
+  },
+  NumCar: {
+    color: SKEYE_WHITE,
+    fontSize: 30,
+    marginTop: 50,
+    marginBottom: 4,
+    fontWeight: 600,
+    height:35,
+  }
 };
-
-
-
-
 
 const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
@@ -185,15 +209,19 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                     tlStop={tlStop}
                     onTLUpdate={onTLUpdate}
                     updatePassedVehicles={updatePassedVehicles}
-                    simuWidthRatio={0.38}
+                    simuWidthRatio={0.325}
                     resolutionRatio={38 / 19.5}
                   />
                 </SimContainer>
               </VerticalBlock>
               <VerticalBlock>
-                <CarPassedBox>
-                  <p>Number of car passed</p>
-                </CarPassedBox>
+                  <div>
+                    <CarPassedBox>
+                      <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
+                      {/* To insert real data */}
+                      <text style={skeyeStyles.NumCar}>50</text>
+                    </CarPassedBox>
+                  </div>
               </VerticalBlock>
               <VerticalBlock>
                 <BarChartContainer>
@@ -206,8 +234,6 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                   />
                 </BarChartContainer>
               </VerticalBlock>
-            
-              
             </InnerDivHorizon>
 
             <InnerDivHorizon>
@@ -222,15 +248,19 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                     tlStop={tlStop}
                     onTLUpdate={onTLUpdate}
                     updatePassedVehicles={updatePassedVehicles}
-                    simuWidthRatio={0.38}
+                    simuWidthRatio={0.325}
                     resolutionRatio={38 / 19.5}
                   />
                 </SimContainer>
               </VerticalBlock>
               <VerticalBlock>
-                <CarPassedBox>
-                  <p>Number of car passed</p>
-                </CarPassedBox>
+                  <div>
+                    <CarPassedBox>
+                      <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
+                      {/* To insert real data */}
+                      <text style={skeyeStyles.NumCar}>60</text>
+                    </CarPassedBox>
+                  </div>
               </VerticalBlock>
               <VerticalBlock>
                 <BarChartContainer>
