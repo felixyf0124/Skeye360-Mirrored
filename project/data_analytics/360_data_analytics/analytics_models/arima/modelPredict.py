@@ -56,7 +56,7 @@ class modelPredict:
 
         # Create a list of date for the prediction based on the date got from the test set
         listOfDate = list()
-        startDateString = str((todayDate - timedelta(days=1)).strftime("%Y-%m-%d"))
+        startDateString = str((todayDate + timedelta(days=1)).strftime("%Y-%m-%d"))
         startDateObj = datetime.strptime(startDateString + " 00:00:00", '%Y-%m-%d %H:%M:%S')
         for index in range(test.shape[0]):
             listOfDate.append((startDateObj + timedelta(hours=index)))
