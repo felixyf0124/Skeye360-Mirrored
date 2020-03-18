@@ -28,10 +28,12 @@ interface Props {
   isLiveFeed: boolean;
   isSmartTL: boolean;
   tl_mode: any;
+  onSimuStart: any;
+  onSimuClickUpdata: any;
   toggles: any;
   tlStop: boolean;
   onTLUpdate: any;
-  updatePassedVehicles: any ;
+  updatePassedVehicles: any;
   simuWidthRatio: number;
   resolutionRatio: number;
 }
@@ -162,6 +164,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
   forceHelper: { startT: number; delay: number; fPeriod: number; isForced: boolean };
 
   tlDefaultDistribution: { tl0: number; tl1: number; tl3: number };
+
+  tlArimaDistribution: { tl0: number; tl1: number; tl3: number };
 
   atArimaH: number;
 
@@ -310,6 +314,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     ];
 
     this.tlDefaultDistribution = { tl0: 40, tl1: 15, tl3: 35 };
+    this.tlArimaDistribution = { tl0: 40, tl1: 15, tl3: 35 };
 
     this.roadIntersection.addNewTrafficLight(
       trafficLightBindingData[0],
@@ -362,7 +367,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.toggleGroup = new Array<{ name: string; state: boolean }>();
     this.labelGroup = new Array<Btn>();
     this.tlCaseBtnGroup = new Array<Btn>();
-    
+
     // toggle group
     const videoFeed = { name: 'enable video feed', state: false };
     const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
@@ -376,8 +381,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.toggleGroup.push(showSectionAreas);
     this.toggleGroup.push(showDirectVideoFeedMapping);
     this.toggleGroup.push(showVideoFeedBG);
-    const {isLiveFeed} = this.props;
-    if(isLiveFeed){
+    const { isLiveFeed } = this.props;
+    if (isLiveFeed) {
       videoFeed.state = true;
       samplingVideoFeed.state = false;
       uiV7.state = true;
@@ -579,7 +584,9 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       tlUpdateHelper.updateCaseRealTime(dataPack, this.roadIntersection);
     }
   }
-
+  /**
+   * get Arima Traffic light Update
+   */
   async getArimaTLUpdate(): Promise<void> {
     const currentH = new Date().getHours();
 
@@ -597,6 +604,62 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
     tlUpdateHelper.updateCaseArima(this.tlDefaultDistribution, this.roadIntersection);
   }
+
+  /**
+   * get smart Traffic light update
+   * arima + realtime
+   */
+  async getSmartTLUpdate(): Promise<void> {
+    const currentH = new Date().getHours();
+
+    if (currentH !== this.atArimaH) {
+      const ip = '168.62.183.116:8000';
+
+      const arimaDistribution = await tsData.tlArimaData(ip);
+
+      if (arimaDistribution !== undefined) {
+        this.tlArimaDistribution = arimaDistribution;
+        this.atArimaH = currentH;
+      }
+
+    }
+    // tlUpdateHelper.updateCaseArima(this.tlArimaDistribution, this.roadIntersection);
+
+    const { camera_url } = this.props;
+    const realTimeDistribution = await tsData.tlRealTimeData(camera_url);
+    if (realTimeDistribution !== undefined
+      && realTimeDistribution['east-west'] !== undefined) {
+      const data0 = {
+        id: 0,
+        t: realTimeDistribution['east-west'],
+      };
+      const data1 = {
+        id: 1,
+        t: realTimeDistribution.left,
+      };
+      const data3 = {
+        id: 3,
+        t: realTimeDistribution['north-south'],
+      };
+      const dataPack = new Array<any>();
+      dataPack.push(data0);
+      dataPack.push(data1);
+      dataPack.push(data3);
+
+      if (dataPack !== undefined && this.tlArimaDistribution.tl0 !== undefined) {
+        let distribution = {
+          tl0: tsData.getOptimizedTime(this.tlArimaDistribution.tl0, parseFloat(dataPack[0].t.toString())),
+          tl1: tsData.getOptimizedTime(this.tlArimaDistribution.tl1, parseFloat(dataPack[0].t.toString())),
+          tl3: tsData.getOptimizedTime(this.tlArimaDistribution.tl3, parseFloat(dataPack[0].t.toString())),
+        };
+
+        tlUpdateHelper.updateCaseOptimized(distribution, this.roadIntersection);
+      }
+
+    }
+
+  }
+
 
   /**
    * get certain toggle state by @param toggleName:string
@@ -635,7 +698,12 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.isCPAnimating = true;
     // this.updateControlPanelDisplayState(0);
     this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
-    this.drawRoad();
+    const { isLiveFeed } = this.props;
+    if (isLiveFeed && this.toggleGroup[0].state) {
+      this.drawRoadBackGround();
+    } else {
+      this.drawRoad();
+    }
     this.renderObjects();
     this.drawLaneArea();
     this.app.ticker.add(this.animation);
@@ -692,7 +760,12 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       // this.laneW = 0.06 * Math.min(this.windowW, this.windowH);
 
       this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
-      this.drawRoad();
+      const { isLiveFeed } = this.props;
+      if (isLiveFeed && this.toggleGroup[0].state) {
+        this.drawRoadBackGround();
+      } else {
+        this.drawRoad();
+      }
       this.roadIntersection.updateVehiclePosV2();
 
       this.laneAreaContainer.x = -this.coordinateOffset.x;
@@ -721,7 +794,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
   };
 
   /**
-   * draw road
+   * draw road with traffic light
    */
   drawRoad = (): void => {
     this.roadG.clear();
@@ -789,6 +862,56 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       }
     }
   };
+
+  /** draw live feed back ground */
+  drawRoadBackGround = (): void => {
+    this.roadG.clear();
+    this.roadG.removeChildren();
+    const sections = this.roadIntersection.getRoadSections();
+
+    const h = this.laneW * 0.3 * this.windowW;
+    const w = this.laneW * 0.3 * this.windowW;
+    for (let i = 0; i < sections.length; i += 1) {
+      const laneIn = sections[i].getLaneIn();
+      const laneOut = sections[i].getLaneOut();
+      let color = 0xffffff;
+      for (let j = 0; j < laneIn.length; j += 1) {
+        const lane = laneIn[j];
+
+        // Sets the color of the traffic lights depending on the status
+        color = parseInt(Scene.getColor('skeye_blue'), 16);
+
+        const direction = ts.tsNormalize(lane.getHead().minus(lane.getTail()));
+        const division = ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4) + 1;
+
+        // this will draw from head to tail
+        for (let k = 0; k < division; k += 1) {
+
+          for (let k = 1; k < division; k += 1) {
+            const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k))
+              .multiply(this.windowW);
+            const graphicObj = this.drawTriangle(topVertex, h, w, direction, color);
+            this.roadG.addChild(graphicObj);
+          }
+        }
+      }
+
+      for (let j = 0; j < laneOut.length; j += 1) {
+        const lane = laneOut[j];
+        // Sets the color of the traffic lights depending on the status
+        const color2 = parseInt(Scene.getColor('skeye_blue'), 16);
+
+        const direction = ts.tsNormalize(lane.getHead().minus(lane.getTail()));
+        const division = ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4) + 1;
+        for (let k = 1; k < division; k += 1) {
+          const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k))
+            .multiply(this.windowW);
+          const graphicObj = this.drawTriangle(topVertex, h, w, direction, color2);
+          this.roadG.addChild(graphicObj);
+        }
+      }
+    }
+  }
 
   /**
    * render objects
@@ -885,27 +1008,35 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.updateTLCase();
 
     this.roadIntersection.updateVehiclePosV2();
-    const {updatePassedVehicles, isSmartTL} = this.props;
-    if(updatePassedVehicles !== null){
+    const { updatePassedVehicles, isSmartTL } = this.props;
+    if (updatePassedVehicles !== null) {
       const passedCars = this.roadIntersection.getPassedVehicles();
-      const adaptedCarNums = new Array<{direction:string, passedNum:number}>();
-      for(let i=0;i<passedCars.length;i+=1){
-        switch (passedCars[i].sectionId){
+      const adaptedCarNums = new Array<{ direction: string, passedNum: number }>();
+      for (let i = 0; i < passedCars.length; i += 1) {
+        switch (passedCars[i].sectionId) {
           case 0:
-            adaptedCarNums.push({direction:"East", 
-              passedNum: passedCars[i].passedNum});
+            adaptedCarNums.push({
+              direction: "East",
+              passedNum: passedCars[i].passedNum
+            });
             break;
           case 1:
-            adaptedCarNums.push({direction:"West", 
-              passedNum: passedCars[i].passedNum});
+            adaptedCarNums.push({
+              direction: "West",
+              passedNum: passedCars[i].passedNum
+            });
             break;
           case 2:
-            adaptedCarNums.push({direction:"North", 
-              passedNum: passedCars[i].passedNum});
+            adaptedCarNums.push({
+              direction: "North",
+              passedNum: passedCars[i].passedNum
+            });
             break;
           case 3:
-            adaptedCarNums.push({direction:"South", 
-              passedNum: passedCars[i].passedNum});
+            adaptedCarNums.push({
+              direction: "South",
+              passedNum: passedCars[i].passedNum
+            });
             break;
         }
       }
@@ -945,63 +1076,80 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       if (this.dataReady[this.caseId].imported && this.dataReady[this.caseId].sorted) {
         this.caseData = this.trafficData[this.caseId];
       }
+      const { onSimuStart, onSimuClickUpdata } = this.props;
+      if (onSimuStart) {
+        // make up car loop
+        if (this.caseData.length !== 0) {
+          const period = this.caseData[this.caseData.length - 1].tLine - this.caseData[0].tLine;
+          this.deltaT = Date.now() % period;
+          // initial atIndex for makeup cars
+          if (this.atIndex < 0) {
+            this.atIndex = 0;
 
-      // make up car loop
-      if (this.caseData.length !== 0) {
-        const period = this.caseData[this.caseData.length - 1].tLine - this.caseData[0].tLine;
-        this.deltaT = Date.now() % period;
-        // initial atIndex for makeup cars
-        if (this.atIndex < 0) {
-          this.atIndex = 0;
+            let currentCD = 0;
+            for (let i = 0; i < this.caseData.length; i += 1) {
+              currentCD = this.caseData[this.atIndex].tLine - this.caseData[0].tLine;
+              if (this.deltaT > currentCD) {
+                this.atIndex += 1;
+              }
+            }
+          } else if (this.atIndex < this.caseData.length) {
+            let currentCD = 0;
+            for (let i = 0; i < this.atIndex + 1; i += 1) {
+              currentCD = this.caseData[this.atIndex].tLine - this.caseData[0].tLine;
+            }
+            const { isLiveFeed } = this.props;
+            let maxVSpeed;
+            if (isLiveFeed) {
+              maxVSpeed = this.laneW * 0.028;
+            } else {
+              maxVSpeed = this.laneW * 0.028 * 6;
+            }
 
-          let currentCD = 0;
-          for (let i = 0; i < this.caseData.length; i += 1) {
-            currentCD = this.caseData[this.atIndex].tLine - this.caseData[0].tLine;
             if (this.deltaT > currentCD) {
+              const dirct = {
+                from: this.caseData[this.atIndex].from,
+                to: this.caseData[this.atIndex].to,
+              };
+
+              const laneP = tsData.dirAdapter(dirct.from, dirct.to);
+
+              // east
+              this.roadIntersection.addNewVehicleV2(
+                laneP.getLaneId(),
+                laneP.getSectionId(),
+                maxVSpeed,
+              );
+
               this.atIndex += 1;
             }
+          } else if (!this.toggleGroup[0].state) {
+            this.atIndex = -1;
           }
-        } else if (this.atIndex < this.caseData.length) {
-          let currentCD = 0;
-          for (let i = 0; i < this.atIndex + 1; i += 1) {
-            currentCD = this.caseData[this.atIndex].tLine - this.caseData[0].tLine;
-          }
-          const maxVSpeed = this.laneW * 0.028;
-          if (this.deltaT > currentCD) {
-            const dirct = {
-              from: this.caseData[this.atIndex].from,
-              to: this.caseData[this.atIndex].to,
-            };
-
-            const laneP = tsData.dirAdapter(dirct.from, dirct.to);
-            // east
-            this.roadIntersection.addNewVehicleV2(
-              laneP.getLaneId(),
-              laneP.getSectionId(),
-              maxVSpeed,
-            );
-
-            this.atIndex += 1;
-          }
-        } else if (!this.toggleGroup[0].state) {
-          this.atIndex = -1;
         }
+      } else {
+        onSimuClickUpdata();
       }
-
       this.numberOfCars = this.roadIntersection.getVehiclesNum();
     }
-    if(!this.toggleGroup[0].state){
+
+    if (!this.toggleGroup[0].state) {
       // if(this.roadG.parent !== null){
       //   this.mapContainer.addChild(this.roadG);
       // }
-
       if (this.isUpdate()) {
         this.roadIntersection.tlCountingDown();
-        this.drawRoad();
+        const { isLiveFeed } = this.props;
+        if (isLiveFeed && this.toggleGroup[0].state) {
+          this.drawRoadBackGround();
+        } else {
+          this.drawRoad();
+        }
       }
-    }else{
-      this.roadG.clear();
-      this.roadG.removeChildren();
+    } else {
+      // this.roadG.clear();
+      // this.roadG.removeChildren();
+      // this.drawRoadBackGround();
     }
     this.renderObjects();
     // this.displayPlaneContainer.removeChildren();
@@ -1017,9 +1165,53 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       this.fpsCounter = 0;
 
       const { isLiveFeed, isSmartTL, tl_mode } = this.props;
-      
-      this.tlCaseId = tl_mode + 1;
-      if (!isLiveFeed && isSmartTL) {
+      if (isLiveFeed) {
+        this.tlCaseId = tl_mode + 1;
+        // live feed
+        if (this.tlCaseId === 1) {
+          this.toggleGroup[0].state = true;
+          this.toggleGroup[1].state = false;
+          this.toggleGroup[2].state = true;
+          this.toggleGroup[3].state = true;
+          this.toggleGroup[4].state = true;
+        } else {
+          for (let i = 0; i < this.toggleGroup.length; i += 1) {
+            this.toggleGroup[i].state = false;
+          }
+          // this.toggleGroup[0].state = false;
+          // this.toggleGroup[1].state = false;
+          // this.toggleGroup[2].state = false;
+          // this.toggleGroup[3].state = false;
+          // this.toggleGroup[4].state = false;
+          // this.toggleGroup[5].state = false;
+
+          // pedestrian case
+          this.getPedestrianTLInfo();
+          // this.pedestrianCaseTLUpdate();
+          tlUpdateHelper.updateCasePedestrian(
+            this.pAiDataTL,
+            this.roadIntersection,
+            this.forceHelper,
+          );
+        }
+
+      } else {
+        if (isSmartTL) {
+          // new smart mode type
+          // arima + realtime
+          this.tlCaseId = 4;
+          const tlQue = this.roadIntersection.getTrafficLightQueue();
+          for (let i = 0; i < tlQue.length; i += 1) {
+            this.roadIntersection.deForceTLState(i);
+          }
+          this.getSmartTLUpdate();
+        }
+      }
+
+      // old cases toggle format
+      // no need after the UI changed
+      // keep the code in case of reuse
+      if (false) {
         // real-time case
         if (this.tlCaseId === 3) {
           const tlQue = this.roadIntersection.getTrafficLightQueue();
@@ -1049,6 +1241,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           );
         }
       }
+
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -1059,8 +1252,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
-
-    if (this.tlCaseId === 2) {
+    const { isLiveFeed, } = this.props;
+    if (isLiveFeed && this.tlCaseId === 2) {
       const pCD = Math.round((Date.now() - this.forceHelper.startT) / 1000);
       const pCDText = new PIXI.Text('Pedestrian Time: N/A', this.textStyle);
       if (this.forceHelper.isForced === true) {
@@ -1077,7 +1270,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       pCDText.y = -this.windowH / 2 + 40;
       this.displayPlaneContainer.addChild(pCDText);
     }
-    
+
   };
 
   /**
@@ -1621,7 +1814,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.toggleGroup[i].state = togValues[i];
       }
     }
-    
+
     const color = 0x51bcd8;
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
       if (i === 1) {

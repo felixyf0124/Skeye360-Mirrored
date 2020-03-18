@@ -102,7 +102,7 @@ const CarPassedBox = styled.div`
     width: 20vw;
     color: white;
     margin-left: 5.5vw;
-`; 
+`;
 
 const BarChartContainer = styled.div`
   // height: 60vh;
@@ -124,7 +124,7 @@ const skeyeStyles = {
     fontSize: 20,
     marginBottom: 4,
     fontWeight: 600,
-    height:35,
+    height: 35,
     marginLeft: -100,
   },
   HeaderCar: {
@@ -133,7 +133,7 @@ const skeyeStyles = {
     marginTop: 100,
     marginBottom: 4,
     fontWeight: 600,
-    height:35,
+    height: 35,
   },
   NumCar: {
     color: SKEYE_WHITE,
@@ -141,9 +141,23 @@ const skeyeStyles = {
     marginTop: 50,
     marginBottom: 4,
     fontWeight: 600,
-    height:35,
+    height: 35,
   }
 };
+
+let passedVehicles = [
+  { direction: "", passedNum: 0 },
+  { direction: "", passedNum: 0 },
+  { direction: "", passedNum: 0 },
+  { direction: "", passedNum: 0 },
+];
+
+let passedVehicles2 = [
+  { direction: "", passedNum: 0 },
+  { direction: "", passedNum: 0 },
+  { direction: "", passedNum: 0 },
+  { direction: "", passedNum: 0 },
+];
 
 const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
@@ -153,43 +167,62 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
     tlCombStates, onTLUpdate, camera_url, intersectionId, intersectionLat, intersectionLng,
   } = props;
 
-  const [passedVehicles, setPassedVehicles] = React.useState([
+  //const [passedVehicles, setPassedVehicles] = React.useState(props);
+
+  /*const [passedVehicles2, setPassedVehicles2] = React.useState([
     {direction:"",passedNum:0},
     {direction:"",passedNum:0},
     {direction:"",passedNum:0},
     {direction:"",passedNum:0},
-  ]);
-  
-  const [passedVehicles2, setPassedVehicles2] = React.useState([
-    {direction:"",passedNum:0},
-    {direction:"",passedNum:0},
-    {direction:"",passedNum:0},
-    {direction:"",passedNum:0},
-  ]);
-  
-  const updatePassedVehicles = 
-  (passedVehicles: Array<{direction:string,passedNum:number}>,
-    isSmartTL:boolean): 
-  void => {
+  ]);*/
+
+  const [onSimuStart, setOnSimuStart] = React.useState(false);
+
+  const onClickSimuStart = (): void => {
+    setOnSimuStart(true);
+  };
+
+  const onSimuStartReset = (): void => {
+    setOnSimuStart(false);
+  }
+
+  function updatePassedVehicles(pVehicles: Array<{
+    direction: string,
+    passedNum: number,
+  }>, isSmartTL: boolean): void {
     if (isSmartTL) {
-      setPassedVehicles2(passedVehicles);
-      console.log(passedVehicles2);
+      passedVehicles2 = pVehicles;
     } else {
-      setPassedVehicles(passedVehicles);
-      console.log(passedVehicles);
+      passedVehicles = pVehicles;
     }
   };
+
+  let ttlPassedCars = 0;
+  ttlPassedCars +=
+    passedVehicles[0].passedNum +
+    passedVehicles[1].passedNum +
+    passedVehicles[2].passedNum +
+    passedVehicles[3].passedNum;
+
+  let ttlPassedCars2 = 0;
+  ttlPassedCars2 +=
+    passedVehicles2[0].passedNum +
+    passedVehicles2[1].passedNum +
+    passedVehicles2[2].passedNum +
+    passedVehicles2[3].passedNum;
 
   return (
     <div>
       <text style={skeyeStyles.Title}>Simulation of Traffic</text>
       <HorizontalFlexBox>
         <SidebarComponent
+          isLiveFeed={false}
           tlMode={tlMode}
           onChangeTLMode={onChangeTLMode}
           onClickTLStop={onClickTLStop}
           tlCombStates={tlCombStates}
-        // tlStates2={tlStates2}
+          // tlStates2={tlStates2}
+          onClickSimuStart={onClickSimuStart}
           keyValue="2"
         />
         <ContentBlock>
@@ -197,12 +230,14 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
           <VerticalBlock>
             <InnerDivHorizon>
               <VerticalBlock>
-                <div style={{height:`20px`}}>
+                <div style={{ height: `20px` }}>
                   <text style={skeyeStyles.Header}>Default Traffic Light</text>
                 </div>
                 <SimContainer>
                   <Simulator
                     isLiveFeed={false}
+                    onSimuClickUpdata={onSimuStartReset}
+                    onSimuStart={onSimuStart}
                     isSmartTL={false}
                     tl_mode={tlMode}
                     toggles={toggles}
@@ -215,22 +250,22 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 </SimContainer>
               </VerticalBlock>
               <VerticalBlock>
-                  <div>
-                    <CarPassedBox>
-                      <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
-                      {/* To insert real data */}
-                      <text style={skeyeStyles.NumCar}>50</text>
-                    </CarPassedBox>
-                  </div>
+                <div>
+                  <CarPassedBox>
+                    <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
+                    {/* To insert real data */}
+                    <text style={skeyeStyles.NumCar}>{ttlPassedCars}</text>
+                  </CarPassedBox>
+                </div>
               </VerticalBlock>
               <VerticalBlock>
                 <BarChartContainer>
                   {/* Add real data into the bar charts */}
                   <BarChartDirections
-                      chartID="barChart-default"
-                      title="Number Of Car Passed Per Direction"
-                      categories={['North', 'East', 'West', 'South']}
-                      directionData={[50, 80, 25, 65]}
+                    chartID="barChart-default"
+                    title="Number Of Car Passed Per Direction"
+                    categories={['North', 'East', 'South', 'West']}
+                    directionData={passedVehicles}
                   />
                 </BarChartContainer>
               </VerticalBlock>
@@ -243,6 +278,8 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                   <Simulator
                     isLiveFeed={false}
                     isSmartTL={true}
+                    onSimuStart={onSimuStart}
+                    onSimuClickUpdata={onSimuStartReset}
                     tl_mode={tlMode}
                     toggles={toggles}
                     tlStop={tlStop}
@@ -254,22 +291,22 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 </SimContainer>
               </VerticalBlock>
               <VerticalBlock>
-                  <div>
-                    <CarPassedBox>
-                      <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
-                      {/* To insert real data */}
-                      <text style={skeyeStyles.NumCar}>60</text>
-                    </CarPassedBox>
-                  </div>
+                <div>
+                  <CarPassedBox>
+                    <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
+                    {/* To insert real data */}
+                    <text style={skeyeStyles.NumCar}>{ttlPassedCars2}</text>
+                  </CarPassedBox>
+                </div>
               </VerticalBlock>
               <VerticalBlock>
                 <BarChartContainer>
                   {/* Add real data into the bar charts */}
                   <BarChartDirections
-                      chartID="barChart-smart"
-                      title="Number Of Car Passed Per Direction"
-                      categories={['North', 'East', 'West', 'South']}
-                      directionData={[60, 90, 35, 75]}
+                    chartID="barChart-smart"
+                    title="Number Of Car Passed Per Direction"
+                    categories={['North', 'East', 'South', 'West']}
+                    directionData={passedVehicles2}
                   />
                 </BarChartContainer>
               </VerticalBlock>

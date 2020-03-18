@@ -7,21 +7,24 @@ import IntSect from './RoadIntersection';
  * @param forceHelper
  */
 export function updateCasePedestrian(TStampData: {
-    current: {ew: number; ns: number}; last: {ew: number; ns: number};},
-intersection: IntSect,
-forceHelper: {startT: number;delay: number; fPeriod: number;
-     isForced: boolean;}): void {
+  current: { ew: number; ns: number }; last: { ew: number; ns: number };
+},
+  intersection: IntSect,
+  forceHelper: {
+    startT: number; delay: number; fPeriod: number;
+    isForced: boolean;
+  }): void {
   if (TStampData.current !== undefined
-        && TStampData.current.ew !== undefined
-        && !Number.isNaN(TStampData.current.ew)
-        && intersection !== undefined) {
+    && TStampData.current.ew !== undefined
+    && !Number.isNaN(TStampData.current.ew)
+    && intersection !== undefined) {
     if (TStampData.current !== TStampData.last
     ) {
       // console.log(TStampData.current.ew+"|"+TStampData.current.ns);
 
       if ((TStampData.current.ew !== 0
-            || TStampData.current.ns !== 0)
-            && !forceHelper.isForced) {
+        || TStampData.current.ns !== 0)
+        && !forceHelper.isForced) {
         forceHelper.startT = Date.now();
         forceHelper.isForced = true;
         // console.log(forceHelper.startT);
@@ -92,7 +95,7 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
       const id = tlQue[i].getId();
       if (id !== 2 && id !== 4) {
         if (tlQue[i].getStatus() === 'green'
-              || tlQue[i].getStatus() === 'yellow') {
+          || tlQue[i].getStatus() === 'yellow') {
           noRedTL.id = id;
           noRedTL.cd = tlQue[i].getCountDown();
           noRedTL.state = tlQue[i].getStatus();
@@ -107,15 +110,15 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
       const id = tlQue[i].getId();
       if (id !== 2 && id !== 4) {
         counter
-                  += tlQue[i].getTotalTime();
+          += tlQue[i].getTotalTime();
       }
     }
     if (noRedTL.state === 'green') {
       counter += (tlQue[noRedTL.index].getGreenTime()
-          - noRedTL.cd);
+        - noRedTL.cd);
     } else if (noRedTL.state === 'yellow') {
       counter += (tlQue[noRedTL.index].getTotalTime()
-          - noRedTL.cd);
+        - noRedTL.cd);
     }
     // let counterOffset = Date.now()-counter;
     for (let i = 0; i < data.length; i += 1) {
@@ -125,12 +128,33 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
         const totalT = cSetting.green + cSetting.yellow;
         if (totalT !== data[i].t) {
           doUpdate = true;
-          const index = intersection.getTrafficLightIndex(data[i].id);
-          if (index < noRedTL.index) {
-            counter += (data[i].t - totalT);
+          //tl2 depends on tl0
+          if (data[i].id === 0 && intersection.getTrafficLightState(2) !== "red") {
+            doUpdate = false;
           }
-          // console.log(data[i].id);
-          intersection.setTrafficLightTime(data[i].id, data[i].t);
+          //tl2 depends on tl1
+          if (data[i].id === 1 && intersection.getTrafficLightState(2) !== "red") {
+            doUpdate = false;
+          }
+          //tl4 depends on tl1
+          if (data[i].id === 1 && intersection.getTrafficLightState(4) !== "red") {
+            doUpdate = false;
+          }
+
+          //tl4 depends on tl3
+          if (data[i].id === 3 && intersection.getTrafficLightState(4) !== "red") {
+            doUpdate = false;
+          }
+          if (doUpdate) {
+
+            const index = intersection.getTrafficLightIndex(data[i].id);
+            if (index < noRedTL.index) {
+              counter += (data[i].t - totalT);
+            }
+            // console.log(data[i].id);
+            intersection.setTrafficLightTime(data[i].id, data[i].t);
+          }
+
         }
       }
     }
@@ -141,7 +165,7 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
       const id2 = 2;
       const totalT2 = intersection.getTrafficLight(0)
         .getTotalTime() + intersection.getTrafficLight(1)
-        .getTotalTime();
+          .getTotalTime();
       intersection.setTLOverlapOffset(id2, -totalT2);
       intersection.setTrafficLightTime(id2, totalT2);
 
@@ -149,7 +173,7 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
       const id4 = 4;
       const totalT4 = intersection.getTrafficLight(1)
         .getTotalTime() + intersection.getTrafficLight(3)
-        .getTotalTime();
+          .getTotalTime();
       intersection.setTLOverlapOffset(id4, -totalT4);
       intersection.setTrafficLightTime(id4, totalT4);
 
@@ -194,4 +218,13 @@ export function updateCaseArima(tlDistribution: any, intersection: IntSect): voi
       updateCaseRealTime(dataPack, intersection);
     }
   }
+}
+
+/**
+ * tl case update for combined optimized (arima + realtime)
+ * @param tlDistribution 
+ * @param intersection 
+ */
+export function updateCaseOptimized(tlDistribution: any, intersection: IntSect): void {
+  updateCaseArima(tlDistribution, intersection);
 }

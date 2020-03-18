@@ -24,9 +24,11 @@ import {
 } from '../../css/custom';
 
 interface SimProps {
+  isLiveFeed: boolean;
   tlMode: number;
   onChangeTLMode: any;
   onClickTLStop: any;
+  onClickSimuStart: any;
   tlCombStates: Array<{
     direction: string;
     state: string;
@@ -184,7 +186,7 @@ const skeyeStyles = {
 // Creates and returns a component for the sidebar that will be used in the simulator
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const {
-    tlMode, onChangeTLMode, onClickTLStop, tlCombStates, keyValue,
+    isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, onClickSimuStart, tlCombStates, keyValue,
   } = props;
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
@@ -200,15 +202,15 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
 
   const tlDiv = tlCombStates.map((
     tlCombState:
-    {
-      direction: string;
-      state: string;
-      state2: string;
-      countDown: string;
-      countDown2: string;
-      totalTime: string; // G+Y
-      totalTime2: string; // G+Y
-    },
+      {
+        direction: string;
+        state: string;
+        state2: string;
+        countDown: string;
+        countDown2: string;
+        totalTime: string; // G+Y
+        totalTime2: string; // G+Y
+      },
   ) => {
     const tlData = {
       color: SKEYE_WHITE,
@@ -273,6 +275,35 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
     );
   });
 
+  const tlDoCompare = (isLiveFeed: boolean): JSX.Element => {
+    if (isLiveFeed) {
+      return (<div></div>);
+    } else {
+      return (<div>
+        {/* For the Traffic Light Comparison */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
+            aria-controls="panel2a-content"
+            id="panel2a-header"
+          >
+            <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+            <table style={{ display: 'block' }}>
+              <tbody className={classes.tlTable}>
+                {tlDiv}
+              </tbody>
+            </table>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </div>);
+    }
+
+  };
+
+
   // Returns the UI for the sidebar
   return (
     <div className={classes.sidebar}>
@@ -285,7 +316,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
 
         {/* For the modes options */}
         {/* {console.log(keyPassed)} */}
-        { keyValue === '1'
+        {keyValue === '1'
           ? (
             <ExpansionPanel style={skeyeStyles.Expansion}>
               <ExpansionPanelSummary
@@ -343,14 +374,14 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )
-          : null }
+          : null}
 
         {keyValue === '1'
           ? <Divider classes={{ root: classes.dividerWhite }} />
           : null}
-
+        {tlDoCompare(isLiveFeed)}
         {/* For the Traffic Light Comparison */}
-        <ExpansionPanel style={skeyeStyles.Expansion}>
+        {/* <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
             aria-controls="panel2a-content"
@@ -366,7 +397,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
               </tbody>
             </table>
           </ExpansionPanelDetails>
-        </ExpansionPanel>
+        </ExpansionPanel> */}
 
         <Divider classes={{ root: classes.dividerWhite }} />
 
@@ -382,7 +413,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
             <DivVertical>
-              <Button variant="contained" style={skeyeStyles.ButtonStyle}>
+              <Button variant="contained" style={skeyeStyles.ButtonStyle} onClick={onClickSimuStart}>
                 <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon} />
                 START
               </Button>

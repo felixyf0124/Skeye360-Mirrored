@@ -181,7 +181,7 @@ const skeyeStyles = {
 class LiveComponent extends React.Component<
   SimProps & StateProps & DispatchProps,
   { tlMode: number }
-> {
+  > {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { camera_id, getExistingCamera } = this.props;
@@ -204,6 +204,7 @@ class LiveComponent extends React.Component<
       <div>
         <HorizontalFlexBox>
           <SidebarComponent
+            isLiveFeed={true}
             tlMode={tlMode}
             onChangeTLMode={onChangeTLMode}
             onClickTLStop={onClickTLStop}
@@ -221,13 +222,15 @@ class LiveComponent extends React.Component<
               <text style={skeyeStyles.Header}>Simulator with Live Feed</text>
               <SimContainer>
                 <Simulator
-                  isLiveFeed = {true}
+                  isLiveFeed={true}
                   isSmartTL={false}
                   tl_mode={tlMode}
                   toggles={toggles}
+                  onSimuStart={true}
+                  onSimuClickUpdata={() => { }}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
-                  updatePassedVehicles={()=>{}}
+                  updatePassedVehicles={() => { }}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
                 />
