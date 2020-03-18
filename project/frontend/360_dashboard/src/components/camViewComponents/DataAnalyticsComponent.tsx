@@ -21,7 +21,7 @@ const Body = styled.div`
 
 const MapContainer = styled.div`
   position: relative;
-  width: 20vw;
+  width: 35vw;
   margin: 1rem;
 `;
 
