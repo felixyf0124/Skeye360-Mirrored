@@ -36,8 +36,10 @@ class main:
         directionNames.sort()
 
         modelPredictObj = modelPredict()
-
-        for direction in directionNames:
+        
+        # directionNamesLess = ["ns", "sn", "ew", "we", "en", "es"]
+        directionNamesLess = ["es"]
+        for direction in directionNamesLess:
             dataf = dataframe.loc[dataframe['series'] == direction][['value']].round(0).astype(int)
             modelPredictObj.modelAndPredict(dataf, direction)
 
