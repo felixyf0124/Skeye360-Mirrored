@@ -31,7 +31,7 @@ interface Props {
   toggles: any;
   tlStop: boolean;
   onTLUpdate: any;
-  updatePassedVehicles: any ;
+  updatePassedVehicles: any;
   simuWidthRatio: number;
   resolutionRatio: number;
 }
@@ -362,7 +362,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.toggleGroup = new Array<{ name: string; state: boolean }>();
     this.labelGroup = new Array<Btn>();
     this.tlCaseBtnGroup = new Array<Btn>();
-    
+
     // toggle group
     const videoFeed = { name: 'enable video feed', state: false };
     const samplingVideoFeed = { name: 'enable sampling video feed', state: true };
@@ -376,8 +376,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.toggleGroup.push(showSectionAreas);
     this.toggleGroup.push(showDirectVideoFeedMapping);
     this.toggleGroup.push(showVideoFeedBG);
-    const {isLiveFeed} = this.props;
-    if(isLiveFeed){
+    const { isLiveFeed } = this.props;
+    if (isLiveFeed) {
       videoFeed.state = true;
       samplingVideoFeed.state = false;
       uiV7.state = true;
@@ -885,27 +885,35 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.updateTLCase();
 
     this.roadIntersection.updateVehiclePosV2();
-    const {updatePassedVehicles, isSmartTL} = this.props;
-    if(updatePassedVehicles !== null){
+    const { updatePassedVehicles, isSmartTL } = this.props;
+    if (updatePassedVehicles !== null) {
       const passedCars = this.roadIntersection.getPassedVehicles();
-      const adaptedCarNums = new Array<{direction:string, passedNum:number}>();
-      for(let i=0;i<passedCars.length;i+=1){
-        switch (passedCars[i].sectionId){
+      const adaptedCarNums = new Array<{ direction: string, passedNum: number }>();
+      for (let i = 0; i < passedCars.length; i += 1) {
+        switch (passedCars[i].sectionId) {
           case 0:
-            adaptedCarNums.push({direction:"East", 
-              passedNum: passedCars[i].passedNum});
+            adaptedCarNums.push({
+              direction: "East",
+              passedNum: passedCars[i].passedNum
+            });
             break;
           case 1:
-            adaptedCarNums.push({direction:"West", 
-              passedNum: passedCars[i].passedNum});
+            adaptedCarNums.push({
+              direction: "West",
+              passedNum: passedCars[i].passedNum
+            });
             break;
           case 2:
-            adaptedCarNums.push({direction:"North", 
-              passedNum: passedCars[i].passedNum});
+            adaptedCarNums.push({
+              direction: "North",
+              passedNum: passedCars[i].passedNum
+            });
             break;
           case 3:
-            adaptedCarNums.push({direction:"South", 
-              passedNum: passedCars[i].passedNum});
+            adaptedCarNums.push({
+              direction: "South",
+              passedNum: passedCars[i].passedNum
+            });
             break;
         }
       }
@@ -978,7 +986,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             this.roadIntersection.addNewVehicleV2(
               laneP.getLaneId(),
               laneP.getSectionId(),
-              maxVSpeed,
+              maxVSpeed * 16,
             );
 
             this.atIndex += 1;
@@ -990,7 +998,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
       this.numberOfCars = this.roadIntersection.getVehiclesNum();
     }
-    if(!this.toggleGroup[0].state){
+    if (!this.toggleGroup[0].state) {
       // if(this.roadG.parent !== null){
       //   this.mapContainer.addChild(this.roadG);
       // }
@@ -999,7 +1007,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.roadIntersection.tlCountingDown();
         this.drawRoad();
       }
-    }else{
+    } else {
       this.roadG.clear();
       this.roadG.removeChildren();
     }
@@ -1017,7 +1025,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       this.fpsCounter = 0;
 
       const { isLiveFeed, isSmartTL, tl_mode } = this.props;
-      if (isLiveFeed){
+      if (isLiveFeed) {
         this.tlCaseId = tl_mode + 1;
         // live feed
         if (this.tlCaseId === 1) {
@@ -1026,8 +1034,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           this.toggleGroup[2].state = true;
           this.toggleGroup[3].state = true;
           this.toggleGroup[4].state = true;
-        }else{
-          for(let i=0 ;i<this.toggleGroup.length;i+=1){
+        } else {
+          for (let i = 0; i < this.toggleGroup.length; i += 1) {
             this.toggleGroup[i].state = false;
           }
           // this.toggleGroup[0].state = false;
@@ -1036,7 +1044,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           // this.toggleGroup[3].state = false;
           // this.toggleGroup[4].state = false;
           // this.toggleGroup[5].state = false;
-          
+
           // pedestrian case
           this.getPedestrianTLInfo();
           // this.pedestrianCaseTLUpdate();
@@ -1047,15 +1055,15 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           );
         }
 
-      }else{
-        if(isSmartTL){
+      } else {
+        if (isSmartTL) {
           // new smart mode type
           // arima + realtime
           this.tlCaseId = 4;
 
         }
       }
-      
+
       // old cases toggle format
       // no need after the UI changed
       // keep the code in case of reuse
@@ -1100,7 +1108,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
-    const {isLiveFeed,} = this.props;
+    const { isLiveFeed, } = this.props;
     if (isLiveFeed && this.tlCaseId === 2) {
       const pCD = Math.round((Date.now() - this.forceHelper.startT) / 1000);
       const pCDText = new PIXI.Text('Pedestrian Time: N/A', this.textStyle);
@@ -1118,7 +1126,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       pCDText.y = -this.windowH / 2 + 40;
       this.displayPlaneContainer.addChild(pCDText);
     }
-    
+
   };
 
   /**
@@ -1662,7 +1670,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.toggleGroup[i].state = togValues[i];
       }
     }
-    
+
     const color = 0x51bcd8;
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
       if (i === 1) {

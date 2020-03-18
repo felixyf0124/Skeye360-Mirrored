@@ -13,8 +13,8 @@ import { SKEYE_BLACK, SKEYE_WHITE } from '../../css/custom';
 interface Props {
   chartID: string;
   title: string;
-  categories: [string, string, string, string];
-  directionData: [number, number, number , number];
+  categories: string[];
+  directionData: Array<{ direction: string, passedNum: number }>;
 }
 
 // For every graph, there needs to be options and series
@@ -23,6 +23,25 @@ interface Props {
 interface ChartState {
   barOptions: any;
   barSeries: any;
+}
+
+async function loadDataToChart(
+  data: number[],
+): Promise<any> {
+  const date = new Date();
+  let current_bar;
+  try {
+    // Populate the moving average displayed on graph one by one
+    current_bar = [];
+    // populate the bar chart
+    current_bar.push(data[0]);
+    current_bar.push(data[1]);
+    current_bar.push(data[2]);
+    current_bar.push(data[3]);
+  } catch (error) {
+    console.log(error);
+  }
+  return current_bar;
 }
 
 class BarChartDirections extends React.Component<{} & Props, ChartState> {
@@ -72,7 +91,7 @@ class BarChartDirections extends React.Component<{} & Props, ChartState> {
       },
       barSeries: [
         {
-        //   data: current_bar[0],
+          data: [],
         },
       ],
     };
@@ -81,10 +100,27 @@ class BarChartDirections extends React.Component<{} & Props, ChartState> {
   // The data gets retrieved here, in future implementations: Use async fetch from the database
   public async componentDidMount(): Promise<void> {
     const { chartID, directionData } = this.props;
-    const time = new Date();
-    window.setInterval((): any => {
-      ApexCharts.exec(chartID, 'updateSeries', [{ data: directionData }]); //[{ data: current_bar }]);
-    }, 1000 / time.getHours());
+    let data;
+    data = await loadDataToChart([
+      directionData[0].passedNum,
+      directionData[1].passedNum,
+      directionData[2].passedNum,
+      directionData[3].passedNum,
+    ]);
+    ApexCharts.exec(chartID, 'updateSeries', [{ data: data }]); //[{ data: current_bar }]);
+  }
+
+  public async componentDidUpdate(): Promise<void> {
+
+    const { chartID, directionData } = this.props;
+    let data;
+    data = await loadDataToChart([
+      directionData[0].passedNum,
+      directionData[1].passedNum,
+      directionData[2].passedNum,
+      directionData[3].passedNum,
+    ]);
+    ApexCharts.exec(chartID, 'updateSeries', [{ data: data }]); //[{ data: current_bar }]);
   }
 
   /* eslint-disable react/destructuring-assignment */
