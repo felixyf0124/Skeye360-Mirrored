@@ -116,8 +116,8 @@ class BarChartRT extends React.Component<{} & Props, ChartState> {
       // Data gets populated here
       // Datasets current_arima and current_mavg get updated here
       // console.log(current_bar);
-      console.log(primaryMovingAverageData);
-      console.log(secondaryMovingAverageData);
+      // console.log(primaryMovingAverageData);
+      // console.log(secondaryMovingAverageData);
       current_bar = await loadDataToChart(
         primaryMovingAverageData,
         secondaryMovingAverageData,
