@@ -86,7 +86,6 @@ const OuterContainer = styled.div`
 
 const OuterDiv = styled.div`
   color: ${SKEYE_WHITE};
-  margin-top: 5rem;
   display: flex;
   flex-direction: column;
 `;
@@ -157,7 +156,9 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
 
     // Function that fetches all traffic news of a city
     const staffNewsFetch = (): void => {
-      fetch(`http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=45.7047897,-73.47429525,45.41007553,-73.97290173`)
+      fetch(
+        `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=45.7047897,-73.47429525,45.41007553,-73.97290173`,
+      )
         .then((results) => results.json())
         .then((data) => {
           this.setState({
