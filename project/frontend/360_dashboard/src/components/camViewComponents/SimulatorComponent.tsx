@@ -206,6 +206,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
       <text style={skeyeStyles.Title}>Simulation of Traffic</text>
       <HorizontalFlexBox>
         <SidebarComponent
+          isLiveFeed={false}
           tlMode={tlMode}
           onChangeTLMode={onChangeTLMode}
           onClickTLStop={onClickTLStop}
