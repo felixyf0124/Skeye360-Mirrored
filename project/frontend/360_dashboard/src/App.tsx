@@ -10,10 +10,10 @@ import SkeyeMap from './containers/SkeyeMap';
 import AddIntersection from './containers/AddIntersection';
 import EditIntersection from './containers/EditIntersection';
 import StreetView from './containers/StreetView';
-import ChartsPrototype from './components/ChartsPrototype';
+import ChartsPrototype from './components/charts/ChartsPrototype';
 import SessionRoutes from './SessionRoutes';
 import { authenticated, isStaff } from './contexts/authentication';
-import IntersectionList from './containers/IntersectionList';
+import Home from './containers/Home';
 import CamView from './containers/CamView';
 import AdminRoutes from './AdminRoutes';
 
@@ -29,7 +29,7 @@ const App = ({ authenticated, isStaff }: StateProps): JSX.Element => (
     <Route>
       <Switch>
         <SessionRoutes authenticated={authenticated}>
-          <Route exact path="/" component={IntersectionList} />
+          <Route exact path="/" component={Home} />
           <Route exact path="/streetview/:intersectionId" component={StreetView} />
           <Route exact path="/camview/:intersectionId" component={CamView} />
           <Route exact path="/chartsprototype" component={ChartsPrototype} />

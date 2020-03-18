@@ -10,11 +10,11 @@ import {
   resetIntersection as resetCurrentIntersection,
   ResetIntersectionAction,
 } from '../contexts/intersection';
-import EditIntersectionForm from '../components/EditIntersectionForm';
+import EditIntersectionForm from '../components/forms/EditIntersectionForm';
 import { Response as cameraResponse } from '../api/camera';
 import SideDrawer from '../components/SideDrawer';
-import EditCameraForm from '../components/EditCameraForm';
-import AddCameraForm from '../components/AddCameraForm';
+import EditCameraForm from '../components/forms/EditCameraForm';
+import AddCameraForm from '../components/forms/AddCameraForm';
 import { getUsers, STATE as userState, GetUsersAction } from '../contexts/users';
 import { LOW_RES } from '../css/custom';
 

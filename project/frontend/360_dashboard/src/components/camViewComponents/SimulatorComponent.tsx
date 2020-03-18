@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SidebarComponent from './SidebarComponent';
 import Simulator from '../../containers/simulator/Scene';
+import BarChartDirections from '../charts/BarChartDirections';
 import { SKEYE_WHITE } from '../../css/custom';
 
 interface SimProps {
@@ -66,7 +67,6 @@ const InnerDivVerticalSecondSim = styled.div`
 const SimContainer = styled.div`
   width: 20vw;
   height: 20vw;
-  margin-left: 20rem;
   display: flex;
   justify-content: center;
   margin: 1rem;
@@ -81,9 +81,23 @@ const ContentBlock = styled.div`
 
 const VerticalBlock = styled.div`
   display:block;
-  width: 100vw;
+  // width: 30vw;
   height: auto;
   flex-direction:column;
+`;
+
+const CarPassedBox = styled.div`
+  display:block;
+  width: 32vw;
+  // height: auto;
+  flex-direction:column;
+`; 
+
+const BarChartContainer = styled.div`
+  // height: 25vh;
+  width: 32vw;
+  position: relative;
+  margin: 1rem;
 `;
 
 // Custom styling
@@ -108,10 +122,11 @@ const skeyeStyles = {
 
 
 const SimulatorComponent = (props: SimProps | any): JSX.Element => {
+
   // eslint-disable-next-line consistent-return
   const {
     tlMode, onChangeTLMode, toggles, tlStop, onClickTLStop,
-    tlCombStates, onTLUpdate,
+    tlCombStates, onTLUpdate, camera_url, intersectionId, intersectionLat, intersectionLng,
   } = props;
 
   const [passedVehicles, setPassedVehicles] = React.useState([
@@ -155,45 +170,81 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
         />
         <ContentBlock>
 
-        <VerticalBlock>
-        <InnerDivHorizon>
-          <div style={{height:`20px`}}>
-            <text style={skeyeStyles.Header}>Default Traffic Light</text>
-            </div>
-            <SimContainer>
-              <Simulator
-                isLiveFeed={false}
-                isSmartTL={false}
-                tl_mode={tlMode}
-                toggles={toggles}
-                tlStop={tlStop}
-                onTLUpdate={onTLUpdate}
-                updatePassedVehicles={updatePassedVehicles}
-                simuWidthRatio={0.38}
-                resolutionRatio={38 / 19.5}
-              />
-            </SimContainer>
-         
-          
-        </InnerDivHorizon>
-        <InnerDivHorizon>
-          
-            <text style={skeyeStyles.Header}>Smart Traffic Light</text>
-            <SimContainer>
-              <Simulator
-                isLiveFeed={false}
-                isSmartTL={true}
-                tl_mode={tlMode}
-                toggles={toggles}
-                tlStop={tlStop}
-                onTLUpdate={onTLUpdate}
-                updatePassedVehicles={updatePassedVehicles}
-                simuWidthRatio={0.38}
-                resolutionRatio={38 / 19.5}
-              />
-            </SimContainer>
-        </InnerDivHorizon>
-        </VerticalBlock>
+          <VerticalBlock>
+            <InnerDivHorizon>
+              <VerticalBlock>
+                <div style={{height:`20px`}}>
+                  <text style={skeyeStyles.Header}>Default Traffic Light</text>
+                </div>
+                <SimContainer>
+                  <Simulator
+                    isLiveFeed={false}
+                    isSmartTL={false}
+                    tl_mode={tlMode}
+                    toggles={toggles}
+                    tlStop={tlStop}
+                    onTLUpdate={onTLUpdate}
+                    updatePassedVehicles={updatePassedVehicles}
+                    simuWidthRatio={0.38}
+                    resolutionRatio={38 / 19.5}
+                  />
+                </SimContainer>
+              </VerticalBlock>
+              <VerticalBlock>
+                <CarPassedBox>
+                  <p>Number of car passed</p>
+                </CarPassedBox>
+              </VerticalBlock>
+              <VerticalBlock>
+                <BarChartContainer>
+                  {/* Add real data into the bar charts */}
+                  <BarChartDirections
+                      chartID="barChart-default"
+                      title="Number Of Car Passed Per Direction"
+                      categories={['North', 'East', 'West', 'South']}
+                      directionData={[50, 80, 25, 65]}
+                  />
+                </BarChartContainer>
+              </VerticalBlock>
+            
+              
+            </InnerDivHorizon>
+
+            <InnerDivHorizon>
+              <VerticalBlock>
+                <text style={skeyeStyles.Header}>Smart Traffic Light</text>
+                <SimContainer>
+                  <Simulator
+                    isLiveFeed={false}
+                    isSmartTL={true}
+                    tl_mode={tlMode}
+                    toggles={toggles}
+                    tlStop={tlStop}
+                    onTLUpdate={onTLUpdate}
+                    updatePassedVehicles={updatePassedVehicles}
+                    simuWidthRatio={0.38}
+                    resolutionRatio={38 / 19.5}
+                  />
+                </SimContainer>
+              </VerticalBlock>
+              <VerticalBlock>
+                <CarPassedBox>
+                  <p>Number of car passed</p>
+                </CarPassedBox>
+              </VerticalBlock>
+              <VerticalBlock>
+                <BarChartContainer>
+                  {/* Add real data into the bar charts */}
+                  <BarChartDirections
+                      chartID="barChart-smart"
+                      title="Number Of Car Passed Per Direction"
+                      categories={['North', 'East', 'West', 'South']}
+                      directionData={[60, 90, 35, 75]}
+                  />
+                </BarChartContainer>
+              </VerticalBlock>
+            </InnerDivHorizon>
+          </VerticalBlock>
         </ContentBlock>
       </HorizontalFlexBox>
     </div>
