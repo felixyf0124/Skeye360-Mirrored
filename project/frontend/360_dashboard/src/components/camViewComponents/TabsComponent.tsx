@@ -143,7 +143,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 // Custom styling
-const skeyeStyles = {
+export const skeyeStyles = {
   TabBar: {
     backgroundColor: SKEYE_LIGHT_DARK_GREY,
   },

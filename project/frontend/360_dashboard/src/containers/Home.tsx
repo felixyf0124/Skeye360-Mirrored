@@ -1,9 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable @typescript-eslint/camelcase */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import SideDrawer from '../components/SideDrawer';
+
 import IntersectionTable from '../components/IntersectionTable';
 import { RootState } from '../reducers/rootReducer';
 import { isStaff } from '../contexts/authentication';
@@ -18,13 +25,17 @@ import { deleteExistingIntersection, DeleteIntersectionAction } from '../context
 import { logClick, LogAction } from '../contexts/LogClicks';
 import TrafficNews from '../components/TrafficNews';
 import GoogleMap from '../components/GoogleMap';
-import { LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
+import { LOW_RES, MOBILE_DEVICE_MAX_WIDTH, SKEYE_DARK_GREY } from '../css/custom';
 import AddIntersection from './AddIntersection';
 import { getUsers, STATE as userState, GetUsersAction } from '../contexts/users';
+import { skeyeStyles } from '../components/camViewComponents/TabsComponent';
 
 // Content Container
 const Content = styled.div`
+  display: flex;
+  margin-top: 5rem;
   overflow-y: hidden;
+  overflow-x: hidden;
   @media only screen and (min-width: ${MOBILE_DEVICE_MAX_WIDTH}px) {
     & {
       overflow-y: hidden;
@@ -65,6 +76,7 @@ const LeftContentFlexBox = styled.div`
 `;
 
 const TableDiv = styled.div`
+  margin-top: 1rem;
   width: 50vw;
   @media only screen and (max-width: ${LOW_RES}px) {
     & {
@@ -74,23 +86,28 @@ const TableDiv = styled.div`
 `;
 
 const TrafficDiv = styled.div`
-  width: 50vw;
+  width: 45vw;
+  height: 78vh;
   @media only screen and (max-width: ${LOW_RES}px) {
     & {
-      width: 100vw;
+      width: 80vw;
     }
   }
 `;
 
 const Map = styled.div`
-  left-margin: 1rem;
-  width: 50%;
-  height: 100vh;
+  width: 45vw;
+  height: 78vh;
+  @media only screen and (max-width: ${LOW_RES}px) {
+    & {
+      width: 80vw;
+    }
+  }
 `;
 
 const AddButton = styled.div`
   float: right;
-  margin-right: 1rem;
+  margin: 1rem;
 `;
 
 interface StateProps {
@@ -108,62 +125,102 @@ interface DispatchProps {
   logClick: (log_message: string, user_id: number) => LogAction;
 }
 
-class Home extends React.Component<StateProps & DispatchProps, {}> {
-  public componentDidMount(): void {
-    // eslint-disable-next-line no-shadow
-    const { getDistricts, getUsers } = this.props;
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
+
+function TabPanel(props: TabPanelProps): JSX.Element {
+  const {
+    children, value, index, ...other
+  } = props;
+
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box p={3}>{children}</Box>}
+    </Typography>
+  );
+}
+
+function a11yProps(index: any): any {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: SKEYE_DARK_GREY,
+    margin: '1rem',
+  },
+}));
+
+const Home = (props: StateProps & DispatchProps): JSX.Element => {
+  const {
+    districts, isStaff, user_id, users, getDistricts, getUsers,
+  } = props;
+
+  useEffect(() => {
     getDistricts();
     getUsers();
-  }
+  });
 
-  public componentDidUpdate(prevProps: StateProps): void {
-    const { districts: prevDistricts, users: prevUsers } = prevProps;
-    // eslint-disable-next-line no-shadow
-    const { getDistricts, getUsers } = this.props;
-    const { districts, users } = this.props;
-    if (districts !== prevDistricts) {
-      getDistricts();
-    }
-    if (users !== prevUsers) {
-      getUsers();
-    }
-  }
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
 
-  // public componentWillUnmount(): void {
-  //   // eslint-disable-next-line no-shadow
-  //   const { resetDistricts } = this.props;
-  //   resetDistricts();
-  // }
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
+    setValue(newValue);
+  };
 
-  public render(): JSX.Element {
-    const {
-      districts, isStaff, user_id, users,
-    } = this.props;
-    // const districtsProps = {
-    //   // eslint-disable-next-line object-shorthand
-    //   districts: districts,
-    // };
-    return (
-      <Content>
-        <SideDrawer headerTitle={districts[0].district_name} />
-        <ContentFlexBox>
-          <LeftContentFlexBox>
-            <TableDiv>
-              <IntersectionTable districts={districts} isStaff={isStaff} user_id={user_id} />
-              <AddButton>{isStaff ? <AddIntersection users={users} /> : <div />}</AddButton>
-            </TableDiv>
+  return (
+    <Content>
+      <SideDrawer headerTitle={districts[0].district_name} />
+      <ContentFlexBox>
+        <LeftContentFlexBox>
+          <TableDiv>
+            <IntersectionTable districts={districts} isStaff={isStaff} user_id={user_id} />
+            <AddButton>{isStaff ? <AddIntersection users={users} /> : <div />}</AddButton>
+          </TableDiv>
+        </LeftContentFlexBox>
+        <div className={classes.root}>
+          <AppBar position="static" style={skeyeStyles.TabBar}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="simple tabs example"
+              TabIndicatorProps={{ style: { backgroundColor: 'white' } }}
+            >
+              <Tab label="SkeYe Map" {...a11yProps(0)} style={skeyeStyles.TabOnly} />
+              <Tab label="Traffic News" {...a11yProps(1)} style={skeyeStyles.TabOnly} />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <Map>
+              <GoogleMap districts={districts} />
+            </Map>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
             <TrafficDiv>
               <TrafficNews />
             </TrafficDiv>
-          </LeftContentFlexBox>
-          <Map>
-            <GoogleMap districts={districts} />
-          </Map>
-        </ContentFlexBox>
-      </Content>
-    );
-  }
-}
+          </TabPanel>
+        </div>
+      </ContentFlexBox>
+    </Content>
+  );
+};
+
 const mapStateToProps = (state: RootState): StateProps => ({
   districts: state.districts,
   isStaff: isStaff(state),

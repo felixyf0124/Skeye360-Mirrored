@@ -9,7 +9,8 @@ import TabsComponent from '../components/camViewComponents/TabsComponent';
 
 // DIV inside the sideDrawer
 const Body = styled.div`
-  margin-left: 1vw;
+  display: flex;
+  margin: 1rem;
   margin-top: 5rem;
 `;
 
