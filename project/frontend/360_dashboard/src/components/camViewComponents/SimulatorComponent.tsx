@@ -88,9 +88,8 @@ const ContentBlock = styled.div`
 `;
 
 const VerticalBlock = styled.div`
-  display:block;
-  // width: 30vw;
-  // height: auto;
+  display: flex;
+  margin-bottom: -2.5vh;
   flex-direction:column;
 `;
 
@@ -142,6 +141,9 @@ const skeyeStyles = {
     marginBottom: 4,
     fontWeight: 600,
     height: 35,
+  },
+  Block: {
+    // margin
   }
 };
 
@@ -213,7 +215,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
   return (
     <div>
-      <text style={skeyeStyles.Title}>Simulation of Traffic</text>
+      {/* <text style={skeyeStyles.Title}>Simulation of Traffic</text> */}
       <HorizontalFlexBox>
         <SidebarComponent
           isLiveFeed={false}
@@ -229,8 +231,8 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
           <VerticalBlock>
             <InnerDivHorizon>
-              <VerticalBlock>
-                <div style={{ height: `20px` }}>
+              <VerticalBlock style={skeyeStyles.Block}>
+                <div style={{ height: `15px` }}>
                   <text style={skeyeStyles.Header}>Default Traffic Light</text>
                 </div>
                 <SimContainer>
@@ -273,7 +275,9 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
             <InnerDivHorizon>
               <VerticalBlock>
-                <text style={skeyeStyles.Header}>Smart Traffic Light</text>
+                <div style={{ height: `15px` }}>
+                  <text style={skeyeStyles.Header}>Smart Traffic Light</text>
+                </div>
                 <SimContainer>
                   <Simulator
                     isLiveFeed={false}
