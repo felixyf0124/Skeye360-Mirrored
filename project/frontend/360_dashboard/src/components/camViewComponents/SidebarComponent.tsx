@@ -191,6 +191,8 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
 
+  const directions = ["North & South", "East & West - Left Turn", "East & West", "East & West - Right Turn", "South - Right Turn"]
+
   // OnClick it will the variable to the selected item (Arima, Pedestrians or Real-Time)
   const onClickListItem = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -203,6 +205,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const tlDiv = tlCombStates.map((
     tlCombState:
       {
+        directionName: string;
         direction: string;
         state: string;
         state2: string;
@@ -212,6 +215,13 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         totalTime2: string; // G+Y
       },
   ) => {
+    const tlDataHeader = {
+      color: SKEYE_WHITE,
+      fontSize: '0.9em',
+      textDecorationLine: 'underline',
+      margin: 'auto',
+      display: 'table-cell',
+    };
     const tlData = {
       color: SKEYE_WHITE,
       fontSize: '0.8em',
@@ -249,8 +259,15 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
     return (
       <div key={tlCombState.direction} style={{ display: 'table-row-group' }}>
         <tr className={classes.tlTRow}>
-          <td style={tlData}>Direction</td>
-          <td style={tlData} colSpan={3}>{tlCombState.direction}</td>
+          <th style={tlDataHeader}>Direction:</th>
+        </tr>
+        <tr className={classes.tlTRow}>
+          <td style={tlData} colSpan={4}>{tlCombState.direction == "s<=>n,s->w,s->s,n->e,n->w" ? directions[0] :
+                                          tlCombState.direction == "e->e,e->s,w->w,w->n" ? directions[1] :
+                                          tlCombState.direction == "e<=>w" ? directions[2] :
+                                          tlCombState.direction == "e->n,w->s" ? directions[3] :
+                                          tlCombState.direction == "s->e" ? directions[4] :
+                                          null}</td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
           <td style={tlData}>Type</td>
@@ -259,18 +276,18 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           <td style={tlData}>Time</td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>non-smart</td>
+          <td style={tlData}>Default</td>
           <td style={tlDataCol}>{tlCombState.state}</td>
           <td style={tlDataCol}>{tlCombState.countDown}</td>
           <td style={tlData}>{tlCombState.totalTime}</td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>smart</td>
+          <td style={tlData}>Smart</td>
           <td style={tlDataCol2}>{tlCombState.state2}</td>
           <td style={tlDataCol2}>{tlCombState.countDown2}</td>
           <td style={tlData}>{tlCombState.totalTime2}</td>
         </tr>
-
+        <br/>
       </div>
     );
   });
