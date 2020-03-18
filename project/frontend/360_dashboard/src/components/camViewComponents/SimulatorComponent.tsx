@@ -235,7 +235,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                   <BarChartDirections
                     chartID="barChart-default"
                     title="Number Of Car Passed Per Direction"
-                    categories={['North', 'East', 'West', 'South']}
+                    categories={['North', 'East', 'South', 'West']}
                     directionData={passedVehicles}
                   />
                 </BarChartContainer>
@@ -274,7 +274,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                   <BarChartDirections
                     chartID="barChart-smart"
                     title="Number Of Car Passed Per Direction"
-                    categories={['North', 'East', 'West', 'South']}
+                    categories={['North', 'East', 'South', 'West']}
                     directionData={passedVehicles2}
                   />
                 </BarChartContainer>

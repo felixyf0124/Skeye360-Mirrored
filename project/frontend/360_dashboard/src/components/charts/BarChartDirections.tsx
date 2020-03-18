@@ -80,8 +80,6 @@ class BarChartDirections extends React.Component<{} & Props, ChartState> {
           },
         },
         yaxis: {
-          min: 0,
-          max: 200,
           labels: {
             style: {
               colors: SKEYE_WHITE,
@@ -98,29 +96,23 @@ class BarChartDirections extends React.Component<{} & Props, ChartState> {
   }
 
   // The data gets retrieved here, in future implementations: Use async fetch from the database
-  public async componentDidMount(): Promise<void> {
-    const { chartID, directionData } = this.props;
-    let data;
-    data = await loadDataToChart([
-      directionData[0].passedNum,
-      directionData[1].passedNum,
-      directionData[2].passedNum,
-      directionData[3].passedNum,
-    ]);
-    ApexCharts.exec(chartID, 'updateSeries', [{ data: data }]); //[{ data: current_bar }]);
+  public componentDidMount(): void {
+    const { chartID } = this.props;
+    ApexCharts.exec(chartID, 'updateSeries', [{ data: [] }]); //[{ data: current_bar }]);
   }
 
-  public async componentDidUpdate(): Promise<void> {
-
+  public async componentDidUpdate(prevProps: any): Promise<void> {
     const { chartID, directionData } = this.props;
     let data;
-    data = await loadDataToChart([
-      directionData[0].passedNum,
-      directionData[1].passedNum,
-      directionData[2].passedNum,
-      directionData[3].passedNum,
-    ]);
-    ApexCharts.exec(chartID, 'updateSeries', [{ data: data }]); //[{ data: current_bar }]);
+    if (this.props.directionData !== prevProps.directionData) {
+      data = await loadDataToChart([
+        directionData[0].passedNum,
+        directionData[1].passedNum,
+        directionData[2].passedNum,
+        directionData[3].passedNum,
+      ]);
+      ApexCharts.exec(chartID, 'updateSeries', [{ data: data }]);
+    }
   }
 
   /* eslint-disable react/destructuring-assignment */

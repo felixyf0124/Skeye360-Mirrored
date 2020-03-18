@@ -986,7 +986,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             this.roadIntersection.addNewVehicleV2(
               laneP.getLaneId(),
               laneP.getSectionId(),
-              maxVSpeed * 16,
+              maxVSpeed * 8,
             );
 
             this.atIndex += 1;
