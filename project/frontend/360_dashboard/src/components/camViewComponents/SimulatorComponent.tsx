@@ -176,6 +176,16 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
     {direction:"",passedNum:0},
   ]);*/
 
+  const [onSimuStart, setOnSimuStart] = React.useState(false);
+
+  const onClickSimuStart = (): void => {
+    setOnSimuStart(true);
+  };
+
+  const onSimuStartReset = (): void => {
+    setOnSimuStart(false);
+  }
+
   function updatePassedVehicles(pVehicles: Array<{
     direction: string,
     passedNum: number,
@@ -212,6 +222,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
           onClickTLStop={onClickTLStop}
           tlCombStates={tlCombStates}
           // tlStates2={tlStates2}
+          onClickSimuStart={onClickSimuStart}
           keyValue="2"
         />
         <ContentBlock>
@@ -225,6 +236,8 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 <SimContainer>
                   <Simulator
                     isLiveFeed={false}
+                    onSimuClickUpdata={onSimuStartReset}
+                    onSimuStart={onSimuStart}
                     isSmartTL={false}
                     tl_mode={tlMode}
                     toggles={toggles}
@@ -265,6 +278,8 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                   <Simulator
                     isLiveFeed={false}
                     isSmartTL={true}
+                    onSimuStart={onSimuStart}
+                    onSimuClickUpdata={onSimuStartReset}
                     tl_mode={tlMode}
                     toggles={toggles}
                     tlStop={tlStop}

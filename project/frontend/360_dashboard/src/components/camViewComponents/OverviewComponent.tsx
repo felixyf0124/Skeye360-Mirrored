@@ -184,7 +184,7 @@ const skeyeStyles = {
 class OverviewComponent extends React.Component<
   SimProps & StateProps & DispatchProps,
   { tlMode: number }
-> {
+  > {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { camera_id, getExistingCamera } = this.props;
@@ -221,12 +221,14 @@ class OverviewComponent extends React.Component<
               <text style={skeyeStyles.Header}>Default Traffic Light</text>
               <SimContainer>
                 <Simulator
-                  isLiveFeed={false}
+                  isLiveFeed={true}
                   isSmartTL={false}
+                  onSimuStart={true}
                   tl_mode={tlMode}
+                  onSimuClickUpdata={() => { }}
                   toggles={toggles}
                   tlStop={tlStop}
-                  updatePassedVehicles={()=>{}}
+                  updatePassedVehicles={() => { }}
                   onTLUpdate={onTLUpdate}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
@@ -273,13 +275,15 @@ class OverviewComponent extends React.Component<
               <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
               <SimContainer>
                 <Simulator
-                  isLiveFeed={false}
+                  isLiveFeed={true}
                   isSmartTL={false}
+                  onSimuStart={true}
                   tl_mode={tlMode}
+                  onSimuClickUpdata={() => { }}
                   toggles={toggles}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
-                  updatePassedVehicles={()=>{}}
+                  updatePassedVehicles={() => { }}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
                 />

@@ -226,6 +226,8 @@ class LiveComponent extends React.Component<
                   isSmartTL={false}
                   tl_mode={tlMode}
                   toggles={toggles}
+                  onSimuStart={true}
+                  onSimuClickUpdata={() => { }}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
                   updatePassedVehicles={() => { }}

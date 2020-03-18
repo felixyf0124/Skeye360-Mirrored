@@ -28,6 +28,7 @@ interface SimProps {
   tlMode: number;
   onChangeTLMode: any;
   onClickTLStop: any;
+  onClickSimuStart: any;
   tlCombStates: Array<{
     direction: string;
     state: string;
@@ -185,7 +186,7 @@ const skeyeStyles = {
 // Creates and returns a component for the sidebar that will be used in the simulator
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const {
-    isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, tlCombStates, keyValue,
+    isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, onClickSimuStart, tlCombStates, keyValue,
   } = props;
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
@@ -412,7 +413,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
             <DivVertical>
-              <Button variant="contained" style={skeyeStyles.ButtonStyle}>
+              <Button variant="contained" style={skeyeStyles.ButtonStyle} onClick={onClickSimuStart}>
                 <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon} />
                 START
               </Button>

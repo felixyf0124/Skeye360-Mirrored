@@ -28,6 +28,8 @@ interface Props {
   isLiveFeed: boolean;
   isSmartTL: boolean;
   tl_mode: any;
+  onSimuStart: any;
+  onSimuClickUpdata: any;
   toggles: any;
   tlStop: boolean;
   onTLUpdate: any;
@@ -1014,57 +1016,60 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       if (this.dataReady[this.caseId].imported && this.dataReady[this.caseId].sorted) {
         this.caseData = this.trafficData[this.caseId];
       }
+      const { onSimuStart, onSimuClickUpdata } = this.props;
+      if (onSimuStart) {
+        // make up car loop
+        if (this.caseData.length !== 0) {
+          const period = this.caseData[this.caseData.length - 1].tLine - this.caseData[0].tLine;
+          this.deltaT = Date.now() % period;
+          // initial atIndex for makeup cars
+          if (this.atIndex < 0) {
+            this.atIndex = 0;
 
-      // make up car loop
-      if (this.caseData.length !== 0) {
-        const period = this.caseData[this.caseData.length - 1].tLine - this.caseData[0].tLine;
-        this.deltaT = Date.now() % period;
-        // initial atIndex for makeup cars
-        if (this.atIndex < 0) {
-          this.atIndex = 0;
+            let currentCD = 0;
+            for (let i = 0; i < this.caseData.length; i += 1) {
+              currentCD = this.caseData[this.atIndex].tLine - this.caseData[0].tLine;
+              if (this.deltaT > currentCD) {
+                this.atIndex += 1;
+              }
+            }
+          } else if (this.atIndex < this.caseData.length) {
+            let currentCD = 0;
+            for (let i = 0; i < this.atIndex + 1; i += 1) {
+              currentCD = this.caseData[this.atIndex].tLine - this.caseData[0].tLine;
+            }
+            const { isLiveFeed } = this.props;
+            let maxVSpeed;
+            if (isLiveFeed) {
+              maxVSpeed = this.laneW * 0.028;
+            } else {
+              maxVSpeed = this.laneW * 0.028 * 6;
+            }
 
-          let currentCD = 0;
-          for (let i = 0; i < this.caseData.length; i += 1) {
-            currentCD = this.caseData[this.atIndex].tLine - this.caseData[0].tLine;
             if (this.deltaT > currentCD) {
+              const dirct = {
+                from: this.caseData[this.atIndex].from,
+                to: this.caseData[this.atIndex].to,
+              };
+
+              const laneP = tsData.dirAdapter(dirct.from, dirct.to);
+
+              // east
+              this.roadIntersection.addNewVehicleV2(
+                laneP.getLaneId(),
+                laneP.getSectionId(),
+                maxVSpeed,
+              );
+
               this.atIndex += 1;
             }
+          } else if (!this.toggleGroup[0].state) {
+            this.atIndex = -1;
           }
-        } else if (this.atIndex < this.caseData.length) {
-          let currentCD = 0;
-          for (let i = 0; i < this.atIndex + 1; i += 1) {
-            currentCD = this.caseData[this.atIndex].tLine - this.caseData[0].tLine;
-          }
-          const { isLiveFeed } = this.props;
-          let maxVSpeed;
-          if (isLiveFeed) {
-            maxVSpeed = this.laneW * 0.028;
-          } else {
-            maxVSpeed = this.laneW * 0.028 * 6;
-          }
-
-          if (this.deltaT > currentCD) {
-            const dirct = {
-              from: this.caseData[this.atIndex].from,
-              to: this.caseData[this.atIndex].to,
-            };
-
-            const laneP = tsData.dirAdapter(dirct.from, dirct.to);
-
-            // east
-            this.roadIntersection.addNewVehicleV2(
-              laneP.getLaneId(),
-              laneP.getSectionId(),
-              maxVSpeed,
-            );
-
-            this.atIndex += 1;
-          }
-        } else if (!this.toggleGroup[0].state) {
-          this.atIndex = -1;
         }
+      } else {
+        onSimuClickUpdata();
       }
-
       this.numberOfCars = this.roadIntersection.getVehiclesNum();
     }
 
