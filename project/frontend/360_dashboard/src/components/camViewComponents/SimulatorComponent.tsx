@@ -186,6 +186,21 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
       passedVehicles = pVehicles;
     }
   };
+
+  let ttlPassedCars = 0;
+  ttlPassedCars +=
+    passedVehicles[0].passedNum +
+    passedVehicles[1].passedNum +
+    passedVehicles[2].passedNum +
+    passedVehicles[3].passedNum;
+
+  let ttlPassedCars2 = 0;
+  ttlPassedCars2 +=
+    passedVehicles2[0].passedNum +
+    passedVehicles2[1].passedNum +
+    passedVehicles2[2].passedNum +
+    passedVehicles2[3].passedNum;
+
   return (
     <div>
       <text style={skeyeStyles.Title}>Simulation of Traffic</text>
@@ -225,7 +240,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                   <CarPassedBox>
                     <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
                     {/* To insert real data */}
-                    <text style={skeyeStyles.NumCar}>50</text>
+                    <text style={skeyeStyles.NumCar}>{ttlPassedCars}</text>
                   </CarPassedBox>
                 </div>
               </VerticalBlock>
@@ -264,7 +279,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                   <CarPassedBox>
                     <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
                     {/* To insert real data */}
-                    <text style={skeyeStyles.NumCar}>60</text>
+                    <text style={skeyeStyles.NumCar}>{ttlPassedCars}</text>
                   </CarPassedBox>
                 </div>
               </VerticalBlock>
