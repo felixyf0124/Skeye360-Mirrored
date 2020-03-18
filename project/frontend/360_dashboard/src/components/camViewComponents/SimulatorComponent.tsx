@@ -279,7 +279,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                   <CarPassedBox>
                     <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
                     {/* To insert real data */}
-                    <text style={skeyeStyles.NumCar}>{ttlPassedCars}</text>
+                    <text style={skeyeStyles.NumCar}>{ttlPassedCars2}</text>
                   </CarPassedBox>
                 </div>
               </VerticalBlock>

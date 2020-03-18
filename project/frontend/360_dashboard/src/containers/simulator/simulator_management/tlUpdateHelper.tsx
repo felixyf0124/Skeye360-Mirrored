@@ -128,12 +128,33 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
         const totalT = cSetting.green + cSetting.yellow;
         if (totalT !== data[i].t) {
           doUpdate = true;
-          const index = intersection.getTrafficLightIndex(data[i].id);
-          if (index < noRedTL.index) {
-            counter += (data[i].t - totalT);
+          //tl2 depends on tl0
+          if (data[i].id === 0 && intersection.getTrafficLightState(2) !== "red") {
+            doUpdate = false;
           }
-          // console.log(data[i].id);
-          intersection.setTrafficLightTime(data[i].id, data[i].t);
+          //tl2 depends on tl1
+          if (data[i].id === 1 && intersection.getTrafficLightState(2) !== "red") {
+            doUpdate = false;
+          }
+          //tl4 depends on tl1
+          if (data[i].id === 1 && intersection.getTrafficLightState(4) !== "red") {
+            doUpdate = false;
+          }
+
+          //tl4 depends on tl3
+          if (data[i].id === 3 && intersection.getTrafficLightState(4) !== "red") {
+            doUpdate = false;
+          }
+          if (doUpdate) {
+
+            const index = intersection.getTrafficLightIndex(data[i].id);
+            if (index < noRedTL.index) {
+              counter += (data[i].t - totalT);
+            }
+            // console.log(data[i].id);
+            intersection.setTrafficLightTime(data[i].id, data[i].t);
+          }
+
         }
       }
     }
