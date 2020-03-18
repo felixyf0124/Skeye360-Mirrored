@@ -163,6 +163,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
   tlDefaultDistribution: { tl0: number; tl1: number; tl3: number };
 
+  tlArimaDistribution: { tl0: number; tl1: number; tl3: number };
+
   atArimaH: number;
 
   constructor(props: any) {
@@ -310,6 +312,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     ];
 
     this.tlDefaultDistribution = { tl0: 40, tl1: 15, tl3: 35 };
+    this.tlArimaDistribution = { tl0: 40, tl1: 15, tl3: 35 };
 
     this.roadIntersection.addNewTrafficLight(
       trafficLightBindingData[0],
@@ -579,7 +582,9 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       tlUpdateHelper.updateCaseRealTime(dataPack, this.roadIntersection);
     }
   }
-
+  /**
+   * get Arima Traffic light Update
+   */
   async getArimaTLUpdate(): Promise<void> {
     const currentH = new Date().getHours();
 
@@ -597,6 +602,62 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
     tlUpdateHelper.updateCaseArima(this.tlDefaultDistribution, this.roadIntersection);
   }
+
+  /**
+   * get smart Traffic light update
+   * arima + realtime
+   */
+  async getSmartTLUpdate(): Promise<void> {
+    const currentH = new Date().getHours();
+
+    if (currentH !== this.atArimaH) {
+      const ip = '168.62.183.116:8000';
+
+      const arimaDistribution = await tsData.tlArimaData(ip);
+
+      if (arimaDistribution !== undefined) {
+        this.tlArimaDistribution = arimaDistribution;
+        this.atArimaH = currentH;
+      }
+
+    }
+    // tlUpdateHelper.updateCaseArima(this.tlArimaDistribution, this.roadIntersection);
+
+    const { camera_url } = this.props;
+    const realTimeDistribution = await tsData.tlRealTimeData(camera_url);
+    if (realTimeDistribution !== undefined
+      && realTimeDistribution['east-west'] !== undefined) {
+      const data0 = {
+        id: 0,
+        t: realTimeDistribution['east-west'],
+      };
+      const data1 = {
+        id: 1,
+        t: realTimeDistribution.left,
+      };
+      const data3 = {
+        id: 3,
+        t: realTimeDistribution['north-south'],
+      };
+      const dataPack = new Array<any>();
+      dataPack.push(data0);
+      dataPack.push(data1);
+      dataPack.push(data3);
+
+      if (dataPack !== undefined && this.tlArimaDistribution.tl0 !== undefined) {
+        let distribution = {
+          tl0: tsData.getOptimizedTime(this.tlArimaDistribution.tl0, parseFloat(dataPack[0].t.toString())),
+          tl1: tsData.getOptimizedTime(this.tlArimaDistribution.tl1, parseFloat(dataPack[0].t.toString())),
+          tl3: tsData.getOptimizedTime(this.tlArimaDistribution.tl3, parseFloat(dataPack[0].t.toString())),
+        };
+
+        tlUpdateHelper.updateCaseOptimized(distribution, this.roadIntersection);
+      }
+
+    }
+
+  }
+
 
   /**
    * get certain toggle state by @param toggleName:string
@@ -998,6 +1059,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
       this.numberOfCars = this.roadIntersection.getVehiclesNum();
     }
+
     if (!this.toggleGroup[0].state) {
       // if(this.roadG.parent !== null){
       //   this.mapContainer.addChild(this.roadG);
@@ -1060,7 +1122,11 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           // new smart mode type
           // arima + realtime
           this.tlCaseId = 4;
-
+          const tlQue = this.roadIntersection.getTrafficLightQueue();
+          for (let i = 0; i < tlQue.length; i += 1) {
+            this.roadIntersection.deForceTLState(i);
+          }
+          this.getSmartTLUpdate();
         }
       }
 
