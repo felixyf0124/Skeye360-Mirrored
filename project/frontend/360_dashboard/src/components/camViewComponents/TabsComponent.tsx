@@ -322,7 +322,8 @@ const TabsComponents = (): JSX.Element => {
 
           {/* this is a setting button. Due to UI modificationm we no need them for our design*/}
           {/* KEEP this in case the stakeholder needs it */}
-          {/* {value === 0 || value === 3
+          {/* value === 0 is for Live Feed tab and value === 3 is for Simulator tab */}
+          {value === 0
             ? (
               <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
                 <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
@@ -330,7 +331,7 @@ const TabsComponents = (): JSX.Element => {
                 </button>
               </BoxSettingsMenu>
             )
-            : null } */}
+            : null }
 
         </Tabs>
       </AppBar>
@@ -367,7 +368,7 @@ const TabsComponents = (): JSX.Element => {
       
       {/* The following is the setting toggle form  */}
       {/* KEEP this in case the stakeholder need it */}
-      {/* <Modal
+      <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
@@ -386,7 +387,7 @@ const TabsComponents = (): JSX.Element => {
                 <text id="transition-modal-title" style={skeyeStyles.Title}>Settings for the simulators</text> */}
                 {/* <text style={ skeyeStyles.Message }>
                 All your preferences for the simulators will be saved here</text> */}
-              {/* </BoxMain>
+              </BoxMain>
               <BoxHorizontal>
                 <BoxSettings>
                   <text style={skeyeStyles.SettingsHeader}>Enable video feed</text>
@@ -451,15 +452,15 @@ const TabsComponents = (): JSX.Element => {
                       )}
                       label=""
                       style={skeyeStyles.ControlLabel}
-                    /> */}
+                    />
                     
-                  {/* </BoxSettings>
+                  </BoxSettings>
                 </FormGroup>
               </BoxHorizontal>
             </HorizontalFlexBox>
           </div>
         </Fade>
-      </Modal> */}
+      </Modal>
     </div>
   );
 };
