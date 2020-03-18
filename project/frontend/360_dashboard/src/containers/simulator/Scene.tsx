@@ -698,7 +698,12 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.isCPAnimating = true;
     // this.updateControlPanelDisplayState(0);
     this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
-    this.drawRoad();
+    const { isLiveFeed } = this.props;
+    if (isLiveFeed && this.toggleGroup[0].state) {
+      this.drawRoadBackGround();
+    } else {
+      this.drawRoad();
+    }
     this.renderObjects();
     this.drawLaneArea();
     this.app.ticker.add(this.animation);
@@ -755,7 +760,12 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       // this.laneW = 0.06 * Math.min(this.windowW, this.windowH);
 
       this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
-      this.drawRoad();
+      const { isLiveFeed } = this.props;
+      if (isLiveFeed && this.toggleGroup[0].state) {
+        this.drawRoadBackGround();
+      } else {
+        this.drawRoad();
+      }
       this.roadIntersection.updateVehiclePosV2();
 
       this.laneAreaContainer.x = -this.coordinateOffset.x;
@@ -784,7 +794,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
   };
 
   /**
-   * draw road
+   * draw road with traffic light
    */
   drawRoad = (): void => {
     this.roadG.clear();
@@ -852,6 +862,56 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       }
     }
   };
+
+  /** draw live feed back ground */
+  drawRoadBackGround = (): void => {
+    this.roadG.clear();
+    this.roadG.removeChildren();
+    const sections = this.roadIntersection.getRoadSections();
+
+    const h = this.laneW * 0.3 * this.windowW;
+    const w = this.laneW * 0.3 * this.windowW;
+    for (let i = 0; i < sections.length; i += 1) {
+      const laneIn = sections[i].getLaneIn();
+      const laneOut = sections[i].getLaneOut();
+      let color = 0xffffff;
+      for (let j = 0; j < laneIn.length; j += 1) {
+        const lane = laneIn[j];
+
+        // Sets the color of the traffic lights depending on the status
+        color = parseInt(Scene.getColor('skeye_blue'), 16);
+
+        const direction = ts.tsNormalize(lane.getHead().minus(lane.getTail()));
+        const division = ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4) + 1;
+
+        // this will draw from head to tail
+        for (let k = 0; k < division; k += 1) {
+
+          for (let k = 1; k < division; k += 1) {
+            const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k))
+              .multiply(this.windowW);
+            const graphicObj = this.drawTriangle(topVertex, h, w, direction, color);
+            this.roadG.addChild(graphicObj);
+          }
+        }
+      }
+
+      for (let j = 0; j < laneOut.length; j += 1) {
+        const lane = laneOut[j];
+        // Sets the color of the traffic lights depending on the status
+        const color2 = parseInt(Scene.getColor('skeye_blue'), 16);
+
+        const direction = ts.tsNormalize(lane.getHead().minus(lane.getTail()));
+        const division = ts.tsLength(lane.getHead().minus(lane.getTail())) / (this.laneW * 0.4) + 1;
+        for (let k = 1; k < division; k += 1) {
+          const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k))
+            .multiply(this.windowW);
+          const graphicObj = this.drawTriangle(topVertex, h, w, direction, color2);
+          this.roadG.addChild(graphicObj);
+        }
+      }
+    }
+  }
 
   /**
    * render objects
@@ -1077,14 +1137,19 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       // if(this.roadG.parent !== null){
       //   this.mapContainer.addChild(this.roadG);
       // }
-
       if (this.isUpdate()) {
         this.roadIntersection.tlCountingDown();
-        this.drawRoad();
+        const { isLiveFeed } = this.props;
+        if (isLiveFeed && this.toggleGroup[0].state) {
+          this.drawRoadBackGround();
+        } else {
+          this.drawRoad();
+        }
       }
     } else {
-      this.roadG.clear();
-      this.roadG.removeChildren();
+      // this.roadG.clear();
+      // this.roadG.removeChildren();
+      // this.drawRoadBackGround();
     }
     this.renderObjects();
     // this.displayPlaneContainer.removeChildren();
