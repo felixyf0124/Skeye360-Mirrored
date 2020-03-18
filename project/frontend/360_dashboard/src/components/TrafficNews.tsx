@@ -9,6 +9,11 @@ import { connect } from 'react-redux';
 import { SKEYE_WHITE } from '../css/custom';
 import { isStaff } from '../contexts/authentication';
 import { RootState } from '../reducers/rootReducer';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 // MapQuest API is used to retrieve traffic news
 // https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -77,6 +82,26 @@ const filterList = (user_id: number, assigned_user_id: number): boolean => {
   return false;
 };
 
+// Function that filters traffic news by oldest start time
+const sortOldest = (incidents: any) => {
+  return incidents.sort((a: any, b: any) => (a.startTime > b.startTime) ? 1: -1);
+}
+
+// Function that sorts traffic by most recent
+const sortNewest = (incidents: any) => {
+  return incidents.sort((a: any, b: any) => (a.startTime < b.startTime) ? 1: -1);
+}
+
+// Function that sorts traffic by highest severity first
+const sortByHighSeverity = (incidents: any) => {
+  return incidents.sort((a: any, b: any) => (a.severity < b.severity) ? 1 : -1);
+}
+
+// Function that sorts traffic news by lowest severity first
+const sortByLowSeverity = (incidents: any) => {
+  return incidents.sort((a: any, b: any) => (a.severity > b.severity) ? 1 : -1); 
+}
+
 // Styled Components
 const OuterContainer = styled.div`
   overflow: scroll;
@@ -86,6 +111,7 @@ const OuterContainer = styled.div`
 
 const OuterDiv = styled.div`
   color: ${SKEYE_WHITE};
+  margin-top: 5rem;
   display: flex;
   flex-direction: column;
 `;
@@ -156,9 +182,7 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
 
     // Function that fetches all traffic news of a city
     const staffNewsFetch = (): void => {
-      fetch(
-        `http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=45.7047897,-73.47429525,45.41007553,-73.97290173`,
-      )
+      fetch(`http://www.mapquestapi.com/traffic/v2/incidents?key=${API_KEY}&boundingBox=45.7047897,-73.47429525,45.41007553,-73.97290173`)
         .then((results) => results.json())
         .then((data) => {
           this.setState({
@@ -179,6 +203,12 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
 
   render(): JSX.Element {
     const { isLoaded, incidents } = this.state;
+
+    const sortIncs = sortNewest(incidents);
+    
+    sortIncs.map((sortInc: any) => {
+      console.log(sortInc.startTime);
+    })
     if (!isLoaded) {
       return (
         <Loader>
@@ -190,6 +220,17 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     /* eslint-disable @typescript-eslint/explicit-function-return-type */
     return (
       <OuterDiv>
+        <FormControl>
+        <Select>
+          <MenuItem value="" disabled>
+            Placeholder
+          </MenuItem>
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+        <FormHelperText>Placeholder</FormHelperText>
+      </FormControl>
         <OuterContainer>
           {incidents.map(
             (incident: {
