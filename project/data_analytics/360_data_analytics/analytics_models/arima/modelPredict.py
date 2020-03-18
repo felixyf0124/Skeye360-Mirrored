@@ -31,13 +31,13 @@ class modelPredict:
 
         # Hardcoded datetime, to be removed when having the data flowing into the database every day
         startTrainDate = '2020-01-01 00:00:00.000'
-        endTrainDate = '2020-01-25 23:00:00.000'
+        endTrainDate = '2020-01-18 23:00:00.000'
         startTestDate = '2020-01-26 00:00:00.000'
-        endTrainDate = '2020-01-26 23:00:00.000'
+        endTestDate = '2020-01-26 23:00:00.000'
 
         # Divide the data into train and test sets
         train = dataf.loc[startTrainDate : endTrainDate]
-        test = dataf.loc[startTestDate : endTrainDate]
+        test = dataf.loc[startTestDate : endTestDate]
 
         forecastArimaObj = forecastArima()
         forecast = forecastArimaObj.forecastWithArima(train, test)
@@ -52,7 +52,7 @@ class modelPredict:
         # Plot the test values on the graph, as well as the forecast/prediction values obtained in the code above
         future_forecast = panda.DataFrame(forecast, index=test.index, columns=['Prediction'])
         panda.concat([test, future_forecast], axis=1).plot()
-        matplot.show()
+        # matplot.show()
 
         # Create a list of date for the prediction based on the date got from the test set
         listOfDate = list()
