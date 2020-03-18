@@ -298,6 +298,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             </table>
           </ExpansionPanelDetails>
         </ExpansionPanel>
+        <Divider classes={{ root: classes.dividerWhite }} />
       </div>);
     }
 
@@ -380,26 +381,6 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           ? <Divider classes={{ root: classes.dividerWhite }} />
           : null}
         {tlDoCompare(isLiveFeed)}
-        {/* For the Traffic Light Comparison */}
-        {/* <ExpansionPanel style={skeyeStyles.Expansion}>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
-            aria-controls="panel2a-content"
-            id="panel2a-header"
-          >
-            <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
-            <Divider classes={{ root: classes.dividerGrey }} />
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
-            <table style={{ display: 'block' }}>
-              <tbody className={classes.tlTable}>
-                {tlDiv}
-              </tbody>
-            </table>
-          </ExpansionPanelDetails>
-        </ExpansionPanel> */}
-
-        <Divider classes={{ root: classes.dividerWhite }} />
 
         {/* For the simulator options */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
