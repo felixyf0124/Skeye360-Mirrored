@@ -1035,7 +1035,14 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           for (let i = 0; i < this.atIndex + 1; i += 1) {
             currentCD = this.caseData[this.atIndex].tLine - this.caseData[0].tLine;
           }
-          const maxVSpeed = this.laneW * 0.028;
+          const { isLiveFeed } = this.props;
+          let maxVSpeed;
+          if (isLiveFeed) {
+            maxVSpeed = this.laneW * 0.028;
+          } else {
+            maxVSpeed = this.laneW * 0.028 * 6;
+          }
+
           if (this.deltaT > currentCD) {
             const dirct = {
               from: this.caseData[this.atIndex].from,
@@ -1043,11 +1050,12 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             };
 
             const laneP = tsData.dirAdapter(dirct.from, dirct.to);
+
             // east
             this.roadIntersection.addNewVehicleV2(
               laneP.getLaneId(),
               laneP.getSectionId(),
-              maxVSpeed * 8,
+              maxVSpeed,
             );
 
             this.atIndex += 1;
