@@ -47,10 +47,10 @@ async function loadMovingAverage(
         current_mavg.push(movingAverageData[COUNT + 2].count);
         current_mavg.push(movingAverageData[COUNT + 3].count);
       } else {
-        current_mavg.push(movingAverageData[COUNT * 4 - 4].count);
-        current_mavg.push(movingAverageData[COUNT * 4 - 3].count);
-        current_mavg.push(movingAverageData[COUNT * 4 - 2].count);
-        current_mavg.push(movingAverageData[COUNT * 4 - 1].count);
+        current_mavg.push(movingAverageData[COUNT * 4].count);
+        current_mavg.push(movingAverageData[COUNT * 4 + 1].count);
+        current_mavg.push(movingAverageData[COUNT * 4 + 2].count);
+        current_mavg.push(movingAverageData[COUNT * 4 + 3].count);
       }
     }
   } catch (error) {
@@ -128,7 +128,7 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
           },
           labels: {
             formatter(max: number): string {
-              if (max % 4 === 0) {
+              if ((max / 2) % 4 === 0) {
                 return String(`${max / 4}:00`);
               }
               return '';
@@ -166,7 +166,7 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
           data: [],
         },
         {
-          name: 'Moving Average',
+          name: 'Current Traffic',
           data: [],
         },
       ],

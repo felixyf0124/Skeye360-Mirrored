@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* eslint-disable  @typescript-eslint/camelcase */
 import React from 'react';
 import Chart from 'react-apexcharts';
 import ApexCharts from 'apexcharts';
@@ -10,29 +9,27 @@ import { SKEYE_BLACK, SKEYE_WHITE } from '../../css/custom';
 // https://apexcharts.com/react-chart-demos/line-charts/realtime/
 // https://github.com/apexcharts/apexcharts.js/blob/master/samples/react/line/realtime.html
 
-let current_bar: any[] = [];
-let COUNT = 0;
-
 // Logic to be implemented:
 // Check the current time, if the minutes are equal to 00,
 // then retrieve the new data for the current hour.
 // Check if the values in the graph are populated or not
 async function loadDataToChart(
-  primaryDirection: countData[],
-  secondaryMovingAverageData: countData[],
-): Promise<void> {
+  primaryDirection: any,
+  secondaryMovingAverageData: any,
+  prev_current_mavg: countData[],
+): Promise<any> {
   const date = new Date();
+  let current_bar = prev_current_mavg;
   try {
     // Populate the moving average displayed on graph one by one
-    if (COUNT < date.getHours()) {
-      current_bar = [];
-      // populate the bar chart
-      current_bar.push(primaryDirection[COUNT * 4].count);
-      current_bar.push(secondaryMovingAverageData[COUNT * 4].count);
-    }
+    current_bar = [];
+    // populate the bar chart
+    current_bar.push(primaryDirection[date.getHours() * 4 - 1].count);
+    current_bar.push(secondaryMovingAverageData[date.getHours() * 4 - 1].count);
   } catch (error) {
     console.log(error);
   }
+  return current_bar;
 }
 
 // Component external parameters
@@ -99,7 +96,7 @@ class BarChartRT extends React.Component<{} & Props, ChartState> {
       },
       barSeries: [
         {
-          data: current_bar[0],
+          data: [],
         },
       ],
     };
@@ -109,21 +106,29 @@ class BarChartRT extends React.Component<{} & Props, ChartState> {
   public async componentDidMount(): Promise<void> {
     const { chartID, primaryDirection, secondaryDirection } = this.props;
     // const date = new Date().toISOString().split('T')[0];
-    const time = new Date();
     const date = '2020-01-31';
     const primaryMovingAverageData = await fetchCount('MA', primaryDirection, date);
     const secondaryMovingAverageData = await fetchCount('MA', secondaryDirection, date);
-    window.setInterval((): any => {
+
+    let current_bar: any[] = [];
+
+    window.setInterval(async (): Promise<any> => {
       // Data gets populated here
       // Datasets current_arima and current_mavg get updated here
-      loadDataToChart(primaryMovingAverageData, secondaryMovingAverageData);
+      // console.log(current_bar);
+      console.log(primaryMovingAverageData);
+      console.log(secondaryMovingAverageData);
+      current_bar = await loadDataToChart(
+        primaryMovingAverageData,
+        secondaryMovingAverageData,
+        current_bar,
+      );
 
       // Execute the realtime function here, using the two below data arrays as datasets
       // ApexCharts.exec() takes in chart ID, method, and data as parameters
       ApexCharts.exec(chartID, 'updateSeries', [{ data: current_bar }]);
       // eslint-disable-next-line no-plusplus
-      COUNT++;
-    }, 1000 / time.getHours());
+    }, 1000);
   }
 
   /* eslint-disable react/destructuring-assignment */

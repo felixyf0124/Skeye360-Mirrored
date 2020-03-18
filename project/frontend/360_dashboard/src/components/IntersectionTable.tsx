@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     paddingLeft: '1rem',
-    paddingTop: '5rem',
   },
   table: {
     minWidth: 650,

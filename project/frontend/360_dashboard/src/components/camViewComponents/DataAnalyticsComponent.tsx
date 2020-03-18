@@ -21,7 +21,7 @@ const Body = styled.div`
 
 const MapContainer = styled.div`
   position: relative;
-  width: 20vw;
+  width: 35vw;
   margin: 1rem;
 `;
 
@@ -37,7 +37,6 @@ const SmallImgContainer = styled.img`
   background-color: ${SKEYE_BLACK};
   width: 25vw;
   position: relative;
-  margin: 1rem;
 `;
 
 // Bigger chart on the bottom right side chart.
@@ -157,10 +156,10 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
               <SmallContainer>
                 <BarChartRT
                   chartID="barChart-NS-EW"
-                  title="Moving Average North-South VS East-West"
+                  title="Current Traffic North-South VS East-West"
                   categories={['North-South', 'East-West']}
                   primaryDirection="ns"
-                  secondaryDirection="ew"
+                  secondaryDirection="nw"
                 />
               </SmallContainer>
             </ChartVerticalFlexBox>
@@ -168,14 +167,14 @@ class DataAnalyticsComponent extends React.Component<StateProps & DispatchProps>
               <SmallContainer>
                 <RealTimeLineChart
                   chartID="lineNS"
-                  title="Prediction vs Moving Average in North-South"
+                  title="Prediction vs Current Traffic in North-South"
                   countDirection="ns"
                 />
               </SmallContainer>
               <SmallContainer>
                 <RealTimeLineChart
                   chartID="lineEW"
-                  title="Prediction vs Moving Average in East-West"
+                  title="Prediction vs Current Traffic in East-West"
                   countDirection="nw"
                 />
               </SmallContainer>

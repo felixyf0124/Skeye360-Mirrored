@@ -127,7 +127,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
           error: 'Invalid credentials.',
         };
       }
-      localStorage.setItem('user', JSON.stringify(data));
+      // localStorage.setItem('user', JSON.stringify(data));
       return {
         ...state,
         sessionToken: `${data.username}-${data.user_id}`,
@@ -166,6 +166,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
     }
     case LOGOUT: {
       localStorage.removeItem('user');
+      localStorage.removeItem('root');
       return {
         sessionToken: initState.sessionToken,
         username: initState.username,
