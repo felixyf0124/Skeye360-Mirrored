@@ -100,17 +100,25 @@ class BarChartDirections extends React.Component<{} & Props, ChartState> {
     ApexCharts.exec(chartID, 'updateSeries', [{ data: [] }]);
   }
 
+  /**
+   * update
+   * @param prevProps
+   */
   public async componentDidUpdate(prevProps: any): Promise<void> {
-    const { chartID, directionData } = this.props;
-    let data;
-    if (directionData !== prevProps.directionData) {
-      data = await loadDataToChart([
-        directionData[0].passedNum,
-        directionData[1].passedNum,
-        directionData[2].passedNum,
-        directionData[3].passedNum,
-      ]);
-      ApexCharts.exec(chartID, 'updateSeries', [{ data }]);
+    const now = new Date();
+    if (now.getTime() % 500 < 30) {
+      const { chartID, directionData } = this.props;
+
+      let data;
+      if (directionData !== prevProps.directionData) {
+        data = await loadDataToChart([
+          directionData[0].passedNum,
+          directionData[1].passedNum,
+          directionData[2].passedNum,
+          directionData[3].passedNum,
+        ]);
+        ApexCharts.exec(chartID, 'updateSeries', [{ data }]);
+      }
     }
   }
 

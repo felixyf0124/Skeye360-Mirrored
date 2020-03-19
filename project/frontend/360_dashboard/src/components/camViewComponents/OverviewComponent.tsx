@@ -225,14 +225,10 @@ class OverviewComponent extends React.Component<
                   isSmartTL={false}
                   onSimuStart
                   tl_mode={tlMode}
-                  onSimuClickUpdata={(): any => {
-                    // nothing
-                  }}
+                  onSimuClickUpdata={null}
                   toggles={toggles}
                   tlStop={tlStop}
-                  updatePassedVehicles={(): any => {
-                    // nothing
-                  }}
+                  updatePassedVehicles={null}
                   onTLUpdate={onTLUpdate}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
@@ -283,15 +279,11 @@ class OverviewComponent extends React.Component<
                   isSmartTL={false}
                   onSimuStart
                   tl_mode={tlMode}
-                  onSimuClickUpdata={(): any => {
-                    // nothing
-                  }}
+                  onSimuClickUpdata={null}
                   toggles={toggles}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
-                  updatePassedVehicles={(): any => {
-                    // nothing
-                  }}
+                  updatePassedVehicles={null}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
                 />

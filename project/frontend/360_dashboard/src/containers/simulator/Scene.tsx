@@ -6,6 +6,7 @@ import React from 'react';
 // pixi.js-legacy for VM
 import * as PIXI from 'pixi.js';
 import { connect } from 'react-redux';
+// import { stringify } from 'querystring';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry';
 import Vec2 from './simulator_management/vec2';
@@ -587,18 +588,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
   }
 
   /**
-   * old function for only retrieve total car number from video feed directly
-   */
-  async getNumberOfCars(): Promise<number> {
-    const { camera_url } = this.props;
-    const rawData = (await DataFromCamera.getDataFromCamera(camera_url)) || '';
-    const numberCars = await DataFromCamera.getNumberOfCars(rawData);
-    // console.log(`Number of cars : ${numberCars}`);
-    this.numberOfCars = numberCars;
-    return numberCars;
-  }
-
-  /**
    * retrieve pedestrian case tl data
    */
   async getPedestrianTLInfo(): Promise<void> {
@@ -714,6 +703,18 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         tlUpdateHelper.updateCaseOptimized(distribution, this.roadIntersection);
       }
     }
+  }
+
+  /**
+   * old function for only retrieve total car number from video feed directly
+   */
+  async getNumberOfCars(): Promise<number> {
+    const { camera_url } = this.props;
+    const rawData = (await DataFromCamera.getDataFromCamera(camera_url)) || '';
+    const numberCars = await DataFromCamera.getNumberOfCars(rawData);
+    // console.log(`Number of cars : ${numberCars}`);
+    this.numberOfCars = numberCars;
+    return numberCars;
   }
 
   /**
@@ -1093,6 +1094,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
               passedNum: passedCars[i].passedNum,
             });
             break;
+          default:
         }
       }
 
@@ -1158,7 +1160,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             if (isLiveFeed) {
               maxVSpeed = this.laneW * 0.028;
             } else {
-              maxVSpeed = this.laneW * 0.028 * 6;
+              maxVSpeed = this.laneW * 0.028 * 3.5;
             }
 
             if (this.deltaT > currentCD) {

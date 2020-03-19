@@ -117,9 +117,6 @@ const skeyeStyles = {
     fontWeight: 600,
     height: 35,
   },
-  Block: {
-    // margin
-  },
 };
 
 let passedVehicles = [
@@ -205,7 +202,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
           <VerticalBlock>
             <InnerDivHorizon>
-              <VerticalBlock style={skeyeStyles.Block}>
+              <VerticalBlock>
                 <div style={{ height: '15px' }}>
                   <text style={skeyeStyles.Header}>Default Traffic Light</text>
                 </div>

@@ -227,14 +227,10 @@ class LiveComponent extends React.Component<
                   tl_mode={tlMode}
                   toggles={toggles}
                   onSimuStart
-                  onSimuClickUpdata={(): any => {
-                    // nothing
-                  }}
+                  onSimuClickUpdata={null}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
-                  updatePassedVehicles={(): any => {
-                    // nothing
-                  }}
+                  updatePassedVehicles={null}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
                 />

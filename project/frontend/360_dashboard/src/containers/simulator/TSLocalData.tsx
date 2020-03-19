@@ -338,8 +338,7 @@ export async function tlArimaData(url: string): Promise<any> {
   }
 
   // const tFormat = currentY + "-" + currentM + "-" + currentDate+"T"+currentH+":00:00Z";
-  /* eslint-disable no-useless-concat */
-  const tFormat = `${currentY}-` + '01' + '-' + '31' + `T${currentH}:00:00Z`;
+  const tFormat = `${currentY}-01-31T${currentH}:00:00Z`;
   // console.log(tFormat);
   const data = await retrieve(url, 'api/count', `?count_type=arima&time=${tFormat}`);
   const filtered = new Array<any>();
@@ -426,6 +425,6 @@ export function getOptimizedTime(arimaT: number, realTimeT: number): number {
   const deltaT = Math.abs(arimaT - realTimeT);
   /* eslint-disable no-mixed-operators */
   const finalT = ((Math.max(arimaT, realTimeT) * deltaT) / Math.max(arimaT, realTimeT))
-    + ((Math.min(arimaT, realTimeT) * (Math.min(arimaT, realTimeT)) / Math.max(arimaT, realTimeT)));
+    + ((Math.min(arimaT, realTimeT) * Math.min(arimaT, realTimeT)) / Math.max(arimaT, realTimeT));
   return finalT;
 }
