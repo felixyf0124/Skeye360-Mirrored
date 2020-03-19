@@ -70,7 +70,7 @@ const useStyles = makeStyles(() => createStyles({
     maxHeight: '37.5vw',
   },
   titleBox: {
-    backgroundColor: SKEYE_LIGHT_DARK_GREY,
+    backgroundColor: SKEYE_LIGHT_BLACK,
     marginRight: 10,
     marginTop: 10,
     marginBottom: 10,
