@@ -67,7 +67,7 @@ const useStyles = makeStyles(() => createStyles({
     marginTop: 10,
     paddingTop: 8,
     overflowY: 'scroll',
-    maxHeight: '45vw',
+    maxHeight: '37.5vw',
   },
   titleBox: {
     backgroundColor: SKEYE_LIGHT_DARK_GREY,
@@ -263,12 +263,6 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         </tr>
         <tr className={classes.tlTRow}>
           <td style={tlData} colSpan={4}>
-            {/* {tlCombState.direction === 's<=>n,s->w,s->s,n->e,n->w' ? directions[0]
-              : tlCombState.direction === 'e->e,e->s,w->w,w->n' ? directions[1]
-                : tlCombState.direction === 'e<=>w' ? directions[2]
-                  : tlCombState.direction === 'e->n,w->s' ? directions[3]
-                    : tlCombState.direction === 's->e' ? directions[4]
-                      : null} */}
             {((): any => {
               switch (tlCombState.direction) {
                 case 's<=>n,s->w,s->s,n->e,n->w': return directions[0];
