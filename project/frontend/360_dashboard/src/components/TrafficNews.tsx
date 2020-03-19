@@ -11,9 +11,12 @@ import { isStaff } from '../contexts/authentication';
 import { RootState } from '../reducers/rootReducer';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+//import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import NativeSelect from '@material-ui/core/NativeSelect'; 
+import FormControl from '@material-ui/core/FormControl';
+import { InputLabel } from '@material-ui/core';
 
 // MapQuest API is used to retrieve traffic news
 // https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -84,23 +87,29 @@ const filterList = (user_id: number, assigned_user_id: number): boolean => {
 
 // Function that filters traffic news by oldest start time
 const sortOldest = (incidents: any) => {
+  console.log('old')
   return incidents.sort((a: any, b: any) => (a.startTime > b.startTime) ? 1: -1);
 }
 
 // Function that sorts traffic by most recent
 const sortNewest = (incidents: any) => {
+  console.log('new')
   return incidents.sort((a: any, b: any) => (a.startTime < b.startTime) ? 1: -1);
 }
 
 // Function that sorts traffic by highest severity first
 const sortByHighSeverity = (incidents: any) => {
+  console.log('high')
   return incidents.sort((a: any, b: any) => (a.severity < b.severity) ? 1 : -1);
 }
 
 // Function that sorts traffic news by lowest severity first
 const sortByLowSeverity = (incidents: any) => {
+  console.log('low')
   return incidents.sort((a: any, b: any) => (a.severity > b.severity) ? 1 : -1); 
 }
+
+
 
 // Styled Components
 const OuterContainer = styled.div`
@@ -204,11 +213,11 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
   render(): JSX.Element {
     const { isLoaded, incidents } = this.state;
 
-    const sortIncs = sortNewest(incidents);
-    
-    sortIncs.map((sortInc: any) => {
-      console.log(sortInc.startTime);
-    })
+    const handleChange = (event: any): void => {
+      event.preventDefault();
+      this.setState({...this.state, [event.target.name]: event.target.value});
+    }
+
     if (!isLoaded) {
       return (
         <Loader>
@@ -220,17 +229,26 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     /* eslint-disable @typescript-eslint/explicit-function-return-type */
     return (
       <OuterDiv>
-        <FormControl>
-        <Select>
-          <MenuItem value="" disabled>
-            Placeholder
+        <FormControl variant="outlined">
+          <InputLabel id="demo-simple-select-outlined-label">Sort</InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={incidents}
+              onChange={handleChange}
+              label="Sort"
+              name="incidents"
+        >
+          <MenuItem value="">
+            <em>Sort by</em>
           </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem key={1} value={sortByHighSeverity(incidents)}>High Severity</MenuItem>
+          <MenuItem key={2} value={sortByLowSeverity(incidents)}>Low Severity</MenuItem>
+          <MenuItem key={3} value={sortNewest(incidents)}>Newest</MenuItem>
+          <MenuItem key={4} value={sortOldest(incidents)}>Oldest</MenuItem>
         </Select>
-        <FormHelperText>Placeholder</FormHelperText>
       </FormControl>
+      
         <OuterContainer>
           {incidents.map(
             (incident: {
