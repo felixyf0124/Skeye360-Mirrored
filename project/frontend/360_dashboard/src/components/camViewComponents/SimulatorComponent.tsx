@@ -140,15 +140,6 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
     tlCombStates, onTLUpdate,
   } = props;
 
-  // const [passedVehicles, setPassedVehicles] = React.useState(props);
-
-  /* const [passedVehicles2, setPassedVehicles2] = React.useState([
-    {direction:"",passedNum:0},
-    {direction:"",passedNum:0},
-    {direction:"",passedNum:0},
-    {direction:"",passedNum:0},
-  ]); */
-
   const [onSimuStart, setOnSimuStart] = React.useState(false);
 
   const onClickSimuStart = (): void => {
@@ -186,7 +177,6 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
   return (
     <div>
-      {/* <text style={skeyeStyles.Title}>Simulation of Traffic</text> */}
       <HorizontalFlexBox>
         <SidebarComponent
           isLiveFeed={false}
