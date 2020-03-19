@@ -9,8 +9,8 @@ import IntSect from './RoadIntersection';
 export function updateCasePedestrian(TStampData: {
   current: { ew: number; ns: number }; last: { ew: number; ns: number };
 },
-  intersection: IntSect,
-  forceHelper: {
+intersection: IntSect,
+forceHelper: {
     startT: number; delay: number; fPeriod: number;
     isForced: boolean;
   }): void {
@@ -164,7 +164,7 @@ export function updateCaseRealTime_Legacy(data: any, intersection: IntSect): voi
       const id2 = 2;
       const totalT2 = intersection.getTrafficLight(0)
         .getTotalTime() + intersection.getTrafficLight(1)
-          .getTotalTime();
+        .getTotalTime();
       intersection.setTLOverlapOffset(id2, -totalT2);
       intersection.setTrafficLightTime(id2, totalT2);
 
@@ -172,7 +172,7 @@ export function updateCaseRealTime_Legacy(data: any, intersection: IntSect): voi
       const id4 = 4;
       const totalT4 = intersection.getTrafficLight(1)
         .getTotalTime() + intersection.getTrafficLight(3)
-          .getTotalTime();
+        .getTotalTime();
       intersection.setTLOverlapOffset(id4, -totalT4);
       intersection.setTrafficLightTime(id4, totalT4);
 
@@ -233,9 +233,9 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
     // let counterOffset = Date.now()-counter;
     for (let i = 0; i < data.length; i += 1) {
       if (noRedTL.id !== data[i].id) {
-        const cSetting = intersection
-          .getTrafficLightSetting(data[i].id);
-        const totalT = cSetting.green + cSetting.yellow;
+        // const cSetting = intersection
+        //   .getTrafficLightSetting(data[i].id);
+        // const totalT = cSetting.green + cSetting.yellow;
         doUpdate = true;
         // tl2 depends on tl0
         if (data[i].id === 0 && intersection.getTrafficLightState(2) !== 'red') {
@@ -266,7 +266,7 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
       const id2 = 2;
       const totalT2 = intersection.getTrafficLight(0)
         .getTotalTime() + intersection.getTrafficLight(1)
-          .getTotalTime();
+        .getTotalTime();
       intersection.setTLOverlapOffset(id2, -totalT2);
       intersection.setTrafficLightTime(id2, totalT2);
 
@@ -274,7 +274,7 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
       const id4 = 4;
       const totalT4 = intersection.getTrafficLight(1)
         .getTotalTime() + intersection.getTrafficLight(3)
-          .getTotalTime();
+        .getTotalTime();
       intersection.setTLOverlapOffset(id4, -totalT4);
       intersection.setTrafficLightTime(id4, totalT4);
 
