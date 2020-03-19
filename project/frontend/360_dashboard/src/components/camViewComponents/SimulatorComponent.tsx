@@ -30,11 +30,8 @@ interface SimProps {
 const HorizontalFlexBox = styled.div`
   display: flex;
   flex-direction: row;
-  // flex-wrap: nowrap;
   justify-content: space-around;
   align-items: space-around;
-  // align-content: stretch;
-  // padding: 0px;
 `;
 
 // Single Container Horizontal
@@ -79,7 +76,6 @@ const CarPassedBox = styled.div`
 `;
 
 const BarChartContainer = styled.div`
-  // height: 60vh;
   width: 27vw;
   position: relative;
   margin: 2rem;
@@ -184,7 +180,6 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
           onChangeTLMode={onChangeTLMode}
           onClickTLStop={onClickTLStop}
           tlCombStates={tlCombStates}
-          // tlStates2={tlStates2}
           onClickSimuStart={onClickSimuStart}
           keyValue="2"
         />
@@ -237,7 +232,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
             <InnerDivHorizon>
               <VerticalBlock>
                 <div style={{ height: '15px' }}>
-                  <text style={skeyeStyles.Header}>Smart Traffic Light</text>
+                  <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
                 </div>
                 <SimContainer>
                   <Simulator

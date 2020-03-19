@@ -288,7 +288,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           <td style={tlData}>{tlCombState.totalTime}</td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>Smart</td>
+          <td style={tlData}>Optimized</td>
           <td style={tlDataCol2}>{tlCombState.state2}</td>
           <td style={tlDataCol2}>{tlCombState.countDown2}</td>
           <td style={tlData}>{tlCombState.totalTime2}</td>
