@@ -16,7 +16,7 @@ export function loadSectionAreas(): Array<Array<Vec2>> {
   const sectionArea3 = new Array<Vec2>();
   const sectionArea4 = new Array<Vec2>();
 
-  // north
+  // south
   sectionArea1.push(new Vec2(0.32044198895027626, 0.8322017458777885));
   sectionArea1.push(new Vec2(0.4718232044198895, 0.9194956353055286));
   sectionArea1.push(new Vec2(0.44419889502762433, 1.0));
@@ -28,9 +28,10 @@ export function loadSectionAreas(): Array<Array<Vec2>> {
   sectionArea2.push(new Vec2(0.0, 0.41125121241513096));
   sectionArea2.push(new Vec2(0.0, 0.3375363724539282));
 
-  // south
+  // north
   sectionArea3.push(new Vec2(0.6408839779005525, 0.3123181377303589));
   sectionArea3.push(new Vec2(0.5767955801104973, 0.2987390882638215));
+  sectionArea3.push(new Vec2(0.5904025795061979, 0.21486115236115236));
   sectionArea3.push(new Vec2(0.5900552486187846, 0.11251212415130941));
   sectionArea3.push(new Vec2(0.6696132596685083, 0.09311348205625607));
   sectionArea3.push(new Vec2(0.6983425414364641, 0.18040737148399613));
@@ -73,10 +74,11 @@ export function saveSectionAreas(): void {
  */
 export function loadCarGenData(path: any): Array<any> {
   const array = new Array<{
-      id: number;
-      tLine: number;
-      from: string;
-      to: string;}>();
+    id: number;
+    tLine: number;
+    from: string;
+    to: string;
+  }>();
 
   d3.csv(path, (d: any) => {
     //  console.log(d);
@@ -114,7 +116,7 @@ export function loadCarGenData(path: any): Array<any> {
  * sort csv data based on timeLine @param tLine
  * @param unsorted
  */
-export function sortDataByTime(unsorted: Array<any>): void{
+export function sortDataByTime(unsorted: Array<any>): void {
   unsorted.sort((a: any, b: any) => a.tLine - b.tLine);
 }
 
@@ -206,13 +208,17 @@ export function dirAdapter(from: string, to: string): LanePointer {
  * @param url
  * @param endP
  */
-export async function retrieve(url: string, endP: string): Promise<any> {
+export async function retrieve(url: string, endP: string, filter?: string): Promise<any> {
+  let filterValue = '';
+  if (filter !== undefined) {
+    filterValue = filter;
+  }
   const result = await
-  fetch(`http://${url}/${endP}/`)
+  fetch(`http://${url}/${endP}/${filterValue}`)
     .then((response) => response.json())
-    // .then(result => console.log(result))
+  // .then(result => console.log(result))
     .catch((error) => `ERROR:${error}`);
-    // .catch((error) => console.log('error', error));
+  // .catch((error) => console.log('error', error));
   // console.log(result);
   return result;
 }
@@ -232,7 +238,7 @@ export async function tlPedestrianData(url: string): Promise<any> {
  * @param url
  */
 export async function tlRealTimeData(url: string): Promise<any> {
-  const data = await retrieve(url, 'timers');
+  const data = await retrieve(url, 'timers', '');
   return data;
 }
 
@@ -250,7 +256,7 @@ export function tlArimaDataAdapter(filtered: any): Array<any> {
     // e->w
     // w->s
     if (filtered[i].dir === 'ew'
-    || filtered[i].dir === 'we') {
+      || filtered[i].dir === 'we') {
       tl0.count += filtered[i].count;
     }
 
@@ -258,9 +264,9 @@ export function tlArimaDataAdapter(filtered: any): Array<any> {
     // e->e e->s
     // w->w w->n
     if (filtered[i].dir === 'ee'
-    || filtered[i].dir === 'es'
-    || filtered[i].dir === 'ww'
-    || filtered[i].dir === 'wn') {
+      || filtered[i].dir === 'es'
+      || filtered[i].dir === 'ww'
+      || filtered[i].dir === 'wn') {
       tl1.count += filtered[i].count;
     }
 
@@ -268,11 +274,11 @@ export function tlArimaDataAdapter(filtered: any): Array<any> {
     // s->w s->n s->s
     // n->e n->s n->w
     if (filtered[i].dir === 'sw'
-    || filtered[i].dir === 'sn'
-    || filtered[i].dir === 'ss'
-    || filtered[i].dir === 'ne'
-    || filtered[i].dir === 'ns'
-    || filtered[i].dir === 'nw') {
+      || filtered[i].dir === 'sn'
+      || filtered[i].dir === 'ss'
+      || filtered[i].dir === 'ne'
+      || filtered[i].dir === 'ns'
+      || filtered[i].dir === 'nw') {
       tl3.count += filtered[i].count;
     }
   }
@@ -303,7 +309,7 @@ export function tlArimaDataToTimeDistribution(adaptedData: any): any {
     * (adaptedData[1].count / tCount);
 
   const tl3 = tTime
-  * (adaptedData[2].count / tCount);
+    * (adaptedData[2].count / tCount);
 
   const tlTDistrib = { tl0, tl1, tl3 };
   return tlTDistrib;
@@ -315,24 +321,39 @@ export function tlArimaDataToTimeDistribution(adaptedData: any): any {
  * @param url
  */
 export async function tlArimaData(url: string): Promise<any> {
-  const data = await retrieve(url, 'api/count');
-  const currentH = new Date().getHours();
-  // console.log(new Date());
+  // console.log(new Date().toString());
+  let currentH = new Date().getHours().toString();
+  const currentY = new Date().getFullYear().toString();
+  let currentM = (new Date().getMonth() + 1).toString();
+  let currentDate = new Date().getDate().toString();
+
+  if (currentH.length === 1) {
+    currentH = `0${currentH}`;
+  }
+  if (currentM.length === 1) {
+    currentM = `0${currentM}`;
+  }
+  if (currentDate.length === 1) {
+    currentDate = `0${currentDate}`;
+  }
+
+  // const tFormat = currentY + "-" + currentM + "-" + currentDate+"T"+currentH+":00:00Z";
+  const tFormat = `${currentY}-01-31T${currentH}:00:00Z`;
+  // console.log(tFormat);
+  const data = await retrieve(url, 'api/count', `?count_type=arima&time=${tFormat}`);
   const filtered = new Array<any>();
   if (data !== undefined && data.length !== 0) {
     for (let i = 0; i < data.length; i += 1) {
       // eg. "time": "2020-01-26T00:00:00Z",
-      const hh = parseInt(data[i].time.substring(11, 13), 10);
+      // const hh = parseInt(data[i].time.substring(11, 13), 10);
       // console.log( hh);
 
-      if (hh === currentH) {
-        const cData = {
-          dir: data[i].count_direction,
-          count: data[i].count,
-        };
+      const cData = {
+        dir: data[i].count_direction,
+        count: data[i].count,
+      };
 
-        filtered.push(cData);
-      }
+      filtered.push(cData);
     }
     // console.log(filtered);
   }
@@ -387,4 +408,23 @@ export function getDirs(tlId: number): string {
   }
 
   return '';
+}
+
+/**
+ * calculate optimized time for traffic light
+ * equation:
+ *
+ *  |a - r|                 |a - r|
+ * ---------   *  a + (1 - --------- ) * r
+ *  max(a,r)                max(a,r)
+ *
+ * @param arimaT
+ * @param realTimeT
+ */
+export function getOptimizedTime(arimaT: number, realTimeT: number): number {
+  const deltaT = Math.abs(arimaT - realTimeT);
+  /* eslint-disable no-mixed-operators */
+  const finalT = ((Math.max(arimaT, realTimeT) * deltaT) / Math.max(arimaT, realTimeT))
+    + ((Math.min(arimaT, realTimeT) * Math.min(arimaT, realTimeT)) / Math.max(arimaT, realTimeT));
+  return finalT;
 }

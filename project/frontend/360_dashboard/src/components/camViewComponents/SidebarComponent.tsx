@@ -24,9 +24,11 @@ import {
 } from '../../css/custom';
 
 interface SimProps {
+  isLiveFeed: boolean;
   tlMode: number;
   onChangeTLMode: any;
   onClickTLStop: any;
+  onClickSimuStart: any;
   tlCombStates: Array<{
     direction: string;
     state: string;
@@ -65,10 +67,10 @@ const useStyles = makeStyles(() => createStyles({
     marginTop: 10,
     paddingTop: 8,
     overflowY: 'scroll',
-    maxHeight: '45vw',
+    maxHeight: '37.5vw',
   },
   titleBox: {
-    backgroundColor: SKEYE_LIGHT_DARK_GREY,
+    backgroundColor: SKEYE_LIGHT_BLACK,
     marginRight: 10,
     marginTop: 10,
     marginBottom: 10,
@@ -79,13 +81,13 @@ const useStyles = makeStyles(() => createStyles({
     backgroundColor: SKEYE_WHITE,
     marginRight: 10,
     marginTop: 10,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   dividerGrey: {
     backgroundColor: SKEYE_GREY,
     marginRight: 10,
-    marginTop: 8,
-    marginBottom: 8,
+    marginTop: 2,
+    marginBottom: 2,
   },
   listItem: {
     marginTop: -8,
@@ -97,13 +99,11 @@ const useStyles = makeStyles(() => createStyles({
   tlTable: {
     marginTop: 0,
     marginBottom: 0,
-    // width: `100%`,
     display: 'block',
   },
 
   tlTRow: {
     margin: 'auto',
-    // width: `100%`,
     display: 'table-row',
   },
   '@global': {
@@ -179,15 +179,21 @@ const skeyeStyles = {
     color: SKEYE_WHITE,
     fontSize: 12,
   },
+  TrafficLightComp: {
+    display: 'table-row-group',
+    // marginTop: '-10vh',
+  },
 };
 
 // Creates and returns a component for the sidebar that will be used in the simulator
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const {
-    tlMode, onChangeTLMode, onClickTLStop, tlCombStates, keyValue,
+    isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, onClickSimuStart, tlCombStates, keyValue,
   } = props;
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
+
+  const directions = ['North & South', 'East & West - Left Turn', 'East & West', 'East & West - Right Turn', 'South - Right Turn'];
 
   // OnClick it will the variable to the selected item (Arima, Pedestrians or Real-Time)
   const onClickListItem = (
@@ -200,16 +206,24 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
 
   const tlDiv = tlCombStates.map((
     tlCombState:
-    {
-      direction: string;
-      state: string;
-      state2: string;
-      countDown: string;
-      countDown2: string;
-      totalTime: string; // G+Y
-      totalTime2: string; // G+Y
-    },
+      {
+        directionName: string;
+        direction: string;
+        state: string;
+        state2: string;
+        countDown: string;
+        countDown2: string;
+        totalTime: string; // G+Y
+        totalTime2: string; // G+Y
+      },
   ) => {
+    const tlDataHeader = {
+      color: SKEYE_WHITE,
+      fontSize: '0.9em',
+      textDecorationLine: 'underline',
+      margin: 'auto',
+      display: 'table-cell',
+    };
     const tlData = {
       color: SKEYE_WHITE,
       fontSize: '0.8em',
@@ -245,33 +259,80 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
       tlDataCol2.color = '#f5c842';
     }
     return (
-      <div key={tlCombState.direction} style={{ display: 'table-row-group' }}>
+      <div key={tlCombState.direction} style={skeyeStyles.TrafficLightComp}>
         <tr className={classes.tlTRow}>
-          <td style={tlData}>Direction</td>
-          <td style={tlData} colSpan={3}>{tlCombState.direction}</td>
+          <th style={tlDataHeader}>Direction:</th>
+        </tr>
+        <tr className={classes.tlTRow}>
+          <td style={tlData} colSpan={4}>
+            {((): any => {
+              switch (tlCombState.direction) {
+                case 's<=>n,s->w,s->s,n->e,n->w': return directions[0];
+                case 'e->e,e->s,w->w,w->n': return directions[1];
+                case 'e<=>w': return directions[2];
+                case 'e->n,w->s': return directions[3];
+                case 's->e': return directions[4];
+                default: return null;
+              }
+            })()}
+          </td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
           <td style={tlData}>Type</td>
-          <td style={tlData}>State</td>
+          {/* <td style={tlData}>State</td> */}
           <td style={tlData}>Count</td>
           <td style={tlData}>Time</td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>non-smart</td>
-          <td style={tlDataCol}>{tlCombState.state}</td>
+          <td style={tlData}>Default</td>
+          {/* <td style={tlDataCol}>{tlCombState.state}</td> */}
           <td style={tlDataCol}>{tlCombState.countDown}</td>
           <td style={tlData}>{tlCombState.totalTime}</td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>smart</td>
-          <td style={tlDataCol2}>{tlCombState.state2}</td>
+          <td style={tlData}>Optimized</td>
+          {/* <td style={tlDataCol2}>{tlCombState.state2}</td> */}
           <td style={tlDataCol2}>{tlCombState.countDown2}</td>
           <td style={tlData}>{tlCombState.totalTime2}</td>
         </tr>
-
+        <tr>
+          <td colSpan={4}>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </td>
+        </tr>
       </div>
     );
   });
+
+  const tlDoCompare = (isLiveFeed: boolean): JSX.Element => {
+    if (isLiveFeed) {
+      return (<div />);
+    }
+    return (
+      <div>
+        {/* For the Traffic Light Comparison */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
+            aria-controls="panel2a-content"
+            id="panel2a-header"
+          >
+            <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+            <table style={{ display: 'block' }}>
+              <tbody className={classes.tlTable}>
+                {tlDiv}
+              </tbody>
+            </table>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <Divider classes={{ root: classes.dividerWhite }} />
+      </div>
+    );
+  };
+
 
   // Returns the UI for the sidebar
   return (
@@ -285,7 +346,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
 
         {/* For the modes options */}
         {/* {console.log(keyPassed)} */}
-        { keyValue === '1'
+        {keyValue === '1'
           ? (
             <ExpansionPanel style={skeyeStyles.Expansion}>
               <ExpansionPanelSummary
@@ -343,32 +404,12 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )
-          : null }
+          : null}
 
         {keyValue === '1'
           ? <Divider classes={{ root: classes.dividerWhite }} />
           : null}
-
-        {/* For the Traffic Light Comparison */}
-        <ExpansionPanel style={skeyeStyles.Expansion}>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
-            aria-controls="panel2a-content"
-            id="panel2a-header"
-          >
-            <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
-            <Divider classes={{ root: classes.dividerGrey }} />
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
-            <table style={{ display: 'block' }}>
-              <tbody className={classes.tlTable}>
-                {tlDiv}
-              </tbody>
-            </table>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-
-        <Divider classes={{ root: classes.dividerWhite }} />
+        {tlDoCompare(isLiveFeed)}
 
         {/* For the simulator options */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
@@ -382,7 +423,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
             <DivVertical>
-              <Button variant="contained" style={skeyeStyles.ButtonStyle}>
+              <Button variant="contained" style={skeyeStyles.ButtonStyle} onClick={onClickSimuStart}>
                 <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon} />
                 START
               </Button>

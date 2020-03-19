@@ -123,7 +123,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: SKEYE_DARK_GREY,
-    width: '94vw',
+    width: '98vw',
   },
   modal: {
     display: 'flex',
@@ -193,6 +193,9 @@ export const skeyeStyles = {
   ControlLabel: {
     marginLeft: 60,
     marginBottom: 42,
+  },
+  Box: {
+    marginTop: 60,
   },
 };
 
@@ -320,13 +323,19 @@ const TabsComponents = (): JSX.Element => {
           <Tab label="Camera" {...props(2)} style={skeyeStyles.TabOnly} />
           <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
 
-          {value === 0 || value === 3 ? (
-            <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
-              <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
-                <SettingsIcon />
-              </button>
-            </BoxSettingsMenu>
-          ) : null}
+          {/* this is a setting button. Due to UI modificationm we no need them for our design */}
+          {/* KEEP this in case the stakeholder needs it */}
+          {/* value === 0 is for Live Feed tab and value === 3 is for Simulator tab */}
+          {value === 0
+            ? (
+              <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
+                <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
+                  <SettingsIcon />
+                </button>
+              </BoxSettingsMenu>
+            )
+            : null }
+
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -360,6 +369,8 @@ const TabsComponents = (): JSX.Element => {
         />
       </TabPanel>
 
+      {/* The following is the setting toggle form  */}
+      {/* KEEP this in case the stakeholder need it */}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -376,13 +387,12 @@ const TabsComponents = (): JSX.Element => {
           <div className={classes.paper}>
             <HorizontalFlexBox>
               <BoxMain>
-                <text id="transition-modal-title" style={skeyeStyles.Title}>
-                  Settings for the simulators
-                </text>
+                <text id="transition-modal-title" style={skeyeStyles.Title}>Settings for the simulators</text>
+                {' '}
                 {/* <text style={ skeyeStyles.Message }>
                 All your preferences for the simulators will be saved here</text> */}
               </BoxMain>
-              <BoxHorizontal>
+              <BoxHorizontal style={skeyeStyles.Box}>
                 <BoxSettings>
                   <text style={skeyeStyles.SettingsHeader}>Enable video feed</text>
                   <text style={skeyeStyles.SettingsHeader}>Enable sampling of video feed</text>
@@ -447,16 +457,7 @@ const TabsComponents = (): JSX.Element => {
                       label=""
                       style={skeyeStyles.ControlLabel}
                     />
-                    {/* Do we need this save button? */}
-                    {/* <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      className={classes.SaveButton}
-                      startIcon={<SaveIcon />}
-                    >
-                      Save
-                    </Button> */}
+
                   </BoxSettings>
                 </FormGroup>
               </BoxHorizontal>
