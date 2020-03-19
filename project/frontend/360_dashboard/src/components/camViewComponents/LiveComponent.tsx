@@ -204,7 +204,7 @@ class LiveComponent extends React.Component<
       <div>
         <HorizontalFlexBox>
           <SidebarComponent
-            isLiveFeed={true}
+            isLiveFeed
             tlMode={tlMode}
             onChangeTLMode={onChangeTLMode}
             onClickTLStop={onClickTLStop}
@@ -222,15 +222,19 @@ class LiveComponent extends React.Component<
               <text style={skeyeStyles.Header}>Simulator with Live Feed</text>
               <SimContainer>
                 <Simulator
-                  isLiveFeed={true}
+                  isLiveFeed
                   isSmartTL={false}
                   tl_mode={tlMode}
                   toggles={toggles}
-                  onSimuStart={true}
-                  onSimuClickUpdata={() => { }}
+                  onSimuStart
+                  onSimuClickUpdata={(): any => {
+                    // nothing
+                  }}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
-                  updatePassedVehicles={() => { }}
+                  updatePassedVehicles={(): any => {
+                    // nothing
+                  }}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
                 />

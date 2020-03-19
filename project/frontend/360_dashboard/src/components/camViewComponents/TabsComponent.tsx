@@ -320,7 +320,7 @@ const TabsComponents = (): JSX.Element => {
           <Tab label="Camera" {...props(2)} style={skeyeStyles.TabOnly} />
           <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
 
-          {/* this is a setting button. Due to UI modificationm we no need them for our design*/}
+          {/* this is a setting button. Due to UI modificationm we no need them for our design */}
           {/* KEEP this in case the stakeholder needs it */}
           {/* value === 0 is for Live Feed tab and value === 3 is for Simulator tab */}
           {value === 0
@@ -365,7 +365,7 @@ const TabsComponents = (): JSX.Element => {
           key="2"
         />
       </TabPanel>
-      
+
       {/* The following is the setting toggle form  */}
       {/* KEEP this in case the stakeholder need it */}
       <Modal
@@ -384,7 +384,8 @@ const TabsComponents = (): JSX.Element => {
           <div className={classes.paper}>
             <HorizontalFlexBox>
               <BoxMain>
-                <text id="transition-modal-title" style={skeyeStyles.Title}>Settings for the simulators</text> */}
+                <text id="transition-modal-title" style={skeyeStyles.Title}>Settings for the simulators</text>
+                {' '}
                 {/* <text style={ skeyeStyles.Message }>
                 All your preferences for the simulators will be saved here</text> */}
               </BoxMain>
@@ -453,7 +454,7 @@ const TabsComponents = (): JSX.Element => {
                       label=""
                       style={skeyeStyles.ControlLabel}
                     />
-                    
+
                   </BoxSettings>
                 </FormGroup>
               </BoxHorizontal>

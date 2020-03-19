@@ -191,7 +191,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
 
-  const directions = ["North & South", "East & West - Left Turn", "East & West", "East & West - Right Turn", "South - Right Turn"]
+  const directions = ['North & South', 'East & West - Left Turn', 'East & West', 'East & West - Right Turn', 'South - Right Turn'];
 
   // OnClick it will the variable to the selected item (Arima, Pedestrians or Real-Time)
   const onClickListItem = (
@@ -262,12 +262,24 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           <th style={tlDataHeader}>Direction:</th>
         </tr>
         <tr className={classes.tlTRow}>
-          <td style={tlData} colSpan={4}>{tlCombState.direction == "s<=>n,s->w,s->s,n->e,n->w" ? directions[0] :
-                                          tlCombState.direction == "e->e,e->s,w->w,w->n" ? directions[1] :
-                                          tlCombState.direction == "e<=>w" ? directions[2] :
-                                          tlCombState.direction == "e->n,w->s" ? directions[3] :
-                                          tlCombState.direction == "s->e" ? directions[4] :
-                                          null}</td>
+          <td style={tlData} colSpan={4}>
+            {/* {tlCombState.direction === 's<=>n,s->w,s->s,n->e,n->w' ? directions[0]
+              : tlCombState.direction === 'e->e,e->s,w->w,w->n' ? directions[1]
+                : tlCombState.direction === 'e<=>w' ? directions[2]
+                  : tlCombState.direction === 'e->n,w->s' ? directions[3]
+                    : tlCombState.direction === 's->e' ? directions[4]
+                      : null} */}
+            {((): any => {
+              switch (tlCombState.direction) {
+                case 's<=>n,s->w,s->s,n->e,n->w': return directions[0];
+                case 'e->e,e->s,w->w,w->n': return directions[1];
+                case 'e<=>w': return directions[2];
+                case 'e->n,w->s': return directions[3];
+                case 's->e': return directions[4];
+                default: return null;
+              }
+            })()}
+          </td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
           <td style={tlData}>Type</td>
@@ -287,16 +299,17 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           <td style={tlDataCol2}>{tlCombState.countDown2}</td>
           <td style={tlData}>{tlCombState.totalTime2}</td>
         </tr>
-        <br/>
+        <br />
       </div>
     );
   });
 
   const tlDoCompare = (isLiveFeed: boolean): JSX.Element => {
     if (isLiveFeed) {
-      return (<div></div>);
-    } else {
-      return (<div>
+      return (<div />);
+    }
+    return (
+      <div>
         {/* For the Traffic Light Comparison */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
@@ -316,9 +329,8 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <Divider classes={{ root: classes.dividerWhite }} />
-      </div>);
-    }
-
+      </div>
+    );
   };
 
 

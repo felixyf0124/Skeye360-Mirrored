@@ -209,15 +209,15 @@ export function dirAdapter(from: string, to: string): LanePointer {
  * @param endP
  */
 export async function retrieve(url: string, endP: string, filter?: string): Promise<any> {
-  let filterValue = "";
-  if (filter != undefined) {
+  let filterValue = '';
+  if (filter !== undefined) {
     filterValue = filter;
   }
   const result = await
-    fetch(`http://${url}/${endP}/${filterValue}`)
-      .then((response) => response.json())
-      // .then(result => console.log(result))
-      .catch((error) => `ERROR:${error}`);
+  fetch(`http://${url}/${endP}/${filterValue}`)
+    .then((response) => response.json())
+  // .then(result => console.log(result))
+    .catch((error) => `ERROR:${error}`);
   // .catch((error) => console.log('error', error));
   // console.log(result);
   return result;
@@ -238,7 +238,7 @@ export async function tlPedestrianData(url: string): Promise<any> {
  * @param url
  */
 export async function tlRealTimeData(url: string): Promise<any> {
-  const data = await retrieve(url, 'timers', ``);
+  const data = await retrieve(url, 'timers', '');
   return data;
 }
 
@@ -327,25 +327,26 @@ export async function tlArimaData(url: string): Promise<any> {
   let currentM = (new Date().getMonth() + 1).toString();
   let currentDate = new Date().getDate().toString();
 
-  if (currentH.length == 1) {
-    currentH = "0" + currentH;
+  if (currentH.length === 1) {
+    currentH = `0${currentH}`;
   }
-  if (currentM.length == 1) {
-    currentM = "0" + currentM;
+  if (currentM.length === 1) {
+    currentM = `0${currentM}`;
   }
-  if (currentDate.length == 1) {
-    currentDate = "0" + currentDate;
+  if (currentDate.length === 1) {
+    currentDate = `0${currentDate}`;
   }
 
   // const tFormat = currentY + "-" + currentM + "-" + currentDate+"T"+currentH+":00:00Z";
-  const tFormat = currentY + "-" + "01" + "-" + "31" + "T" + currentH + ":00:00Z";
+  /* eslint-disable no-useless-concat */
+  const tFormat = `${currentY}-` + '01' + '-' + '31' + `T${currentH}:00:00Z`;
   // console.log(tFormat);
-  const data = await retrieve(url, 'api/count', "?count_type=arima&time=" + tFormat);
+  const data = await retrieve(url, 'api/count', `?count_type=arima&time=${tFormat}`);
   const filtered = new Array<any>();
   if (data !== undefined && data.length !== 0) {
     for (let i = 0; i < data.length; i += 1) {
       // eg. "time": "2020-01-26T00:00:00Z",
-      const hh = parseInt(data[i].time.substring(11, 13), 10);
+      // const hh = parseInt(data[i].time.substring(11, 13), 10);
       // console.log( hh);
 
       const cData = {
@@ -413,16 +414,17 @@ export function getDirs(tlId: number): string {
 /**
  * calculate optimized time for traffic light
  * equation:
- * 
+ *
  *  |a - r|                 |a - r|
  * ---------   *  a + (1 - --------- ) * r
  *  max(a,r)                max(a,r)
- * 
- * @param arimaT 
- * @param realTimeT 
+ *
+ * @param arimaT
+ * @param realTimeT
  */
 export function getOptimizedTime(arimaT: number, realTimeT: number): number {
   const deltaT = Math.abs(arimaT - realTimeT);
+  /* eslint-disable no-mixed-operators */
   const finalT = ((Math.max(arimaT, realTimeT) * deltaT) / Math.max(arimaT, realTimeT))
     + ((Math.min(arimaT, realTimeT) * (Math.min(arimaT, realTimeT)) / Math.max(arimaT, realTimeT)));
   return finalT;

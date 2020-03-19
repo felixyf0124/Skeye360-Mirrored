@@ -14,7 +14,7 @@ interface Props {
   chartID: string;
   title: string;
   categories: string[];
-  directionData: Array<{ direction: string, passedNum: number }>;
+  directionData: Array<{ direction: string; passedNum: number }>;
 }
 
 // For every graph, there needs to be options and series
@@ -28,7 +28,6 @@ interface ChartState {
 async function loadDataToChart(
   data: number[],
 ): Promise<any> {
-  const date = new Date();
   let current_bar;
   try {
     // Populate the moving average displayed on graph one by one
@@ -98,20 +97,20 @@ class BarChartDirections extends React.Component<{} & Props, ChartState> {
   // The data gets retrieved here, in future implementations: Use async fetch from the database
   public componentDidMount(): void {
     const { chartID } = this.props;
-    ApexCharts.exec(chartID, 'updateSeries', [{ data: [] }]); //[{ data: current_bar }]);
+    ApexCharts.exec(chartID, 'updateSeries', [{ data: [] }]);
   }
 
   public async componentDidUpdate(prevProps: any): Promise<void> {
     const { chartID, directionData } = this.props;
     let data;
-    if (this.props.directionData !== prevProps.directionData) {
+    if (directionData !== prevProps.directionData) {
       data = await loadDataToChart([
         directionData[0].passedNum,
         directionData[1].passedNum,
         directionData[2].passedNum,
         directionData[3].passedNum,
       ]);
-      ApexCharts.exec(chartID, 'updateSeries', [{ data: data }]);
+      ApexCharts.exec(chartID, 'updateSeries', [{ data }]);
     }
   }
 

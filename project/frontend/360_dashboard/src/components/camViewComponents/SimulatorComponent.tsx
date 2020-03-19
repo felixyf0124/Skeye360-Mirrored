@@ -45,31 +45,6 @@ const InnerDivHorizon = styled.div`
   margin-left: 4.5vw;
 `;
 
-// Single Container Vertical for the first simulator
-const InnerDivVerticalFirstSim = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-`;
-
-// Single Container Vertical for the second simulator
-const InnerDivVerticalSecondSim = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-  margin-left: 20vw;
-`;
-
-// Single Container Vertical
-const InnerDivVertical = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-`;
-
 // Container for the simulator
 const SimContainer = styled.div`
   width: 20vw;
@@ -144,39 +119,38 @@ const skeyeStyles = {
   },
   Block: {
     // margin
-  }
+  },
 };
 
 let passedVehicles = [
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
 ];
 
 let passedVehicles2 = [
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
 ];
 
 const SimulatorComponent = (props: SimProps | any): JSX.Element => {
-
   // eslint-disable-next-line consistent-return
   const {
     tlMode, onChangeTLMode, toggles, tlStop, onClickTLStop,
-    tlCombStates, onTLUpdate, camera_url, intersectionId, intersectionLat, intersectionLng,
+    tlCombStates, onTLUpdate,
   } = props;
 
-  //const [passedVehicles, setPassedVehicles] = React.useState(props);
+  // const [passedVehicles, setPassedVehicles] = React.useState(props);
 
-  /*const [passedVehicles2, setPassedVehicles2] = React.useState([
+  /* const [passedVehicles2, setPassedVehicles2] = React.useState([
     {direction:"",passedNum:0},
     {direction:"",passedNum:0},
     {direction:"",passedNum:0},
     {direction:"",passedNum:0},
-  ]);*/
+  ]); */
 
   const [onSimuStart, setOnSimuStart] = React.useState(false);
 
@@ -186,32 +160,32 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
   const onSimuStartReset = (): void => {
     setOnSimuStart(false);
-  }
+  };
 
   function updatePassedVehicles(pVehicles: Array<{
-    direction: string,
-    passedNum: number,
+    direction: string;
+    passedNum: number;
   }>, isSmartTL: boolean): void {
     if (isSmartTL) {
       passedVehicles2 = pVehicles;
     } else {
       passedVehicles = pVehicles;
     }
-  };
+  }
 
   let ttlPassedCars = 0;
-  ttlPassedCars +=
-    passedVehicles[0].passedNum +
-    passedVehicles[1].passedNum +
-    passedVehicles[2].passedNum +
-    passedVehicles[3].passedNum;
+  ttlPassedCars
+    += passedVehicles[0].passedNum
+    + passedVehicles[1].passedNum
+    + passedVehicles[2].passedNum
+    + passedVehicles[3].passedNum;
 
   let ttlPassedCars2 = 0;
-  ttlPassedCars2 +=
-    passedVehicles2[0].passedNum +
-    passedVehicles2[1].passedNum +
-    passedVehicles2[2].passedNum +
-    passedVehicles2[3].passedNum;
+  ttlPassedCars2
+    += passedVehicles2[0].passedNum
+    + passedVehicles2[1].passedNum
+    + passedVehicles2[2].passedNum
+    + passedVehicles2[3].passedNum;
 
   return (
     <div>
@@ -232,7 +206,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
           <VerticalBlock>
             <InnerDivHorizon>
               <VerticalBlock style={skeyeStyles.Block}>
-                <div style={{ height: `15px` }}>
+                <div style={{ height: '15px' }}>
                   <text style={skeyeStyles.Header}>Default Traffic Light</text>
                 </div>
                 <SimContainer>
@@ -275,13 +249,13 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
             <InnerDivHorizon>
               <VerticalBlock>
-                <div style={{ height: `15px` }}>
+                <div style={{ height: '15px' }}>
                   <text style={skeyeStyles.Header}>Smart Traffic Light</text>
                 </div>
                 <SimContainer>
                   <Simulator
                     isLiveFeed={false}
-                    isSmartTL={true}
+                    isSmartTL
                     onSimuStart={onSimuStart}
                     onSimuClickUpdata={onSimuStartReset}
                     tl_mode={tlMode}
