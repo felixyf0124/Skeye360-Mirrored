@@ -168,12 +168,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Home = (props: StateProps & DispatchProps): JSX.Element => {
   const {
-    districts, isStaff, user_id, users, getDistricts, getUsers,
+    districts, isStaff, user_id, users, getDistricts,
   } = props;
 
   useEffect(() => {
     getDistricts();
-    getUsers();
   });
 
   const classes = useStyles();
