@@ -194,6 +194,9 @@ export const skeyeStyles = {
     marginLeft: 60,
     marginBottom: 42,
   },
+  Box: {
+    marginTop: 60,
+  }
 };
 
 const TabsComponents = (): JSX.Element => {
@@ -389,7 +392,7 @@ const TabsComponents = (): JSX.Element => {
                 {/* <text style={ skeyeStyles.Message }>
                 All your preferences for the simulators will be saved here</text> */}
               </BoxMain>
-              <BoxHorizontal>
+              <BoxHorizontal style={skeyeStyles.Box}>
                 <BoxSettings>
                   <text style={skeyeStyles.SettingsHeader}>Enable video feed</text>
                   <text style={skeyeStyles.SettingsHeader}>Enable sampling of video feed</text>
