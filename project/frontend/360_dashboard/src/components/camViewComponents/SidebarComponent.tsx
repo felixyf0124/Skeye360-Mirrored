@@ -81,13 +81,13 @@ const useStyles = makeStyles(() => createStyles({
     backgroundColor: SKEYE_WHITE,
     marginRight: 10,
     marginTop: 10,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   dividerGrey: {
     backgroundColor: SKEYE_GREY,
     marginRight: 10,
-    marginTop: 8,
-    marginBottom: 8,
+    marginTop: 2,
+    marginBottom: 2,
   },
   listItem: {
     marginTop: -8,
@@ -99,13 +99,11 @@ const useStyles = makeStyles(() => createStyles({
   tlTable: {
     marginTop: 0,
     marginBottom: 0,
-    // width: `100%`,
     display: 'block',
   },
 
   tlTRow: {
     margin: 'auto',
-    // width: `100%`,
     display: 'table-row',
   },
   '@global': {
@@ -180,6 +178,10 @@ const skeyeStyles = {
   TextMessage: {
     color: SKEYE_WHITE,
     fontSize: 12,
+  },
+  TrafficLightComp: {
+    display: 'table-row-group',
+    // marginTop: '-10vh',
   },
 };
 
@@ -257,7 +259,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
       tlDataCol2.color = '#f5c842';
     }
     return (
-      <div key={tlCombState.direction} style={{ display: 'table-row-group' }}>
+      <div key={tlCombState.direction} style={skeyeStyles.TrafficLightComp}>
         <tr className={classes.tlTRow}>
           <th style={tlDataHeader}>Direction:</th>
         </tr>
@@ -277,23 +279,27 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
           <td style={tlData}>Type</td>
-          <td style={tlData}>State</td>
+          {/* <td style={tlData}>State</td> */}
           <td style={tlData}>Count</td>
           <td style={tlData}>Time</td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
           <td style={tlData}>Default</td>
-          <td style={tlDataCol}>{tlCombState.state}</td>
+          {/* <td style={tlDataCol}>{tlCombState.state}</td> */}
           <td style={tlDataCol}>{tlCombState.countDown}</td>
           <td style={tlData}>{tlCombState.totalTime}</td>
         </tr>
         <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
           <td style={tlData}>Optimized</td>
-          <td style={tlDataCol2}>{tlCombState.state2}</td>
+          {/* <td style={tlDataCol2}>{tlCombState.state2}</td> */}
           <td style={tlDataCol2}>{tlCombState.countDown2}</td>
           <td style={tlData}>{tlCombState.totalTime2}</td>
         </tr>
-        <br />
+        <tr>
+          <td colSpan={4}>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </td>
+        </tr>
       </div>
     );
   });

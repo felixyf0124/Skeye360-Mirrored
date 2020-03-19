@@ -196,7 +196,7 @@ export const skeyeStyles = {
   },
   Box: {
     marginTop: 60,
-  }
+  },
 };
 
 const TabsComponents = (): JSX.Element => {

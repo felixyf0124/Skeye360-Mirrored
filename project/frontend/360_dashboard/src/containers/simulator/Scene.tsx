@@ -1265,6 +1265,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       // old cases toggle format
       // no need after the UI changed
       // keep the code in case of reuse
+      /* eslint-disable no-constant-condition */
       if (false) {
         // real-time case
         if (this.tlCaseId === 3) {

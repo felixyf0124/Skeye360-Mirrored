@@ -211,14 +211,12 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 <div>
                   <CarPassedBox>
                     <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
-                    {/* To insert real data */}
                     <text style={skeyeStyles.NumCar}>{ttlPassedCars}</text>
                   </CarPassedBox>
                 </div>
               </VerticalBlock>
               <VerticalBlock>
                 <BarChartContainer>
-                  {/* Add real data into the bar charts */}
                   <BarChartDirections
                     chartID="barChart-default"
                     title="Number Of Car Passed Per Direction"
@@ -254,14 +252,12 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 <div>
                   <CarPassedBox>
                     <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
-                    {/* To insert real data */}
                     <text style={skeyeStyles.NumCar}>{ttlPassedCars2}</text>
                   </CarPassedBox>
                 </div>
               </VerticalBlock>
               <VerticalBlock>
                 <BarChartContainer>
-                  {/* Add real data into the bar charts */}
                   <BarChartDirections
                     chartID="barChart-smart"
                     title="Number Of Car Passed Per Direction"
