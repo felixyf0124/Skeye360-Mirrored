@@ -221,14 +221,14 @@ class OverviewComponent extends React.Component<
               <text style={skeyeStyles.Header}>Default Traffic Light</text>
               <SimContainer>
                 <Simulator
-                  isLiveFeed={true}
+                  isLiveFeed
                   isSmartTL={false}
-                  onSimuStart={true}
+                  onSimuStart
                   tl_mode={tlMode}
-                  onSimuClickUpdata={() => { }}
+                  onSimuClickUpdata={null}
                   toggles={toggles}
                   tlStop={tlStop}
-                  updatePassedVehicles={() => { }}
+                  updatePassedVehicles={null}
                   onTLUpdate={onTLUpdate}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
@@ -275,15 +275,15 @@ class OverviewComponent extends React.Component<
               <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
               <SimContainer>
                 <Simulator
-                  isLiveFeed={true}
+                  isLiveFeed
                   isSmartTL={false}
-                  onSimuStart={true}
+                  onSimuStart
                   tl_mode={tlMode}
-                  onSimuClickUpdata={() => { }}
+                  onSimuClickUpdata={null}
                   toggles={toggles}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
-                  updatePassedVehicles={() => { }}
+                  updatePassedVehicles={null}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
                 />

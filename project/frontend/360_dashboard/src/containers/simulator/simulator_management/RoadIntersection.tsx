@@ -31,7 +31,7 @@ export default class RoadIntersection {
 
   sectionAreas: Array<Array<Vec2>>;
 
-  passedVehicles: Array<{ sectionId: number, passedNum: number }>;
+  passedVehicles: Array<{ sectionId: number; passedNum: number }>;
 
   constructor(id: number, mapCoordinate: Vec2, TLManager?: TrafficLightManager) {
     this.id = id;
@@ -43,7 +43,7 @@ export default class RoadIntersection {
     this.simpleVehicles = new Array<Vehicle>();
     this.vehicleCount = 0;
     this.sectionAreas = new Array<Array<Vec2>>();
-    this.passedVehicles = new Array<{ sectionId: number, passedNum: number }>();
+    this.passedVehicles = new Array<{ sectionId: number; passedNum: number }>();
   }
 
   // Getters
@@ -745,7 +745,7 @@ export default class RoadIntersection {
 
   /**
    * getVehicle index in the array
-   * @param id 
+   * @param id
    */
   getVehicleIndex(id: number): number {
     for (let i = 0; i < this.vehicles.length; i += 1) {
@@ -759,7 +759,7 @@ export default class RoadIntersection {
   /**
    * get passed vehicles of each section
    */
-  getPassedVehicles(): Array<{ sectionId: number, passedNum: number }> {
+  getPassedVehicles(): Array<{ sectionId: number; passedNum: number }> {
     return this.passedVehicles;
   }
 

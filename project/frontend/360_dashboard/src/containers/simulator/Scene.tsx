@@ -6,6 +6,7 @@ import React from 'react';
 // pixi.js-legacy for VM
 import * as PIXI from 'pixi.js';
 import { connect } from 'react-redux';
+// import { stringify } from 'querystring';
 import RoadIntersection from './simulator_management/RoadIntersection';
 import * as ts from './TSGeometry';
 import Vec2 from './simulator_management/vec2';
@@ -20,7 +21,6 @@ import edata1 from './traffic_edge_case.csv';
 import { RootState } from '../../reducers/rootReducer';
 import { logClick } from '../../contexts/LogClicks';
 import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
-import { stringify } from 'querystring';
 
 // import 'pixi-text-input.js';
 
@@ -528,16 +528,64 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     }
   }
 
-  /**
-   * old function for only retrieve total car number from video feed directly
-   */
-  async getNumberOfCars(): Promise<number> {
-    const { camera_url } = this.props;
-    const rawData = (await DataFromCamera.getDataFromCamera(camera_url)) || '';
-    const numberCars = await DataFromCamera.getNumberOfCars(rawData);
-    // console.log(`Number of cars : ${numberCars}`);
-    this.numberOfCars = numberCars;
-    return numberCars;
+
+  // unmount content destroy
+  componentWillUnmount(): void {
+    this.app.ticker.remove(this.animation);
+    this.app.ticker.stop();
+    this.app.destroy();
+    this.btnShowCP.destroy();
+    this.btnStop.destroy();
+    this.backGroundG.destroy();
+    this.mapContainer.destroy();
+    this.objectContainer.destroy();
+    this.controlPanelContainer.destroy();
+    this.displayPlaneContainer.destroy();
+    this.tlDisplayPanelContainer.destroy();
+    this.roadG.destroy();
+    this.trafficLightG.destroy();
+    this.controlPanelG.destroy();
+    delete this.windowW;
+    delete this.windowH;
+    delete this.windowMin;
+    delete this.windowScaleRatio;
+    delete this.roadIntersection;
+    delete this.roadData;
+    delete this.trafficLightData;
+    delete this.laneW;
+    delete this.trafficLightCounterOffset;
+    delete this.trafficLightCounter;
+    delete this.timeLastMoment;
+    delete this.fps;
+    delete this.fpsCounter;
+    delete this.textStyle;
+    delete this.coordinateOffset;
+    delete this.vehicles;
+    delete this.pixiContent;
+    delete this.context;
+    delete this.render;
+    delete this.toggleGroup;
+    delete this.btnGroup;
+    delete this.labelGroup;
+    delete this.dragablePoints;
+    delete this.menuPage;
+    delete this.menuBtns;
+    delete this.objRawData;
+    delete this.laneAreaContainer;
+    delete this.mappingBGContainer;
+    delete this.atArimaH;
+    delete this.atIndex;
+    delete this.caseData;
+    delete this.caseId;
+    delete this.dataReady;
+    delete this.forceHelper;
+    delete this.objRawData;
+    delete this.pAiDataTL;
+    delete this.tlCaseBtnGroup;
+    delete this.tlCaseId;
+    delete this.tlDefaultDistribution;
+    delete this.trafficLightCounter;
+    delete this.trafficLightCounterOffset;
   }
 
   /**
@@ -584,6 +632,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       tlUpdateHelper.updateCaseRealTime(dataPack, this.roadIntersection);
     }
   }
+
   /**
    * get Arima Traffic light Update
    */
@@ -621,7 +670,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.tlArimaDistribution = arimaDistribution;
         this.atArimaH = currentH;
       }
-
     }
     // tlUpdateHelper.updateCaseArima(this.tlArimaDistribution, this.roadIntersection);
 
@@ -647,7 +695,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       dataPack.push(data3);
 
       if (dataPack !== undefined && this.tlArimaDistribution.tl0 !== undefined) {
-        let distribution = {
+        const distribution = {
           tl0: tsData.getOptimizedTime(this.tlArimaDistribution.tl0, parseFloat(dataPack[0].t.toString())),
           tl1: tsData.getOptimizedTime(this.tlArimaDistribution.tl1, parseFloat(dataPack[0].t.toString())),
           tl3: tsData.getOptimizedTime(this.tlArimaDistribution.tl3, parseFloat(dataPack[0].t.toString())),
@@ -655,11 +703,20 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
         tlUpdateHelper.updateCaseOptimized(distribution, this.roadIntersection);
       }
-
     }
-
   }
 
+  /**
+   * old function for only retrieve total car number from video feed directly
+   */
+  async getNumberOfCars(): Promise<number> {
+    const { camera_url } = this.props;
+    const rawData = (await DataFromCamera.getDataFromCamera(camera_url)) || '';
+    const numberCars = await DataFromCamera.getNumberOfCars(rawData);
+    // console.log(`Number of cars : ${numberCars}`);
+    this.numberOfCars = numberCars;
+    return numberCars;
+  }
 
   /**
    * get certain toggle state by @param toggleName:string
@@ -886,7 +943,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
         // this will draw from head to tail
         for (let k = 0; k < division; k += 1) {
-
           for (let k = 1; k < division; k += 1) {
             const topVertex = lane.getTail().plus(direction.multiply(this.laneW * 0.4 * k))
               .multiply(this.windowW);
@@ -1011,33 +1067,34 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     const { updatePassedVehicles, isSmartTL } = this.props;
     if (updatePassedVehicles !== null) {
       const passedCars = this.roadIntersection.getPassedVehicles();
-      const adaptedCarNums = new Array<{ direction: string, passedNum: number }>();
+      const adaptedCarNums = new Array<{ direction: string; passedNum: number }>();
       for (let i = 0; i < passedCars.length; i += 1) {
         switch (passedCars[i].sectionId) {
           case 0:
             adaptedCarNums.push({
-              direction: "East",
-              passedNum: passedCars[i].passedNum
+              direction: 'East',
+              passedNum: passedCars[i].passedNum,
             });
             break;
           case 1:
             adaptedCarNums.push({
-              direction: "West",
-              passedNum: passedCars[i].passedNum
+              direction: 'West',
+              passedNum: passedCars[i].passedNum,
             });
             break;
           case 2:
             adaptedCarNums.push({
-              direction: "North",
-              passedNum: passedCars[i].passedNum
+              direction: 'North',
+              passedNum: passedCars[i].passedNum,
             });
             break;
           case 3:
             adaptedCarNums.push({
-              direction: "South",
-              passedNum: passedCars[i].passedNum
+              direction: 'South',
+              passedNum: passedCars[i].passedNum,
             });
             break;
+          default:
         }
       }
 
@@ -1103,7 +1160,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             if (isLiveFeed) {
               maxVSpeed = this.laneW * 0.028;
             } else {
-              maxVSpeed = this.laneW * 0.028 * 6;
+              maxVSpeed = this.laneW * 0.028 * 3.5;
             }
 
             if (this.deltaT > currentCD) {
@@ -1194,18 +1251,15 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             this.forceHelper,
           );
         }
-
-      } else {
-        if (isSmartTL) {
-          // new smart mode type
-          // arima + realtime
-          this.tlCaseId = 4;
-          const tlQue = this.roadIntersection.getTrafficLightQueue();
-          for (let i = 0; i < tlQue.length; i += 1) {
-            this.roadIntersection.deForceTLState(i);
-          }
-          this.getSmartTLUpdate();
+      } else if (isSmartTL) {
+        // new smart mode type
+        // arima + realtime
+        this.tlCaseId = 4;
+        const tlQue = this.roadIntersection.getTrafficLightQueue();
+        for (let i = 0; i < tlQue.length; i += 1) {
+          this.roadIntersection.deForceTLState(i);
         }
+        this.getSmartTLUpdate();
       }
 
       // old cases toggle format
@@ -1241,7 +1295,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           );
         }
       }
-
     }
 
     const fpsText = new PIXI.Text(`FPS: ${this.fps}`, this.textStyle);
@@ -1252,7 +1305,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     numberCarsText.x = this.windowW / 2 - 80;
     numberCarsText.y = -this.windowH / 2 + 20;
     this.displayPlaneContainer.addChild(numberCarsText);
-    const { isLiveFeed, } = this.props;
+    const { isLiveFeed } = this.props;
     if (isLiveFeed && this.tlCaseId === 2) {
       const pCD = Math.round((Date.now() - this.forceHelper.startT) / 1000);
       const pCDText = new PIXI.Text('Pedestrian Time: N/A', this.textStyle);
@@ -1270,7 +1323,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       pCDText.y = -this.windowH / 2 + 40;
       this.displayPlaneContainer.addChild(pCDText);
     }
-
   };
 
   /**
@@ -1326,65 +1378,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     } else {
       this.objRawData = '(1, [524, 127])(2, [290, 166])(3, [747, 221])(4, [204, 192])(5, [537, 168])(6, [384, 203])(7, [60, 160])(8, [792, 247])(9, [95, 178])(10, [151, 185])(11, [528, 256])';
     }
-  }
-
-  // unmount content destroy
-  componentWillUnmount(): void {
-    this.app.ticker.remove(this.animation);
-    this.app.ticker.stop();
-    this.app.destroy();
-    this.btnShowCP.destroy();
-    this.btnStop.destroy();
-    this.backGroundG.destroy();
-    this.mapContainer.destroy();
-    this.objectContainer.destroy();
-    this.controlPanelContainer.destroy();
-    this.displayPlaneContainer.destroy();
-    this.tlDisplayPanelContainer.destroy();
-    this.roadG.destroy();
-    this.trafficLightG.destroy();
-    this.controlPanelG.destroy();
-    delete this.windowW;
-    delete this.windowH;
-    delete this.windowMin;
-    delete this.windowScaleRatio;
-    delete this.roadIntersection;
-    delete this.roadData;
-    delete this.trafficLightData;
-    delete this.laneW;
-    delete this.trafficLightCounterOffset;
-    delete this.trafficLightCounter;
-    delete this.timeLastMoment;
-    delete this.fps;
-    delete this.fpsCounter;
-    delete this.textStyle;
-    delete this.coordinateOffset;
-    delete this.vehicles;
-    delete this.pixiContent;
-    delete this.context;
-    delete this.render;
-    delete this.toggleGroup;
-    delete this.btnGroup;
-    delete this.labelGroup;
-    delete this.dragablePoints;
-    delete this.menuPage;
-    delete this.menuBtns;
-    delete this.objRawData;
-    delete this.laneAreaContainer;
-    delete this.mappingBGContainer;
-    delete this.atArimaH;
-    delete this.atIndex;
-    delete this.caseData;
-    delete this.caseId;
-    delete this.dataReady;
-    delete this.forceHelper;
-    delete this.objRawData;
-    delete this.pAiDataTL;
-    delete this.tlCaseBtnGroup;
-    delete this.tlCaseId;
-    delete this.tlDefaultDistribution;
-    delete this.trafficLightCounter;
-    delete this.trafficLightCounterOffset;
   }
 
   /**
@@ -1800,7 +1793,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * update toggle btn state when the btn is pressed
    */
   updateToggleBtnState(): void {
-    const { isLiveFeed, toggles } = this.props;
+    const { toggles } = this.props;
     let togValues = new Array<boolean>();
     if (toggles !== undefined && toggles !== null) {
       togValues = Object.values(toggles);

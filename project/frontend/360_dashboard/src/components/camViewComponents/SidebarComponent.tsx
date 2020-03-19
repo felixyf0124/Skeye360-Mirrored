@@ -277,9 +277,10 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
 
   const tlDoCompare = (isLiveFeed: boolean): JSX.Element => {
     if (isLiveFeed) {
-      return (<div></div>);
-    } else {
-      return (<div>
+      return (<div />);
+    }
+    return (
+      <div>
         {/* For the Traffic Light Comparison */}
         <ExpansionPanel style={skeyeStyles.Expansion}>
           <ExpansionPanelSummary
@@ -298,9 +299,8 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             </table>
           </ExpansionPanelDetails>
         </ExpansionPanel>
-      </div>);
-    }
-
+      </div>
+    );
   };
 
 

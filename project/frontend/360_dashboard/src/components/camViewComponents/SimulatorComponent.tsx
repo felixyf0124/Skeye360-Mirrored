@@ -142,39 +142,38 @@ const skeyeStyles = {
     marginBottom: 4,
     fontWeight: 600,
     height: 35,
-  }
+  },
 };
 
 let passedVehicles = [
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
 ];
 
 let passedVehicles2 = [
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
-  { direction: "", passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
+  { direction: '', passedNum: 0 },
 ];
 
 const SimulatorComponent = (props: SimProps | any): JSX.Element => {
-
   // eslint-disable-next-line consistent-return
   const {
     tlMode, onChangeTLMode, toggles, tlStop, onClickTLStop,
     tlCombStates, onTLUpdate, camera_url, intersectionId, intersectionLat, intersectionLng,
   } = props;
 
-  //const [passedVehicles, setPassedVehicles] = React.useState(props);
+  // const [passedVehicles, setPassedVehicles] = React.useState(props);
 
-  /*const [passedVehicles2, setPassedVehicles2] = React.useState([
+  /* const [passedVehicles2, setPassedVehicles2] = React.useState([
     {direction:"",passedNum:0},
     {direction:"",passedNum:0},
     {direction:"",passedNum:0},
     {direction:"",passedNum:0},
-  ]);*/
+  ]); */
 
   const [onSimuStart, setOnSimuStart] = React.useState(false);
 
@@ -184,32 +183,32 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
 
   const onSimuStartReset = (): void => {
     setOnSimuStart(false);
-  }
+  };
 
   function updatePassedVehicles(pVehicles: Array<{
-    direction: string,
-    passedNum: number,
+    direction: string;
+    passedNum: number;
   }>, isSmartTL: boolean): void {
     if (isSmartTL) {
       passedVehicles2 = pVehicles;
     } else {
       passedVehicles = pVehicles;
     }
-  };
+  }
 
   let ttlPassedCars = 0;
-  ttlPassedCars +=
-    passedVehicles[0].passedNum +
-    passedVehicles[1].passedNum +
-    passedVehicles[2].passedNum +
-    passedVehicles[3].passedNum;
+  ttlPassedCars
+    += passedVehicles[0].passedNum
+    + passedVehicles[1].passedNum
+    + passedVehicles[2].passedNum
+    + passedVehicles[3].passedNum;
 
   let ttlPassedCars2 = 0;
-  ttlPassedCars2 +=
-    passedVehicles2[0].passedNum +
-    passedVehicles2[1].passedNum +
-    passedVehicles2[2].passedNum +
-    passedVehicles2[3].passedNum;
+  ttlPassedCars2
+    += passedVehicles2[0].passedNum
+    + passedVehicles2[1].passedNum
+    + passedVehicles2[2].passedNum
+    + passedVehicles2[3].passedNum;
 
   return (
     <div>
@@ -230,7 +229,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
           <VerticalBlock>
             <InnerDivHorizon>
               <VerticalBlock>
-                <div style={{ height: `20px` }}>
+                <div style={{ height: '20px' }}>
                   <text style={skeyeStyles.Header}>Default Traffic Light</text>
                 </div>
                 <SimContainer>
@@ -277,7 +276,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                 <SimContainer>
                   <Simulator
                     isLiveFeed={false}
-                    isSmartTL={true}
+                    isSmartTL
                     onSimuStart={onSimuStart}
                     onSimuClickUpdata={onSimuStartReset}
                     tl_mode={tlMode}
