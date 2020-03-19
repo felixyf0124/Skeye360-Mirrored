@@ -183,6 +183,10 @@ export default class RoadIntersection {
     this.TLManager.setTimeOffset(offset);
   }
 
+  setTLStartTime(startTime: number): void {
+    this.TLManager.setStartTime(startTime);
+  }
+
   /**
    * set tl total time in second
    * @param id

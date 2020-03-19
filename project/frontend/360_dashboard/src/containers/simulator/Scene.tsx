@@ -695,11 +695,11 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       if (dataPack !== undefined && this.tlArimaDistribution.tl0 !== undefined) {
         const distribution = {
           tl0: tsData.getOptimizedTime(this.tlArimaDistribution.tl0, parseFloat(dataPack[0].t.toString())),
-          tl1: tsData.getOptimizedTime(this.tlArimaDistribution.tl1, parseFloat(dataPack[0].t.toString())),
-          tl3: tsData.getOptimizedTime(this.tlArimaDistribution.tl3, parseFloat(dataPack[0].t.toString())),
+          tl1: tsData.getOptimizedTime(this.tlArimaDistribution.tl1, parseFloat(dataPack[1].t.toString())),
+          tl3: tsData.getOptimizedTime(this.tlArimaDistribution.tl3, parseFloat(dataPack[2].t.toString())),
         };
         const periodSum = distribution.tl0 + distribution.tl1 + distribution.tl3;
-        const periodCap = 30;
+        const periodCap = 50;
         const distribution2 = {
           tl0: periodCap * (distribution.tl0 / periodSum),
           tl1: periodCap * (distribution.tl1 / periodSum),
@@ -1266,6 +1266,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           this.roadIntersection.deForceTLState(i);
         }
         // this.getRealTimeTLUpdate();
+        // this.getArimaTLUpdate();
         this.getSmartTLUpdate();
       }
 

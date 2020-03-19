@@ -143,9 +143,9 @@ export function updateCaseRealTime_Legacy(data: any, intersection: IntSect): voi
           }
 
           // tl4 depends on tl3
-          // if (data[i].id === 3 && intersection.getTrafficLightState(4) !== 'red') {
-          //   doUpdate = false;
-          // }
+          if (data[i].id === 3 && intersection.getTrafficLightState(4) !== 'red') {
+            doUpdate = false;
+          }
           if (doUpdate) {
             const index = intersection.getTrafficLightIndex(data[i].id);
             if (index < noRedTL.index) {
@@ -249,7 +249,8 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
         if (data[i].id === 1 && intersection.getTrafficLightState(4) !== 'red') {
           doUpdate = false;
         }
-
+        // console.log(data);
+        // console.log(intersection.getTrafficLightSetting(3));
         // tl4 depends on tl3
         if (data[i].id === 3 && intersection.getTrafficLightState(4) !== 'red') {
           doUpdate = false;
@@ -267,7 +268,7 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
       const totalT2 = intersection.getTrafficLight(0)
         .getTotalTime() + intersection.getTrafficLight(1)
         .getTotalTime();
-      intersection.setTLOverlapOffset(id2, -totalT2);
+      intersection.setTLOverlapOffset(id2, totalT2);
       intersection.setTrafficLightTime(id2, totalT2);
 
       // id 4 overlap with 1 & 3
@@ -275,9 +276,10 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
       const totalT4 = intersection.getTrafficLight(1)
         .getTotalTime() + intersection.getTrafficLight(3)
         .getTotalTime();
-      intersection.setTLOverlapOffset(id4, -totalT4);
+      intersection.setTLOverlapOffset(id4, totalT4);
       intersection.setTrafficLightTime(id4, totalT4);
 
+      // intersection.setTLStartTime(Date.now());
       // then update counter offset
       intersection
         .setTLCounterOffset(counter);
