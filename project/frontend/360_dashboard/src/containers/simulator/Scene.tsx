@@ -649,7 +649,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         this.atArimaH = currentH;
       }
     }
-
     tlUpdateHelper.updateCaseArima(this.tlDefaultDistribution, this.roadIntersection);
   }
 
@@ -699,8 +698,15 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           tl1: tsData.getOptimizedTime(this.tlArimaDistribution.tl1, parseFloat(dataPack[0].t.toString())),
           tl3: tsData.getOptimizedTime(this.tlArimaDistribution.tl3, parseFloat(dataPack[0].t.toString())),
         };
+        const periodSum = distribution.tl0 + distribution.tl1 + distribution.tl3;
+        const periodCap = 30;
+        const distribution2 = {
+          tl0: periodCap * (distribution.tl0 / periodSum),
+          tl1: periodCap * (distribution.tl1 / periodSum),
+          tl3: periodCap * (distribution.tl3 / periodSum),
+        };
 
-        tlUpdateHelper.updateCaseOptimized(distribution, this.roadIntersection);
+        tlUpdateHelper.updateCaseOptimized(distribution2, this.roadIntersection);
       }
     }
   }
@@ -1259,6 +1265,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         for (let i = 0; i < tlQue.length; i += 1) {
           this.roadIntersection.deForceTLState(i);
         }
+        // this.getRealTimeTLUpdate();
         this.getSmartTLUpdate();
       }
 
