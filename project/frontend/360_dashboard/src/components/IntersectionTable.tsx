@@ -141,9 +141,7 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
                 districts[0].intersections.map((intersection) => (filterList(isStaff, user_id, intersection.user_id) ? (
                   <TableRow key={intersection.id}>
                     <TableCell component="th" scope="row" align="center">
-                      <Link to={`/streetview/${intersection.id}`}>
-                        {intersection.intersection_name}
-                      </Link>
+                      {intersection.intersection_name}
                     </TableCell>
                     <TableCell align="center">
                       <VerticalFlexBox>
@@ -156,12 +154,11 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
                     </TableCell>
                     <TableCell align="center">
                       {intersection.cameras.map((camera: cameraResponse) => (
-                        <a key={camera.id} href={`http://${camera.camera_url}/los/`}>
-                          <TrafficIntensity
-                            camera_id={camera.id}
-                            camera_url={camera.camera_url}
-                          />
-                        </a>
+                        <TrafficIntensity
+                          key={camera.id}
+                          camera_id={camera.id}
+                          camera_url={camera.camera_url}
+                        />
                       ))}
                     </TableCell>
                     <TableCell align="center">

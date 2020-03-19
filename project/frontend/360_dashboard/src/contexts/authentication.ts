@@ -79,7 +79,7 @@ export const getUserData = (): GetUserDataAction => ({
 // selector
 
 // check for authentication
-export const authenticated = (state: { authentication: STATE }): boolean => getUserData() && state.authentication.user_id !== 0 && state.authentication.username !== '';
+export const authenticated = (state: { authentication: STATE }): boolean => state.authentication.user_id !== 0 && state.authentication.username !== '';
 
 // check for staff privilege status
 export const isStaff = (state: { authentication: STATE }): boolean => state.authentication.is_staff === true;
