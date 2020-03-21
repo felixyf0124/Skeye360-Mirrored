@@ -98,12 +98,12 @@ class Realtime:
         weCount = westToEast.shape[0]
 
         # Counting cars going straight and turning right.
-        northSouthCount = ssCount + snCount + nnCount + nsCount + seCount + nwCount
-        eastWestCount = eeCount + ewCount + wwCount + weCount + enCount + wsCount
+        northSouthCount = ssCount + snCount + nnCount + nsCount + seCount + nwCount +1
+        eastWestCount = eeCount + ewCount + wwCount + weCount + enCount + wsCount +1
 
         # Counting cars turning left.
-        northSouthLeftCount = swCount + neCount
-        eastWestLeftCount = wnCount + esCount
+        northSouthLeftCount = swCount + neCount +1
+        eastWestLeftCount = wnCount + esCount +1
 
         # Calculating ratios for all directions
         if (northSouthCount == 0):
