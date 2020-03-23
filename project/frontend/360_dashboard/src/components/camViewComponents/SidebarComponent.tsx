@@ -329,6 +329,65 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <Divider classes={{ root: classes.dividerWhite }} />
+
+        {/* For the simulator options */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
+            aria-controls="panel3a-content"
+            id="panel3a-header"
+          >
+            <text style={skeyeStyles.Header}> Simulator </text>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+            <DivVertical>
+              <Button variant="contained" style={skeyeStyles.ButtonStyle} onClick={onClickSimuStart}>
+                <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon} />
+                START
+              </Button>
+              {/* <Button variant="contained" style={skeyeStyles.ButtonStyle}>
+                <SettingsIcon style={skeyeStyles.SettingsMenuIcon}/>
+                SETTINGS
+              </Button> */}
+            </DivVertical>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+
+        <Divider classes={{ root: classes.dividerWhite }} />
+
+        {/* For the emergency option */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
+            aria-controls="panel4a-content"
+            id="panel4a-header"
+          >
+            <text style={skeyeStyles.Header}> Emergency Mode </text>
+            <Divider
+              classes={{ root: classes.dividerGrey }}
+            />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+            <DivVertical>
+              <text style={skeyeStyles.TextMessage}>
+                To change all traffic lights to red for emergency operations
+              </text>
+              <Button
+                variant="contained"
+                style={skeyeStyles.EmergencyButton}
+                onClick={onClickTLStop}
+              >
+                {' '}
+                <ReportIcon style={skeyeStyles.StopIcon} />
+                {' '}
+                STOP
+              </Button>
+            </DivVertical>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <Divider classes={{ root: classes.dividerWhite }} />
+
       </div>
     );
   };
@@ -411,64 +470,6 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           : null}
         {tlDoCompare(isLiveFeed)}
 
-        {/* For the simulator options */}
-        <ExpansionPanel style={skeyeStyles.Expansion}>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
-            aria-controls="panel3a-content"
-            id="panel3a-header"
-          >
-            <text style={skeyeStyles.Header}> Simulator </text>
-            <Divider classes={{ root: classes.dividerGrey }} />
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
-            <DivVertical>
-              <Button variant="contained" style={skeyeStyles.ButtonStyle} onClick={onClickSimuStart}>
-                <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon} />
-                START
-              </Button>
-              {/* <Button variant="contained" style={skeyeStyles.ButtonStyle}>
-                <SettingsIcon style={skeyeStyles.SettingsMenuIcon}/>
-                SETTINGS
-              </Button> */}
-            </DivVertical>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-
-        <Divider classes={{ root: classes.dividerWhite }} />
-
-        {/* For the emergency option */}
-        <ExpansionPanel style={skeyeStyles.Expansion}>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
-            aria-controls="panel4a-content"
-            id="panel4a-header"
-          >
-            <text style={skeyeStyles.Header}> Emergency Mode </text>
-            <Divider
-              classes={{ root: classes.dividerGrey }}
-            />
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
-            <DivVertical>
-              <text style={skeyeStyles.TextMessage}>
-                To change all traffic lights to red for emergency operations
-              </text>
-              <Button
-                variant="contained"
-                style={skeyeStyles.EmergencyButton}
-                onClick={onClickTLStop}
-              >
-                {' '}
-                <ReportIcon style={skeyeStyles.StopIcon} />
-                {' '}
-                STOP
-              </Button>
-            </DivVertical>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-
-        <Divider classes={{ root: classes.dividerWhite }} />
       </div>
     </div>
   );
