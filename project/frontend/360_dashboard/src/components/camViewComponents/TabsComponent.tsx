@@ -18,7 +18,8 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import DataAnalyticsComponent from './DataAnalyticsComponent';
-import SimulatorComponent from './SimulatorComponent';
+// import SimulatorComponent from './SimulatorComponent';
+import SimulatorWithTabsComponent from './SimulatorWithTabsComponent';
 import CameraComponent from './CameraComponent';
 // import OverviewComponent from './OverviewComponent';
 import LiveComponent from './LiveComponent';
@@ -357,7 +358,7 @@ const TabsComponents = (): JSX.Element => {
         <CameraComponent />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <SimulatorComponent
+        <SimulatorWithTabsComponent
           toggles={state}
           tlMode={tlMode}
           onChangeTLMode={onChangeTLMode}
