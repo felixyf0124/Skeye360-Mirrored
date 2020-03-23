@@ -204,6 +204,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                     updatePassedVehicles={updatePassedVehicles}
                     simuWidthRatio={0.325}
                     resolutionRatio={38 / 19.5}
+                    onWaitingTimeUpdate={null}
                   />
                 </SimContainer>
               </VerticalBlock>
@@ -245,6 +246,7 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                     updatePassedVehicles={updatePassedVehicles}
                     simuWidthRatio={0.325}
                     resolutionRatio={38 / 19.5}
+                    onWaitingTimeUpdate={null}
                   />
                 </SimContainer>
               </VerticalBlock>

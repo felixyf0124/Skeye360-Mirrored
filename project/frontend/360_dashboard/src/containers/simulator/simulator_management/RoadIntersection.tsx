@@ -33,7 +33,7 @@ export default class RoadIntersection {
 
   passedVehicles: Array<{ sectionId: number; passedNum: number }>;
 
-  cumulativeWaitingTime: number; //for non-passed vehicles
+  cumulativeWaitingTime: number; // for non-passed vehicles
 
   historicalWaitingTime: number; // for passed vehicles only
 
@@ -159,6 +159,13 @@ export default class RoadIntersection {
   getOverallCumulativeWaitingTime(): number {
     const waitingT = this.historicalWaitingTime + this.cumulativeWaitingTime;
     return waitingT;
+  }
+
+  /**
+   * return sum of all passed vehicle's waiting time
+   */
+  getHistoricalWaitingTime(): number {
+    return this.historicalWaitingTime;
   }
 
   // Setters
@@ -841,5 +848,4 @@ export default class RoadIntersection {
       }
     }
   }
-
 }

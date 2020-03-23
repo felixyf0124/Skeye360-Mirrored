@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-  makeStyles, Theme, Typography, Box,
+  makeStyles, Typography, Box,
 } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -15,6 +15,8 @@ import {
 interface Props {
   ttlPassed: number;
   directionData: Array<{ direction: string; passedNum: number }>;
+
+  waitingTime: number;
 }
 
 interface TabPanelProps {
@@ -140,13 +142,23 @@ const skeyeStyles = {
 };
 
 const DataTabsComponent = (props: any): JSX.Element => {
-  const { ttlPassedCars, passedVehicles } = props;
+  const { ttlPassedCars, passedVehicles, waitingTime } = props;
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);
   };
+
+  const onFLoatRound = (num: number, digits: number): number => {
+    let tens = 1;
+    for (let i = 0; i < digits; i += 1) {
+      tens *= 10;
+    }
+    const rounded = Math.round(num * tens) / tens;
+    return rounded;
+  };
+
   return (
 
     <div className={classes.root}>
@@ -211,7 +223,9 @@ const DataTabsComponent = (props: any): JSX.Element => {
                 <DataBox>
                   <text style={skeyeStyles.Header}>Average Wait Time (All Directions)</text>
                   {/* TO DO: CHANGE TO REAL DATA */}
-                  <text style={skeyeStyles.Data}>28.2</text>
+                  <text style={skeyeStyles.Data}>
+                    {onFLoatRound(waitingTime / ttlPassedCars, 2)}
+                  </text>
                   <text style={skeyeStyles.Metric}>Seconds</text>
                   <div>
                     <ArrowDropDownIcon style={skeyeStyles.GreenArrow} />

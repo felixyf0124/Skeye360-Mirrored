@@ -155,6 +155,18 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
     + passedVehicles2[2].passedNum
     + passedVehicles2[3].passedNum;
 
+  const [cumulativeWaitingTime, setCumulativeWaitingTime] = React.useState(0);
+  const [cumulativeWaitingTime2, setCumulativeWaitingTime2] = React.useState(0);
+
+  const onWaitingTimeUpdate = (wTime: number, isSmartTL: boolean):
+    void => {
+    if (isSmartTL) {
+      setCumulativeWaitingTime2(wTime);
+    } else {
+      setCumulativeWaitingTime(wTime);
+    }
+  };
+
   return (
     <div>
       <HorizontalFlexBox>
@@ -188,12 +200,14 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
                     updatePassedVehicles={updatePassedVehicles}
                     simuWidthRatio={0.327}
                     resolutionRatio={38 / 19.5}
+                    onWaitingTimeUpdate={onWaitingTimeUpdate}
                   />
                 </SimContainer>
               </VerticalBlock>
               <DataTabsComponent
                 ttlPassedCars={ttlPassedCars}
                 passedVehicles={passedVehicles}
+                waitingTime={cumulativeWaitingTime}
               />
             </InnerDivHorizon>
 
@@ -215,12 +229,14 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
                     updatePassedVehicles={updatePassedVehicles}
                     simuWidthRatio={0.327}
                     resolutionRatio={38 / 19.5}
+                    onWaitingTimeUpdate={onWaitingTimeUpdate}
                   />
                 </SimContainer>
               </VerticalBlock>
               <DataTabsComponent
                 ttlPassedCars={ttlPassedCars2}
                 passedVehicles={passedVehicles2}
+                waitingTime={cumulativeWaitingTime2}
               />
             </InnerDivHorizon>
           </VerticalBlock>
