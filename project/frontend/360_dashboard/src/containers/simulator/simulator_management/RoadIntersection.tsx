@@ -33,6 +33,10 @@ export default class RoadIntersection {
 
   passedVehicles: Array<{ sectionId: number; passedNum: number }>;
 
+  cumulativeWaitingTime: number; //for non-passed vehicles
+
+  historicalWaitingTime: number; // for passed vehicles only
+
   constructor(id: number, mapCoordinate: Vec2, TLManager?: TrafficLightManager) {
     this.id = id;
     this.mapCoordinate = mapCoordinate;
@@ -44,6 +48,8 @@ export default class RoadIntersection {
     this.vehicleCount = 0;
     this.sectionAreas = new Array<Array<Vec2>>();
     this.passedVehicles = new Array<{ sectionId: number; passedNum: number }>();
+    this.cumulativeWaitingTime = 0;
+    this.historicalWaitingTime = 0;
   }
 
   // Getters
@@ -145,6 +151,14 @@ export default class RoadIntersection {
 
   getVehiclesNum(): number {
     return this.vehicles.length;
+  }
+
+  /**
+   * return overall cumulative waiting time
+   */
+  getOverallCumulativeWaitingTime(): number {
+    const waitingT = this.historicalWaitingTime + this.cumulativeWaitingTime;
+    return waitingT;
   }
 
   // Setters
@@ -713,6 +727,9 @@ export default class RoadIntersection {
     // the following two function calls are very important
     this.checkTransitionVehicle();
     while (this.checkLeavingVehicle());
+
+    // non passed vehicle's cumulative waiting time update
+    this.updateNonPassedCarCumulativeWaitingTime();
   }
 
   /**
@@ -793,6 +810,7 @@ export default class RoadIntersection {
 
           sectionId = headLink[0].getSectionId();
           laneId = headLink[0].getLaneId();
+          this.historicalWaitingTime += this.vehicles[i].getCumulativeWaitingTime();
 
           // vehicle has to gone first from the section before update their now section and lane
           this.vehicleGone(this.vehicles[i].getId());
@@ -811,4 +829,17 @@ export default class RoadIntersection {
       }
     }
   }
+
+  /**
+   * update sum of all non-passed cars' cumulative waiting time
+   */
+  updateNonPassedCarCumulativeWaitingTime(): void {
+    this.cumulativeWaitingTime = 0;
+    for (let i = 0; i < this.vehicles.length; i += 1) {
+      if (this.vehicles[i].getAtPathSection() === 0) {
+        this.cumulativeWaitingTime += this.vehicles[i].getCumulativeWaitingTime();
+      }
+    }
+  }
+
 }
