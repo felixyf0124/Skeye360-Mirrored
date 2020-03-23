@@ -13,15 +13,15 @@ import {
 } from '../../css/custom';
 
 interface Props {
-    ttlPassed: number;
-    directionData: Array<{ direction: string; passedNum: number }>;
+  ttlPassed: number;
+  directionData: Array<{ direction: string; passedNum: number }>;
 }
 
 interface TabPanelProps {
-    children?: React.ReactNode;
-    index: any;
-    value: any;
-  }
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
 
 // Used simple tabs example from the reference mentioned above
 function TabPanel(props: TabPanelProps): JSX.Element {
@@ -140,7 +140,7 @@ const skeyeStyles = {
 };
 
 const DataTabsComponent = (props: any): JSX.Element => {
-  const { ttlPassedCars, directionData } = props;
+  const { ttlPassedCars, passedVehicles } = props;
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -179,7 +179,7 @@ const DataTabsComponent = (props: any): JSX.Element => {
                   chartID="barChart-default"
                   title="Number Of Car Passed Per Direction"
                   categories={['North', 'East', 'South', 'West']}
-                  directionData={directionData}
+                  directionData={passedVehicles}
                 />
               </BarChartContainer>
             </VerticalBlock>
