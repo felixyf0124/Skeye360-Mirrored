@@ -38,6 +38,7 @@ interface SimProps {
     totalTime: string; // G+Y
     totalTime2: string; // G+Y
   }>;
+  getTLstates: any;
 }
 
 // Horizontal box for the entire component
@@ -188,7 +189,8 @@ const skeyeStyles = {
 // Creates and returns a component for the sidebar that will be used in the simulator
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const {
-    isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, onClickSimuStart, tlCombStates, keyValue,
+    isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, onClickSimuStart,
+    tlCombStates, keyValue, getTLstates
   } = props;
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
@@ -304,6 +306,160 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
     );
   });
 
+
+  const tlAtDiv = (index: number, combinedTLState: Array<{
+    direction: string;
+    state: string;
+    state2: string;
+    countDown: string;
+    countDown2: string;
+    totalTime: string; // G+Y
+    totalTime2: string; // G+Y
+  }>): JSX.Element | void => {
+
+    const tlDataHeader = {
+      color: SKEYE_WHITE,
+      fontSize: '0.9em',
+      textDecorationLine: 'underline',
+      margin: 'auto',
+      display: 'table-cell',
+    };
+    const tlData = {
+      color: SKEYE_WHITE,
+      fontSize: '0.8em',
+      margin: 'auto',
+      display: 'table-cell',
+    };
+    const tlDataCol = {
+      color: SKEYE_WHITE,
+      fontSize: '0.8em',
+      margin: 'auto',
+      display: 'table-cell',
+    };
+    const tlDataCol2 = {
+      color: SKEYE_WHITE,
+      fontSize: '0.8em',
+      margin: 'auto',
+      display: 'table-cell',
+    };
+    if (combinedTLState.length > 0) {
+      if (combinedTLState[index].state === 'red') {
+        tlDataCol.color = '#FF0000';
+      } else if (combinedTLState[index].state === 'green') {
+        tlDataCol.color = '#00FF00';
+      } else if (combinedTLState[index].state === 'yellow') {
+        tlDataCol.color = '#f5c842';
+      }
+
+      if (combinedTLState[index].state2 === 'red') {
+        tlDataCol2.color = '#FF0000';
+      } else if (combinedTLState[index].state2 === 'green') {
+        tlDataCol2.color = '#00FF00';
+      } else if (combinedTLState[index].state2 === 'yellow') {
+        tlDataCol2.color = '#f5c842';
+      }
+
+      return (
+        <div>
+          <tr className={classes.tlTRow}>
+            <th style={tlDataHeader}>Direction:</th>
+          </tr>
+          <tr className={classes.tlTRow}>
+            <td style={tlData} colSpan={4}>
+              {((): any => {
+                switch (combinedTLState[index].direction) {
+                  case 's<=>n,s->w,s->s,n->e,n->w': return directions[0];
+                  case 'e->e,e->s,w->w,w->n': return directions[1];
+                  case 'e<=>w': return directions[2];
+                  case 'e->n,w->s': return directions[3];
+                  case 's->e': return directions[4];
+                  default: return null;
+                }
+              })()}
+            </td>
+          </tr>
+          <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
+            <td style={tlData}>Type</td>
+            {/* <td style={tlData}>State</td> */}
+            <td style={tlData}>State</td>
+            <td style={tlData}>Time</td>
+          </tr>
+          <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
+            <td style={tlData}>Default</td>
+            {/* <td style={tlDataCol}>{tlCombState.state}</td> */}
+            <td style={tlDataCol}>{`⬤`}</td>
+            <td style={tlData}>{combinedTLState[index].totalTime}</td>
+          </tr>
+          <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
+            <td style={tlData}>Optimized</td>
+            {/* <td style={tlDataCol2}>{tlCombState.state2}</td> */}
+            <td style={tlDataCol2}>{`⬤`}</td>
+            <td style={tlData}>{combinedTLState[index].totalTime2}</td>
+          </tr>
+          <tr>
+            <td colSpan={4}>
+              <Divider classes={{ root: classes.dividerGrey }} />
+            </td>
+          </tr>
+        </div>);
+    }
+  }
+
+
+  // traffic light comparison layout 1
+  const tlStateComponent1 = (): JSX.Element => {
+    return (
+      <div>
+        <table style={{ display: 'block' }}>
+          <tbody className={classes.tlTable}>
+            {tlDiv}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  const tlStateComponent2 = (): JSX.Element => {
+
+    const tlDataHeader = {
+      color: SKEYE_WHITE,
+      fontSize: '0.9em',
+      textDecorationLine: 'underline',
+      margin: 'auto',
+      display: 'table-cell',
+    };
+    const tlData = {
+      color: SKEYE_WHITE,
+      fontSize: '0.8em',
+      margin: 'auto',
+      display: 'table-cell',
+    };
+    const tlDataCol = {
+      color: SKEYE_WHITE,
+      fontSize: '0.8em',
+      margin: 'auto',
+      display: 'table-cell',
+    };
+    const tlDataCol2 = {
+      color: SKEYE_WHITE,
+      fontSize: '0.8em',
+      margin: 'auto',
+      display: 'table-cell',
+    };
+
+    return (
+      <div>
+        <table style={{ display: 'block' }}>
+          <tbody className={classes.tlTable}>
+            {tlAtDiv(1, tlCombStates)}
+            {tlAtDiv(2, tlCombStates)}
+            {tlAtDiv(0, tlCombStates)}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
   const tlDoCompare = (isLiveFeed: boolean): JSX.Element => {
     if (isLiveFeed) {
       return (<div />);
@@ -321,11 +477,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
             <Divider classes={{ root: classes.dividerGrey }} />
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
-            <table style={{ display: 'block' }}>
-              <tbody className={classes.tlTable}>
-                {tlDiv}
-              </tbody>
-            </table>
+            {tlStateComponent2()}
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <Divider classes={{ root: classes.dividerWhite }} />
