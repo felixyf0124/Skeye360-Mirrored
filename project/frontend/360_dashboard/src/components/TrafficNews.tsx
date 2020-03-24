@@ -144,7 +144,33 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
       isLoaded: false,
       incidents: [],
     };
+    
+    /*
+    this.handleOld = this.handleOld.bind(this);
+    this.handleNew = this.handleNew.bind(this);
+    */
+
+    this.handleChange = this.handleChange.bind(this);
   }
+
+  /*
+    handleOld = (event: any, sortt: any): void => {
+    console.log(sortt);
+    this.setState({incidents: sortOldest(sortt)});
+  }
+  */
+
+  /*
+  handleNew = (event: any, sortt: any): void => {
+    console.log(sortt);
+    this.setState({incidents: sortNewest(sortt)});
+  }
+  */
+
+  handleChange = (event: any): void => {
+    this.setState({...this.state, incidents: event.target.value});
+  }
+
 
   componentDidMount(): void {
     // eslint-disable-next-line no-shadow
@@ -213,10 +239,8 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
   render(): JSX.Element {
     const { isLoaded, incidents } = this.state;
 
-    const handleChange = (event: any): void => {
-      event.preventDefault();
-      this.setState({...this.state, [event.target.name]: event.target.value});
-    }
+    
+
 
     if (!isLoaded) {
       return (
@@ -229,25 +253,23 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     /* eslint-disable @typescript-eslint/explicit-function-return-type */
     return (
       <OuterDiv>
-        <FormControl variant="outlined">
-          <InputLabel id="demo-simple-select-outlined-label">Sort</InputLabel>
+          <FormControl style={{backgroundColor: 'white'}} >
             <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
+            
+        
               value={incidents}
-              onChange={handleChange}
+              onChange={this.handleChange}
               label="Sort"
-              name="incidents"
-        >
-          <MenuItem value="">
-            <em>Sort by</em>
-          </MenuItem>
-          <MenuItem key={1} value={sortByHighSeverity(incidents)}>High Severity</MenuItem>
-          <MenuItem key={2} value={sortByLowSeverity(incidents)}>Low Severity</MenuItem>
-          <MenuItem key={3} value={sortNewest(incidents)}>Newest</MenuItem>
-          <MenuItem key={4} value={sortOldest(incidents)}>Oldest</MenuItem>
-        </Select>
-      </FormControl>
+            >
+              <MenuItem>
+                Sort
+              </MenuItem>
+              <MenuItem value={sortOldest(incidents)}>Oldest</MenuItem>
+              <MenuItem value={sortNewest(incidents)}>Most Recent</MenuItem>
+              <MenuItem value={sortByHighSeverity(incidents)}>Highest Impact</MenuItem>
+              <MenuItem value={sortByLowSeverity(incidents)}>Lowest Impact</MenuItem>
+            </Select>
+          </FormControl>
       
         <OuterContainer>
           {incidents.map(
