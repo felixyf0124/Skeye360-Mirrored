@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import SidebarComponent from './SidebarComponent';
-import Simulator from '../../containers/simulator/Scene';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import HelpIcon from '@material-ui/icons/Help';
+import Simulator from '../../containers/simulator/Scene';
+import SidebarComponent from './SidebarComponent';
 import { SKEYE_WHITE, SKEYE_BLUE } from '../../css/custom';
 import DataTabsComponent from './DataTabsComponent';
 import helpImg from '../../images/helpImg02.png';
@@ -208,7 +208,7 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
                         <td>
                           <text style={skeyeStyles.Header}>
                             Default Traffic Light
-                      </text>
+                          </text>
                         </td>
                         <td>
                           <Tooltip
@@ -257,7 +257,7 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
                         <td>
                           <text style={skeyeStyles.Header}>
                             Optimized Traffic Light
-                      </text>
+                          </text>
                         </td>
                         <td>
                           <Tooltip
