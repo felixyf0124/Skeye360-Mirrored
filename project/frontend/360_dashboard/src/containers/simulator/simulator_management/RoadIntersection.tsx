@@ -90,27 +90,57 @@ export default class RoadIntersection {
     return lane;
   }
 
+  /**
+   * get traffic light loop count down
+   */
+  getTLLoopCountDown(): number {
+    return this.TLManager.getCountDown();
+  }
+
+  /**
+   * get traffic light queue
+   */
   getTrafficLightQueue(): Array<TrafficLight> {
     return this.TLManager.getTrafficLightQueue();
   }
 
+  /**
+   * get traffic light at specific id
+   * @param id
+   */
   getTrafficLight(id: number): TrafficLight {
     return this.TLManager.getTrafficLight(id);
   }
 
+  /**
+   * get traffic light state at specific id
+   * @param id
+   */
   getTrafficLightState(id: number): string {
     return this.TLManager.getTrafficLightState(id);
   }
 
+  /**
+   * get traffic light countdown at specific id
+   * @param id
+   */
   getTrafficLightCD(id: number): number {
     return Math.round(this.TLManager.getTrafficLightCD(id));
   }
 
+  /**
+   * get traffic light setting at specific id
+   * @param id
+   */
   getTrafficLightSetting(id: number): { green: number; yellow: number } {
     const tl = this.TLManager.getTrafficLight(id);
     return tl.getCountDownSetting();
   }
 
+  /**
+   * get traffic light index in the que at specific id
+   * @param id
+   */
   getTrafficLightIndex(id: number): number {
     return this.TLManager.getTrafficLightIndex(id);
   }
@@ -122,6 +152,12 @@ export default class RoadIntersection {
     return this.TLManager.getTimeOffset();
   }
 
+  /**
+   * get traffic light state of specific lane
+   * @param sectionId
+   * @param laneId
+   * @param isLaneIn
+   */
   getLaneState(sectionId: number, laneId: number, isLaneIn?: boolean): string {
     const isLIn: boolean = isLaneIn || true;
     if (isLIn) {

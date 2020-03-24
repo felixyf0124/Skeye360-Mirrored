@@ -295,19 +295,6 @@ const TabsComponents = (): JSX.Element => {
     // console.log(tlCombStates);
   };
 
-  const getTLStates = (simId: number): Array<{
-    direction: string;
-    state: string;
-    countDown: string;
-    totalTime: string; // G+Y
-  }> => {
-    if (simId === 0) {
-      return tlStates;
-    } else {
-      return tlStates2;
-    }
-  }
-
 
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);

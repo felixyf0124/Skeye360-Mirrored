@@ -37,6 +37,7 @@ interface Props {
   simuWidthRatio: number;
   resolutionRatio: number;
   onWaitingTimeUpdate: any;
+  onLoopCDUpdate: any;
 }
 
 interface StateProps {
@@ -1398,7 +1399,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * update outer TL display
    */
   updateTLDisplayState(): void {
-    const { isSmartTL, onTLUpdate } = this.props;
+    const { isSmartTL, onTLUpdate, onLoopCDUpdate } = this.props;
     const tlQueue = this.roadIntersection.getTrafficLightQueue();
     const newTLStates = new Array<{
       direction: string;
@@ -1423,6 +1424,10 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       newTLStates.push(tlState);
     }
     onTLUpdate(newTLStates, isSmartTL);
+    if (onLoopCDUpdate !== null) {
+      const loopCD = this.roadIntersection.getTLLoopCountDown();
+      onLoopCDUpdate(Math.round(loopCD), isSmartTL);
+    }
   }
 
   /**

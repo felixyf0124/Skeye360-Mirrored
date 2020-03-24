@@ -39,6 +39,8 @@ interface SimProps {
     totalTime2: string; // G+Y
   }>;
   getTLstates: any;
+  loopCountDown: number;
+  loopCountDown2: number;
 }
 
 // Horizontal box for the entire component
@@ -190,7 +192,7 @@ const skeyeStyles = {
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const {
     isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, onClickSimuStart,
-    tlCombStates, keyValue, getTLstates
+    tlCombStates, keyValue, loopCountDown, loopCountDown2,
   } = props;
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
@@ -206,107 +208,6 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
     onChangeTLMode(index);
   };
 
-  const tlDiv = tlCombStates.map((
-    tlCombState:
-      {
-        directionName: string;
-        direction: string;
-        state: string;
-        state2: string;
-        countDown: string;
-        countDown2: string;
-        totalTime: string; // G+Y
-        totalTime2: string; // G+Y
-      },
-  ) => {
-    const tlDataHeader = {
-      color: SKEYE_WHITE,
-      fontSize: '0.9em',
-      textDecorationLine: 'underline',
-      margin: 'auto',
-      display: 'table-cell',
-    };
-    const tlData = {
-      color: SKEYE_WHITE,
-      fontSize: '0.8em',
-      margin: 'auto',
-      display: 'table-cell',
-    };
-    const tlDataCol = {
-      color: SKEYE_WHITE,
-      fontSize: '0.8em',
-      margin: 'auto',
-      display: 'table-cell',
-    };
-    const tlDataCol2 = {
-      color: SKEYE_WHITE,
-      fontSize: '0.8em',
-      margin: 'auto',
-      display: 'table-cell',
-    };
-
-    if (tlCombState.state === 'red') {
-      tlDataCol.color = '#FF0000';
-    } else if (tlCombState.state === 'green') {
-      tlDataCol.color = '#00FF00';
-    } else if (tlCombState.state === 'yellow') {
-      tlDataCol.color = '#f5c842';
-    }
-
-    if (tlCombState.state2 === 'red') {
-      tlDataCol2.color = '#FF0000';
-    } else if (tlCombState.state2 === 'green') {
-      tlDataCol2.color = '#00FF00';
-    } else if (tlCombState.state2 === 'yellow') {
-      tlDataCol2.color = '#f5c842';
-    }
-    return (
-      <div key={tlCombState.direction} style={skeyeStyles.TrafficLightComp}>
-        <tr className={classes.tlTRow}>
-          <th style={tlDataHeader}>Direction:</th>
-        </tr>
-        <tr className={classes.tlTRow}>
-          <td style={tlData} colSpan={4}>
-            {((): any => {
-              switch (tlCombState.direction) {
-                case 's<=>n,s->w,s->s,n->e,n->w': return directions[0];
-                case 'e->e,e->s,w->w,w->n': return directions[1];
-                case 'e<=>w': return directions[2];
-                case 'e->n,w->s': return directions[3];
-                case 's->e': return directions[4];
-                default: return null;
-              }
-            })()}
-          </td>
-        </tr>
-        <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>Type</td>
-          {/* <td style={tlData}>State</td> */}
-          <td style={tlData}>Count</td>
-          <td style={tlData}>Time</td>
-        </tr>
-        <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>Default</td>
-          {/* <td style={tlDataCol}>{tlCombState.state}</td> */}
-          <td style={tlDataCol}>{tlCombState.countDown}</td>
-          <td style={tlData}>{tlCombState.totalTime}</td>
-        </tr>
-        <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>Optimized</td>
-          {/* <td style={tlDataCol2}>{tlCombState.state2}</td> */}
-          <td style={tlDataCol2}>{tlCombState.countDown2}</td>
-          <td style={tlData}>{tlCombState.totalTime2}</td>
-        </tr>
-        <tr>
-          <td colSpan={4}>
-            <Divider classes={{ root: classes.dividerGrey }} />
-          </td>
-        </tr>
-      </div>
-    );
-  });
-
-
   const tlAtDiv = (index: number, combinedTLState: Array<{
     direction: string;
     state: string;
@@ -315,8 +216,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
     countDown2: string;
     totalTime: string; // G+Y
     totalTime2: string; // G+Y
-  }>): JSX.Element | void => {
-
+  }>): JSX.Element => {
     const tlDataHeader = {
       color: SKEYE_WHITE,
       fontSize: '0.9em',
@@ -387,13 +287,13 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
             <td style={tlData}>Default</td>
             {/* <td style={tlDataCol}>{tlCombState.state}</td> */}
-            <td style={tlDataCol}>{`⬤`}</td>
+            <td style={tlDataCol}>⬤</td>
             <td style={tlData}>{combinedTLState[index].totalTime}</td>
           </tr>
           <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
             <td style={tlData}>Optimized</td>
             {/* <td style={tlDataCol2}>{tlCombState.state2}</td> */}
-            <td style={tlDataCol2}>{`⬤`}</td>
+            <td style={tlDataCol2}>⬤</td>
             <td style={tlData}>{combinedTLState[index].totalTime2}</td>
           </tr>
           <tr>
@@ -401,64 +301,64 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
               <Divider classes={{ root: classes.dividerGrey }} />
             </td>
           </tr>
-        </div>);
+        </div>
+      );
     }
-  }
+    return (<div />);
+  };
 
 
   // traffic light comparison layout 1
-  const tlStateComponent1 = (): JSX.Element => {
-    return (
-      <div>
-        <table style={{ display: 'block' }}>
-          <tbody className={classes.tlTable}>
-            {tlDiv}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
+  // const tlStateComponent1 = (): JSX.Element => (
+  //   <div>
+  //     <table style={{ display: 'block' }}>
+  //       <tbody className={classes.tlTable}>
+  //         {tlDiv}
+  //       </tbody>
+  //     </table>
+  //   </div>
+  // );
 
+  // traffic light comparison layout 2
   const tlStateComponent2 = (): JSX.Element => {
-
-    const tlDataHeader = {
-      color: SKEYE_WHITE,
-      fontSize: '0.9em',
-      textDecorationLine: 'underline',
-      margin: 'auto',
-      display: 'table-cell',
-    };
     const tlData = {
       color: SKEYE_WHITE,
       fontSize: '0.8em',
       margin: 'auto',
       display: 'table-cell',
     };
-    const tlDataCol = {
-      color: SKEYE_WHITE,
-      fontSize: '0.8em',
-      margin: 'auto',
-      display: 'table-cell',
-    };
-    const tlDataCol2 = {
-      color: SKEYE_WHITE,
-      fontSize: '0.8em',
-      margin: 'auto',
-      display: 'table-cell',
-    };
 
     return (
       <div>
+        <Divider classes={{ root: classes.dividerGrey }} />
         <table style={{ display: 'block' }}>
           <tbody className={classes.tlTable}>
+            <tr className={classes.tlTRow}>
+              <td style={tlData} colSpan={3}>
+                Loop countdown:
+              </td>
+            </tr>
+            <tr className={classes.tlTRow}>
+              <td style={tlData} colSpan={2}>
+                Default
+              </td>
+              <td style={tlData}>{loopCountDown}</td>
+            </tr>
+            <tr className={classes.tlTRow}>
+              <td style={tlData} colSpan={2}>
+                Optimized
+              </td>
+              <td style={tlData}>{loopCountDown2}</td>
+            </tr>
+            <Divider classes={{ root: classes.dividerGrey }} />
+            {tlAtDiv(0, tlCombStates)}
             {tlAtDiv(1, tlCombStates)}
             {tlAtDiv(2, tlCombStates)}
-            {tlAtDiv(0, tlCombStates)}
           </tbody>
         </table>
       </div>
     );
-  }
+  };
 
   const tlDoCompare = (isLiveFeed: boolean): JSX.Element => {
     if (isLiveFeed) {

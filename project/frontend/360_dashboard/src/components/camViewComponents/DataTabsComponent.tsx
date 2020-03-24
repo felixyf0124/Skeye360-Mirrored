@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-  makeStyles, Theme, Typography, Box,
+  makeStyles, Typography, Box,
 } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -78,7 +78,7 @@ const BarChartContainer = styled.div`
   position: relative;
 `;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
     //   backgroundColor: SKEYE_DARK_GREY,

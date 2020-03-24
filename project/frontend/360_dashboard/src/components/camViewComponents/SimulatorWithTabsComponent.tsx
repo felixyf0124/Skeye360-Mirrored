@@ -167,6 +167,17 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
     }
   };
 
+  const [loopCountDown, setLoopCountDown] = React.useState(0);
+  const [loopCountDown2, setLoopCountDown2] = React.useState(0);
+  const updateLoopCountDown = (loopCD: number, isSmartTL: boolean):
+    void => {
+    if (isSmartTL) {
+      setLoopCountDown2(loopCD);
+    } else {
+      setLoopCountDown(loopCD);
+    }
+  };
+
   return (
     <div>
       <HorizontalFlexBox>
@@ -178,6 +189,8 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
           tlCombStates={tlCombStates}
           onClickSimuStart={onClickSimuStart}
           keyValue="2"
+          loopCountDown={loopCountDown}
+          loopCountDown2={loopCountDown2}
         />
         <ContentBlock>
 
@@ -201,6 +214,7 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
                     simuWidthRatio={0.327}
                     resolutionRatio={38 / 19.5}
                     onWaitingTimeUpdate={onWaitingTimeUpdate}
+                    onLoopCDUpdate={updateLoopCountDown}
                   />
                 </SimContainer>
               </VerticalBlock>
@@ -230,6 +244,7 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
                     simuWidthRatio={0.327}
                     resolutionRatio={38 / 19.5}
                     onWaitingTimeUpdate={onWaitingTimeUpdate}
+                    onLoopCDUpdate={updateLoopCountDown}
                   />
                 </SimContainer>
               </VerticalBlock>

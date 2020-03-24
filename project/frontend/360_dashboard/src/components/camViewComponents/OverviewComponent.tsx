@@ -233,6 +233,7 @@ class OverviewComponent extends React.Component<
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
                   onWaitingTimeUpdate={null}
+                  onLoopCDUpdate={null}
                 />
               </SimContainer>
             </InnerDivVertical>
@@ -288,6 +289,7 @@ class OverviewComponent extends React.Component<
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
                   onWaitingTimeUpdate={null}
+                  onLoopCDUpdate={null}
                 />
               </SimContainer>
             </InnerDivVertical>
