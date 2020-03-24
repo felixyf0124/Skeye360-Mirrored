@@ -190,7 +190,7 @@ const DataTabsComponent = (props: any): JSX.Element => {
                 <BarChartDirections
                   chartID="barChart-default"
                   title="Number Of Car Passed Per Direction"
-                  categories={['North', 'East', 'South', 'West']}
+                  categories={['From North', 'From East', 'From South', 'From West']}
                   directionData={passedVehicles}
                 />
               </BarChartContainer>

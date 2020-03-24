@@ -3,8 +3,12 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SidebarComponent from './SidebarComponent';
 import Simulator from '../../containers/simulator/Scene';
-import { SKEYE_WHITE } from '../../css/custom';
+import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import HelpIcon from '@material-ui/icons/Help';
+import { SKEYE_WHITE, SKEYE_BLUE } from '../../css/custom';
 import DataTabsComponent from './DataTabsComponent';
+import helpImg from '../../images/helpImg02.png';
 
 interface SimProps {
   tlMode: number;
@@ -198,7 +202,25 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
             <InnerDivHorizon>
               <VerticalBlock>
                 <div style={{ height: '2vh' }}>
-                  <text style={skeyeStyles.Header}>Default Traffic Light</text>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <text style={skeyeStyles.Header}>
+                            Default Traffic Light
+                      </text>
+                        </td>
+                        <td>
+                          <Tooltip
+                            title={<img style={{ width: '16rem' }} src={helpImg} alt="help img" />}
+                          >
+                            <Button style={{ margin: 0 }}><HelpIcon style={{ color: SKEYE_BLUE, fontSize: '14px' }} /></Button>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  {/* <text style={skeyeStyles.Header}>Default Traffic Light</text> */}
                 </div>
                 <SimContainer>
                   <Simulator
@@ -228,7 +250,25 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
             <InnerDivHorizon>
               <VerticalBlock>
                 <div style={{ height: '2vh' }}>
-                  <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
+                  {/* <text style={skeyeStyles.Header}>Optimized Traffic Light</text> */}
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <text style={skeyeStyles.Header}>
+                            Optimized Traffic Light
+                      </text>
+                        </td>
+                        <td>
+                          <Tooltip
+                            title={<img style={{ width: '16rem' }} src={helpImg} alt="help img" />}
+                          >
+                            <Button style={{ margin: 0 }}><HelpIcon style={{ color: SKEYE_BLUE, fontSize: '14px' }} /></Button>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
                 <SimContainer>
                   <Simulator

@@ -11,6 +11,7 @@ import {
 } from '../../css/custom';
 import { getExistingCamera } from '../../contexts/camera';
 import Simulator from '../../containers/simulator/Scene';
+import helpImg from '../../images/helpImg01.png';
 
 interface SimProps {
   tlMode: number;
@@ -205,7 +206,7 @@ class LiveComponent extends React.Component<
       tlCombStates,
       onTLUpdate,
     } = this.props;
-    const helpImg = 'https://cdn.discordapp.com/attachments/645413074265833512/691837168674668584/unknown.png';
+
     // eslint-disable-next-line consistent-return
     return (
       <div>
