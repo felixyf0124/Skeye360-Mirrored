@@ -1,6 +1,8 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,6 +16,7 @@ import LaunchIcon from '@material-ui/icons/Launch';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { setDistrictCoord, SetCoordAction } from '../contexts/app';
 import { STATE as districtState } from '../contexts/districts';
 import DeleteIntersectionButton from './DeleteIntersectionButton';
 import TrafficIntensity from './TrafficIntensity';
@@ -78,8 +81,17 @@ const useStyles = makeStyles((theme) => ({
 
 interface StateProps {
   districts: districtState;
+  districtName: string;
   isStaff: boolean;
   user_id: number;
+  defaultDistrictLat: number;
+  defaultDistrictLng: number;
+  districtLat: number;
+  districtLng: number;
+}
+
+interface DispatchProps {
+  setDistrictCoord: (lat: number, lng: number, zoom: number) => SetCoordAction;
 }
 
 const filterList = (isStaff: boolean, user_id: number, assigned_user_id: number): boolean => {
@@ -92,12 +104,29 @@ const filterList = (isStaff: boolean, user_id: number, assigned_user_id: number)
   return false;
 };
 
-const IntersectionTable = (props: StateProps): JSX.Element => {
+const IntersectionTable = (props: StateProps & DispatchProps): JSX.Element => {
   // Intersection Table that retrieves all of the intersections of a district
   // And displays their information in the table.
   const classes = useStyles();
-  const { districts, isStaff, user_id } = props;
+  const {
+    districts, districtName, isStaff, user_id,
+  } = props;
   const isMobile = useMediaQuery(`(max-width:${MOBILE_DEVICE_MAX_WIDTH}px)`);
+
+  const intersectionOnClick = (lat: number, lng: number): void => {
+    const {
+      defaultDistrictLat,
+      defaultDistrictLng,
+      districtLat,
+      districtLng,
+      setDistrictCoord,
+    } = props;
+    if (districtLat !== lat && districtLng !== lng) {
+      setDistrictCoord(lat, lng, 15);
+    } else {
+      setDistrictCoord(defaultDistrictLat, defaultDistrictLng, 11);
+    }
+  };
 
   return (
     <Content>
@@ -108,11 +137,11 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
               <TableRow>
                 {isMobile ? (
                   <TableCell align="left" colSpan={10} style={{ fontSize: '20px' }}>
-                    <TableTitle>{`Intersection List: ${districts[0].district_name}`}</TableTitle>
+                    <TableTitle>{`Intersection List: ${districts[districtName].district_name}`}</TableTitle>
                   </TableCell>
                 ) : (
                   <TableCell align="center" colSpan={10} style={{ fontSize: '20px' }}>
-                    <TableTitle>{`Intersection List: ${districts[0].district_name}`}</TableTitle>
+                    <TableTitle>{`Intersection List: ${districts[districtName].district_name}`}</TableTitle>
                   </TableCell>
                 )}
               </TableRow>
@@ -128,7 +157,7 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {districts[0] === undefined ? (
+              {districts[districtName] === undefined ? (
                 <TableRow>
                   <TableCell component="th" scope="row" />
                   <TableCell />
@@ -138,10 +167,16 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
                 </TableRow>
               ) : (
                 // eslint-disable-next-line max-len
-                districts[0].intersections.map((intersection) => (filterList(isStaff, user_id, intersection.user_id) ? (
+                districts[districtName].intersections.map((intersection) => (filterList(isStaff, user_id, intersection.user_id) ? (
                   <TableRow key={intersection.id}>
                     <TableCell component="th" scope="row" align="center">
-                      {intersection.intersection_name}
+                      <a
+                        href="/#"
+                          // eslint-disable-next-line max-len
+                        onClick={(): void => intersectionOnClick(intersection.latitude, intersection.longitude)}
+                      >
+                        {intersection.intersection_name}
+                      </a>
                     </TableCell>
                     <TableCell align="center">
                       <VerticalFlexBox>
@@ -195,4 +230,8 @@ const IntersectionTable = (props: StateProps): JSX.Element => {
   );
 };
 
-export default IntersectionTable;
+const mapDispatchToProps: DispatchProps = {
+  setDistrictCoord,
+};
+
+export default connect(null, mapDispatchToProps)(IntersectionTable);
