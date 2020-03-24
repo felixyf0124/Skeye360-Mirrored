@@ -1,9 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import HelpIcon from '@material-ui/icons/Help';
 import { RootState } from '../../reducers/rootReducer';
 import SidebarComponent from './SidebarComponent';
-import { SKEYE_WHITE, SKEYE_LIGHT_BLACK, SKEYE_BRIGHT_GREEN } from '../../css/custom';
+import {
+  SKEYE_WHITE, SKEYE_LIGHT_BLACK, SKEYE_BRIGHT_GREEN, SKEYE_BLUE,
+} from '../../css/custom';
 import { getExistingCamera } from '../../contexts/camera';
 import Simulator from '../../containers/simulator/Scene';
 
@@ -178,6 +183,7 @@ const skeyeStyles = {
   },
 };
 
+
 class LiveComponent extends React.Component<
   SimProps & StateProps & DispatchProps,
   { tlMode: number }
@@ -199,6 +205,7 @@ class LiveComponent extends React.Component<
       tlCombStates,
       onTLUpdate,
     } = this.props;
+    const helpImg = 'https://cdn.discordapp.com/attachments/645413074265833512/691837168674668584/unknown.png';
     // eslint-disable-next-line consistent-return
     return (
       <div>
@@ -219,7 +226,25 @@ class LiveComponent extends React.Component<
               </CamContainer>
             </InnerDivVerticalCam>
             <InnerDivVerticalSim>
-              <text style={skeyeStyles.Header}>Simulator with Live Feed</text>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <text style={skeyeStyles.Header}>
+                        Simulator with Live Feed
+                      </text>
+                    </td>
+                    <td>
+                      <Tooltip
+                        title={<img style={{ width: '12rem' }} src={helpImg} alt="help img" />}
+                      >
+                        <Button style={{ margin: 0 }}><HelpIcon style={{ color: SKEYE_BLUE, fontSize: '16px' }} /></Button>
+                      </Tooltip>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
               <SimContainer>
                 <Simulator
                   isLiveFeed
