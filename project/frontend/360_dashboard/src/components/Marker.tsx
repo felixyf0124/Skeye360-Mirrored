@@ -4,9 +4,9 @@ import '../css/Marker.css';
 import { Link } from 'react-router-dom';
 import { setDistrictCoord, SetCoordAction } from '../contexts/app';
 import { RootState } from '../reducers/rootReducer';
+import { SKEYE_GREEN, SKEYE_RED } from '../css/custom';
 
 interface Props {
-  color: string;
   name: string;
   lat: number;
   lng: number;
@@ -20,6 +20,7 @@ interface StateProps {
   districtLng: number;
   defaultDistrictLat: number;
   defaultDistrictLng: number;
+  selectedIntersection: string;
 }
 
 interface DispatchProps {
@@ -33,7 +34,7 @@ interface DispatchProps {
 
 const Marker = (props: (Props & StateProps & DispatchProps) | any): JSX.Element => {
   const {
-    color, name, lat, lng, link,
+    name, lat, lng, link,
   } = props;
   const intersectionOnClick = (selectedIntersection: string, lat: number, lng: number): void => {
     const {
@@ -50,9 +51,21 @@ const Marker = (props: (Props & StateProps & DispatchProps) | any): JSX.Element 
     }
   };
 
+  const getColor = (): string => {
+    const { selectedIntersection, name } = props;
+    if (selectedIntersection === name) {
+      return SKEYE_GREEN;
+    }
+    return SKEYE_RED;
+  };
+
   return (
     <Link to={link} onClick={(): void => intersectionOnClick(name, lat, lng)}>
-      <div className="marker" style={{ backgroundColor: color, cursor: 'pointer' }} title={name} />
+      <div
+        className="marker"
+        style={{ backgroundColor: getColor(), cursor: 'pointer' }}
+        title={name}
+      />
     </Link>
   );
 };
@@ -63,6 +76,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   districtLng: state.app.districtLng,
   defaultDistrictLat: state.app.defaultLat,
   defaultDistrictLng: state.app.defaultLng,
+  selectedIntersection: state.app.selectedIntersection,
 });
 
 const mapDispatchToProps: DispatchProps = {

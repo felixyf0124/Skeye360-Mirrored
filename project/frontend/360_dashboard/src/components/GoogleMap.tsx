@@ -50,17 +50,15 @@ const GoogleMap = (props: Props & StateProps): JSX.Element => {
     }
   }, [districtLat, center.lat, center.lng, districtLng, zoom, appZoom]);
 
-  return (
-    <GoogleMapReact
-      bootstrapURLKeys={{ key: API_KEY }}
-      center={center}
-      zoom={zoom}
-      layerTypes={layerTypes}
-    >
-      {districts[districtName] === undefined ? (
-        <CircularProgress />
-      ) : (
-        districts[districtName].intersections.map((intersection) => (
+  if (districts[districtName] !== undefined) {
+    return (
+      <GoogleMapReact
+        bootstrapURLKeys={{ key: API_KEY }}
+        center={center}
+        zoom={zoom}
+        layerTypes={layerTypes}
+      >
+        {districts[districtName].intersections.map((intersection) => (
           <Marker
             key={intersection.id}
             name={intersection.intersection_name}
@@ -70,10 +68,11 @@ const GoogleMap = (props: Props & StateProps): JSX.Element => {
             color="red"
             link="/#map"
           />
-        ))
-      )}
-    </GoogleMapReact>
-  );
+        ))}
+      </GoogleMapReact>
+    );
+  }
+  return <CircularProgress />;
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
