@@ -23,14 +23,19 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  setDistrictCoord: (lat: number, lng: number, zoom: number) => SetCoordAction;
+  setDistrictCoord: (
+    selectedIntersection: string,
+    lat: number,
+    lng: number,
+    zoom: number,
+  ) => SetCoordAction;
 }
 
 const Marker = (props: (Props & StateProps & DispatchProps) | any): JSX.Element => {
   const {
     color, name, lat, lng, link,
   } = props;
-  const intersectionOnClick = (lat: number, lng: number): void => {
+  const intersectionOnClick = (selectedIntersection: string, lat: number, lng: number): void => {
     const {
       defaultDistrictLat,
       defaultDistrictLng,
@@ -39,14 +44,14 @@ const Marker = (props: (Props & StateProps & DispatchProps) | any): JSX.Element 
       setDistrictCoord,
     } = props;
     if (districtLat !== lat && districtLng !== lng) {
-      setDistrictCoord(lat, lng, 15);
+      setDistrictCoord(selectedIntersection, lat, lng, 15);
     } else {
-      setDistrictCoord(defaultDistrictLat, defaultDistrictLng, 11);
+      setDistrictCoord('none', defaultDistrictLat, defaultDistrictLng, 11);
     }
   };
 
   return (
-    <Link to={link} onClick={(): void => intersectionOnClick(lat, lng)}>
+    <Link to={link} onClick={(): void => intersectionOnClick(name, lat, lng)}>
       <div className="marker" style={{ backgroundColor: color, cursor: 'pointer' }} title={name} />
     </Link>
   );

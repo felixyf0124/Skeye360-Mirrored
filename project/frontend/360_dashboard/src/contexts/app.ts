@@ -2,6 +2,7 @@
 
 export interface STATE {
   currentDistrict: string;
+  selectedIntersection: string;
   districtLat: number;
   districtLng: number;
   defaultLat: number;
@@ -12,6 +13,7 @@ export interface STATE {
 // initState
 const initState: STATE = {
   currentDistrict: 'Montreal',
+  selectedIntersection: 'none',
   districtLat: 45.5017,
   districtLng: -73.5673,
   defaultLat: 45.5017,
@@ -48,13 +50,23 @@ export const setSelectedDistrict = (
 
 export interface SetCoordAction {
   type: string;
-  data: { lat: number; lng: number; zoom: number };
+  data: { selectedIntersection: string; lat: number; lng: number; zoom: number };
 }
 
 // set district coord
-export const setDistrictCoord = (lat: number, lng: number, zoom: number): SetCoordAction => ({
+export const setDistrictCoord = (
+  selectedIntersection: string,
+  lat: number,
+  lng: number,
+  zoom: number,
+): SetCoordAction => ({
   type: SET_DISTRICT_COORD,
-  data: { lat, lng, zoom },
+  data: {
+    selectedIntersection,
+    lat,
+    lng,
+    zoom,
+  },
 });
 
 // REDUCER
@@ -65,6 +77,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       return {
         ...state,
         currentDistrict: data.districtName,
+        selectedIntersection: 'none',
         districtLat: data.lat,
         districtLng: data.lng,
         defaultLat: data.lat,
@@ -76,6 +89,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       const { data } = action as SetCoordAction;
       return {
         ...state,
+        selectedIntersection: data.selectedIntersection,
         districtLat: data.lat,
         districtLng: data.lng,
         zoom: data.zoom,

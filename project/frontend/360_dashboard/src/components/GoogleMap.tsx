@@ -63,6 +63,7 @@ const GoogleMap = (props: Props & StateProps): JSX.Element => {
         districts[districtName].intersections.map((intersection) => (
           <Marker
             key={intersection.id}
+            name={intersection.intersection_name}
             lat={intersection.latitude}
             lng={intersection.longitude}
             text="Camera_id"

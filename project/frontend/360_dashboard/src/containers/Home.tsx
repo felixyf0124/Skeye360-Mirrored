@@ -120,6 +120,7 @@ interface StateProps {
   defaultDistrictLat: number;
   defaultDistrictLng: number;
   isStaff: boolean;
+  selectedIntersection: string;
   users: userState;
   user_id: number;
 }
@@ -130,7 +131,7 @@ interface DispatchProps {
   getUsers(): GetUsersAction;
   resetDistricts(): ResetDistrictAction;
   logClick: (log_message: string, user_id: number) => LogAction;
-  setDistrictCoord: (lat: number, lng: number, zoom: number) => SetCoordAction;
+  setDistrictCoord: (name: string, lat: number, lng: number, zoom: number) => SetCoordAction;
 }
 
 interface TabPanelProps {
@@ -187,6 +188,7 @@ const Home = (props: StateProps & DispatchProps): JSX.Element => {
     isStaff,
     user_id,
     users,
+    selectedIntersection,
     getDistricts,
     currentDistrict,
   } = props;
@@ -217,6 +219,7 @@ const Home = (props: StateProps & DispatchProps): JSX.Element => {
                 defaultDistrictLng={defaultDistrictLng}
                 districtLat={districtLat}
                 districtLng={districtLng}
+                selectedIntersection={selectedIntersection}
               />
               <AddButton>{isStaff ? <AddIntersection users={users} /> : <div />}</AddButton>
             </TableDiv>
@@ -260,6 +263,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   defaultDistrictLat: state.app.defaultLat,
   defaultDistrictLng: state.app.defaultLng,
   isStaff: isStaff(state),
+  selectedIntersection: state.app.selectedIntersection,
   users: state.users,
   user_id: state.authentication.user_id,
 });

@@ -49,6 +49,11 @@ const TableTitle = styled.div`
   }
 `;
 
+// Hyperlink Bold
+const BoldLink = styled.a`
+  font-weight: bold;
+`;
+
 /* Tables from Material-UI:
   https://material-ui.com/components/tables/ */
 
@@ -79,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface StateProps {
+interface Props {
   districts: districtState;
   districtName: string;
   isStaff: boolean;
@@ -88,10 +93,16 @@ interface StateProps {
   defaultDistrictLng: number;
   districtLat: number;
   districtLng: number;
+  selectedIntersection: string;
 }
 
 interface DispatchProps {
-  setDistrictCoord: (lat: number, lng: number, zoom: number) => SetCoordAction;
+  setDistrictCoord: (
+    selectedIntersection: string,
+    lat: number,
+    lng: number,
+    zoom: number,
+  ) => SetCoordAction;
 }
 
 const filterList = (isStaff: boolean, user_id: number, assigned_user_id: number): boolean => {
@@ -104,16 +115,16 @@ const filterList = (isStaff: boolean, user_id: number, assigned_user_id: number)
   return false;
 };
 
-const IntersectionTable = (props: StateProps & DispatchProps): JSX.Element => {
+const IntersectionTable = (props: Props & DispatchProps): JSX.Element => {
   // Intersection Table that retrieves all of the intersections of a district
   // And displays their information in the table.
   const classes = useStyles();
   const {
-    districts, districtName, isStaff, user_id,
+    districts, districtName, isStaff, user_id, selectedIntersection,
   } = props;
   const isMobile = useMediaQuery(`(max-width:${MOBILE_DEVICE_MAX_WIDTH}px)`);
 
-  const intersectionOnClick = (lat: number, lng: number): void => {
+  const intersectionOnClick = (selectedIntersection: string, lat: number, lng: number): void => {
     const {
       defaultDistrictLat,
       defaultDistrictLng,
@@ -122,9 +133,9 @@ const IntersectionTable = (props: StateProps & DispatchProps): JSX.Element => {
       setDistrictCoord,
     } = props;
     if (districtLat !== lat && districtLng !== lng) {
-      setDistrictCoord(lat, lng, 15);
+      setDistrictCoord(selectedIntersection, lat, lng, 15);
     } else {
-      setDistrictCoord(defaultDistrictLat, defaultDistrictLng, 11);
+      setDistrictCoord('none', defaultDistrictLat, defaultDistrictLng, 11);
     }
   };
 
@@ -170,13 +181,29 @@ const IntersectionTable = (props: StateProps & DispatchProps): JSX.Element => {
                 districts[districtName].intersections.map((intersection) => (filterList(isStaff, user_id, intersection.user_id) ? (
                   <TableRow key={intersection.id}>
                     <TableCell component="th" scope="row" align="center">
-                      <a
-                        href="/#"
-                          // eslint-disable-next-line max-len
-                        onClick={(): void => intersectionOnClick(intersection.latitude, intersection.longitude)}
-                      >
-                        {intersection.intersection_name}
-                      </a>
+                      {selectedIntersection === intersection.intersection_name ? (
+                        <BoldLink
+                          href="/#"
+                          onClick={(): void => intersectionOnClick(
+                            intersection.intersection_name,
+                            intersection.latitude,
+                            intersection.longitude,
+                          )}
+                        >
+                          {intersection.intersection_name}
+                        </BoldLink>
+                      ) : (
+                        <a
+                          href="/#"
+                          onClick={(): void => intersectionOnClick(
+                            intersection.intersection_name,
+                            intersection.latitude,
+                            intersection.longitude,
+                          )}
+                        >
+                          {intersection.intersection_name}
+                        </a>
+                      )}
                     </TableCell>
                     <TableCell align="center">
                       <VerticalFlexBox>
