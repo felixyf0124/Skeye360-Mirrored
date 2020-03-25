@@ -97,7 +97,7 @@ class BarChartDirections extends React.Component<{} & Props, ChartState> {
   // The data gets retrieved here, in future implementations: Use async fetch from the database
   public componentDidMount(): void {
     const { chartID } = this.props;
-    ApexCharts.exec(chartID, 'updateSeries', [{ data: [] }]);
+    // ApexCharts.exec(chartID, 'updateSeries', [{ data: [] }]);
   }
 
   /**
@@ -110,14 +110,20 @@ class BarChartDirections extends React.Component<{} & Props, ChartState> {
       const { chartID, directionData } = this.props;
 
       let data;
-      if (directionData !== prevProps.directionData) {
+      if (directionData != undefined && directionData !== prevProps.directionData) {
         data = await loadDataToChart([
           directionData[0].passedNum,
           directionData[1].passedNum,
           directionData[2].passedNum,
           directionData[3].passedNum,
         ]);
-        ApexCharts.exec(chartID, 'updateSeries', [{ data }]);
+        if(data != null && data != undefined) {
+          // if(data == "0,0,0,0") {
+          //   ApexCharts.exec(chartID, 'updateSeries', [{ data: [] }]);
+          // } else {
+            ApexCharts.exec(chartID, 'updateSeries', [{ data }]);
+          // }
+        }
       }
     }
   }

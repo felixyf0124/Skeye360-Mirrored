@@ -13,9 +13,9 @@ import {
 } from '../../css/custom';
 
 interface Props {
+  chartID: string;
   ttlPassed: number;
   directionData: Array<{ direction: string; passedNum: number }>;
-
   waitingTime: number;
 }
 
@@ -142,7 +142,7 @@ const skeyeStyles = {
 };
 
 const DataTabsComponent = (props: any): JSX.Element => {
-  const { ttlPassedCars, passedVehicles, waitingTime } = props;
+  const { chartID, ttlPassedCars, passedVehicles, waitingTime } = props;
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -188,7 +188,8 @@ const DataTabsComponent = (props: any): JSX.Element => {
               <BarChartContainer>
                 {/* TO DO: CHANGE TO REAL DATA */}
                 <BarChartDirections
-                  chartID="barChart-default"
+                  // chartID="barChart-default"
+                  chartID={chartID}
                   title="Number Of Car Passed Per Direction"
                   categories={['From North', 'From East', 'From South', 'From West']}
                   directionData={passedVehicles}
@@ -208,11 +209,6 @@ const DataTabsComponent = (props: any): JSX.Element => {
                   {/* TO DO: CHANGE TO REAL DATA */}
                   <text style={skeyeStyles.Data}>62</text>
                   <text style={skeyeStyles.Metric}>Gallons/Hour</text>
-                  <div>
-                    <ArrowDropDownIcon style={skeyeStyles.GreenArrow} />
-                    {/* TO DO: CHANGE TO REAL DATA */}
-                    <text style={skeyeStyles.BoxTextPercentage}>28,88%</text>
-                  </div>
                   {/* TO DO: CHANGE TO REAL DATA */}
                   <text style={skeyeStyles.BoxTextUpdated}>Last updated: 5 min ago</text>
                 </DataBox>
@@ -227,11 +223,6 @@ const DataTabsComponent = (props: any): JSX.Element => {
                     {onFLoatRound(waitingTime / ttlPassedCars, 2)}
                   </text>
                   <text style={skeyeStyles.Metric}>Seconds</text>
-                  <div>
-                    <ArrowDropDownIcon style={skeyeStyles.GreenArrow} />
-                    {/* TO DO: CHANGE TO REAL DATA */}
-                    <text style={skeyeStyles.BoxTextPercentage}>28,88%</text>
-                  </div>
                   {/* TO DO: CHANGE TO REAL DATA */}
                   <text style={skeyeStyles.BoxTextUpdated}>Last updated: 5 min ago</text>
                 </DataBox>
