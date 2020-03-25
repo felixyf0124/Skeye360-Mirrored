@@ -17,6 +17,9 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import NativeSelect from '@material-ui/core/NativeSelect'; 
 import FormControl from '@material-ui/core/FormControl';
 import { InputLabel } from '@material-ui/core';
+import Menu from '@material-ui/core/Menu';
+import Button from '@material-ui/core/Button';
+import { cos } from '../containers/simulator/TSGeometry';
 
 // MapQuest API is used to retrieve traffic news
 // https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -47,6 +50,7 @@ const incidentsArray: any[] = [];
 interface StateProps {
   isLoaded: boolean;
   incidents: any;
+  anchorEl: any;
 }
 interface StaffProps {
   districts: any;
@@ -143,6 +147,8 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     this.state = {
       isLoaded: false,
       incidents: [],
+      anchorEl: null,
+
     };
     
     /*
@@ -151,6 +157,11 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     */
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleSortHigh = this.handleSortHigh.bind(this);
+    this.handleSortLow = this.handleSortLow.bind(this);
+    this.handleSortNew = this.handleSortNew.bind(this);
+    this.handleSortOld = this.handleSortOld.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   /*
@@ -167,7 +178,29 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
   }
   */
 
+  handleClick = (event: any) => {
+    this.setState({...this.state, anchorEl: event.currentTarget})
+  }
+  handleSortOld = (e: any, incidents: any) => {
+    this.setState({...this.state, incidents: sortOldest(incidents)})
+  }
+  handleSortNew = (e: any, incidents: any) => {
+    this.setState({...this.state, incidents: sortNewest(incidents)})
+  }
+
+  handleSortHigh = (e: any, incidents: any) => {
+    this.setState({...this.state, incidents: sortByHighSeverity(incidents)})
+  }
+
+  handleSortLow = (e: any, incidents: any) => {
+    this.setState({...this.state, incidents: sortByLowSeverity(incidents)})
+  }
+
+  handleClose = () => {
+    this.setState({...this.state, anchorEl: null})
+  }
   handleChange = (event: any): void => {
+    console.log()
     this.setState({...this.state, incidents: event.target.value});
   }
 
@@ -237,7 +270,7 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
   }
 
   render(): JSX.Element {
-    const { isLoaded, incidents } = this.state;
+    const { isLoaded, incidents, anchorEl } = this.state;
 
     
 
@@ -253,23 +286,20 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     /* eslint-disable @typescript-eslint/explicit-function-return-type */
     return (
       <OuterDiv>
-          <FormControl style={{backgroundColor: 'white'}} >
-            <Select
-            
-        
-              value={incidents}
-              onChange={this.handleChange}
-              label="Sort"
-            >
-              <MenuItem>
-                Sort
-              </MenuItem>
-              <MenuItem value={sortOldest(incidents)}>Oldest</MenuItem>
-              <MenuItem value={sortNewest(incidents)}>Most Recent</MenuItem>
-              <MenuItem value={sortByHighSeverity(incidents)}>Highest Impact</MenuItem>
-              <MenuItem value={sortByLowSeverity(incidents)}>Lowest Impact</MenuItem>
-            </Select>
-          </FormControl>
+          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
+            Sort
+          </Button>
+          <Menu id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={this.handleClose} >
+              <MenuItem onClick={(event): void => this.handleSortOld(event, incidents)}> Old</MenuItem>
+              <MenuItem onClick={(event): void => this.handleSortNew(event, incidents)}> New</MenuItem>
+              <MenuItem onClick={(event): void => this.handleSortHigh(event, incidents)}> High</MenuItem>
+              <MenuItem onClick={(event): void => this.handleSortLow(event, incidents)}> Low</MenuItem>
+          </Menu>
+
       
         <OuterContainer>
           {incidents.map(
