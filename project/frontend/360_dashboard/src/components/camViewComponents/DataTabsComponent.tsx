@@ -69,6 +69,8 @@ const DataBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     width: 20vw;
     color: white;
 `;
@@ -95,6 +97,7 @@ const skeyeStyles = {
   Header: {
     color: SKEYE_WHITE,
     fontSize: 20,
+    marginTop: 20,
     marginBottom: 4,
     fontWeight: 600,
     height: 30,
@@ -102,7 +105,7 @@ const skeyeStyles = {
   Data: {
     color: SKEYE_WHITE,
     fontSize: 30,
-    marginTop: 40,
+    marginTop: 50,
     marginBottom: 4,
     fontWeight: 600,
     height: 35,
@@ -114,18 +117,11 @@ const skeyeStyles = {
     fontWeight: 600,
     height: 35,
   },
-  BoxTextPercentage: {
-    color: SKEYE_BRIGHT_GREEN,
-    fontSize: 32,
-    fontWeight: 600,
-    marginTop: 20,
-    marginRight: 15,
-  },
   BoxTextUpdated: {
     color: SKEYE_WHITE,
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 200,
-    marginTop: 10,
+    marginTop: 30,
   },
   GreenArrow: {
     color: SKEYE_BRIGHT_GREEN,
@@ -141,6 +137,57 @@ const skeyeStyles = {
   },
 };
 
+function getMonthName(month: Number): String {
+  switch(month) {
+    case 1: {
+      return "January"
+    }
+    case 2: {
+      return "February"
+    }
+    case 3: {
+      return "March"
+    }
+    case 4: {
+      return "April"
+    }
+    case 5: {
+      return "May"
+    }
+    case 6: {
+      return "June"
+    }
+    case 7: {
+      return "July"
+    }
+    case 8: {
+      return "August"
+    }
+    case 9: {
+      return "September"
+    }
+    case 10: {
+      return "October"
+    }
+    case 11: {
+      return "November"
+    }
+    case 12: {
+      return "December"
+    }
+    default: {
+      return "unknown"
+    }
+  }
+
+}
+
+function getDateTime() {
+  const fullDate = new Date();
+  return getMonthName(fullDate.getMonth()) + " " + fullDate.getDate() + ", " 
+          + fullDate.getFullYear() + " at " + fullDate.getHours() + ":" 
+          + fullDate.getMinutes() + ":" + fullDate.getSeconds()
+}
 const DataTabsComponent = (props: any): JSX.Element => {
   const { chartID, ttlPassedCars, passedVehicles, waitingTime } = props;
 
@@ -210,7 +257,7 @@ const DataTabsComponent = (props: any): JSX.Element => {
                   <text style={skeyeStyles.Data}>62</text>
                   <text style={skeyeStyles.Metric}>Gallons/Hour</text>
                   {/* TO DO: CHANGE TO REAL DATA */}
-                  <text style={skeyeStyles.BoxTextUpdated}>Last updated: 5 min ago</text>
+                  <text style={skeyeStyles.BoxTextUpdated}>Updated on: {getDateTime()}</text>
                 </DataBox>
               </div>
             </VerticalBlock>
@@ -224,7 +271,7 @@ const DataTabsComponent = (props: any): JSX.Element => {
                   </text>
                   <text style={skeyeStyles.Metric}>Seconds</text>
                   {/* TO DO: CHANGE TO REAL DATA */}
-                  <text style={skeyeStyles.BoxTextUpdated}>Last updated: 5 min ago</text>
+                  <text style={skeyeStyles.BoxTextUpdated}>Updated on: {getDateTime()}</text>
                 </DataBox>
               </div>
             </VerticalBlock>
