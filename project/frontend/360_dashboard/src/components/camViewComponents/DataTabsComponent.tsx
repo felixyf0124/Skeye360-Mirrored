@@ -261,7 +261,7 @@ const DataTabsComponent = (props: any): JSX.Element => {
             <VerticalBlock>
               <div style={{ marginRight: '3vh' }}>
                 <DataBox>
-                  <text style={skeyeStyles.Header}>Gas Wasted</text>
+                  <text style={skeyeStyles.Header}>Average Gas Wasted Per Car</text>
                   {/* 0.63L of gas wasted per hour * average wait time  */}
                   <text style={skeyeStyles.Data}>{gasWasted()}</text>
                   <text style={skeyeStyles.Metric}>Liters/Hour</text>
