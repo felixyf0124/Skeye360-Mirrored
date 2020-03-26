@@ -1,10 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import SidebarComponent from './SidebarComponent';
+import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import HelpIcon from '@material-ui/icons/Help';
 import Simulator from '../../containers/simulator/Scene';
-import BarChartDirections from '../charts/BarChartDirections';
-import { SKEYE_WHITE } from '../../css/custom';
+import SidebarComponent from './SidebarComponent';
+import { SKEYE_WHITE, SKEYE_BLUE } from '../../css/custom';
+import DataTabsComponent from './DataTabsComponent';
+import helpImg from '../../images/helpImg02.png';
 
 interface SimProps {
   tlMode: number;
@@ -61,24 +65,8 @@ const ContentBlock = styled.div`
 
 const VerticalBlock = styled.div`
   display: flex;
-  margin-bottom: -2.5vh;
+  margin-bottom: -3vh;
   flex-direction:column;
-`;
-
-const CarPassedBox = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flow: center;
-    width: 20vw;
-    color: white;
-    margin-left: 5.5vw;
-`;
-
-const BarChartContainer = styled.div`
-  width: 27vw;
-  position: relative;
-  margin: 2rem;
 `;
 
 // Custom styling
@@ -92,7 +80,7 @@ const skeyeStyles = {
   Header: {
     color: SKEYE_WHITE,
     fontSize: 20,
-    marginBottom: 4,
+    marginBottom: 2,
     fontWeight: 600,
     height: 35,
     marginLeft: -100,
@@ -129,7 +117,7 @@ let passedVehicles2 = [
   { direction: '', passedNum: 0 },
 ];
 
-const SimulatorComponent = (props: SimProps | any): JSX.Element => {
+const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
   // eslint-disable-next-line consistent-return
   const {
     tlMode, onChangeTLMode, toggles, tlStop, onClickTLStop,
@@ -171,6 +159,29 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
     + passedVehicles2[2].passedNum
     + passedVehicles2[3].passedNum;
 
+  const [cumulativeWaitingTime, setCumulativeWaitingTime] = React.useState(0);
+  const [cumulativeWaitingTime2, setCumulativeWaitingTime2] = React.useState(0);
+
+  const onWaitingTimeUpdate = (wTime: number, isSmartTL: boolean):
+    void => {
+    if (isSmartTL) {
+      setCumulativeWaitingTime2(wTime);
+    } else {
+      setCumulativeWaitingTime(wTime);
+    }
+  };
+
+  const [loopCountDown, setLoopCountDown] = React.useState(0);
+  const [loopCountDown2, setLoopCountDown2] = React.useState(0);
+  const updateLoopCountDown = (loopCD: number, isSmartTL: boolean):
+    void => {
+    if (isSmartTL) {
+      setLoopCountDown2(loopCD);
+    } else {
+      setLoopCountDown(loopCD);
+    }
+  };
+
   return (
     <div>
       <HorizontalFlexBox>
@@ -182,14 +193,34 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
           tlCombStates={tlCombStates}
           onClickSimuStart={onClickSimuStart}
           keyValue="2"
+          loopCountDown={loopCountDown}
+          loopCountDown2={loopCountDown2}
         />
         <ContentBlock>
 
           <VerticalBlock>
             <InnerDivHorizon>
               <VerticalBlock>
-                <div style={{ height: '15px' }}>
-                  <text style={skeyeStyles.Header}>Default Traffic Light</text>
+                <div style={{ height: '2vh' }}>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <text style={skeyeStyles.Header}>
+                            Default Traffic Light
+                          </text>
+                        </td>
+                        <td>
+                          <Tooltip
+                            title={<img style={{ width: '16rem' }} src={helpImg} alt="help img" />}
+                          >
+                            <Button style={{ margin: 0 }}><HelpIcon style={{ color: SKEYE_BLUE, fontSize: '14px' }} /></Button>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  {/* <text style={skeyeStyles.Header}>Default Traffic Light</text> */}
                 </div>
                 <SimContainer>
                   <Simulator
@@ -202,37 +233,43 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                     tlStop={tlStop}
                     onTLUpdate={onTLUpdate}
                     updatePassedVehicles={updatePassedVehicles}
-                    simuWidthRatio={0.325}
+                    simuWidthRatio={0.327}
                     resolutionRatio={38 / 19.5}
-                    onWaitingTimeUpdate={null}
-                    onLoopCDUpdate={null}
+                    onWaitingTimeUpdate={onWaitingTimeUpdate}
+                    onLoopCDUpdate={updateLoopCountDown}
                   />
                 </SimContainer>
               </VerticalBlock>
-              <VerticalBlock>
-                <div>
-                  <CarPassedBox>
-                    <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
-                    <text style={skeyeStyles.NumCar}>{ttlPassedCars}</text>
-                  </CarPassedBox>
-                </div>
-              </VerticalBlock>
-              <VerticalBlock>
-                <BarChartContainer>
-                  <BarChartDirections
-                    chartID="barChart-default"
-                    title="Number Of Car Passed Per Direction"
-                    categories={['North', 'East', 'South', 'West']}
-                    directionData={passedVehicles}
-                  />
-                </BarChartContainer>
-              </VerticalBlock>
+              <DataTabsComponent
+                chartID="first"
+                ttlPassedCars={ttlPassedCars}
+                passedVehicles={passedVehicles}
+                waitingTime={cumulativeWaitingTime}
+              />
             </InnerDivHorizon>
 
             <InnerDivHorizon>
               <VerticalBlock>
-                <div style={{ height: '15px' }}>
-                  <text style={skeyeStyles.Header}>Optimized Traffic Light</text>
+                <div style={{ height: '2vh' }}>
+                  {/* <text style={skeyeStyles.Header}>Optimized Traffic Light</text> */}
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <text style={skeyeStyles.Header}>
+                            Optimized Traffic Light
+                          </text>
+                        </td>
+                        <td>
+                          <Tooltip
+                            title={<img style={{ width: '16rem' }} src={helpImg} alt="help img" />}
+                          >
+                            <Button style={{ margin: 0 }}><HelpIcon style={{ color: SKEYE_BLUE, fontSize: '14px' }} /></Button>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
                 <SimContainer>
                   <Simulator
@@ -245,31 +282,19 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
                     tlStop={tlStop}
                     onTLUpdate={onTLUpdate}
                     updatePassedVehicles={updatePassedVehicles}
-                    simuWidthRatio={0.325}
+                    simuWidthRatio={0.327}
                     resolutionRatio={38 / 19.5}
-                    onWaitingTimeUpdate={null}
-                    onLoopCDUpdate={null}
+                    onWaitingTimeUpdate={onWaitingTimeUpdate}
+                    onLoopCDUpdate={updateLoopCountDown}
                   />
                 </SimContainer>
               </VerticalBlock>
-              <VerticalBlock>
-                <div>
-                  <CarPassedBox>
-                    <text style={skeyeStyles.HeaderCar}>Total Number Of Car Passed</text>
-                    <text style={skeyeStyles.NumCar}>{ttlPassedCars2}</text>
-                  </CarPassedBox>
-                </div>
-              </VerticalBlock>
-              <VerticalBlock>
-                <BarChartContainer>
-                  <BarChartDirections
-                    chartID="barChart-smart"
-                    title="Number Of Car Passed Per Direction"
-                    categories={['North', 'East', 'South', 'West']}
-                    directionData={passedVehicles2}
-                  />
-                </BarChartContainer>
-              </VerticalBlock>
+              <DataTabsComponent
+                chartID="second"
+                ttlPassedCars={ttlPassedCars2}
+                passedVehicles={passedVehicles2}
+                waitingTime={cumulativeWaitingTime2}
+              />
             </InnerDivHorizon>
           </VerticalBlock>
         </ContentBlock>
@@ -278,4 +303,4 @@ const SimulatorComponent = (props: SimProps | any): JSX.Element => {
   );
 };
 
-export default connect()(SimulatorComponent);
+export default connect()(SimulatorWithTabsComponent);

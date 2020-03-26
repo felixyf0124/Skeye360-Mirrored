@@ -232,6 +232,8 @@ class OverviewComponent extends React.Component<
                   onTLUpdate={onTLUpdate}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
+                  onWaitingTimeUpdate={null}
+                  onLoopCDUpdate={null}
                 />
               </SimContainer>
             </InnerDivVertical>
@@ -286,6 +288,8 @@ class OverviewComponent extends React.Component<
                   updatePassedVehicles={null}
                   simuWidthRatio={0.38}
                   resolutionRatio={38 / 19.5}
+                  onWaitingTimeUpdate={null}
+                  onLoopCDUpdate={null}
                 />
               </SimContainer>
             </InnerDivVertical>

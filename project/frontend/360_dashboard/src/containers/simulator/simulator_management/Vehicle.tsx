@@ -34,6 +34,10 @@ export default class Vehicle extends Object {
 
   initialSection: number;
 
+  lastStopTime: number;
+
+  cumulativeWaitingTime: number;
+
   constructor(id: number, laneId: number, roadSectionId: number,
     speed: number, position?: vec2) {
     super(id, laneId, roadSectionId, speed, position);
@@ -51,6 +55,8 @@ export default class Vehicle extends Object {
     this.direction = undefined;
     this.targetSpeed = undefined;
     this.initialSection = roadSectionId;
+    this.lastStopTime = -1;
+    this.cumulativeWaitingTime = 0;
   }
 
   /**
@@ -116,26 +122,44 @@ export default class Vehicle extends Object {
     return this.path;
   }
 
+  /**
+   * get at which path in current section
+   */
   getAtPath(): number {
     return this.atPath;
   }
 
+  /**
+   * get at which path section
+   */
   getAtPathSection(): number {
     return this.atPathSection;
   }
 
+  /**
+   * get traveled distance
+   */
   getTraveled(): number {
     return this.traveled;
   }
 
+  /**
+   * check if the vehicle is tagged isgone to be deleted
+   */
   getIsGone(): boolean {
     return this.isGone;
   }
 
+  /**
+   * check if is in section transition state
+   */
   getIsInTransition(): boolean {
     return this.isInTransition;
   }
 
+  /**
+   * get target speed
+   */
   getTargetSpeed(): number | undefined {
     return this.targetSpeed;
   }
@@ -145,6 +169,13 @@ export default class Vehicle extends Object {
    */
   getInitialSectionId(): number {
     return this.initialSection;
+  }
+
+  /**
+   * get cumulative waiting time
+   */
+  getCumulativeWaitingTime(): number {
+    return this.cumulativeWaitingTime;
   }
 
   /**
@@ -196,6 +227,9 @@ export default class Vehicle extends Object {
     }
   }
 
+  /**
+   * get delta Time from the last call
+   */
   getDeltaT(): number {
     const currentTime = Date.now();
     const deltaT = currentTime - this.lastTime;
@@ -234,6 +268,8 @@ export default class Vehicle extends Object {
     if (deltaTime !== undefined) {
       deltaT = deltaTime;
     }
+    const lastSpeed = this.speed;
+
     // acceleration
     if (this.state === 1) {
       let mSpeed = this.maxSpeed;
@@ -258,6 +294,20 @@ export default class Vehicle extends Object {
         }
       }
     }
+    // start record
+    if (this.speed === 0 && lastSpeed > 0
+      && this.atPathSection === 0) {
+      this.lastStopTime = Date.now();
+    }
+
+    // add up
+    if (this.speed > 0 && lastSpeed === 0
+      && this.lastStopTime !== -1 && this.atPathSection === 0) {
+      const wTime = Date.now() - this.lastStopTime;
+      this.cumulativeWaitingTime += wTime;
+      this.lastStopTime = -1;
+    }
+
 
     // check if it is off the path or not
     if (!this.checkOnLine()) {
@@ -359,7 +409,7 @@ export default class Vehicle extends Object {
     return false;
   }
 
-
+  // check if is within the section line
   checkOnLine(): boolean {
     let dir = ts
       .getAngleOfVec(this.path[this.atPathSection][0].minus(this.position));
