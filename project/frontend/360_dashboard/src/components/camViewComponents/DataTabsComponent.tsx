@@ -263,10 +263,10 @@ const DataTabsComponent = (props: any): JSX.Element => {
                 <DataBox>
                   <text style={skeyeStyles.Header}>Gas Wasted</text>
                   {/* 0.63L of gas wasted per hour * average wait time  */}
-                  <text style={skeyeStyles.Data}>{ gasWasted() }</text>
+                  <text style={skeyeStyles.Data}>{gasWasted()}</text>
                   <text style={skeyeStyles.Metric}>Liters/Hour</text>
                   <text style={skeyeStyles.BoxTextUpdated}>
-                    Updated on:
+                    Updated on:	&nbsp;
                     {getDateTime()}
                   </text>
                 </DataBox>
@@ -281,7 +281,7 @@ const DataTabsComponent = (props: any): JSX.Element => {
                   </text>
                   <text style={skeyeStyles.Metric}>Seconds</text>
                   <text style={skeyeStyles.BoxTextUpdated}>
-                    Updated on:
+                    Updated on:	&nbsp;
                     {getDateTime()}
                   </text>
                 </DataBox>
