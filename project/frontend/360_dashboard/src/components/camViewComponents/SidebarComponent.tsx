@@ -394,6 +394,9 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
             <DivVertical>
+              <text style={skeyeStyles.TextMessage}>
+                Starts generating sample vehicles.
+              </text>
               <Button variant="contained" style={skeyeStyles.ButtonStyle} onClick={onClickSimuStart}>
                 <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon} />
                 START
