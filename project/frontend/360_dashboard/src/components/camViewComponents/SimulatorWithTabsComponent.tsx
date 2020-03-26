@@ -241,7 +241,7 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
                 </SimContainer>
               </VerticalBlock>
               <DataTabsComponent
-                chartID = {'first'}
+                chartID="first"
                 ttlPassedCars={ttlPassedCars}
                 passedVehicles={passedVehicles}
                 waitingTime={cumulativeWaitingTime}
@@ -290,7 +290,7 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
                 </SimContainer>
               </VerticalBlock>
               <DataTabsComponent
-                chartID = {'second'}
+                chartID="second"
                 ttlPassedCars={ttlPassedCars2}
                 passedVehicles={passedVehicles2}
                 waitingTime={cumulativeWaitingTime2}

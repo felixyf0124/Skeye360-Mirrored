@@ -6,7 +6,6 @@ import {
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import BarChartDirections from '../charts/BarChartDirections';
 import {
   SKEYE_WHITE, SKEYE_DARK_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_LIGHT_BLACK, SKEYE_BRIGHT_GREEN,
@@ -137,59 +136,68 @@ const skeyeStyles = {
   },
 };
 
-function getMonthName(month: Number): String {
-  switch(month) {
+function getMonthName(month: number): string {
+  switch (month) {
+    case 0: {
+      return 'January';
+    }
     case 1: {
-      return "January"
+      return 'February';
     }
     case 2: {
-      return "February"
+      return 'March';
     }
     case 3: {
-      return "March"
+      return 'April';
     }
     case 4: {
-      return "April"
+      return 'May';
     }
     case 5: {
-      return "May"
+      return 'June';
     }
     case 6: {
-      return "June"
+      return 'July';
     }
     case 7: {
-      return "July"
+      return 'August';
     }
     case 8: {
-      return "August"
+      return 'September';
     }
     case 9: {
-      return "September"
+      return 'October';
     }
     case 10: {
-      return "October"
+      return 'November';
     }
     case 11: {
-      return "November"
-    }
-    case 12: {
-      return "December"
+      return 'December';
     }
     default: {
-      return "unknown"
+      return 'unknown';
     }
   }
-
 }
 
-function getDateTime() {
+function modifyNumber(seconds: number): string {
+  if (seconds < 10) {
+    return `0${seconds.toString()}`;
+  }
+  return seconds.toString();
+}
+
+function getDateTime(): any {
   const fullDate = new Date();
-  return getMonthName(fullDate.getMonth()) + " " + fullDate.getDate() + ", " 
-          + fullDate.getFullYear() + " at " + fullDate.getHours() + ":" 
-          + fullDate.getMinutes() + ":" + fullDate.getSeconds()
+  return `${getMonthName(fullDate.getMonth())} ${fullDate.getDate()}, ${
+    fullDate.getFullYear()} at ${modifyNumber(fullDate.getHours())}:${
+    modifyNumber(fullDate.getMinutes())}:${modifyNumber(fullDate.getSeconds())}`;
 }
+
 const DataTabsComponent = (props: any): JSX.Element => {
-  const { chartID, ttlPassedCars, passedVehicles, waitingTime } = props;
+  const {
+    chartID, ttlPassedCars, passedVehicles, waitingTime,
+  } = props;
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -205,6 +213,9 @@ const DataTabsComponent = (props: any): JSX.Element => {
     const rounded = Math.round(num * tens) / tens;
     return rounded;
   };
+
+  /* eslint-disable no-mixed-operators */
+  const gasWasted = (): number => onFLoatRound(waitingTime / ttlPassedCars * 0.63, 2);
 
   return (
 
@@ -233,9 +244,7 @@ const DataTabsComponent = (props: any): JSX.Element => {
             </VerticalBlock>
             <VerticalBlock>
               <BarChartContainer>
-                {/* TO DO: CHANGE TO REAL DATA */}
                 <BarChartDirections
-                  // chartID="barChart-default"
                   chartID={chartID}
                   title="Number Of Car Passed Per Direction"
                   categories={['From North', 'From East', 'From South', 'From West']}
@@ -252,12 +261,14 @@ const DataTabsComponent = (props: any): JSX.Element => {
             <VerticalBlock>
               <div style={{ marginRight: '3vh' }}>
                 <DataBox>
-                  <text style={skeyeStyles.Header}>Gas Consumption</text>
-                  {/* TO DO: CHANGE TO REAL DATA */}
-                  <text style={skeyeStyles.Data}>62</text>
-                  <text style={skeyeStyles.Metric}>Gallons/Hour</text>
-                  {/* TO DO: CHANGE TO REAL DATA */}
-                  <text style={skeyeStyles.BoxTextUpdated}>Updated on: {getDateTime()}</text>
+                  <text style={skeyeStyles.Header}>Gas Wasted</text>
+                  {/* 0.63L of gas wasted per hour * average wait time  */}
+                  <text style={skeyeStyles.Data}>{ gasWasted() }</text>
+                  <text style={skeyeStyles.Metric}>Liters/Hour</text>
+                  <text style={skeyeStyles.BoxTextUpdated}>
+                    Updated on:
+                    {getDateTime()}
+                  </text>
                 </DataBox>
               </div>
             </VerticalBlock>
@@ -265,13 +276,14 @@ const DataTabsComponent = (props: any): JSX.Element => {
               <div>
                 <DataBox>
                   <text style={skeyeStyles.Header}>Average Wait Time (All Directions)</text>
-                  {/* TO DO: CHANGE TO REAL DATA */}
                   <text style={skeyeStyles.Data}>
                     {onFLoatRound(waitingTime / ttlPassedCars, 2)}
                   </text>
                   <text style={skeyeStyles.Metric}>Seconds</text>
-                  {/* TO DO: CHANGE TO REAL DATA */}
-                  <text style={skeyeStyles.BoxTextUpdated}>Updated on: {getDateTime()}</text>
+                  <text style={skeyeStyles.BoxTextUpdated}>
+                    Updated on:
+                    {getDateTime()}
+                  </text>
                 </DataBox>
               </div>
             </VerticalBlock>
