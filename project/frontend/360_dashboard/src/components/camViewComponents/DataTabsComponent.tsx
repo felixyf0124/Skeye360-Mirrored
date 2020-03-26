@@ -6,16 +6,15 @@ import {
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import BarChartDirections from '../charts/BarChartDirections';
 import {
   SKEYE_WHITE, SKEYE_DARK_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_LIGHT_BLACK, SKEYE_BRIGHT_GREEN,
 } from '../../css/custom';
 
 interface Props {
+  chartID: string;
   ttlPassed: number;
   directionData: Array<{ direction: string; passedNum: number }>;
-
   waitingTime: number;
 }
 
@@ -69,6 +68,8 @@ const DataBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     width: 20vw;
     color: white;
 `;
@@ -95,6 +96,7 @@ const skeyeStyles = {
   Header: {
     color: SKEYE_WHITE,
     fontSize: 20,
+    marginTop: 20,
     marginBottom: 4,
     fontWeight: 600,
     height: 30,
@@ -102,7 +104,7 @@ const skeyeStyles = {
   Data: {
     color: SKEYE_WHITE,
     fontSize: 30,
-    marginTop: 40,
+    marginTop: 50,
     marginBottom: 4,
     fontWeight: 600,
     height: 35,
@@ -114,18 +116,11 @@ const skeyeStyles = {
     fontWeight: 600,
     height: 35,
   },
-  BoxTextPercentage: {
-    color: SKEYE_BRIGHT_GREEN,
-    fontSize: 32,
-    fontWeight: 600,
-    marginTop: 20,
-    marginRight: 15,
-  },
   BoxTextUpdated: {
     color: SKEYE_WHITE,
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 200,
-    marginTop: 10,
+    marginTop: 30,
   },
   GreenArrow: {
     color: SKEYE_BRIGHT_GREEN,
@@ -141,8 +136,68 @@ const skeyeStyles = {
   },
 };
 
+function getMonthName(month: number): string {
+  switch (month) {
+    case 0: {
+      return 'January';
+    }
+    case 1: {
+      return 'February';
+    }
+    case 2: {
+      return 'March';
+    }
+    case 3: {
+      return 'April';
+    }
+    case 4: {
+      return 'May';
+    }
+    case 5: {
+      return 'June';
+    }
+    case 6: {
+      return 'July';
+    }
+    case 7: {
+      return 'August';
+    }
+    case 8: {
+      return 'September';
+    }
+    case 9: {
+      return 'October';
+    }
+    case 10: {
+      return 'November';
+    }
+    case 11: {
+      return 'December';
+    }
+    default: {
+      return 'unknown';
+    }
+  }
+}
+
+function modifyNumber(seconds: number): string {
+  if (seconds < 10) {
+    return `0${seconds.toString()}`;
+  }
+  return seconds.toString();
+}
+
+function getDateTime(): any {
+  const fullDate = new Date();
+  return `${getMonthName(fullDate.getMonth())} ${fullDate.getDate()}, ${
+    fullDate.getFullYear()} at ${modifyNumber(fullDate.getHours())}:${
+    modifyNumber(fullDate.getMinutes())}:${modifyNumber(fullDate.getSeconds())}`;
+}
+
 const DataTabsComponent = (props: any): JSX.Element => {
-  const { ttlPassedCars, passedVehicles, waitingTime } = props;
+  const {
+    chartID, ttlPassedCars, passedVehicles, waitingTime,
+  } = props;
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -158,6 +213,9 @@ const DataTabsComponent = (props: any): JSX.Element => {
     const rounded = Math.round(num * tens) / tens;
     return rounded;
   };
+
+  /* eslint-disable no-mixed-operators */
+  const gasWasted = (): number => onFLoatRound(waitingTime / ttlPassedCars * 0.63, 2);
 
   return (
 
@@ -186,9 +244,8 @@ const DataTabsComponent = (props: any): JSX.Element => {
             </VerticalBlock>
             <VerticalBlock>
               <BarChartContainer>
-                {/* TO DO: CHANGE TO REAL DATA */}
                 <BarChartDirections
-                  chartID="barChart-default"
+                  chartID={chartID}
                   title="Number Of Car Passed Per Direction"
                   categories={['From North', 'From East', 'From South', 'From West']}
                   directionData={passedVehicles}
@@ -204,17 +261,14 @@ const DataTabsComponent = (props: any): JSX.Element => {
             <VerticalBlock>
               <div style={{ marginRight: '3vh' }}>
                 <DataBox>
-                  <text style={skeyeStyles.Header}>Gas Consumption</text>
-                  {/* TO DO: CHANGE TO REAL DATA */}
-                  <text style={skeyeStyles.Data}>62</text>
-                  <text style={skeyeStyles.Metric}>Gallons/Hour</text>
-                  <div>
-                    <ArrowDropDownIcon style={skeyeStyles.GreenArrow} />
-                    {/* TO DO: CHANGE TO REAL DATA */}
-                    <text style={skeyeStyles.BoxTextPercentage}>28,88%</text>
-                  </div>
-                  {/* TO DO: CHANGE TO REAL DATA */}
-                  <text style={skeyeStyles.BoxTextUpdated}>Last updated: 5 min ago</text>
+                  <text style={skeyeStyles.Header}>Gas Wasted</text>
+                  {/* 0.63L of gas wasted per hour * average wait time  */}
+                  <text style={skeyeStyles.Data}>{ gasWasted() }</text>
+                  <text style={skeyeStyles.Metric}>Liters/Hour</text>
+                  <text style={skeyeStyles.BoxTextUpdated}>
+                    Updated on:
+                    {getDateTime()}
+                  </text>
                 </DataBox>
               </div>
             </VerticalBlock>
@@ -222,18 +276,14 @@ const DataTabsComponent = (props: any): JSX.Element => {
               <div>
                 <DataBox>
                   <text style={skeyeStyles.Header}>Average Wait Time (All Directions)</text>
-                  {/* TO DO: CHANGE TO REAL DATA */}
                   <text style={skeyeStyles.Data}>
                     {onFLoatRound(waitingTime / ttlPassedCars, 2)}
                   </text>
                   <text style={skeyeStyles.Metric}>Seconds</text>
-                  <div>
-                    <ArrowDropDownIcon style={skeyeStyles.GreenArrow} />
-                    {/* TO DO: CHANGE TO REAL DATA */}
-                    <text style={skeyeStyles.BoxTextPercentage}>28,88%</text>
-                  </div>
-                  {/* TO DO: CHANGE TO REAL DATA */}
-                  <text style={skeyeStyles.BoxTextUpdated}>Last updated: 5 min ago</text>
+                  <text style={skeyeStyles.BoxTextUpdated}>
+                    Updated on:
+                    {getDateTime()}
+                  </text>
                 </DataBox>
               </div>
             </VerticalBlock>
