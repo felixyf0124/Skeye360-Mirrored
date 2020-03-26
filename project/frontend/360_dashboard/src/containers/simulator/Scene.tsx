@@ -14,7 +14,8 @@ import Btn from './Button';
 import DataFromCamera from './simulator_management/DataFromCamera';
 import Vehicle from './simulator_management/Vehicle';
 import DragablePoint from './DragablePoint';
-import mappingBGTexture from './intersection1.png';
+// import mappingBGTexture from './intersection1.png';
+import mappingBGTexture from './intersection2.png';
 import * as tsData from './TSLocalData';
 import ndata1 from './traffic_normal_case.csv';
 import edata1 from './traffic_edge_case.csv';
@@ -171,6 +172,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
   atArimaH: number;
 
+  isAnotherInter: boolean;
+
   constructor(props: any) {
     super(props);
     this.windowScaleRatio = 0.38;
@@ -231,12 +234,20 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       fontSize: '12px',
       fill: '#F7EDCA',
     };
+    this.isAnotherInter = true;
+    if (!this.isAnotherInter) {
+      // #### hard code to initial road intersection data for first loading
+      this.roadIntersection.addNewRoadSection(ts.tsVec2(0.5, 0.11));
+      this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.5, -0.12));
+      this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.16, 0.5));
+      this.roadIntersection.addNewRoadSection(ts.tsVec2(0.16, -0.5));
+    } else {
+      this.roadIntersection.addNewRoadSection(ts.tsVec2(0.5, -0.11));
+      this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.5, 0.12));
+      this.roadIntersection.addNewRoadSection(ts.tsVec2(0.5, 0.3));
+      this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.5, -0.3));
+    }
 
-    // #### hard code to initial road intersection data for first loading
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(0.5, 0.11));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.5, -0.12));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(-0.16, 0.5));
-    this.roadIntersection.addNewRoadSection(ts.tsVec2(0.16, -0.5));
 
     for (let i = 0; i < this.roadIntersection.getRoadSections().length; i += 1) {
       if (i === 3) {
@@ -390,8 +401,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       uiV7.state = true;
       showSectionAreas.state = true;
       showDirectVideoFeedMapping.state = true;
+      showVideoFeedBG.state = true;
     }
-
     // btn group
     for (let i = 0; i < this.toggleGroup.length; i += 1) {
       const toggleTxt = new PIXI.Text(this.toggleGroup[i].name);
@@ -421,7 +432,11 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.laneAreaContainer.y = -this.coordinateOffset.y;
 
     this.dragablePoints = new Array<Array<DragablePoint>>();
-    const sectionAreas = tsData.loadSectionAreas();
+
+    // load different setting depends on 
+    // whether it's new intersection or not
+    const sectionAreas = (!this.isAnotherInter) ?
+      tsData.loadSectionAreas() : tsData.loadSectionAreas2();
     // this.dragablePoints.push(testP);
     for (let i = 0; i < sectionAreas.length; i += 1) {
       const sectionP = new Array<DragablePoint>();
@@ -754,7 +769,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     mappingBG.scale.y = this.windowH / texture.height;
     mappingBG.x = -this.coordinateOffset.x;
     mappingBG.y = -this.coordinateOffset.y;
-    mappingBG.alpha = 0.6;
+    mappingBG.alpha = 0.9;
     this.mappingBGContainer.addChild(mappingBG);
 
     // the following two sequence matters, will affect the listeners;
@@ -1208,8 +1223,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       // }
       if (this.isUpdate()) {
         this.roadIntersection.tlCountingDown();
-        const { isLiveFeed } = this.props;
-        if (isLiveFeed && this.toggleGroup[0].state) {
+        const { isLiveFeed, tl_mode } = this.props;
+        if (isLiveFeed && tl_mode === 0) {
           this.drawRoadBackGround();
         } else {
           this.drawRoad();
@@ -1275,6 +1290,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
         // this.getArimaTLUpdate();
         this.getSmartTLUpdate();
       }
+
 
       // old cases toggle format
       // no need after the UI changed
@@ -2003,7 +2019,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           const x = pos.x / this.windowW;
           const y = pos.y / this.windowH;
           this.dragablePoints[i][j].absolutPos = new Vec2(x, y);
-          // console.log(this.dragablePoints[i][j].absolutPos);
+          console.log(this.dragablePoints[i][j].absolutPos);
         }
         const absPos = this.dragablePoints[i][j].absolutPos;
         this.dragablePoints[i][j].x = absPos.x * this.windowW;
