@@ -17,7 +17,7 @@ export const history = createBrowserHistory();
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['router'],
+  blacklist: ['router', 'app'],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer(history));
 

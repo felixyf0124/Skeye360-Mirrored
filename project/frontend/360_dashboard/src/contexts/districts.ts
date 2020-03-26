@@ -115,7 +115,11 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       const { data } = action as GetDistrictsSuccessAction;
       return {
         ...state,
-        ...data,
+        [data[0].district_name]: {
+          id: data[0].id,
+          district_name: data[0].district_name,
+          intersections: data[0].intersections,
+        },
       };
     }
     case GET_DISTRICTS_FAIL: {
