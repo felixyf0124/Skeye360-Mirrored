@@ -9,17 +9,9 @@ import { connect } from 'react-redux';
 import { SKEYE_WHITE } from '../css/custom';
 import { isStaff } from '../contexts/authentication';
 import { RootState } from '../reducers/rootReducer';
-import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-//import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import NativeSelect from '@material-ui/core/NativeSelect'; 
-import FormControl from '@material-ui/core/FormControl';
-import { InputLabel } from '@material-ui/core';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
-import { cos } from '../containers/simulator/TSGeometry';
 
 // MapQuest API is used to retrieve traffic news
 // https://developer.mapquest.com/documentation/traffic-api/incidents/get/
@@ -38,6 +30,10 @@ import { cos } from '../containers/simulator/TSGeometry';
 
   Severity Ranges from 0-4, which is an indicator for delay,
   0 being the lowest, 4 being the highest.
+
+  Resource for dropdown menu:
+  Material UI Menus
+  https://material-ui.com/components/menus/
 */
 const API_KEY = '24jtUJNMCXQg4pLgMchaC7p6Flihs7wO';
 
@@ -89,42 +85,39 @@ const filterList = (user_id: number, assigned_user_id: number): boolean => {
   return false;
 };
 
+// Sorting objects by property in JavaScript: 
+//https://flaviocopes.com/how-to-sort-array-of-objects-by-property-javascript/
+
 // Function that filters traffic news by oldest start time
 const sortOldest = (incidents: any) => {
-  console.log('old')
   return incidents.sort((a: any, b: any) => (a.startTime > b.startTime) ? 1: -1);
 }
 
 // Function that sorts traffic by most recent
 const sortNewest = (incidents: any) => {
-  console.log('new')
   return incidents.sort((a: any, b: any) => (a.startTime < b.startTime) ? 1: -1);
 }
 
 // Function that sorts traffic by highest severity first
 const sortByHighSeverity = (incidents: any) => {
-  console.log('high')
   return incidents.sort((a: any, b: any) => (a.severity < b.severity) ? 1 : -1);
 }
 
 // Function that sorts traffic news by lowest severity first
 const sortByLowSeverity = (incidents: any) => {
-  console.log('low')
   return incidents.sort((a: any, b: any) => (a.severity > b.severity) ? 1 : -1); 
 }
-
-
 
 // Styled Components
 const OuterContainer = styled.div`
   overflow: scroll;
-  height: 47rem;
+  height: 41rem;
   overflow-x: hidden;
 `;
 
 const OuterDiv = styled.div`
   color: ${SKEYE_WHITE};
-  margin-top: 5rem;
+  
   display: flex;
   flex-direction: column;
 `;
@@ -148,62 +141,46 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
       isLoaded: false,
       incidents: [],
       anchorEl: null,
-
     };
-    
-    /*
-    this.handleOld = this.handleOld.bind(this);
-    this.handleNew = this.handleNew.bind(this);
-    */
 
-    this.handleChange = this.handleChange.bind(this);
     this.handleSortHigh = this.handleSortHigh.bind(this);
     this.handleSortLow = this.handleSortLow.bind(this);
     this.handleSortNew = this.handleSortNew.bind(this);
     this.handleSortOld = this.handleSortOld.bind(this);
+
     this.handleClick = this.handleClick.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
-  /*
-    handleOld = (event: any, sortt: any): void => {
-    console.log(sortt);
-    this.setState({incidents: sortOldest(sortt)});
-  }
-  */
-
-  /*
-  handleNew = (event: any, sortt: any): void => {
-    console.log(sortt);
-    this.setState({incidents: sortNewest(sortt)});
-  }
-  */
-
+  //Functions handling clicking of the menu buttons
   handleClick = (event: any) => {
     this.setState({...this.state, anchorEl: event.currentTarget})
   }
+
+  //Function handling closing the menu
+  handleClose = () => {
+    this.setState({...this.state, anchorEl: null})
+  }
+
+  //Functions that handle changing the state of the incidents list, based on the clicked sorting method.
   handleSortOld = (e: any, incidents: any) => {
     this.setState({...this.state, incidents: sortOldest(incidents)})
+    this.setState({...this.state, anchorEl: null})
   }
   handleSortNew = (e: any, incidents: any) => {
     this.setState({...this.state, incidents: sortNewest(incidents)})
+    this.setState({...this.state, anchorEl: null})
   }
 
   handleSortHigh = (e: any, incidents: any) => {
     this.setState({...this.state, incidents: sortByHighSeverity(incidents)})
+    this.setState({...this.state, anchorEl: null})
   }
 
   handleSortLow = (e: any, incidents: any) => {
     this.setState({...this.state, incidents: sortByLowSeverity(incidents)})
-  }
-
-  handleClose = () => {
     this.setState({...this.state, anchorEl: null})
   }
-  handleChange = (event: any): void => {
-    console.log()
-    this.setState({...this.state, incidents: event.target.value});
-  }
-
 
   componentDidMount(): void {
     // eslint-disable-next-line no-shadow
@@ -238,7 +215,6 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
               if (tempData.length !== 0) {
                 incidentsArray.push(...data.incidents);
               }
-
               this.setState({
                 isLoaded: true,
                 incidents: incidentsArray,
@@ -271,10 +247,6 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
 
   render(): JSX.Element {
     const { isLoaded, incidents, anchorEl } = this.state;
-
-    
-
-
     if (!isLoaded) {
       return (
         <Loader>
@@ -286,21 +258,19 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
     /* eslint-disable @typescript-eslint/explicit-function-return-type */
     return (
       <OuterDiv>
-          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
-            Sort
+          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={{ backgroundColor: 'white', width: 'fit-content', marginLeft: '1rem', marginBottom: '1rem'}}>
+            Sort By ...
           </Button>
           <Menu id="simple-menu"
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
             onClose={this.handleClose} >
-              <MenuItem onClick={(event): void => this.handleSortOld(event, incidents)}> Old</MenuItem>
-              <MenuItem onClick={(event): void => this.handleSortNew(event, incidents)}> New</MenuItem>
-              <MenuItem onClick={(event): void => this.handleSortHigh(event, incidents)}> High</MenuItem>
-              <MenuItem onClick={(event): void => this.handleSortLow(event, incidents)}> Low</MenuItem>
+              <MenuItem onClick={(event): void => this.handleSortOld(event, incidents)}>Oldest</MenuItem>
+              <MenuItem onClick={(event): void => this.handleSortNew(event, incidents)}>Most Recent</MenuItem>
+              <MenuItem onClick={(event): void => this.handleSortHigh(event, incidents)}>Highest Severity</MenuItem>
+              <MenuItem onClick={(event): void => this.handleSortLow(event, incidents)}>Lowest Severity</MenuItem>
           </Menu>
-
-      
         <OuterContainer>
           {incidents.map(
             (incident: {
