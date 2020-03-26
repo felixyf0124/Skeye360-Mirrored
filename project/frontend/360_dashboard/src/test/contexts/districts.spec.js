@@ -17,7 +17,7 @@ chai.use(chaiSubset);
 
 // initState
 const initState = {
-  0: {
+  Montreal: {
     id: 1,
     district_name: 'Loading...',
     intersections: [
@@ -97,7 +97,7 @@ describe('district redux', () => {
     it('should get district successfully', () => {
       const result = reducer(initState, getDistrictsSuccess(data));
       expect(result).to.containSubset({
-        0: {
+        Montreal: {
           id: 1,
           district_name: 'Montreal',
           intersections: [
@@ -124,7 +124,7 @@ describe('district redux', () => {
     it('should fail to get districts', () => {
       const result = reducer(initState, getDistrictsFail());
       expect(result).to.containSubset({
-        0: {
+        Montreal: {
           id: 1,
           district_name: 'Loading...',
           intersections: [

@@ -37,7 +37,7 @@ const GoogleMiniMap = (props: Props): JSX.Element => {
         lng={state.intersectionLng}
         text="Camera_id"
         color="red"
-        link={`/streetview/${state.intersectionId}`}
+        link="#"
       />
     </GoogleMapReact>
   );

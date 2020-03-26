@@ -6,10 +6,8 @@ import { RootState } from './reducers/rootReducer';
 import Login from './containers/Login';
 
 import './css/App.css';
-import SkeyeMap from './containers/SkeyeMap';
 import AddIntersection from './containers/AddIntersection';
 import EditIntersection from './containers/EditIntersection';
-import StreetView from './containers/StreetView';
 import ChartsPrototype from './components/charts/ChartsPrototype';
 import SessionRoutes from './SessionRoutes';
 import { authenticated, isStaff } from './contexts/authentication';
@@ -30,10 +28,8 @@ const App = ({ authenticated, isStaff }: StateProps): JSX.Element => (
       <Switch>
         <SessionRoutes authenticated={authenticated}>
           <Route exact path="/" component={Home} />
-          <Route exact path="/streetview/:intersectionId" component={StreetView} />
           <Route exact path="/camview/:intersectionId" component={CamView} />
           <Route exact path="/chartsprototype" component={ChartsPrototype} />
-          <Route exact path="/map" component={SkeyeMap} />
           <AdminRoutes authenticated={authenticated} isStaff={isStaff}>
             <Route exact path="/intersection/add" component={AddIntersection} />
             <Route

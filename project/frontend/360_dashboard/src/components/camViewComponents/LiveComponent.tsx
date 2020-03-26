@@ -1,11 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import HelpIcon from '@material-ui/icons/Help';
 import { RootState } from '../../reducers/rootReducer';
 import SidebarComponent from './SidebarComponent';
-import { SKEYE_WHITE, SKEYE_LIGHT_BLACK, SKEYE_BRIGHT_GREEN } from '../../css/custom';
+import {
+  SKEYE_WHITE, SKEYE_LIGHT_BLACK, SKEYE_BRIGHT_GREEN, SKEYE_BLUE,
+} from '../../css/custom';
 import { getExistingCamera } from '../../contexts/camera';
 import Simulator from '../../containers/simulator/Scene';
+import helpImg from '../../images/helpImg01.png';
 
 interface SimProps {
   tlMode: number;
@@ -178,10 +184,11 @@ const skeyeStyles = {
   },
 };
 
+
 class LiveComponent extends React.Component<
   SimProps & StateProps & DispatchProps,
   { tlMode: number }
-> {
+  > {
   public componentDidMount(): void {
     // eslint-disable-next-line no-shadow
     const { camera_id, getExistingCamera } = this.props;
@@ -199,11 +206,13 @@ class LiveComponent extends React.Component<
       tlCombStates,
       onTLUpdate,
     } = this.props;
+
     // eslint-disable-next-line consistent-return
     return (
       <div>
         <HorizontalFlexBox>
           <SidebarComponent
+            isLiveFeed
             tlMode={tlMode}
             onChangeTLMode={onChangeTLMode}
             onClickTLStop={onClickTLStop}
@@ -218,14 +227,40 @@ class LiveComponent extends React.Component<
               </CamContainer>
             </InnerDivVerticalCam>
             <InnerDivVerticalSim>
-              <text style={skeyeStyles.Header}>Simulator with Live Feed</text>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <text style={skeyeStyles.Header}>
+                        Simulator with Live Feed
+                      </text>
+                    </td>
+                    <td>
+                      <Tooltip
+                        title={<img style={{ width: '12rem' }} src={helpImg} alt="help img" />}
+                      >
+                        <Button style={{ margin: 0 }}><HelpIcon style={{ color: SKEYE_BLUE, fontSize: '16px' }} /></Button>
+                      </Tooltip>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
               <SimContainer>
                 <Simulator
+                  isLiveFeed
                   isSmartTL={false}
                   tl_mode={tlMode}
                   toggles={toggles}
+                  onSimuStart
+                  onSimuClickUpdata={null}
                   tlStop={tlStop}
                   onTLUpdate={onTLUpdate}
+                  updatePassedVehicles={null}
+                  simuWidthRatio={0.38}
+                  resolutionRatio={38 / 19.5}
+                  onWaitingTimeUpdate={null}
+                  onLoopCDUpdate={null}
                 />
               </SimContainer>
             </InnerDivVerticalSim>

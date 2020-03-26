@@ -9,10 +9,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import SideDrawer from '../components/SideDrawer';
-
 import IntersectionTable from '../components/IntersectionTable';
 import { RootState } from '../reducers/rootReducer';
+import { setDistrictCoord, SetCoordAction } from '../contexts/app';
 import { isStaff } from '../contexts/authentication';
 import {
   STATE as districtState,
@@ -111,8 +112,15 @@ const AddButton = styled.div`
 `;
 
 interface StateProps {
+  appZoom: number;
+  currentDistrict: string;
+  districtLat: number;
+  districtLng: number;
   districts: districtState;
+  defaultDistrictLat: number;
+  defaultDistrictLng: number;
   isStaff: boolean;
+  selectedIntersection: string;
   users: userState;
   user_id: number;
 }
@@ -123,6 +131,7 @@ interface DispatchProps {
   getUsers(): GetUsersAction;
   resetDistricts(): ResetDistrictAction;
   logClick: (log_message: string, user_id: number) => LogAction;
+  setDistrictCoord: (name: string, lat: number, lng: number, zoom: number) => SetCoordAction;
 }
 
 interface TabPanelProps {
@@ -131,6 +140,8 @@ interface TabPanelProps {
   value: any;
 }
 
+// START OF TAB FUNCTIONS for HOME
+// More info: https://material-ui.com/components/tabs/#tabs
 function TabPanel(props: TabPanelProps): JSX.Element {
   const {
     children, value, index, ...other
@@ -156,6 +167,7 @@ function a11yProps(index: any): any {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
+// END OF TAB FUNCTIONS for HOME
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const useStyles = makeStyles((theme: Theme) => ({
@@ -168,12 +180,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Home = (props: StateProps & DispatchProps): JSX.Element => {
   const {
-    districts, isStaff, user_id, users, getDistricts, getUsers,
+    districts,
+    districtLat,
+    districtLng,
+    defaultDistrictLat,
+    defaultDistrictLng,
+    isStaff,
+    user_id,
+    users,
+    selectedIntersection,
+    getDistricts,
+    currentDistrict,
   } = props;
 
   useEffect(() => {
     getDistricts();
-    getUsers();
   });
 
   const classes = useStyles();
@@ -182,48 +203,67 @@ const Home = (props: StateProps & DispatchProps): JSX.Element => {
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);
   };
-
-  return (
-    <Content>
-      <SideDrawer headerTitle={districts[0].district_name} />
-      <ContentFlexBox>
-        <LeftContentFlexBox>
-          <TableDiv>
-            <IntersectionTable districts={districts} isStaff={isStaff} user_id={user_id} />
-            <AddButton>{isStaff ? <AddIntersection users={users} /> : <div />}</AddButton>
-          </TableDiv>
-        </LeftContentFlexBox>
-        <div className={classes.root}>
-          <AppBar position="static" style={skeyeStyles.TabBar}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="simple tabs example"
-              TabIndicatorProps={{ style: { backgroundColor: 'white' } }}
-            >
-              <Tab label="SkeYe Map" {...a11yProps(0)} style={skeyeStyles.TabOnly} />
-              <Tab label="Traffic News" {...a11yProps(1)} style={skeyeStyles.TabOnly} />
-            </Tabs>
-          </AppBar>
-          <TabPanel value={value} index={0}>
-            <Map>
-              <GoogleMap districts={districts} />
-            </Map>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <TrafficDiv>
-              <TrafficNews />
-            </TrafficDiv>
-          </TabPanel>
-        </div>
-      </ContentFlexBox>
-    </Content>
-  );
+  if (districts[currentDistrict] !== undefined) {
+    return (
+      <Content>
+        <SideDrawer headerTitle={districts[currentDistrict].district_name} />
+        <ContentFlexBox>
+          <LeftContentFlexBox>
+            <TableDiv>
+              <IntersectionTable
+                districts={districts}
+                districtName={currentDistrict}
+                isStaff={isStaff}
+                user_id={user_id}
+                defaultDistrictLat={defaultDistrictLat}
+                defaultDistrictLng={defaultDistrictLng}
+                districtLat={districtLat}
+                districtLng={districtLng}
+                selectedIntersection={selectedIntersection}
+              />
+              <AddButton>{isStaff ? <AddIntersection users={users} /> : <div />}</AddButton>
+            </TableDiv>
+          </LeftContentFlexBox>
+          <div className={classes.root} id="map">
+            <AppBar position="static" style={skeyeStyles.TabBar}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="MISC Tab"
+                TabIndicatorProps={{ style: { backgroundColor: 'white' } }}
+              >
+                <Tab label="SkeYe Map" {...a11yProps(0)} style={skeyeStyles.TabOnly} />
+                <Tab label="Traffic News" {...a11yProps(1)} style={skeyeStyles.TabOnly} />
+              </Tabs>
+            </AppBar>
+            <TabPanel value={value} index={0}>
+              <Map>
+                <GoogleMap districts={districts} districtName={currentDistrict} />
+              </Map>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <TrafficDiv>
+                <TrafficNews />
+              </TrafficDiv>
+            </TabPanel>
+          </div>
+        </ContentFlexBox>
+      </Content>
+    );
+  }
+  return <CircularProgress />;
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
+  appZoom: state.app.zoom,
+  currentDistrict: state.app.currentDistrict,
   districts: state.districts,
+  districtLat: state.app.districtLat,
+  districtLng: state.app.districtLng,
+  defaultDistrictLat: state.app.defaultLat,
+  defaultDistrictLng: state.app.defaultLng,
   isStaff: isStaff(state),
+  selectedIntersection: state.app.selectedIntersection,
   users: state.users,
   user_id: state.authentication.user_id,
 });
@@ -234,5 +274,6 @@ const mapDispatchToProps: DispatchProps = {
   getUsers,
   logClick,
   resetDistricts,
+  setDistrictCoord,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
