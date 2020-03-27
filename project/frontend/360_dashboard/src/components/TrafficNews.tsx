@@ -138,6 +138,12 @@ const Loader = styled.div`
   text-align: center;
 `;
 
+const MenuItemWrap = styled.div`
+  :hover{
+    background-color: #f5f5f5;
+  }
+`;
+
 class TrafficNews extends React.Component<StaffProps, StateProps> {
   constructor(props: any) {
     super(props);
@@ -269,7 +275,7 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
           aria-haspopup="true"
           onClick={this.handleClick}
           style={{
-            backgroundColor: 'white', width: 'fit-content', marginLeft: '1rem', marginBottom: '1rem',
+            backgroundColor: 'white', width: 'fit-content', marginLeft: '1rem', marginBottom: '1rem', color: 'black',
           }}
         >
           Sort By ...
@@ -280,11 +286,16 @@ class TrafficNews extends React.Component<StaffProps, StateProps> {
           keepMounted
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
+          style={{ color: 'black' }}
         >
-          <MenuItem onClick={(event): void => this.handleSortOld(event, incidents)}>Oldest</MenuItem>
-          <MenuItem onClick={(event): void => this.handleSortNew(event, incidents)}>Most Recent</MenuItem>
-          <MenuItem onClick={(event): void => this.handleSortHigh(event, incidents)}>Highest Severity</MenuItem>
-          <MenuItem onClick={(event): void => this.handleSortLow(event, incidents)}>Lowest Severity</MenuItem>
+          {/* <MenuItem style={{ color: 'black', backgroundColor: 'white'}}>Sort</MenuItem> */}
+          <MenuItemWrap>
+            <MenuItem style={{ color: 'black' }} onClick={(event): void => this.handleSortOld(event, incidents)}>Oldest</MenuItem>
+          </MenuItemWrap>
+          <MenuItem style={{ color: 'black' }} onClick={(event): void => this.handleSortNew(event, incidents)}>Most Recent</MenuItem>
+          <MenuItem style={{ color: 'black' }} onClick={(event): void => this.handleSortHigh(event, incidents)}>Highest Severity</MenuItem>
+          <MenuItem style={{ color: 'black' }} onClick={(event): void => this.handleSortLow(event, incidents)}>Lowest Severity</MenuItem>
+
         </Menu>
         <OuterContainer>
           {incidents.map(
