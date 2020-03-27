@@ -234,7 +234,12 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       fontSize: '12px',
       fill: '#F7EDCA',
     };
-    this.isAnotherInter = true;
+    const { camera_url } = this.props;
+    if (camera_url.includes(`137.116.55.66`)) {
+      this.isAnotherInter = true;
+    } else {
+      this.isAnotherInter = false;
+    }
     if (!this.isAnotherInter) {
       // #### hard code to initial road intersection data for first loading
       this.roadIntersection.addNewRoadSection(ts.tsVec2(0.5, 0.11));
