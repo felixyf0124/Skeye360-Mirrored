@@ -52,20 +52,48 @@ export function loadSectionAreas(): Array<Array<Vec2>> {
 }
 
 /**
- * TODO save as object
- * {intersectionID:number, sectionAreas:Array<Array<Vec2>>}
+ * get lane areas in form of Array<Array<Vec2>>
+ *
+ * hard coded data for new intersection
  */
-export function saveSectionAreas(): void {
-  // const sectionAreas = new Array<Array<Vec2>>();
-  // const fs = require('browserify-fs');
-  // //let jsonObj = JSON.parse(sectionAreas);
-  // let data = JSON.stringify(sectionAreas);
-  // console.log(data);
-  // fs.writeFile('data.json', data, (err:any) => {
+export function loadSectionAreas2(): Array<Array<Vec2>> {
+  const sectionAreas = new Array<Array<Vec2>>();
+  const sectionArea1 = new Array<Vec2>();
+  const sectionArea2 = new Array<Vec2>();
+  const sectionArea3 = new Array<Vec2>();
+  const sectionArea4 = new Array<Vec2>();
 
-  //     // In case of a error throw err.
-  //     if (err) throw err;
-  // })
+  // south
+  sectionArea1.push(new Vec2(0.7496560312097252, 0.7842859627687556));
+  sectionArea1.push(new Vec2(0.7975504197290049, 0.7265894126830593));
+  sectionArea1.push(new Vec2(1.0, 0.8820125320300701));
+  sectionArea1.push(new Vec2(1.0, 1.0));
+
+  // west
+  sectionArea2.push(new Vec2(0.12354575220314189, 0.6570141611091314));
+  sectionArea2.push(new Vec2(0.14792834999477517, 0.7486498583040608));
+  sectionArea2.push(new Vec2(0.0, 0.8097403231006806));
+  sectionArea2.push(new Vec2(0.0, 0.7147107111948278));
+
+  // north
+  sectionArea3.push(new Vec2(0.311640078024313, 0.4007736004344211));
+  sectionArea3.push(new Vec2(0.23326744226549168, 0.42962187547726927));
+  sectionArea3.push(new Vec2(0.1305122087150371, 0.2701078840638735));
+  sectionArea3.push(new Vec2(0.16795691246647393, 0.25822918257564187));
+
+  // east
+  sectionArea4.push(new Vec2(0.6608337106830611, 0.42622796076634595));
+  sectionArea4.push(new Vec2(0.6303554634435196, 0.4024705577898828));
+  sectionArea4.push(new Vec2(0.9299130934550142, 0.2819865855521051));
+  sectionArea4.push(new Vec2(0.9638745689505034, 0.29725920175126));
+
+
+  sectionAreas.push(sectionArea3);
+  sectionAreas.push(sectionArea2);
+  sectionAreas.push(sectionArea1);
+  sectionAreas.push(sectionArea4);
+
+  return sectionAreas;
 }
 
 /**
