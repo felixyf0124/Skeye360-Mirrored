@@ -235,7 +235,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       fill: '#F7EDCA',
     };
     const { camera_url } = this.props;
-    if (camera_url.includes(`137.116.55.66`)) {
+    if (camera_url.includes('137.116.55.66')) {
       this.isAnotherInter = true;
     } else {
       this.isAnotherInter = false;
@@ -438,10 +438,10 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
     this.dragablePoints = new Array<Array<DragablePoint>>();
 
-    // load different setting depends on 
+    // load different setting depends on
     // whether it's new intersection or not
-    const sectionAreas = (!this.isAnotherInter) ?
-      tsData.loadSectionAreas() : tsData.loadSectionAreas2();
+    const sectionAreas = (!this.isAnotherInter)
+      ? tsData.loadSectionAreas() : tsData.loadSectionAreas2();
     // this.dragablePoints.push(testP);
     for (let i = 0; i < sectionAreas.length; i += 1) {
       const sectionP = new Array<DragablePoint>();
@@ -2024,7 +2024,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           const x = pos.x / this.windowW;
           const y = pos.y / this.windowH;
           this.dragablePoints[i][j].absolutPos = new Vec2(x, y);
-          console.log(this.dragablePoints[i][j].absolutPos);
+          // console.log(this.dragablePoints[i][j].absolutPos);
         }
         const absPos = this.dragablePoints[i][j].absolutPos;
         this.dragablePoints[i][j].x = absPos.x * this.windowW;

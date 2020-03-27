@@ -242,10 +242,10 @@ export async function retrieve(url: string, endP: string, filter?: string): Prom
     filterValue = filter;
   }
   const result = await
-    fetch(`http://${url}/${endP}/${filterValue}`)
-      .then((response) => response.json())
-      // .then(result => console.log(result))
-      .catch((error) => `ERROR:${error}`);
+  fetch(`http://${url}/${endP}/${filterValue}`)
+    .then((response) => response.json())
+  // .then(result => console.log(result))
+    .catch((error) => `ERROR:${error}`);
   // .catch((error) => console.log('error', error));
   // console.log(result);
   return result;
