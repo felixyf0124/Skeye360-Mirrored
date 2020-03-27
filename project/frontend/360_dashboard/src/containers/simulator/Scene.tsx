@@ -401,7 +401,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       uiV7.state = true;
       showSectionAreas.state = true;
       showDirectVideoFeedMapping.state = true;
-      showVideoFeedBG.state = true;
+      showVideoFeedBG.state = false;
     }
     // btn group
     for (let i = 0; i < this.toggleGroup.length; i += 1) {

@@ -76,10 +76,10 @@ export function loadSectionAreas2(): Array<Array<Vec2>> {
   sectionArea2.push(new Vec2(0.0, 0.7147107111948278));
 
   // north
-  sectionArea3.push(new Vec2(0.2994487791284963, 0.4058644725008061));
+  sectionArea3.push(new Vec2(0.311640078024313, 0.4007736004344211));
   sectionArea3.push(new Vec2(0.23326744226549168, 0.42962187547726927));
   sectionArea3.push(new Vec2(0.1305122087150371, 0.2701078840638735));
-  sectionArea3.push(new Vec2(0.16360287714653943, 0.25822918257564187));
+  sectionArea3.push(new Vec2(0.16795691246647393, 0.25822918257564187));
 
   // east
   sectionArea4.push(new Vec2(0.6608337106830611, 0.42622796076634595));
