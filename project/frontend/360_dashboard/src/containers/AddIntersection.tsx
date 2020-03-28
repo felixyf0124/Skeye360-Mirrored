@@ -313,7 +313,9 @@ const AddIntersection = (props: Props & StateProps & DispatchProps): JSX.Element
                             aria-controls="lock-menu"
                             aria-label="Assigned Operator"
                             onClick={handleClickListItem}
-                            style={{backgroundColor: `${SKEYE_GREY}`, width: 'fit-content', color: 'black', borderRadius: '5px', paddingTop: 0, paddingBottom: 0}}
+                            style={{
+                              backgroundColor: `${SKEYE_GREY}`, width: 'fit-content', color: 'black', borderRadius: '5px', paddingTop: 0, paddingBottom: 0,
+                            }}
                           >
                             <ListItemText
                               primary="Assigned Operator"
