@@ -10,6 +10,7 @@ import count, { STATE as countState } from '../contexts/vehicleCounts';
 import camera, { STATE as cameraState } from '../contexts/camera';
 import traffic, { STATE as trafficState } from '../contexts/traffic';
 import users, { STATE as userState } from '../contexts/users';
+import register, { STATE as registerState } from '../contexts/register';
 
 // RootReducer (Alphabetical Order)
 export interface RootState {
@@ -19,8 +20,9 @@ export interface RootState {
   count: countState;
   districts: districtState;
   intersection: intersectionState;
-  logClick: logState;
-  router: RouterState;
+  logClick: logState;  
+  register: registerState;
+  router: RouterState;  
   traffic: trafficState;
   users: userState;
 }
@@ -36,4 +38,5 @@ export default (history: History): any => combineReducers({
   router: connectRouter(history),
   traffic,
   users,
+  register,
 });

@@ -8,6 +8,7 @@ import { saga as count } from './contexts/vehicleCounts';
 import { saga as camera } from './contexts/camera';
 import { saga as traffic } from './contexts/traffic';
 import { saga as users } from './contexts/users';
+import { saga as register} from './contexts/register';
 
 // RootSaga (Alphabetical Order)
 export default function* rootSaga(): IterableIterator<any> {
@@ -17,6 +18,7 @@ export default function* rootSaga(): IterableIterator<any> {
   yield fork(districts);
   yield fork(intersection);
   yield fork(logging);
+  yield fork(register);
   yield fork(traffic);
   yield fork(users);
 }

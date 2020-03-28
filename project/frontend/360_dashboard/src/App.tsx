@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import { RootState } from './reducers/rootReducer';
 import Login from './containers/Login';
+import Register from './containers/Register';
 
 import './css/App.css';
 import AddIntersection from './containers/AddIntersection';
@@ -24,6 +25,7 @@ interface StateProps {
 const App = ({ authenticated, isStaff }: StateProps): JSX.Element => (
   <Switch>
     <Route path="/login" render={(): JSX.Element => <Login />} />
+    <Route path="/register" render={(): JSX.Element => <Register />} />
     <Route>
       <Switch>
         <SessionRoutes authenticated={authenticated}>
