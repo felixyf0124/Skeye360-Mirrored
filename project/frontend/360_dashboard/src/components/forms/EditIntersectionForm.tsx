@@ -24,7 +24,6 @@ const useStyles = makeStyles(() => ({
   dropdownMenu: {
     width: '100%',
     maxWidth: 360,
-    backgroundColor: `${SKEYE_GREY}`,
   },
 
   centeredBox: {
@@ -230,6 +229,9 @@ const EditIntersectionForm = (props: Props & StateProps & DispatchProps): JSX.El
                     aria-controls="lock-menu"
                     aria-label="Assigned Operator"
                     onClick={handleClickListItem}
+                    style={{
+                      backgroundColor: `${SKEYE_GREY}`, width: 'fit-content', marginLeft: '1rem', color: 'black', borderRadius: '5px', paddingTop: 0, paddingBottom: 0,
+                    }}
                   >
                     <ListItemText
                       primary="Assigned Operator"
