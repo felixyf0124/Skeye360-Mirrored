@@ -404,7 +404,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       videoFeed.state = true;
       samplingVideoFeed.state = false;
       uiV7.state = true;
-      showSectionAreas.state = true;
+      showSectionAreas.state = false;
       showDirectVideoFeedMapping.state = true;
       showVideoFeedBG.state = false;
     }
@@ -1261,7 +1261,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           this.toggleGroup[0].state = true;
           this.toggleGroup[1].state = false;
           this.toggleGroup[2].state = true;
-          this.toggleGroup[3].state = true;
+          this.toggleGroup[3].state = false;
           this.toggleGroup[4].state = true;
         } else {
           for (let i = 0; i < this.toggleGroup.length; i += 1) {
