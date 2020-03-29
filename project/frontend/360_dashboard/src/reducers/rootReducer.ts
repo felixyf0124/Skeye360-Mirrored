@@ -20,9 +20,9 @@ export interface RootState {
   count: countState;
   districts: districtState;
   intersection: intersectionState;
-  logClick: logState;  
+  logClick: logState;
   register: registerState;
-  router: RouterState;  
+  router: RouterState;
   traffic: trafficState;
   users: userState;
 }

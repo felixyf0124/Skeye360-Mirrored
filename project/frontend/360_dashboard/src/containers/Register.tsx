@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-alert */
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { connect } from 'react-redux';
@@ -11,9 +13,10 @@ import LockIcon from '@material-ui/icons/Lock';
 import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
 import { RootState } from '../reducers/rootReducer';
-import { register, registered, getUserData,
-  GetUserDataAction, } from '../contexts/register';
- import { SKEYE_RED } from '../css/custom';
+import {
+  register, registered, getUserData, GetUserDataAction,
+} from '../contexts/register';
+import { SKEYE_RED } from '../css/custom';
 
 const Error = styled.h6`
   color: ${SKEYE_RED};
@@ -191,7 +194,7 @@ const Logo = styled.img`
 const Register = (props: StateProps & DispatchProps): JSX.Element => {
   const [state, setState] = React.useState(props);
   const {
-    username, password, password2, email, is_staff
+    username, password, password2, email, is_staff,
   } = state;
   const classes = useStyles();
   const history = useHistory();
@@ -202,31 +205,26 @@ const Register = (props: StateProps & DispatchProps): JSX.Element => {
     // eslint-disable-next-line no-shadow
     isRegistered,
   } = props;
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
   // eslint-disable-next-line consistent-return
   const handleSubmit = (): any => {
-
-    if( password !== password2 ){      
-      alert("passwords not mactching")
+    if (password !== password2) {
+      alert('passwords not matching');
       return <Redirect to="/register" />;
     }
-    else{
-      props.register(
-        username,
-        password,
-        email,
-        is_staff,
-      );
-    }
-    
+    props.register(
+      username,
+      password,
+      email,
+      is_staff,
+    );
   };
 
   if (isRegistered) {
-    console.log(isRegistered)
-    alert("Success! Please login.")
+    alert('Success! Please login.');
     return <Redirect to="/login" />;
   }
   return (
@@ -253,7 +251,6 @@ const Register = (props: StateProps & DispatchProps): JSX.Element => {
                     <PersonIcon />
                   </Grid>
                   <Grid item>
-                    {console.log(state.username)}
                     <TextField
                       name="username"
                       label="Usename"
@@ -354,7 +351,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   password2: localStorage.getItem('password2'),
   email: localStorage.getItem('email'),
   sessionToken: '',
-  log_message:'',
+  log_message: '',
   is_staff: false,
   isRegistered: registered(state),
   error: state.register.error,

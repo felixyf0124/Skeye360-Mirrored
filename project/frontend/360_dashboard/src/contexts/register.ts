@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/camelcase */
 import { call, put, takeLatest } from 'redux-saga/effects';
@@ -47,7 +49,7 @@ export const register = (
   username: string,
   password: string,
   email: string,
-  is_staff: boolean
+  is_staff: boolean,
 ): RegisterAction => ({
   type: REGISTER,
   username,
@@ -89,7 +91,7 @@ export const getUserData = (): GetUserDataAction => ({
 // selector
 
 // check for registeration
-export const registered = (state: { register: STATE }): boolean => state.register.success
+export const registered = (state: { register: STATE }): boolean => state.register.success;
 // SAGA
 
 // create
@@ -99,12 +101,12 @@ export function* handleRegister({
   email,
   is_staff,
 }: RegisterAction): Iterator<any> {
-  try {    
+  try {
     const data = yield call(registerUser, username, password, email, is_staff);
     if (data !== undefined) {
-      console.log(data)
+      console.log(data);
       yield put(registerSuccess(data));
-    }        
+    }
   } catch (e) {
     yield put(registerFail());
     throw e;
@@ -130,7 +132,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
 
       localStorage.setItem('user', JSON.stringify(data));
       return {
-        ...state,        
+        ...state,
         sessionToken: `${data.username}-${data.email}`,
         username: data.username,
         email: data.email,
@@ -139,7 +141,6 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       };
     }
     case REGISTER_FAIL: {
-      console.log(state.username)
       return {
         sessionToken: initState.sessionToken,
         username: initState.username,
@@ -151,7 +152,6 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       };
     }
     case GET_USER_DATA: {
-      console.log(state.username)
       if (localStorage.getItem('user') !== null) {
         const data: any = localStorage.getItem('user');
         const d = new Date();
