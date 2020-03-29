@@ -1572,7 +1572,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     if (this.onReady && this.toggleGroup !== undefined
       && this.tlCaseBtnGroup !== undefined && this.menuBtns !== undefined
       && this.labelGroup !== undefined) {
-
       const color = 0x51bcd8;
 
       // pop - hide btn
