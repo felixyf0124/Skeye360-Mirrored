@@ -8,7 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import SettingsIcon from '@material-ui/icons/Settings';
+// import SettingsIcon from '@material-ui/icons/Settings';
 import styled from 'styled-components';
 import {
   FormControlLabel, Switch, withStyles, FormGroup,
@@ -64,11 +64,11 @@ function props(index: any): any {
   };
 }
 
-const BoxSettingsMenu = styled.div`
-  position: absolute;
-  right: 0;
-  background-color: SKEYE_LIGHT_DARK_GREY;
-`;
+// const BoxSettingsMenu = styled.div`
+//   position: absolute;
+//   right: 0;
+//   background-color: SKEYE_LIGHT_DARK_GREY;
+// `;
 
 // Horizontal flexbox styling
 const HorizontalFlexBox = styled.div`
@@ -300,9 +300,9 @@ const TabsComponents = (): JSX.Element => {
     setValue(newValue);
   };
 
-  const handleClickOpen = (): void => {
-    setOpen(true);
-  };
+  // const handleClickOpen = (): void => {
+  //   setOpen(true);
+  // };
 
   const handleClose = (): void => {
     setOpen(false);
@@ -328,7 +328,7 @@ const TabsComponents = (): JSX.Element => {
           {/* this is a setting button. Due to UI modificationm we no need them for our design */}
           {/* KEEP this in case the stakeholder needs it */}
           {/* value === 0 is for Live Feed tab and value === 3 is for Simulator tab */}
-          {value === 0
+          {/* {value === 0
             ? (
               <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
                 <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
@@ -336,7 +336,7 @@ const TabsComponents = (): JSX.Element => {
                 </button>
               </BoxSettingsMenu>
             )
-            : null}
+            : null} */}
 
         </Tabs>
       </AppBar>
@@ -345,7 +345,7 @@ const TabsComponents = (): JSX.Element => {
           toggles={state}
           tlMode={tlMode}
           onChangeTLMode={onChangeTLMode}
-          tlStop={tlStop}
+          tlStop={false}
           onClickTLStop={onClickTLStop}
           tlCombStates={tlCombStates}
           onTLUpdate={onTLUpdate}

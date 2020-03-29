@@ -11,6 +11,7 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -21,6 +22,7 @@ import {
   SKEYE_LIGHT_BLACK, SKEYE_GREEN,
   SKEYE_DARK_GREY,
   SKEYE_BRIGHT_GREEN,
+  SKEYE_YELLOW,
 } from '../../css/custom';
 
 interface SimProps {
@@ -28,6 +30,7 @@ interface SimProps {
   tlMode: number;
   onChangeTLMode: any;
   onClickTLStop: any;
+  tlStop: boolean;
   onClickSimuStart: any;
   tlCombStates: Array<{
     direction: string;
@@ -160,6 +163,14 @@ const skeyeStyles = {
     marginLeft: 8,
     width: `${width - 2}vw`,
   },
+  ResumeButton: {
+    backgroundColor: SKEYE_LIGHT_DARK_GREY,
+    color: SKEYE_YELLOW,
+    marginTop: 8,
+    marginBottom: 8,
+    marginLeft: 8,
+    width: `${width - 2}vw`,
+  },
   StopIcon: {
     marginRight: 10,
   },
@@ -192,10 +203,64 @@ const skeyeStyles = {
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const {
     isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, onClickSimuStart,
-    tlCombStates, keyValue, loopCountDown, loopCountDown2,
+    tlCombStates, keyValue, loopCountDown, loopCountDown2, tlStop,
   } = props;
   const classes = useStyles();
+
+
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
+  // const [emergencyToggle, setEmergencyToggle] = React.useState(false);
+  const [emergencyBtnCol, setEmergencyBtnCol] = React.useState(
+    tlStop ? SKEYE_GREEN : SKEYE_RED,
+  );
+
+  const eBtnStyle = {
+    backgroundColor: SKEYE_LIGHT_DARK_GREY,
+    color: emergencyBtnCol,
+    marginTop: 8,
+    marginBottom: 8,
+    marginLeft: 8,
+    width: `${width - 2}vw`,
+  };
+
+  const stopBtn = (): JSX.Element => (
+    <div>
+      {' '}
+      <ReportIcon style={skeyeStyles.StopIcon} />
+      {' '}
+      STOP
+    </div>
+  );
+
+  const resumeBtn = (): JSX.Element => (
+    <div>
+      {' '}
+      <PlayCircleFilledIcon style={skeyeStyles.StopIcon} />
+      {' '}
+      RESUME
+    </div>
+  );
+
+  const [emergencyButton, setEmergencyButton] = React.useState(
+    tlStop ? resumeBtn() : stopBtn(),
+  );
+
+  const onClickEmergency = (): void => {
+    onClickTLStop();
+    if (tlStop) {
+      // setEmergencyToggle(false);
+      setEmergencyBtnCol(SKEYE_RED);
+      setEmergencyButton(
+        stopBtn(),
+      );
+    } else {
+      // setEmergencyToggle(true);
+      setEmergencyBtnCol(SKEYE_GREEN);
+      setEmergencyButton(
+        resumeBtn(),
+      );
+    }
+  };
 
   const directions = ['North & South', 'East & West - Left Turn', 'East & West', 'East & West - Right Turn', 'South - Right Turn'];
 
@@ -430,13 +495,10 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
               </text>
               <Button
                 variant="contained"
-                style={skeyeStyles.EmergencyButton}
-                onClick={onClickTLStop}
+                style={eBtnStyle}
+                onClick={onClickEmergency}
               >
-                {' '}
-                <ReportIcon style={skeyeStyles.StopIcon} />
-                {' '}
-                STOP
+                {emergencyButton}
               </Button>
             </DivVertical>
           </ExpansionPanelDetails>

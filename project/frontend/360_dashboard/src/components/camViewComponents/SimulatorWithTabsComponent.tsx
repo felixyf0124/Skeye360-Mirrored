@@ -188,6 +188,7 @@ const SimulatorWithTabsComponent = (props: SimProps | any): JSX.Element => {
         <SidebarComponent
           isLiveFeed={false}
           tlMode={tlMode}
+          tlStop={tlStop}
           onChangeTLMode={onChangeTLMode}
           onClickTLStop={onClickTLStop}
           tlCombStates={tlCombStates}
