@@ -226,12 +226,47 @@ const DataTabsComponent = (props: any): JSX.Element => {
           onChange={handleChangeTab}
           TabIndicatorProps={{ style: { backgroundColor: 'white' } }}
         >
-          <Tab label="Number of cars" {...panel(0)} style={skeyeStyles.TabOnly} />
-          <Tab label="Analysis" {...panel(1)} style={skeyeStyles.TabOnly} />
+          <Tab label="Analysis" {...panel(0)} style={skeyeStyles.TabOnly} />
+          <Tab label="Number of cars" {...panel(1)} style={skeyeStyles.TabOnly} />
 
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
+        <div>
+          <InnerDivHorizon>
+            <VerticalBlock>
+              <div>
+                <DataBox>
+                  <text style={skeyeStyles.Header}>Average Wait Time (All Directions)</text>
+                  <text style={skeyeStyles.Data}>
+                    {onFLoatRound(waitingTime / ttlPassedCars, 2)}
+                  </text>
+                  <text style={skeyeStyles.Metric}>Seconds</text>
+                  <text style={skeyeStyles.BoxTextUpdated}>
+                    Updated on:&nbsp;
+                    {getDateTime()}
+                  </text>
+                </DataBox>
+              </div>
+            </VerticalBlock>
+            <VerticalBlock>
+              <div style={{ marginRight: '3vh' }}>
+                <DataBox>
+                  <text style={skeyeStyles.Header}>Average Gas Wasted Per Car</text>
+                  {/* 0.63L of gas wasted per hour * average wait time  */}
+                  <text style={skeyeStyles.Data}>{gasWasted()}</text>
+                  <text style={skeyeStyles.Metric}>Liters/Hour</text>
+                  <text style={skeyeStyles.BoxTextUpdated}>
+                    Updated on:&nbsp;
+                    {getDateTime()}
+                  </text>
+                </DataBox>
+              </div>
+            </VerticalBlock>
+          </InnerDivHorizon>
+        </div>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
         <div>
           <InnerDivHorizon>
             <VerticalBlock>
@@ -251,41 +286,6 @@ const DataTabsComponent = (props: any): JSX.Element => {
                   directionData={passedVehicles}
                 />
               </BarChartContainer>
-            </VerticalBlock>
-          </InnerDivHorizon>
-        </div>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <div>
-          <InnerDivHorizon>
-            <VerticalBlock>
-              <div style={{ marginRight: '3vh' }}>
-                <DataBox>
-                  <text style={skeyeStyles.Header}>Average Gas Wasted Per Car</text>
-                  {/* 0.63L of gas wasted per hour * average wait time  */}
-                  <text style={skeyeStyles.Data}>{gasWasted()}</text>
-                  <text style={skeyeStyles.Metric}>Liters/Hour</text>
-                  <text style={skeyeStyles.BoxTextUpdated}>
-                    Updated on:&nbsp;
-                    {getDateTime()}
-                  </text>
-                </DataBox>
-              </div>
-            </VerticalBlock>
-            <VerticalBlock>
-              <div>
-                <DataBox>
-                  <text style={skeyeStyles.Header}>Average Wait Time (All Directions)</text>
-                  <text style={skeyeStyles.Data}>
-                    {onFLoatRound(waitingTime / ttlPassedCars, 2)}
-                  </text>
-                  <text style={skeyeStyles.Metric}>Seconds</text>
-                  <text style={skeyeStyles.BoxTextUpdated}>
-                    Updated on:&nbsp;
-                    {getDateTime()}
-                  </text>
-                </DataBox>
-              </div>
             </VerticalBlock>
           </InnerDivHorizon>
         </div>
