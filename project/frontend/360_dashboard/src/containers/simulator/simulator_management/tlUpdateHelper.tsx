@@ -214,76 +214,78 @@ export function updateCaseRealTime(data: any, intersection: IntSect): void {
         break;
       }
     }
-    // counter at current counting time loop
-    let counter = 0;
-    for (let i = 0; i < noRedTL.index; i += 1) {
-      const id = seqIDs[i];
-      // if (id !== 2 && id !== 4) {
-      counter
-        += intersection.getTrafficLight(id).getTotalTime();
-      // }
-    }
-    noRedTL.cd = intersection.getTrafficLight(noRedTL.index).getCountDown();
-    if (noRedTL.state === 'green') {
-      counter += (intersection.getTrafficLight(noRedTL.index).getGreenTime()
-        - noRedTL.cd);
-    } else if (noRedTL.state === 'yellow') {
-      counter += (intersection.getTrafficLight(noRedTL.index).getTotalTime()
-        - noRedTL.cd);
-    }
-    // let counterOffset = Date.now()-counter;
-    for (let i = 0; i < data.length; i += 1) {
-      if (noRedTL.id !== data[i].id) {
-        // const cSetting = intersection
-        //   .getTrafficLightSetting(data[i].id);
-        // const totalT = cSetting.green + cSetting.yellow;
-        doUpdate = true;
-        // tl2 depends on tl0
-        if (data[i].id === 0 && intersection.getTrafficLightState(2) !== 'red') {
-          doUpdate = false;
-        }
-        // tl2 depends on tl1
-        if (data[i].id === 1 && intersection.getTrafficLightState(2) !== 'red') {
-          doUpdate = false;
-        }
-        // tl4 depends on tl1
-        if (data[i].id === 1 && intersection.getTrafficLightState(4) !== 'red') {
-          doUpdate = false;
-        }
-        // console.log(data);
-        // console.log(intersection.getTrafficLightSetting(3));
-        // tl4 depends on tl3
-        if (data[i].id === 3 && intersection.getTrafficLightState(4) !== 'red') {
-          doUpdate = false;
-        }
-        if (doUpdate) {
-          intersection.setTrafficLightTime(data[i].id, data[i].t);
+    if (!Number.isNaN(noRedTL.index)) {
+      // counter at current counting time loop
+      let counter = 0;
+      for (let i = 0; i < noRedTL.index; i += 1) {
+        const id = seqIDs[i];
+        // if (id !== 2 && id !== 4) {
+        counter
+          += intersection.getTrafficLight(id).getTotalTime();
+        // }
+      }
+      noRedTL.cd = intersection.getTrafficLight(noRedTL.index).getCountDown();
+      if (noRedTL.state === 'green') {
+        counter += (intersection.getTrafficLight(noRedTL.index).getGreenTime()
+          - noRedTL.cd);
+      } else if (noRedTL.state === 'yellow') {
+        counter += (intersection.getTrafficLight(noRedTL.index).getTotalTime()
+          - noRedTL.cd);
+      }
+      // let counterOffset = Date.now()-counter;
+      for (let i = 0; i < data.length; i += 1) {
+        if (noRedTL.id !== data[i].id) {
+          // const cSetting = intersection
+          //   .getTrafficLightSetting(data[i].id);
+          // const totalT = cSetting.green + cSetting.yellow;
+          doUpdate = true;
+          // tl2 depends on tl0
+          if (data[i].id === 0 && intersection.getTrafficLightState(2) !== 'red') {
+            doUpdate = false;
+          }
+          // tl2 depends on tl1
+          if (data[i].id === 1 && intersection.getTrafficLightState(2) !== 'red') {
+            doUpdate = false;
+          }
+          // tl4 depends on tl1
+          if (data[i].id === 1 && intersection.getTrafficLightState(4) !== 'red') {
+            doUpdate = false;
+          }
+          // console.log(data);
+          // console.log(intersection.getTrafficLightSetting(3));
+          // tl4 depends on tl3
+          if (data[i].id === 3 && intersection.getTrafficLightState(4) !== 'red') {
+            doUpdate = false;
+          }
+          if (doUpdate) {
+            intersection.setTrafficLightTime(data[i].id, data[i].t);
+          }
         }
       }
-    }
 
-    // special update for overlap tl
-    if (doUpdate) {
-      // id 2 overlap with 0 & 1
-      const id2 = 2;
-      const totalT2 = intersection.getTrafficLight(0)
-        .getTotalTime() + intersection.getTrafficLight(1)
-        .getTotalTime();
-      intersection.setTLOverlapOffset(id2, totalT2);
-      intersection.setTrafficLightTime(id2, totalT2);
+      // special update for overlap tl
+      if (doUpdate) {
+        // id 2 overlap with 0 & 1
+        const id2 = 2;
+        const totalT2 = intersection.getTrafficLight(0)
+          .getTotalTime() + intersection.getTrafficLight(1)
+          .getTotalTime();
+        intersection.setTLOverlapOffset(id2, totalT2);
+        intersection.setTrafficLightTime(id2, totalT2);
 
-      // id 4 overlap with 1 & 3
-      const id4 = 4;
-      const totalT4 = intersection.getTrafficLight(1)
-        .getTotalTime() + intersection.getTrafficLight(3)
-        .getTotalTime();
-      intersection.setTLOverlapOffset(id4, totalT4);
-      intersection.setTrafficLightTime(id4, totalT4);
+        // id 4 overlap with 1 & 3
+        const id4 = 4;
+        const totalT4 = intersection.getTrafficLight(1)
+          .getTotalTime() + intersection.getTrafficLight(3)
+          .getTotalTime();
+        intersection.setTLOverlapOffset(id4, totalT4);
+        intersection.setTrafficLightTime(id4, totalT4);
 
-      // intersection.setTLStartTime(Date.now());
-      // then update counter offset
-      intersection
-        .setTLCounterOffset(counter);
+        // intersection.setTLStartTime(Date.now());
+        // then update counter offset
+        intersection
+          .setTLCounterOffset(counter);
+      }
     }
   }
 }

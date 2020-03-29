@@ -628,7 +628,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     const { camera_url } = this.props;
     const obj = await tsData.tlPedestrianData(camera_url);
 
-    if (obj !== undefined && obj['east-west'] !== undefined) {
+    if (obj !== undefined && obj['east-west'] !== undefined
+      && this.pAiDataTL !== undefined && this.onReady) {
       // console.log(obj['east-west']);
       this.pAiDataTL.current = {
         ew: parseFloat(obj['east-west']),

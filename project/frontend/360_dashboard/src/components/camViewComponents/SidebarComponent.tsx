@@ -30,6 +30,7 @@ interface SimProps {
   tlMode: number;
   onChangeTLMode: any;
   onClickTLStop: any;
+  tlStop: boolean;
   onClickSimuStart: any;
   tlCombStates: Array<{
     direction: string;
@@ -202,14 +203,16 @@ const skeyeStyles = {
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const {
     isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, onClickSimuStart,
-    tlCombStates, keyValue, loopCountDown, loopCountDown2,
+    tlCombStates, keyValue, loopCountDown, loopCountDown2, tlStop,
   } = props;
   const classes = useStyles();
 
 
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
-  const [emergencyToggle, setEmergencyToggle] = React.useState(false);
-  const [emergencyBtnCol, setEmergencyBtnCol] = React.useState(SKEYE_RED);
+  // const [emergencyToggle, setEmergencyToggle] = React.useState(false);
+  const [emergencyBtnCol, setEmergencyBtnCol] = React.useState(
+    tlStop ? SKEYE_GREEN : SKEYE_RED,
+  );
 
   const eBtnStyle = {
     backgroundColor: SKEYE_LIGHT_DARK_GREY,
@@ -220,39 +223,41 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
     width: `${width - 2}vw`,
   };
 
-
-  const [emergencyButton, setEmergencyButton] = React.useState(
+  const stopBtn = (): JSX.Element => (
     <div>
       {' '}
       <ReportIcon style={skeyeStyles.StopIcon} />
       {' '}
       STOP
-    </div>,
+    </div>
+  );
+
+  const resumeBtn = (): JSX.Element => (
+    <div>
+      {' '}
+      <PlayCircleFilledIcon style={skeyeStyles.StopIcon} />
+      {' '}
+      RESUME
+    </div>
+  );
+
+  const [emergencyButton, setEmergencyButton] = React.useState(
+    tlStop ? resumeBtn() : stopBtn(),
   );
 
   const onClickEmergency = (): void => {
     onClickTLStop();
-    if (emergencyToggle) {
-      setEmergencyToggle(false);
+    if (tlStop) {
+      // setEmergencyToggle(false);
       setEmergencyBtnCol(SKEYE_RED);
       setEmergencyButton(
-        <div>
-          {' '}
-          <ReportIcon style={skeyeStyles.StopIcon} />
-          {' '}
-          STOP
-        </div>,
+        stopBtn(),
       );
     } else {
-      setEmergencyToggle(true);
+      // setEmergencyToggle(true);
       setEmergencyBtnCol(SKEYE_GREEN);
       setEmergencyButton(
-        <div>
-          {' '}
-          <PlayCircleFilledIcon style={skeyeStyles.StopIcon} />
-          {' '}
-          RESUME
-        </div>,
+        resumeBtn(),
       );
     }
   };

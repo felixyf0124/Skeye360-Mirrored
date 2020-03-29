@@ -345,7 +345,7 @@ const TabsComponents = (): JSX.Element => {
           toggles={state}
           tlMode={tlMode}
           onChangeTLMode={onChangeTLMode}
-          tlStop={tlStop}
+          tlStop={false}
           onClickTLStop={onClickTLStop}
           tlCombStates={tlCombStates}
           onTLUpdate={onTLUpdate}
