@@ -135,7 +135,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         sessionToken: `${data.username}-${data.email}`,
         username: data.username,
         email: data.email,
-        error: '',
+        error: 'Success! please log in.',
         success: true,
       };
     }

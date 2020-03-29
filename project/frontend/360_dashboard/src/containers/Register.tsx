@@ -33,6 +33,7 @@ interface StateProps {
   log_message: string;
   sessionToken: string;
   error: string;
+  success: boolean;
 }
 
 interface DispatchProps {
@@ -139,7 +140,7 @@ const useStyles = makeStyles(() => ({
   registerBox: {
     backgroundColor: '#212121',
     margin: 'auto',
-    marginTop: '8rem',
+    marginTop: '2vw',
     width: '25rem',
     height: '39rem',
     border: '1px solid grey',
@@ -202,8 +203,7 @@ const Register = (props: StateProps & DispatchProps): JSX.Element => {
   // props
   const {
     error,
-    // eslint-disable-next-line no-shadow
-    isRegistered,
+    success,
   } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -223,10 +223,6 @@ const Register = (props: StateProps & DispatchProps): JSX.Element => {
     );
   };
 
-  if (isRegistered) {
-    alert('Success! Please login.');
-    return <Redirect to="/login" />;
-  }
   return (
     <ThemeProvider theme={registerTheme}>
       <div>
@@ -355,6 +351,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   is_staff: false,
   isRegistered: registered(state),
   error: state.register.error,
+  success: state.register.success,
 });
 
 
