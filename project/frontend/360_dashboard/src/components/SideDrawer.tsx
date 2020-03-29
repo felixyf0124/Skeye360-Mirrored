@@ -1,3 +1,4 @@
+/* eslint-disable prefer-template */
 /* eslint-disable @typescript-eslint/camelcase */
 import AppBar from '@material-ui/core/AppBar';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -201,7 +202,7 @@ const SideDrawer = (props: StateProps & DispatchProps & HeaderProps): JSX.Elemen
             <HomeIcon className={classes.smallIcon} />
             Home
           </a>
-          <a className={classes.whiteStyle} style={{ right: 145, paddingTop: 1.3 }} href="/">
+          <a className={classes.whiteStyle} style={{ right: 145, paddingTop: 1.3 }} href="/profile">
             <PersonIcon className={classes.smallIcon} />
             Profile
           </a>
