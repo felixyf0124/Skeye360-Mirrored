@@ -165,15 +165,9 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       return initState;
     }
     case LOGOUT: {
-      localStorage.removeItem('user');
-      localStorage.removeItem('root');
+      localStorage.clear();
       return {
-        sessionToken: initState.sessionToken,
-        username: initState.username,
-        timestamp: initState.timestamp,
-        error: initState.error,
-        user_id: initState.user_id,
-        is_staff: initState.is_staff,
+        ...initState,
       };
     }
     default:

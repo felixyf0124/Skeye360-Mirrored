@@ -186,12 +186,17 @@ const Home = (props: StateProps & DispatchProps): JSX.Element => {
     defaultDistrictLat,
     defaultDistrictLng,
     isStaff,
-    user_id,
     users,
+    user_id,
     selectedIntersection,
     getDistricts,
+    getUsers,
     currentDistrict,
   } = props;
+
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
 
   useEffect(() => {
     getDistricts();
