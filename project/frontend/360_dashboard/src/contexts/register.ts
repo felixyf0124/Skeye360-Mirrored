@@ -130,7 +130,6 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         };
       }
 
-      localStorage.setItem('user', JSON.stringify(data));
       return {
         ...state,
         sessionToken: `${data.username}-${data.email}`,
@@ -151,21 +150,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         success: false,
       };
     }
-    case GET_USER_DATA: {
-      if (localStorage.getItem('user') !== null) {
-        const data: any = localStorage.getItem('user');
-        const d = new Date();
-        return {
-          ...state,
-          sessionToken: `${JSON.parse(data).username}-${JSON.parse(data).email}`,
-          username: JSON.parse(data).username,
-          error: '',
-          email: JSON.parse(data).email,
-          is_staff: JSON.parse(data).is_staff,
-        };
-      }
-      return initState;
-    }
+
     default:
       return state;
   }
