@@ -174,6 +174,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
   isAnotherInter: boolean;
 
+  onReady: boolean;
+
   constructor(props: any) {
     super(props);
     this.windowScaleRatio = 0.38;
@@ -209,6 +211,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.controlPanelContainer.addChild(this.controlPanelG);
     this.controlPanelContainer.addChild(this.tlDisplayPanelContainer);
     this.coordinateOffset = { x: this.windowW / 2, y: this.windowH / 2 };
+    this.onReady = false;
 
     this.vehicles = new Array<Vehicle>();
 
@@ -524,6 +527,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
       isForced: false,
     };
     this.pAiDataTL = { current: undefined, last: undefined };
+
+    this.onReady = true;
   }
 
   /**
@@ -552,9 +557,15 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
 
   // unmount content destroy
   componentWillUnmount(): void {
+    this.onReady = false;
     this.app.ticker.remove(this.animation);
     this.app.ticker.stop();
+    this.app.loader.destroy();
     this.app.destroy();
+    delete this.initialButtons;
+    delete this.initialize;
+    delete this.animation;
+    delete this.getSmartTLUpdate;
     this.btnShowCP.destroy();
     this.btnStop.destroy();
     this.backGroundG.destroy();
@@ -566,6 +577,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     this.roadG.destroy();
     this.trafficLightG.destroy();
     this.controlPanelG.destroy();
+    delete this.app;
+    delete this.render;
     delete this.windowW;
     delete this.windowH;
     delete this.windowMin;
@@ -584,7 +597,6 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
     delete this.vehicles;
     delete this.pixiContent;
     delete this.context;
-    delete this.render;
     delete this.toggleGroup;
     delete this.btnGroup;
     delete this.labelGroup;
@@ -762,35 +774,37 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * initial
    */
   initialize = (): void => {
-    window.removeEventListener('resize', this.resize);
-    window.addEventListener('resize', this.resize);
+    if (this.onReady) {
+      window.removeEventListener('resize', this.resize);
+      window.addEventListener('resize', this.resize);
 
-    this.initialButtons();
+      this.initialButtons();
 
-    this.mappingBGContainer.removeChildren();
-    const { texture } = this.app.loader.resources.mappingBGTexture;
-    const mappingBG = new PIXI.Sprite(texture);
-    mappingBG.scale.x = this.windowW / texture.width;
-    mappingBG.scale.y = this.windowH / texture.height;
-    mappingBG.x = -this.coordinateOffset.x;
-    mappingBG.y = -this.coordinateOffset.y;
-    mappingBG.alpha = 0.9;
-    this.mappingBGContainer.addChild(mappingBG);
+      this.mappingBGContainer.removeChildren();
+      const { texture } = this.app.loader.resources.mappingBGTexture;
+      const mappingBG = new PIXI.Sprite(texture);
+      mappingBG.scale.x = this.windowW / texture.width;
+      mappingBG.scale.y = this.windowH / texture.height;
+      mappingBG.x = -this.coordinateOffset.x;
+      mappingBG.y = -this.coordinateOffset.y;
+      mappingBG.alpha = 0.9;
+      this.mappingBGContainer.addChild(mappingBG);
 
-    // the following two sequence matters, will affect the listeners;
-    this.isControlPanelShown = false;
-    this.isCPAnimating = true;
-    // this.updateControlPanelDisplayState(0);
-    this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
-    const { isLiveFeed } = this.props;
-    if (isLiveFeed && this.toggleGroup[0].state) {
-      this.drawRoadBackGround();
-    } else {
-      this.drawRoad();
+      // the following two sequence matters, will affect the listeners;
+      this.isControlPanelShown = false;
+      this.isCPAnimating = true;
+      // this.updateControlPanelDisplayState(0);
+      this.drawBackground(parseInt(Scene.getColor('skeye_blue'), 16), 0.16);
+      const { isLiveFeed } = this.props;
+      if (isLiveFeed && this.toggleGroup[0].state) {
+        this.drawRoadBackGround();
+      } else {
+        this.drawRoad();
+      }
+      this.renderObjects();
+      this.drawLaneArea();
+      this.app.ticker.add(this.animation);
     }
-    this.renderObjects();
-    this.drawLaneArea();
-    this.app.ticker.add(this.animation);
   };
 
   /**
@@ -1072,7 +1086,7 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
           );
         }
       } else if (this.tlCaseId !== 2
-          || (this.tlCaseId === 2 && this.forceHelper.isForced === false)) {
+        || (this.tlCaseId === 2 && this.forceHelper.isForced === false)) {
         for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
           const tempId = this.roadIntersection.getTrafficLightQueue()[i].getId();
           this.roadIntersection.deForceTLState(tempId);
@@ -1555,139 +1569,144 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
    * button initial
    */
   initialButtons(): void {
-    const color = 0x51bcd8;
+    if (this.onReady && this.toggleGroup !== undefined
+      && this.tlCaseBtnGroup !== undefined && this.menuBtns !== undefined
+      && this.labelGroup !== undefined) {
 
-    // pop - hide btn
-    this.btnShowCP.setBackground(color, 0.1, 1, color);
-    const textStyle = {
-      fontFamily: 'Courier',
-      fontSize: '12px',
-      fill: '0x51BCD8',
-      fontWeight: '600',
-    };
+      const color = 0x51bcd8;
 
-    this.btnShowCP.setTextStyle(textStyle);
+      // pop - hide btn
+      // this.btnShowCP.setBackground(color, 0.1, 1, color);
+      const textStyle = {
+        fontFamily: 'Courier',
+        fontSize: '12px',
+        fill: '0x51BCD8',
+        fontWeight: '600',
+      };
 
-    this.btnShowCP.x = this.controlPanelG.width;
-    if (this.btnShowCP.parent == null) {
-      this.controlPanelContainer.addChild(this.btnShowCP);
-    }
-    this.updateControlPanelDisplayState(0);
-    this.btnStop.setBackground(color, 0.1, 1, color);
-    const textStyle2 = {
-      // fontFamily: 'Courier',
-      fontSize: '12px',
-      fill: '#FFFFFF',
-      fontWeight: '600',
-    };
-    this.btnStop.setTextStyle(textStyle2);
-    this.btnStop.x = (this.controlPanelG.width - this.btnStop.width) / 2;
-    this.btnStop.y = this.controlPanelG.height - 40;
+      // this.btnShowCP.setTextStyle(textStyle);
 
-    const textStyle3 = {
-      fontSize: '11px',
-      fill: '#FFFFFF',
-    };
-    for (let i = 0; i < this.toggleGroup.length; i += 1) {
-      this.btnGroup[i].btn.setBackground(color, 0.1, 1, color);
-      this.btnGroup[i].btn.setTextStyle(textStyle3);
-      this.btnGroup[i].btn.x = this.controlPanelG.width * 0.75;
-      this.btnGroup[i].btn.y = 20 + i * 26;
+      // this.btnShowCP.x = this.controlPanelG.width;
+      // if (this.btnShowCP.parent == null) {
+      //   this.controlPanelContainer.addChild(this.btnShowCP);
+      // }
+      // this.updateControlPanelDisplayState(0);
+      // this.btnStop.setBackground(color, 0.1, 1, color);
+      // const textStyle2 = {
+      //   // fontFamily: 'Courier',
+      //   fontSize: '12px',
+      //   fill: '#FFFFFF',
+      //   fontWeight: '600',
+      // };
+      // this.btnStop.setTextStyle(textStyle2);
+      // this.btnStop.x = (this.controlPanelG.width - this.btnStop.width) / 2;
+      // this.btnStop.y = this.controlPanelG.height - 40;
 
-      this.btnGroup[i].text.style = textStyle3;
-      this.btnGroup[i].text.x = 8;
-      this.btnGroup[i].text.y = 20 + i * 26 + 6;
-    }
+      const textStyle3 = {
+        fontSize: '11px',
+        fill: '#FFFFFF',
+      };
+      for (let i = 0; i < this.toggleGroup.length; i += 1) {
+        this.btnGroup[i].btn.setBackground(color, 0.1, 1, color);
+        this.btnGroup[i].btn.setTextStyle(textStyle3);
+        this.btnGroup[i].btn.x = this.controlPanelG.width * 0.75;
+        this.btnGroup[i].btn.y = 20 + i * 26;
 
-    // tlcase btns
-    const numOfTL = this.roadIntersection.getTrafficLightQueue().length;
-    for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
-      this.tlCaseBtnGroup[i].setBackground(color, 0.1, 1, color);
-      this.tlCaseBtnGroup[i].setTextStyle(textStyle3);
-      this.tlCaseBtnGroup[i].x = (this.controlPanelG.width - this.tlCaseBtnGroup[i].width) * 0.5;
-      this.tlCaseBtnGroup[i].y = numOfTL * 26 + 50 + i * 27;
-    }
-
-    // menu btns
-    for (let i = 0; i < this.menuBtns.length; i += 1) {
-      this.menuBtns[i].setTextStyle(textStyle);
-      this.menuBtns[i].setDemansion(this.menuBtns[i].text.width + 12, 26);
-
-      this.menuBtns[i].setBackground(color, 0.1, 1, color);
-      this.menuBtns[i].setBoarder(1, color);
-
-      this.menuBtns[i].angle = 90;
-      this.menuBtns[i].x = this.controlPanelG.width + this.menuBtns[i].height - 1;
-      this.menuBtns[i].setTextStyle(textStyle);
-    }
-    this.menuBtns[0].y = this.menuBtns[0].width / 2 - 26;
-    this.menuBtns[1].y = this.menuBtns[0].y + this.menuBtns[0].width / 2 + this.menuBtns[1].width / 2 + 12;
-    this.menuBtns[2].y = this.menuBtns[1].y + this.menuBtns[1].width / 2 + this.menuBtns[2].width / 2 + 6;
-
-    // this is for live feed mapping incoming section car count
-    if (this.labelGroup.length === 0) {
-      for (let i = 0; i < this.dragablePoints.length; i += 1) {
-        const offset = new Vec2(this.coordinateOffset.x, this.coordinateOffset.y);
-        const p1 = this.dragablePoints[i][1].absolutPos;
-        const p2 = this.dragablePoints[i][2].absolutPos;
-
-        let pos = p1;
-
-        const labelG = new Btn(36, 36, 'car#', 0xc658fc);
-        labelG.setTextStyle(textStyle3);
-        labelG.interactive = false;
-        labelG.buttonMode = false;
-
-        const verticalDir = ts.tsNormalize(ts
-          .tsRotateByOrigin(p1.minus(p2), Math.PI / 2));
-
-        pos = pos.plus(verticalDir.multiply(this.laneW * 2.5));
-        pos.x *= this.windowW;
-        pos.y *= this.windowH;
-        pos = pos.minus(offset);
-
-        labelG.x = pos.x - labelG.btnWidth / 2;
-        labelG.y = pos.y - labelG.btnHeight / 2;
-        this.labelGroup.push(labelG);
+        this.btnGroup[i].text.style = textStyle3;
+        this.btnGroup[i].text.x = 8;
+        this.btnGroup[i].text.y = 20 + i * 26 + 6;
       }
-    } else {
-      for (let i = 0; i < this.dragablePoints.length; i += 1) {
-        const offset = new Vec2(this.coordinateOffset.x, this.coordinateOffset.y);
-        const p1 = this.dragablePoints[i][1].absolutPos;
-        const p2 = this.dragablePoints[i][2].absolutPos;
 
-        let pos = p1;
-
-        const verticalDir = ts.tsNormalize(ts
-          .tsRotateByOrigin(p1.minus(p2), Math.PI / 2));
-
-        pos = pos.plus(verticalDir.multiply(this.laneW * 2.5));
-        pos.x *= this.windowW;
-        pos.y *= this.windowH;
-        pos = pos.minus(offset);
-
-        this.labelGroup[i].x = pos.x - this.labelGroup[i].btnWidth / 2;
-        this.labelGroup[i].y = pos.y - this.labelGroup[i].btnHeight / 2;
+      // tlcase btns
+      const numOfTL = this.roadIntersection.getTrafficLightQueue().length;
+      for (let i = 0; i < this.tlCaseBtnGroup.length; i += 1) {
+        this.tlCaseBtnGroup[i].setBackground(color, 0.1, 1, color);
+        this.tlCaseBtnGroup[i].setTextStyle(textStyle3);
+        this.tlCaseBtnGroup[i].x = (this.controlPanelG.width - this.tlCaseBtnGroup[i].width) * 0.5;
+        this.tlCaseBtnGroup[i].y = numOfTL * 26 + 50 + i * 27;
       }
+
+      // menu btns
+      for (let i = 0; i < this.menuBtns.length; i += 1) {
+        this.menuBtns[i].setTextStyle(textStyle);
+        this.menuBtns[i].setDemansion(this.menuBtns[i].text.width + 12, 26);
+
+        this.menuBtns[i].setBackground(color, 0.1, 1, color);
+        this.menuBtns[i].setBoarder(1, color);
+
+        this.menuBtns[i].angle = 90;
+        this.menuBtns[i].x = this.controlPanelG.width + this.menuBtns[i].height - 1;
+        this.menuBtns[i].setTextStyle(textStyle);
+      }
+      this.menuBtns[0].y = this.menuBtns[0].width / 2 - 26;
+      this.menuBtns[1].y = this.menuBtns[0].y + this.menuBtns[0].width / 2 + this.menuBtns[1].width / 2 + 12;
+      this.menuBtns[2].y = this.menuBtns[1].y + this.menuBtns[1].width / 2 + this.menuBtns[2].width / 2 + 6;
+
+      // this is for live feed mapping incoming section car count
+      if (this.labelGroup.length === 0) {
+        for (let i = 0; i < this.dragablePoints.length; i += 1) {
+          const offset = new Vec2(this.coordinateOffset.x, this.coordinateOffset.y);
+          const p1 = this.dragablePoints[i][1].absolutPos;
+          const p2 = this.dragablePoints[i][2].absolutPos;
+
+          let pos = p1;
+
+          const labelG = new Btn(36, 36, 'car#', 0xc658fc);
+          labelG.setTextStyle(textStyle3);
+          labelG.interactive = false;
+          labelG.buttonMode = false;
+
+          const verticalDir = ts.tsNormalize(ts
+            .tsRotateByOrigin(p1.minus(p2), Math.PI / 2));
+
+          pos = pos.plus(verticalDir.multiply(this.laneW * 2.5));
+          pos.x *= this.windowW;
+          pos.y *= this.windowH;
+          pos = pos.minus(offset);
+
+          labelG.x = pos.x - labelG.btnWidth / 2;
+          labelG.y = pos.y - labelG.btnHeight / 2;
+          this.labelGroup.push(labelG);
+        }
+      } else {
+        for (let i = 0; i < this.dragablePoints.length; i += 1) {
+          const offset = new Vec2(this.coordinateOffset.x, this.coordinateOffset.y);
+          const p1 = this.dragablePoints[i][1].absolutPos;
+          const p2 = this.dragablePoints[i][2].absolutPos;
+
+          let pos = p1;
+
+          const verticalDir = ts.tsNormalize(ts
+            .tsRotateByOrigin(p1.minus(p2), Math.PI / 2));
+
+          pos = pos.plus(verticalDir.multiply(this.laneW * 2.5));
+          pos.x *= this.windowW;
+          pos.y *= this.windowH;
+          pos = pos.minus(offset);
+
+          this.labelGroup[i].x = pos.x - this.labelGroup[i].btnWidth / 2;
+          this.labelGroup[i].y = pos.y - this.labelGroup[i].btnHeight / 2;
+        }
+      }
+      // will need this for later passed car number count
+      // const rSections = this.roadIntersection.getRoadSections();
+      // if (this.labelGroup.length === 0) {
+      //   for (let i = 0; i < rSections.length; i += 1) {
+      //     const lane = rSections[i].getLaneAt(0);
+      //     const pos = rSections[i]
+      //       .getTail().multiply(this.windowW)
+      //       .multiply(0.3)
+      //       .plus(lane.getHead());
+      //     const labelG = new Btn(36, 36, 'car#', 0xc658fc);
+      //     labelG.setTextStyle(textStyle3);
+      //     labelG.interactive = false;
+      //     labelG.buttonMode = false;
+      //     labelG.x = pos.x - labelG.btnWidth / 2;
+      //     labelG.y = pos.y - labelG.height / 2;
+      //     this.labelGroup.push(labelG);
+      //   }
+      // }
     }
-    // will need this for later passed car number count
-    // const rSections = this.roadIntersection.getRoadSections();
-    // if (this.labelGroup.length === 0) {
-    //   for (let i = 0; i < rSections.length; i += 1) {
-    //     const lane = rSections[i].getLaneAt(0);
-    //     const pos = rSections[i]
-    //       .getTail().multiply(this.windowW)
-    //       .multiply(0.3)
-    //       .plus(lane.getHead());
-    //     const labelG = new Btn(36, 36, 'car#', 0xc658fc);
-    //     labelG.setTextStyle(textStyle3);
-    //     labelG.interactive = false;
-    //     labelG.buttonMode = false;
-    //     labelG.x = pos.x - labelG.btnWidth / 2;
-    //     labelG.y = pos.y - labelG.height / 2;
-    //     this.labelGroup.push(labelG);
-    //   }
-    // }
   }
 
   /**
