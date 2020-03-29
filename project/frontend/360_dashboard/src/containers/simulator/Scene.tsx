@@ -1071,7 +1071,8 @@ class Scene extends React.Component<Props & StateProps & DispatchProps> {
             'red',
           );
         }
-      } else {
+      } else if (this.tlCaseId !== 2
+          || (this.tlCaseId === 2 && this.forceHelper.isForced === false)) {
         for (let i = 0; i < this.roadIntersection.getTrafficLightQueue().length; i += 1) {
           const tempId = this.roadIntersection.getTrafficLightQueue()[i].getId();
           this.roadIntersection.deForceTLState(tempId);
