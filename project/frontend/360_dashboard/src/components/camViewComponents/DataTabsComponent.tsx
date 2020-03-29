@@ -259,12 +259,13 @@ const DataTabsComponent = (props: any): JSX.Element => {
         <div>
           <InnerDivHorizon>
             <VerticalBlock>
-              <div style={{ marginRight: '3vh' }}>
+              <div>
                 <DataBox>
-                  <text style={skeyeStyles.Header}>Average Gas Wasted Per Car</text>
-                  {/* 0.63L of gas wasted per hour * average wait time  */}
-                  <text style={skeyeStyles.Data}>{gasWasted()}</text>
-                  <text style={skeyeStyles.Metric}>Liters/Hour</text>
+                  <text style={skeyeStyles.Header}>Average Wait Time (All Directions)</text>
+                  <text style={skeyeStyles.Data}>
+                    {onFLoatRound(waitingTime / ttlPassedCars, 2)}
+                  </text>
+                  <text style={skeyeStyles.Metric}>Seconds</text>
                   <text style={skeyeStyles.BoxTextUpdated}>
                     Updated on:&nbsp;
                     {getDateTime()}
@@ -273,13 +274,12 @@ const DataTabsComponent = (props: any): JSX.Element => {
               </div>
             </VerticalBlock>
             <VerticalBlock>
-              <div>
+              <div style={{ marginRight: '3vh' }}>
                 <DataBox>
-                  <text style={skeyeStyles.Header}>Average Wait Time (All Directions)</text>
-                  <text style={skeyeStyles.Data}>
-                    {onFLoatRound(waitingTime / ttlPassedCars, 2)}
-                  </text>
-                  <text style={skeyeStyles.Metric}>Seconds</text>
+                  <text style={skeyeStyles.Header}>Average Gas Wasted Per Car</text>
+                  {/* 0.63L of gas wasted per hour * average wait time  */}
+                  <text style={skeyeStyles.Data}>{gasWasted()}</text>
+                  <text style={skeyeStyles.Metric}>Liters/Hour</text>
                   <text style={skeyeStyles.BoxTextUpdated}>
                     Updated on:&nbsp;
                     {getDateTime()}
