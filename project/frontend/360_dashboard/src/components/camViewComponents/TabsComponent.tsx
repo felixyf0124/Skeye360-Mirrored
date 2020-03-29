@@ -328,7 +328,7 @@ const TabsComponents = (): JSX.Element => {
           {/* this is a setting button. Due to UI modificationm we no need them for our design */}
           {/* KEEP this in case the stakeholder needs it */}
           {/* value === 0 is for Live Feed tab and value === 3 is for Simulator tab */}
-          {value === 0
+          {/* {value === 0
             ? (
               <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
                 <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
@@ -336,7 +336,7 @@ const TabsComponents = (): JSX.Element => {
                 </button>
               </BoxSettingsMenu>
             )
-            : null}
+            : null} */}
 
         </Tabs>
       </AppBar>
