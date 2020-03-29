@@ -8,7 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import SettingsIcon from '@material-ui/icons/Settings';
+// import SettingsIcon from '@material-ui/icons/Settings';
 import styled from 'styled-components';
 import {
   FormControlLabel, Switch, withStyles, FormGroup,
@@ -64,11 +64,11 @@ function props(index: any): any {
   };
 }
 
-const BoxSettingsMenu = styled.div`
-  position: absolute;
-  right: 0;
-  background-color: SKEYE_LIGHT_DARK_GREY;
-`;
+// const BoxSettingsMenu = styled.div`
+//   position: absolute;
+//   right: 0;
+//   background-color: SKEYE_LIGHT_DARK_GREY;
+// `;
 
 // Horizontal flexbox styling
 const HorizontalFlexBox = styled.div`
@@ -300,9 +300,9 @@ const TabsComponents = (): JSX.Element => {
     setValue(newValue);
   };
 
-  const handleClickOpen = (): void => {
-    setOpen(true);
-  };
+  // const handleClickOpen = (): void => {
+  //   setOpen(true);
+  // };
 
   const handleClose = (): void => {
     setOpen(false);
