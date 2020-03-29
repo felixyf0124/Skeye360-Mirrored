@@ -226,36 +226,12 @@ const DataTabsComponent = (props: any): JSX.Element => {
           onChange={handleChangeTab}
           TabIndicatorProps={{ style: { backgroundColor: 'white' } }}
         >
-          <Tab label="Number of cars" {...panel(0)} style={skeyeStyles.TabOnly} />
-          <Tab label="Analysis" {...panel(1)} style={skeyeStyles.TabOnly} />
+          <Tab label="Analysis" {...panel(0)} style={skeyeStyles.TabOnly} />
+          <Tab label="Number of cars" {...panel(1)} style={skeyeStyles.TabOnly} />
 
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <div>
-          <InnerDivHorizon>
-            <VerticalBlock>
-              <div style={{ marginTop: '6vh', marginRight: '3vh' }}>
-                <DataBox>
-                  <text style={skeyeStyles.Header}>Total Number Of Car Passed</text>
-                  <text style={skeyeStyles.Data}>{ttlPassedCars}</text>
-                </DataBox>
-              </div>
-            </VerticalBlock>
-            <VerticalBlock>
-              <BarChartContainer>
-                <BarChartDirections
-                  chartID={chartID}
-                  title="Number Of Car Passed Per Direction"
-                  categories={['From North', 'From East', 'From South', 'From West']}
-                  directionData={passedVehicles}
-                />
-              </BarChartContainer>
-            </VerticalBlock>
-          </InnerDivHorizon>
-        </div>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
         <div>
           <InnerDivHorizon>
             <VerticalBlock>
@@ -286,6 +262,30 @@ const DataTabsComponent = (props: any): JSX.Element => {
                   </text>
                 </DataBox>
               </div>
+            </VerticalBlock>
+          </InnerDivHorizon>
+        </div>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <div>
+          <InnerDivHorizon>
+            <VerticalBlock>
+              <div style={{ marginTop: '6vh', marginRight: '3vh' }}>
+                <DataBox>
+                  <text style={skeyeStyles.Header}>Total Number Of Car Passed</text>
+                  <text style={skeyeStyles.Data}>{ttlPassedCars}</text>
+                </DataBox>
+              </div>
+            </VerticalBlock>
+            <VerticalBlock>
+              <BarChartContainer>
+                <BarChartDirections
+                  chartID={chartID}
+                  title="Number Of Car Passed Per Direction"
+                  categories={['From North', 'From East', 'From South', 'From West']}
+                  directionData={passedVehicles}
+                />
+              </BarChartContainer>
             </VerticalBlock>
           </InnerDivHorizon>
         </div>
