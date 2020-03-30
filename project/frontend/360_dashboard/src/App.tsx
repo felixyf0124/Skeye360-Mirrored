@@ -4,16 +4,16 @@ import { Route, Switch } from 'react-router-dom';
 
 import { RootState } from './reducers/rootReducer';
 import Login from './containers/Login';
+import Register from './containers/Register';
+import Profile from './containers/Profile';
 
 import './css/App.css';
-import SkeyeMap from './containers/SkeyeMap';
 import AddIntersection from './containers/AddIntersection';
 import EditIntersection from './containers/EditIntersection';
-import StreetView from './containers/StreetView';
-import ChartsPrototype from './components/ChartsPrototype';
+import ChartsPrototype from './components/charts/ChartsPrototype';
 import SessionRoutes from './SessionRoutes';
 import { authenticated, isStaff } from './contexts/authentication';
-import IntersectionList from './containers/IntersectionList';
+import Home from './containers/Home';
 import CamView from './containers/CamView';
 import AdminRoutes from './AdminRoutes';
 
@@ -26,14 +26,14 @@ interface StateProps {
 const App = ({ authenticated, isStaff }: StateProps): JSX.Element => (
   <Switch>
     <Route path="/login" render={(): JSX.Element => <Login />} />
+    <Route path="/register" render={(): JSX.Element => <Register />} />
+    <Route exact path="/profile" component={Profile} />
     <Route>
       <Switch>
         <SessionRoutes authenticated={authenticated}>
-          <Route exact path="/" component={IntersectionList} />
-          <Route exact path="/streetview/:intersectionId" component={StreetView} />
+          <Route exact path="/" component={Home} />
           <Route exact path="/camview/:intersectionId" component={CamView} />
           <Route exact path="/chartsprototype" component={ChartsPrototype} />
-          <Route exact path="/map" component={SkeyeMap} />
           <AdminRoutes authenticated={authenticated} isStaff={isStaff}>
             <Route exact path="/intersection/add" component={AddIntersection} />
             <Route

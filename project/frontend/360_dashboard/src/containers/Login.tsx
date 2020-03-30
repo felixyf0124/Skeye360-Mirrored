@@ -11,13 +11,14 @@ import LockIcon from '@material-ui/icons/Lock';
 import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
 import { RootState } from '../reducers/rootReducer';
-import {
-  authenticate,
-  authenticated,
-  getUserData,
-  GetUserDataAction,
-} from '../contexts/authentication';
+import { authenticate, authenticated } from '../contexts/authentication';
 import { logClick } from '../contexts/LogClicks';
+import { SKEYE_RED } from '../css/custom';
+
+const Error = styled.h6`
+  color: ${SKEYE_RED};
+  text-align: center;
+`;
 
 interface StateProps {
   username: any;
@@ -36,7 +37,6 @@ interface DispatchProps {
   authenticate: (username: string, password: string) => void;
   historyPush: (url: string) => void;
   logClick: (log_message: string, user_id: number) => any;
-  getUserData: () => GetUserDataAction;
 }
 
 const loginTheme = createMuiTheme({
@@ -190,12 +190,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
   const history = useHistory();
 
   // props
-  const {
-    error,
-    user_id,
-    // eslint-disable-next-line no-shadow
-    isAuthenticated,
-  } = props;
+  const { error, user_id, isAuthenticated } = props;
 
   // update state on change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -225,12 +220,6 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
     logClick('Clicked Login', user_id);
   };
 
-  const loadUserData = (): any => {
-    const { getUserData } = props;
-    getUserData();
-  };
-
-  loadUserData();
   // eslint-disable-next-line no-alert
   if (isAuthenticated) {
     handleLog();
@@ -255,13 +244,7 @@ const Login = (props: StateProps & DispatchProps): JSX.Element => {
                 history.push('/');
               }}
             >
-              {error !== '' ? (
-                <div className="classes.margin">
-                  <div className={classes.invalid}>{error}</div>
-                </div>
-              ) : (
-                <div />
-              )}
+              {error !== '' ? <Error>{error}</Error> : <div />}
               <div className="classes.margin">
                 <Grid container spacing={1} alignItems="flex-end" justify="center">
                   <Grid item>
@@ -347,7 +330,6 @@ const mapDispatchToProps: DispatchProps = {
   authenticate,
   historyPush: push,
   logClick,
-  getUserData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

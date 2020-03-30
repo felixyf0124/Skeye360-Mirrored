@@ -11,6 +11,7 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 import Button from '@material-ui/core/Button';
 import ReportIcon from '@material-ui/icons/Report';
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -21,12 +22,16 @@ import {
   SKEYE_LIGHT_BLACK, SKEYE_GREEN,
   SKEYE_DARK_GREY,
   SKEYE_BRIGHT_GREEN,
+  SKEYE_YELLOW,
 } from '../../css/custom';
 
 interface SimProps {
+  isLiveFeed: boolean;
   tlMode: number;
   onChangeTLMode: any;
   onClickTLStop: any;
+  tlStop: boolean;
+  onClickSimuStart: any;
   tlCombStates: Array<{
     direction: string;
     state: string;
@@ -36,6 +41,9 @@ interface SimProps {
     totalTime: string; // G+Y
     totalTime2: string; // G+Y
   }>;
+  getTLstates: any;
+  loopCountDown: number;
+  loopCountDown2: number;
 }
 
 // Horizontal box for the entire component
@@ -65,10 +73,10 @@ const useStyles = makeStyles(() => createStyles({
     marginTop: 10,
     paddingTop: 8,
     overflowY: 'scroll',
-    maxHeight: '45vw',
+    maxHeight: '37.5vw',
   },
   titleBox: {
-    backgroundColor: SKEYE_LIGHT_DARK_GREY,
+    backgroundColor: SKEYE_LIGHT_BLACK,
     marginRight: 10,
     marginTop: 10,
     marginBottom: 10,
@@ -79,13 +87,13 @@ const useStyles = makeStyles(() => createStyles({
     backgroundColor: SKEYE_WHITE,
     marginRight: 10,
     marginTop: 10,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   dividerGrey: {
     backgroundColor: SKEYE_GREY,
     marginRight: 10,
-    marginTop: 8,
-    marginBottom: 8,
+    marginTop: 2,
+    marginBottom: 2,
   },
   listItem: {
     marginTop: -8,
@@ -97,13 +105,11 @@ const useStyles = makeStyles(() => createStyles({
   tlTable: {
     marginTop: 0,
     marginBottom: 0,
-    // width: `100%`,
     display: 'block',
   },
 
   tlTRow: {
     margin: 'auto',
-    // width: `100%`,
     display: 'table-row',
   },
   '@global': {
@@ -157,6 +163,14 @@ const skeyeStyles = {
     marginLeft: 8,
     width: `${width - 2}vw`,
   },
+  ResumeButton: {
+    backgroundColor: SKEYE_LIGHT_DARK_GREY,
+    color: SKEYE_YELLOW,
+    marginTop: 8,
+    marginBottom: 8,
+    marginLeft: 8,
+    width: `${width - 2}vw`,
+  },
   StopIcon: {
     marginRight: 10,
   },
@@ -179,15 +193,76 @@ const skeyeStyles = {
     color: SKEYE_WHITE,
     fontSize: 12,
   },
+  TrafficLightComp: {
+    display: 'table-row-group',
+    // marginTop: '-10vh',
+  },
 };
 
 // Creates and returns a component for the sidebar that will be used in the simulator
 const SidebarComponent = (props: SimProps | any): JSX.Element => {
   const {
-    tlMode, onChangeTLMode, onClickTLStop, tlCombStates, keyValue,
+    isLiveFeed, tlMode, onChangeTLMode, onClickTLStop, onClickSimuStart,
+    tlCombStates, keyValue, loopCountDown, loopCountDown2, tlStop,
   } = props;
   const classes = useStyles();
+
+
   const [selectedIndex, setSelectedIndex] = React.useState(tlMode);
+  // const [emergencyToggle, setEmergencyToggle] = React.useState(false);
+  const [emergencyBtnCol, setEmergencyBtnCol] = React.useState(
+    tlStop ? SKEYE_GREEN : SKEYE_RED,
+  );
+
+  const eBtnStyle = {
+    backgroundColor: SKEYE_LIGHT_DARK_GREY,
+    color: emergencyBtnCol,
+    marginTop: 8,
+    marginBottom: 8,
+    marginLeft: 8,
+    width: `${width - 2}vw`,
+  };
+
+  const stopBtn = (): JSX.Element => (
+    <div>
+      {' '}
+      <ReportIcon style={skeyeStyles.StopIcon} />
+      {' '}
+      STOP
+    </div>
+  );
+
+  const resumeBtn = (): JSX.Element => (
+    <div>
+      {' '}
+      <PlayCircleFilledIcon style={skeyeStyles.StopIcon} />
+      {' '}
+      RESUME
+    </div>
+  );
+
+  const [emergencyButton, setEmergencyButton] = React.useState(
+    tlStop ? resumeBtn() : stopBtn(),
+  );
+
+  const onClickEmergency = (): void => {
+    onClickTLStop();
+    if (tlStop) {
+      // setEmergencyToggle(false);
+      setEmergencyBtnCol(SKEYE_RED);
+      setEmergencyButton(
+        stopBtn(),
+      );
+    } else {
+      // setEmergencyToggle(true);
+      setEmergencyBtnCol(SKEYE_GREEN);
+      setEmergencyButton(
+        resumeBtn(),
+      );
+    }
+  };
+
+  const directions = ['North & South', 'East & West - Left Turn', 'East & West', 'East & West - Right Turn', 'South - Right Turn'];
 
   // OnClick it will the variable to the selected item (Arima, Pedestrians or Real-Time)
   const onClickListItem = (
@@ -198,18 +273,22 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
     onChangeTLMode(index);
   };
 
-  const tlDiv = tlCombStates.map((
-    tlCombState:
-    {
-      direction: string;
-      state: string;
-      state2: string;
-      countDown: string;
-      countDown2: string;
-      totalTime: string; // G+Y
-      totalTime2: string; // G+Y
-    },
-  ) => {
+  const tlAtDiv = (index: number, combinedTLState: Array<{
+    direction: string;
+    state: string;
+    state2: string;
+    countDown: string;
+    countDown2: string;
+    totalTime: string; // G+Y
+    totalTime2: string; // G+Y
+  }>): JSX.Element => {
+    const tlDataHeader = {
+      color: SKEYE_WHITE,
+      fontSize: '0.9em',
+      textDecorationLine: 'underline',
+      margin: 'auto',
+      display: 'table-cell',
+    };
     const tlData = {
       color: SKEYE_WHITE,
       fontSize: '0.8em',
@@ -228,50 +307,208 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
       margin: 'auto',
       display: 'table-cell',
     };
+    if (combinedTLState.length > 0) {
+      if (combinedTLState[index].state === 'red') {
+        tlDataCol.color = '#FF0000';
+      } else if (combinedTLState[index].state === 'green') {
+        tlDataCol.color = '#00FF00';
+      } else if (combinedTLState[index].state === 'yellow') {
+        tlDataCol.color = '#f5c842';
+      }
 
-    if (tlCombState.state === 'red') {
-      tlDataCol.color = '#FF0000';
-    } else if (tlCombState.state === 'green') {
-      tlDataCol.color = '#00FF00';
-    } else if (tlCombState.state === 'yellow') {
-      tlDataCol.color = '#f5c842';
+      if (combinedTLState[index].state2 === 'red') {
+        tlDataCol2.color = '#FF0000';
+      } else if (combinedTLState[index].state2 === 'green') {
+        tlDataCol2.color = '#00FF00';
+      } else if (combinedTLState[index].state2 === 'yellow') {
+        tlDataCol2.color = '#f5c842';
+      }
+
+      return (
+        <div>
+          <tr className={classes.tlTRow}>
+            <th style={tlDataHeader}>Direction:</th>
+          </tr>
+          <tr className={classes.tlTRow}>
+            <td style={tlData} colSpan={4}>
+              {((): any => {
+                switch (combinedTLState[index].direction) {
+                  case 's<=>n,s->w,s->s,n->e,n->w': return directions[0];
+                  case 'e->e,e->s,w->w,w->n': return directions[1];
+                  case 'e<=>w': return directions[2];
+                  case 'e->n,w->s': return directions[3];
+                  case 's->e': return directions[4];
+                  default: return null;
+                }
+              })()}
+            </td>
+          </tr>
+          <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
+            <td style={tlData}>Type</td>
+            {/* <td style={tlData}>State</td> */}
+            <td style={tlData}>State</td>
+            <td style={tlData}>Time</td>
+          </tr>
+          <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
+            <td style={tlData}>Default</td>
+            {/* <td style={tlDataCol}>{tlCombState.state}</td> */}
+            <td style={tlDataCol}>⬤</td>
+            <td style={tlData}>{combinedTLState[index].totalTime}</td>
+          </tr>
+          <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
+            <td style={tlData}>Optimized</td>
+            {/* <td style={tlDataCol2}>{tlCombState.state2}</td> */}
+            <td style={tlDataCol2}>⬤</td>
+            <td style={tlData}>{combinedTLState[index].totalTime2}</td>
+          </tr>
+          <tr>
+            <td colSpan={4}>
+              <Divider classes={{ root: classes.dividerGrey }} />
+            </td>
+          </tr>
+        </div>
+      );
     }
+    return (<div />);
+  };
 
-    if (tlCombState.state2 === 'red') {
-      tlDataCol2.color = '#FF0000';
-    } else if (tlCombState.state2 === 'green') {
-      tlDataCol2.color = '#00FF00';
-    } else if (tlCombState.state2 === 'yellow') {
-      tlDataCol2.color = '#f5c842';
+
+  // traffic light comparison layout 1
+  // const tlStateComponent1 = (): JSX.Element => (
+  //   <div>
+  //     <table style={{ display: 'block' }}>
+  //       <tbody className={classes.tlTable}>
+  //         {tlDiv}
+  //       </tbody>
+  //     </table>
+  //   </div>
+  // );
+
+  // traffic light comparison layout 2
+  const tlStateComponent2 = (): JSX.Element => {
+    const tlData = {
+      color: SKEYE_WHITE,
+      fontSize: '0.8em',
+      margin: 'auto',
+      display: 'table-cell',
+    };
+
+    return (
+      <div>
+        <Divider classes={{ root: classes.dividerGrey }} />
+        <table style={{ display: 'block' }}>
+          <tbody className={classes.tlTable}>
+            <tr className={classes.tlTRow}>
+              <td style={tlData} colSpan={3}>
+                Loop countdown:
+              </td>
+            </tr>
+            <tr className={classes.tlTRow}>
+              <td style={tlData} colSpan={2}>
+                Default
+              </td>
+              <td style={tlData}>{loopCountDown}</td>
+            </tr>
+            <tr className={classes.tlTRow}>
+              <td style={tlData} colSpan={2}>
+                Optimized
+              </td>
+              <td style={tlData}>{loopCountDown2}</td>
+            </tr>
+            <Divider classes={{ root: classes.dividerGrey }} />
+            {tlAtDiv(0, tlCombStates)}
+            {tlAtDiv(1, tlCombStates)}
+            {tlAtDiv(2, tlCombStates)}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  const tlDoCompare = (isLiveFeed: boolean): JSX.Element => {
+    if (isLiveFeed) {
+      return (<div />);
     }
     return (
-      <div key={tlCombState.direction} style={{ display: 'table-row-group' }}>
-        <tr className={classes.tlTRow}>
-          <td style={tlData}>Direction</td>
-          <td style={tlData} colSpan={3}>{tlCombState.direction}</td>
-        </tr>
-        <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>Type</td>
-          <td style={tlData}>State</td>
-          <td style={tlData}>Count</td>
-          <td style={tlData}>Time</td>
-        </tr>
-        <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>non-smart</td>
-          <td style={tlDataCol}>{tlCombState.state}</td>
-          <td style={tlDataCol}>{tlCombState.countDown}</td>
-          <td style={tlData}>{tlCombState.totalTime}</td>
-        </tr>
-        <tr className={classes.tlTRow} style={{ textAlign: 'center' }}>
-          <td style={tlData}>smart</td>
-          <td style={tlDataCol2}>{tlCombState.state2}</td>
-          <td style={tlDataCol2}>{tlCombState.countDown2}</td>
-          <td style={tlData}>{tlCombState.totalTime2}</td>
-        </tr>
+      <div>
+        {/* For the Traffic Light Comparison */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
+            aria-controls="panel2a-content"
+            id="panel2a-header"
+          >
+            <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+            {tlStateComponent2()}
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <Divider classes={{ root: classes.dividerWhite }} />
+
+        {/* For the simulator options */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
+            aria-controls="panel3a-content"
+            id="panel3a-header"
+          >
+            <text style={skeyeStyles.Header}> Simulator </text>
+            <Divider classes={{ root: classes.dividerGrey }} />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+            <DivVertical>
+              <text style={skeyeStyles.TextMessage}>
+                Starts generating sample vehicles.
+              </text>
+              <Button variant="contained" style={skeyeStyles.ButtonStyle} onClick={onClickSimuStart}>
+                <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon} />
+                START
+              </Button>
+              {/* <Button variant="contained" style={skeyeStyles.ButtonStyle}>
+                <SettingsIcon style={skeyeStyles.SettingsMenuIcon}/>
+                SETTINGS
+              </Button> */}
+            </DivVertical>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+
+        <Divider classes={{ root: classes.dividerWhite }} />
+
+        {/* For the emergency option */}
+        <ExpansionPanel style={skeyeStyles.Expansion}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
+            aria-controls="panel4a-content"
+            id="panel4a-header"
+          >
+            <text style={skeyeStyles.Header}> Emergency Mode </text>
+            <Divider
+              classes={{ root: classes.dividerGrey }}
+            />
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
+            <DivVertical>
+              <text style={skeyeStyles.TextMessage}>
+                To change all traffic lights to red for emergency operations
+              </text>
+              <Button
+                variant="contained"
+                style={eBtnStyle}
+                onClick={onClickEmergency}
+              >
+                {emergencyButton}
+              </Button>
+            </DivVertical>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <Divider classes={{ root: classes.dividerWhite }} />
 
       </div>
     );
-  });
+  };
+
 
   // Returns the UI for the sidebar
   return (
@@ -285,7 +522,7 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
 
         {/* For the modes options */}
         {/* {console.log(keyPassed)} */}
-        { keyValue === '1'
+        {keyValue === '1'
           ? (
             <ExpansionPanel style={skeyeStyles.Expansion}>
               <ExpansionPanelSummary
@@ -343,91 +580,13 @@ const SidebarComponent = (props: SimProps | any): JSX.Element => {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           )
-          : null }
+          : null}
 
         {keyValue === '1'
           ? <Divider classes={{ root: classes.dividerWhite }} />
           : null}
+        {tlDoCompare(isLiveFeed)}
 
-        {/* For the Traffic Light Comparison */}
-        <ExpansionPanel style={skeyeStyles.Expansion}>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
-            aria-controls="panel2a-content"
-            id="panel2a-header"
-          >
-            <text style={skeyeStyles.Header}> Traffic Light Comparison </text>
-            <Divider classes={{ root: classes.dividerGrey }} />
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
-            <table style={{ display: 'block' }}>
-              <tbody className={classes.tlTable}>
-                {tlDiv}
-              </tbody>
-            </table>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-
-        <Divider classes={{ root: classes.dividerWhite }} />
-
-        {/* For the simulator options */}
-        <ExpansionPanel style={skeyeStyles.Expansion}>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
-            aria-controls="panel3a-content"
-            id="panel3a-header"
-          >
-            <text style={skeyeStyles.Header}> Simulator </text>
-            <Divider classes={{ root: classes.dividerGrey }} />
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
-            <DivVertical>
-              <Button variant="contained" style={skeyeStyles.ButtonStyle}>
-                <PowerSettingsNewIcon style={skeyeStyles.SimMenuIcon} />
-                START
-              </Button>
-              {/* <Button variant="contained" style={skeyeStyles.ButtonStyle}>
-                <SettingsIcon style={skeyeStyles.SettingsMenuIcon}/>
-                SETTINGS
-              </Button> */}
-            </DivVertical>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-
-        <Divider classes={{ root: classes.dividerWhite }} />
-
-        {/* For the emergency option */}
-        <ExpansionPanel style={skeyeStyles.Expansion}>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon style={skeyeStyles.IconStyle} />}
-            aria-controls="panel4a-content"
-            id="panel4a-header"
-          >
-            <text style={skeyeStyles.Header}> Emergency Mode </text>
-            <Divider
-              classes={{ root: classes.dividerGrey }}
-            />
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={skeyeStyles.ExpansionDetails}>
-            <DivVertical>
-              <text style={skeyeStyles.TextMessage}>
-                To change all traffic lights to red for emergency operations
-              </text>
-              <Button
-                variant="contained"
-                style={skeyeStyles.EmergencyButton}
-                onClick={onClickTLStop}
-              >
-                {' '}
-                <ReportIcon style={skeyeStyles.StopIcon} />
-                {' '}
-                STOP
-              </Button>
-            </DivVertical>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-
-        <Divider classes={{ root: classes.dividerWhite }} />
       </div>
     </div>
   );

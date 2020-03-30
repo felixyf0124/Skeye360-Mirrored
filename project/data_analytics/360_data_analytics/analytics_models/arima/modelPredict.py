@@ -20,13 +20,25 @@ class modelPredict:
 
     def modelAndPredict(self, dataf, direction):
         # Seperate the data as train set and test set
-        startTestDate = '2020-01-19 00:00:00.000'
-        train = dataf.loc['2020-01-01 00:00:00.000':'2020-01-18 23:00:00.000']
-        test = dataf.loc[startTestDate:'2020-01-26 23:00:00.000']
-        # startTestDate = '2017-12-02 00:00:00.000'
-        # train = nsDataRaw.loc[(nsDataRaw['date']>'2017-08-27 04:00:00.000') & (nsDataRaw['date']<'2017-12-01 23:00:00.000')]
-        # print(train)
-        # test = nsDataRaw.loc[(nsDataRaw['date']>startTestDate) & (nsDataRaw['date']<'2017-12-31 23:00:00.000')]
+        todayDate = datetime.now()
+
+        # Initialize the start and end of train and test sets
+        # To use the following code when we gonna have data flowing into the database every day
+        # startTrainDate = (todayDate - timedelta(days=32)).strftime("%Y-%m-%d") + " 00:00:00.000"
+        # endTrainDate = (todayDate - timedelta(days=2)).strftime("%Y-%m-%d") + " 23:00:00.000"
+        # startTestDate = (todayDate - timedelta(days=1)).strftime("%Y-%m-%d") + " 00:00:00.000"
+        # endTrainDate = todayDate.strftime("%Y-%m-%d") + " 23:00:00.000"
+
+        # Hardcoded datetime, to be removed when having the data flowing into the database every day
+        startTrainDate = '2020-01-01 00:00:00.000'
+        endTrainDate = '2020-01-18 23:00:00.000'
+        startTestDate = '2020-01-26 00:00:00.000'
+        endTestDate = '2020-01-26 23:00:00.000'
+
+        # Divide the data into train and test sets
+        train = dataf.loc[startTrainDate : endTrainDate]
+        test = dataf.loc[startTestDate : endTestDate]
+
         forecastArimaObj = forecastArima()
         forecast = forecastArimaObj.forecastWithArima(train, test)
 
@@ -40,11 +52,11 @@ class modelPredict:
         # Plot the test values on the graph, as well as the forecast/prediction values obtained in the code above
         future_forecast = panda.DataFrame(forecast, index=test.index, columns=['Prediction'])
         panda.concat([test, future_forecast], axis=1).plot()
-        matplot.show()
+        # matplot.show()
 
         # Create a list of date for the prediction based on the date got from the test set
         listOfDate = list()
-        startDateString = str(date.today() + timedelta(days=1))
+        startDateString = str((todayDate + timedelta(days=1)).strftime("%Y-%m-%d"))
         startDateObj = datetime.strptime(startDateString + " 00:00:00", '%Y-%m-%d %H:%M:%S')
         for index in range(test.shape[0]):
             listOfDate.append((startDateObj + timedelta(hours=index)))
@@ -59,4 +71,4 @@ class modelPredict:
         # The following command calls the write method in writeToDatabase.py to write to the mongodb
         wtd.write(direction, forecast, listOfDate, "arima", intersectionID, collection)
         # The following command calls the read method in writeToDatabase.py to read from the mongodb
-        print(wtd.read(collection))
+        # print(wtd.read(collection))

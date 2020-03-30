@@ -8,6 +8,7 @@ export const SKEYE_DARK_GREY = '#161616';
 export const SKEYE_LIGHT_DARK_GREY = '#454545';
 export const SKEYE_LIGHT_BLACK = '#212121';
 export const SKEYE_RED = '#ED1C24';
+export const SKEYE_YELLOW = '#FFFF00';
 export const SKEYE_BRIGHT_GREEN = '#1AFF00';
 
 // MOBILE THRESHOLD WIDTH

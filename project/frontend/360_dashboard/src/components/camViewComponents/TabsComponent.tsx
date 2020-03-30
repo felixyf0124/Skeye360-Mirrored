@@ -8,7 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import SettingsIcon from '@material-ui/icons/Settings';
+// import SettingsIcon from '@material-ui/icons/Settings';
 import styled from 'styled-components';
 import {
   FormControlLabel, Switch, withStyles, FormGroup,
@@ -18,14 +18,18 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import DataAnalyticsComponent from './DataAnalyticsComponent';
-import SimulatorComponent from './SimulatorComponent';
+// import SimulatorComponent from './SimulatorComponent';
+import SimulatorWithTabsComponent from './SimulatorWithTabsComponent';
 import CameraComponent from './CameraComponent';
 // import OverviewComponent from './OverviewComponent';
 import LiveComponent from './LiveComponent';
 import {
-  SKEYE_GREY, SKEYE_DARK_GREY, SKEYE_LIGHT_DARK_GREY, SKEYE_WHITE, SKEYE_GREEN,
+  SKEYE_GREY,
+  SKEYE_DARK_GREY,
+  SKEYE_LIGHT_DARK_GREY,
+  SKEYE_WHITE,
+  SKEYE_GREEN,
 } from '../../css/custom';
-
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -60,34 +64,31 @@ function props(index: any): any {
   };
 }
 
-const BoxSettingsMenu = styled.div`
-  position: absolute;
-  right: 0;
-  background-color: SKEYE_LIGHT_DARK_GREY;
-`;
+// const BoxSettingsMenu = styled.div`
+//   position: absolute;
+//   right: 0;
+//   background-color: SKEYE_LIGHT_DARK_GREY;
+// `;
 
 // Horizontal flexbox styling
 const HorizontalFlexBox = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: left;
-  align-items: left;
   align-content: stretch;
   padding: 0px;
 `;
 
 // Title flexbox styling
 const BoxMain = styled.div`
-    top: 0px;
-    left: 0px;
+  top: 0px;
+  left: 0px;
 `;
 
 // Horizontal box for the entire component
 const BoxHorizontal = styled.div`
-    display: flex;
-    flex-direction: row;
-    margin-left: 5vw;
+  display: flex;
+  flex-direction: row;
 `;
 
 // Box for settings and toggles
@@ -123,7 +124,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: SKEYE_DARK_GREY,
-    width: '94vw',
+    width: '98vw',
   },
   modal: {
     display: 'flex',
@@ -143,7 +144,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 // Custom styling
-const skeyeStyles = {
+export const skeyeStyles = {
   TabBar: {
     backgroundColor: SKEYE_LIGHT_DARK_GREY,
   },
@@ -193,6 +194,9 @@ const skeyeStyles = {
   ControlLabel: {
     marginLeft: 60,
     marginBottom: 42,
+  },
+  Box: {
+    marginTop: 60,
   },
 };
 
@@ -248,12 +252,15 @@ const TabsComponents = (): JSX.Element => {
     setTlStop(!tlStop);
   };
 
-  const onTLUpdate = (tls: Array<{
-    direction: string;
-    state: string;
-    countDown: string;
-    totalTime: string; // G+Y
-  }>, isSmartTL: boolean): any => {
+  const onTLUpdate = (
+    tls: Array<{
+      direction: string;
+      state: string;
+      countDown: string;
+      totalTime: string; // G+Y
+    }>,
+    isSmartTL: boolean,
+  ): any => {
     if (isSmartTL) {
       setTlStates2(tls);
     } else {
@@ -288,13 +295,14 @@ const TabsComponents = (): JSX.Element => {
     // console.log(tlCombStates);
   };
 
+
   const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);
   };
 
-  const handleClickOpen = (): void => {
-    setOpen(true);
-  };
+  // const handleClickOpen = (): void => {
+  //   setOpen(true);
+  // };
 
   const handleClose = (): void => {
     setOpen(false);
@@ -307,13 +315,20 @@ const TabsComponents = (): JSX.Element => {
   return (
     <div className={classes.root}>
       <AppBar position="static" style={skeyeStyles.TabBar}>
-        <Tabs value={value} onChange={handleChangeTab} TabIndicatorProps={{ style: { backgroundColor: 'white' } }}>
+        <Tabs
+          value={value}
+          onChange={handleChangeTab}
+          TabIndicatorProps={{ style: { backgroundColor: 'white' } }}
+        >
           <Tab label="Live Feed" {...props(0)} style={skeyeStyles.TabOnly} />
           <Tab label="Data Analytics" {...props(1)} style={skeyeStyles.TabOnly} />
           <Tab label="Camera" {...props(2)} style={skeyeStyles.TabOnly} />
           <Tab label="Simulator" {...props(3)} style={skeyeStyles.TabOnly} />
 
-          {value === 0 || value === 3
+          {/* this is a setting button. Due to UI modificationm we no need them for our design */}
+          {/* KEEP this in case the stakeholder needs it */}
+          {/* value === 0 is for Live Feed tab and value === 3 is for Simulator tab */}
+          {/* {value === 0
             ? (
               <BoxSettingsMenu style={skeyeStyles.SettingsBox}>
                 <button type="button" style={skeyeStyles.SettingsIcon} onClick={handleClickOpen}>
@@ -321,7 +336,8 @@ const TabsComponents = (): JSX.Element => {
                 </button>
               </BoxSettingsMenu>
             )
-            : null }
+            : null} */}
+
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -329,7 +345,7 @@ const TabsComponents = (): JSX.Element => {
           toggles={state}
           tlMode={tlMode}
           onChangeTLMode={onChangeTLMode}
-          tlStop={tlStop}
+          tlStop={false}
           onClickTLStop={onClickTLStop}
           tlCombStates={tlCombStates}
           onTLUpdate={onTLUpdate}
@@ -343,7 +359,7 @@ const TabsComponents = (): JSX.Element => {
         <CameraComponent />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <SimulatorComponent
+        <SimulatorWithTabsComponent
           toggles={state}
           tlMode={tlMode}
           onChangeTLMode={onChangeTLMode}
@@ -355,6 +371,8 @@ const TabsComponents = (): JSX.Element => {
         />
       </TabPanel>
 
+      {/* The following is the setting toggle form  */}
+      {/* KEEP this in case the stakeholder need it */}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -372,10 +390,11 @@ const TabsComponents = (): JSX.Element => {
             <HorizontalFlexBox>
               <BoxMain>
                 <text id="transition-modal-title" style={skeyeStyles.Title}>Settings for the simulators</text>
+                {' '}
                 {/* <text style={ skeyeStyles.Message }>
                 All your preferences for the simulators will be saved here</text> */}
               </BoxMain>
-              <BoxHorizontal>
+              <BoxHorizontal style={skeyeStyles.Box}>
                 <BoxSettings>
                   <text style={skeyeStyles.SettingsHeader}>Enable video feed</text>
                   <text style={skeyeStyles.SettingsHeader}>Enable sampling of video feed</text>
@@ -440,16 +459,7 @@ const TabsComponents = (): JSX.Element => {
                       label=""
                       style={skeyeStyles.ControlLabel}
                     />
-                    {/* Do we need this save button? */}
-                    {/* <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      className={classes.SaveButton}
-                      startIcon={<SaveIcon />}
-                    >
-                      Save
-                    </Button> */}
+
                   </BoxSettings>
                 </FormGroup>
               </BoxHorizontal>

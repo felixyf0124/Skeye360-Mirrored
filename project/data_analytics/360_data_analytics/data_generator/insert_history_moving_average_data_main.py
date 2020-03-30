@@ -9,7 +9,7 @@ LOGGER = logging.getLogger('insert_history_moving_average_data_main.py')
 def drop_na(data_frame):
     """Drop NA from csv file """
     LOGGER.info("drop NA")
-    return data_frame.dropna(inplace=True)
+    return data_frame.dropna()
 
 
 def main():
@@ -18,6 +18,7 @@ def main():
     read_file_name = 'csv/test.csv'
     index_col = 'date'
     delimiter = ';'
+
     # Step 1: get the csv file
     data_frame = read_format_csv(read_file_name, index_col, delimiter)
     data_frame['value'] = data_frame['value'].rolling(window=4).mean()
@@ -45,7 +46,7 @@ def main():
         count_latest_id = count_latest_id + 1
         new_post.append(new_count)
 
-    # Step 4: insert to db
+    # Step 5: insert to db
     data_base.insert_counts('djangosite_api_count', new_post)
 
 

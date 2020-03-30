@@ -79,7 +79,7 @@ export const getUserData = (): GetUserDataAction => ({
 // selector
 
 // check for authentication
-export const authenticated = (state: { authentication: STATE }): boolean => getUserData() && state.authentication.user_id !== 0 && state.authentication.username !== '';
+export const authenticated = (state: { authentication: STATE }): boolean => state.authentication.user_id !== 0 && state.authentication.username !== '';
 
 // check for staff privilege status
 export const isStaff = (state: { authentication: STATE }): boolean => state.authentication.is_staff === true;
@@ -165,14 +165,9 @@ export default function reducer(state: STATE = initState, action: any): STATE {
       return initState;
     }
     case LOGOUT: {
-      localStorage.removeItem('user');
+      localStorage.clear();
       return {
-        sessionToken: initState.sessionToken,
-        username: initState.username,
-        timestamp: initState.timestamp,
-        error: initState.error,
-        user_id: initState.user_id,
-        is_staff: initState.is_staff,
+        ...initState,
       };
     }
     default:

@@ -29,11 +29,12 @@ class CountSerializer(DjongoModelSerializer):
 
 class IntersectionSerializer(DjongoModelSerializer):
     cameras = CameraSerializer(many=True, read_only=True)
-    counts = CountSerializer(many=True, read_only=True)
+
+    # counts = CountSerializer(many=True, read_only=True)
 
     class Meta:
         model = Intersection
-        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'counts', 'longitude', 'district_id', 'user_id']
+        fields = ['id', 'intersection_name', 'latitude', 'cameras', 'longitude', 'district_id', 'user_id']
 
 
 class DistrictSerializer(DjongoModelSerializer):
@@ -78,7 +79,7 @@ class PedestrianSerializer(DjongoModelSerializer):
 class UserlogSerializer(DjongoModelSerializer):
     class Meta:
         model = Userlog
-        fields = ['log_message', 'log_time']
+        fields = ['log_message', 'log_time', 'user_id']
 
 
 class RegisterSerializer(DjongoModelSerializer):
@@ -102,9 +103,9 @@ class LoginSerializer(DjongoModelSerializer):
 
 
 class UserSerializer(DjongoModelSerializer):
-    user_logs = UserlogSerializer(many=True, read_only=True)
+    # user_logs = UserlogSerializer(many=True, read_only=True)
     intersections = IntersectionSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'is_staff', 'user_logs', 'intersections']
+        fields = ['id', 'username', 'is_staff', 'intersections', 'email']
