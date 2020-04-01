@@ -29,7 +29,7 @@ interface StateProps {
   password2: any;
   email: any;
   isRegistered: boolean;
-  is_staff: boolean;
+  is_staff: any;
   log_message: string;
   sessionToken: string;
   error: string;
@@ -42,7 +42,7 @@ interface DispatchProps {
     username: string,
     password: string,
     email: string,
-    is_staff: boolean,
+    is_staff: any,
   ) => void;
   historyPush: (url: string) => void;
   getUserData: () => GetUserDataAction;
@@ -207,7 +207,9 @@ const Register = (props: StateProps & DispatchProps): JSX.Element => {
   } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setState({ ...state, [e.target.name]: e.target.value });
+    const input = e.target;
+    const value = input.type === 'checkbox' ? input.checked : input.value;
+    setState({ ...state, [input.name]: value });
   };
   // eslint-disable-next-line consistent-return
   const handleSubmit = (): any => {
@@ -314,7 +316,14 @@ const Register = (props: StateProps & DispatchProps): JSX.Element => {
               </div>
               <div className="form-group">
                 <div>
-                  <input name="is_staff" checked={state.is_staff} onChange={handleChange} type="checkbox" style={{ height: '1rem', width: '1rem', verticalAlign: 'middle' }} />
+                  <input
+                    name="is_staff"
+                    checked={state.is_staff}
+                    onChange={handleChange}
+                    type="checkbox"
+                    value=""
+                    style={{ height: '1rem', width: '1rem', verticalAlign: 'middle' }}
+                  />
                   <div className={classes.checkBox}>Register as Admin</div>
                 </div>
               </div>
@@ -348,7 +357,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   email: localStorage.getItem('email'),
   sessionToken: '',
   log_message: '',
-  is_staff: false,
+  is_staff: localStorage.getItem('is_staff'),
   isRegistered: registered(state),
   error: state.register.error,
   success: state.register.success,

@@ -104,7 +104,6 @@ export function* handleRegister({
   try {
     const data = yield call(registerUser, username, password, email, is_staff);
     if (data !== undefined) {
-      console.log(data);
       yield put(registerSuccess(data));
     }
   } catch (e) {
@@ -136,6 +135,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         username: data.username,
         email: data.email,
         error: 'Success! please log in.',
+        is_staff: data.is_staff,
         success: true,
       };
     }
