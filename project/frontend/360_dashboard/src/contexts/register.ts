@@ -104,7 +104,6 @@ export function* handleRegister({
   try {
     const data = yield call(registerUser, username, password, email, is_staff);
     if (data !== undefined) {
-      console.log(data);
       yield put(registerSuccess(data));
     }
   } catch (e) {

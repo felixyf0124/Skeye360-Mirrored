@@ -17,7 +17,6 @@ export const registerUser = async (
   is_staff: any,
 ): Promise<Response> => {
   // ENDPOINT, PARAMS
-  console.log(is_staff);
   const url = `//${APIDomain}/api/auth/register`;
   const params = {
     username,
@@ -30,9 +29,6 @@ export const registerUser = async (
     body: JSON.stringify(params),
     headers: { 'content-type': 'application/json' },
   };
-  
-  console.log(settings);
-
   // POST REQUEST
   const response = await fetch(url, settings);
 
