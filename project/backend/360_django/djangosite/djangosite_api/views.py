@@ -33,7 +33,10 @@ class RegisterAPI(generics.GenericAPIView):
             username = request.data.get('username')
             password = request.data.get('password')
             email = request.data.get('email')
-            is_staff = True if request.data.get('is_staff') == 'true' else False
+            if (request.data.get('is_staff') is True or request.data.get('is_staff') == 'true'):
+                is_staff = True
+            else:
+                is_staff = False
 
             if User.objects.filter(username=username).exists():
                 return JsonResponse({'error': 'Username already exists'})
