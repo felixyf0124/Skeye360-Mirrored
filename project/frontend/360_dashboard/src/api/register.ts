@@ -4,7 +4,7 @@ export interface Response {
     username: string;
     password: string;
     email: string;
-    is_staff: boolean;
+    is_staff: any;
   }
 
 const APIDomain = REACT_APP_API_URL;
@@ -14,9 +14,10 @@ export const registerUser = async (
   username: string,
   password: string,
   email: string,
-  is_staff: boolean,
+  is_staff: any,
 ): Promise<Response> => {
   // ENDPOINT, PARAMS
+  console.log(is_staff);
   const url = `//${APIDomain}/api/auth/register`;
   const params = {
     username,
@@ -29,6 +30,8 @@ export const registerUser = async (
     body: JSON.stringify(params),
     headers: { 'content-type': 'application/json' },
   };
+  
+  console.log(settings);
 
   // POST REQUEST
   const response = await fetch(url, settings);

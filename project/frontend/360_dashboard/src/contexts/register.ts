@@ -136,6 +136,7 @@ export default function reducer(state: STATE = initState, action: any): STATE {
         username: data.username,
         email: data.email,
         error: 'Success! please log in.',
+        is_staff: data.is_staff,
         success: true,
       };
     }
