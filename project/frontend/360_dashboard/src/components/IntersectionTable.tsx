@@ -105,7 +105,11 @@ interface DispatchProps {
   ) => SetCoordAction;
 }
 
-const filterList = (isStaff: boolean, user_id: number, assigned_user_id: number): boolean => {
+export const filterList = (
+  isStaff: boolean,
+  user_id: number,
+  assigned_user_id: number,
+): boolean => {
   if (isStaff) {
     return true;
   }
