@@ -111,6 +111,11 @@ const AddButton = styled.div`
   margin: 1rem;
 `;
 
+const Loader = styled.div`
+  margin-top: 4rem;
+  text-align: center;
+`;
+
 interface StateProps {
   appZoom: number;
   currentDistrict: string;
@@ -243,7 +248,12 @@ const Home = (props: StateProps & DispatchProps): JSX.Element => {
             </AppBar>
             <TabPanel value={value} index={0}>
               <Map>
-                <GoogleMap districts={districts} districtName={currentDistrict} />
+                <GoogleMap
+                  districts={districts}
+                  districtName={currentDistrict}
+                  isStaff={isStaff}
+                  user_id={user_id}
+                />
               </Map>
             </TabPanel>
             <TabPanel value={value} index={1}>
@@ -256,7 +266,11 @@ const Home = (props: StateProps & DispatchProps): JSX.Element => {
       </Content>
     );
   }
-  return <CircularProgress />;
+  return (
+    <Loader>
+      <CircularProgress />
+    </Loader>
+  );
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({
