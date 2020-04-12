@@ -20,7 +20,7 @@ import * as tsData from './TSLocalData';
 import ndata1 from './traffic_normal_case.csv';
 import edata1 from './traffic_edge_case.csv';
 import { RootState } from '../../reducers/rootReducer';
-import { logClick } from '../../contexts/LogClicks';
+import { logClick } from '../../contexts/logClicks';
 import * as tlUpdateHelper from './simulator_management/tlUpdateHelper';
 
 // import 'pixi-text-input.js';

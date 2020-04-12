@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { editExistingCamera, EditCameraAction } from '../../contexts/camera';
 import { RootState } from '../../reducers/rootReducer';
-import { logClick } from '../../contexts/LogClicks';
+import { logClick } from '../../contexts/logClicks';
 import DeleteCameraButton from '../DeleteCameraButton';
 
 // Generic flexboxes styling

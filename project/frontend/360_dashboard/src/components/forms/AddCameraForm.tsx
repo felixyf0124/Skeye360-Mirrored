@@ -6,7 +6,7 @@ import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import { RootState } from '../../reducers/rootReducer';
 import { addNewCamera } from '../../contexts/camera';
-import { logClick } from '../../contexts/LogClicks';
+import { logClick } from '../../contexts/logClicks';
 
 const useStyles = makeStyles(() => ({
   root: {

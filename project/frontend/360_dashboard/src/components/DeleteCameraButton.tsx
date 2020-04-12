@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { RootState } from '../reducers/rootReducer';
 
-import { logClick, LogAction } from '../contexts/LogClicks';
+import { logClick, LogAction } from '../contexts/logClicks';
 import { deleteExistingCamera, DeleteCameraAction } from '../contexts/camera';
 
 export const useStyles = makeStyles(() => ({

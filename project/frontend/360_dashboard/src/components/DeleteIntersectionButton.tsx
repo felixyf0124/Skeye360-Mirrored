@@ -13,7 +13,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { RootState } from '../reducers/rootReducer';
 
-import { logClick, LogAction } from '../contexts/LogClicks';
+import { logClick, LogAction } from '../contexts/logClicks';
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
 
 interface Props {

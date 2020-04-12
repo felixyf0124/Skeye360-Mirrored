@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
-import { logClick } from '../contexts/LogClicks';
+import { logClick } from '../contexts/logClicks';
 
 export const Head = styled.div`
   display: flex;

@@ -23,7 +23,7 @@ import {
   ResetDistrictAction,
 } from '../contexts/districts';
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
-import { logClick, LogAction } from '../contexts/LogClicks';
+import { logClick, LogAction } from '../contexts/logClicks';
 import TrafficNews from '../components/TrafficNews';
 import GoogleMap from '../components/GoogleMap';
 import { LOW_RES, MOBILE_DEVICE_MAX_WIDTH, SKEYE_DARK_GREY } from '../css/custom';
