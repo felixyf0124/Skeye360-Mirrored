@@ -21,7 +21,7 @@ import {
   ResetDistrictAction,
 } from '../contexts/districts';
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
-import { logClick, LogAction } from '../contexts/LogClicks';
+import { logClick, LogAction } from '../contexts/logClicks';
 import { LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 import { getUsers, STATE as userState, GetUsersAction } from '../contexts/users';
 
@@ -181,19 +181,12 @@ const useStyles = makeStyles(() => ({
 // eslint-disable-next-line consistent-return
 const Profile = (props: StateProps & DispatchProps): any => {
   const {
-    districts,
-    currentDistrict,
-    profile,
-    username,
-    isStaff,
-    email,
+    districts, currentDistrict, profile, username, isStaff, email,
   } = props;
 
   const classes = useStyles();
   const [state] = React.useState(props);
-  const {
-    id,
-  } = state;
+  const { id } = state;
   useEffect(() => {
     profile(id);
   });
@@ -221,7 +214,6 @@ const Profile = (props: StateProps & DispatchProps): any => {
                       <Grid item>
                         <div>
                           ID:
-                          {' '}
                           {id}
                         </div>
                       </Grid>
@@ -235,7 +227,6 @@ const Profile = (props: StateProps & DispatchProps): any => {
                       <Grid item>
                         <div>
                           Username:
-                          {' '}
                           {username}
                         </div>
                       </Grid>
@@ -249,11 +240,7 @@ const Profile = (props: StateProps & DispatchProps): any => {
                       <Grid item>
                         <div>
                           Staff:
-                          {
-                              isStaff
-                                ? ' yes'
-                                : ' no'
-                          }
+                          {isStaff ? ' yes' : ' no'}
                         </div>
                       </Grid>
                     </Grid>
@@ -266,7 +253,6 @@ const Profile = (props: StateProps & DispatchProps): any => {
                       <Grid item>
                         <div>
                           Email:
-                          {' '}
                           {email}
                         </div>
                       </Grid>

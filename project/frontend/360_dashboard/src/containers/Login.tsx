@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
 import { RootState } from '../reducers/rootReducer';
 import { authenticate, authenticated } from '../contexts/authentication';
-import { logClick } from '../contexts/LogClicks';
+import { logClick } from '../contexts/logClicks';
 import { SKEYE_RED } from '../css/custom';
 
 const Error = styled.h6`

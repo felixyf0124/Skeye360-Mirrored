@@ -176,9 +176,9 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
   // The data gets retrieved here, in future implementations: Use async fetch from the database
   public async componentDidMount(): Promise<void> {
     const { chartID, countDirection } = this.props;
-    // const date = new Date().toISOString().split('T')[0];
+    const date = new Date().toISOString().split('T')[0];
     const time = new Date();
-    const date = '2020-01-31';
+    // const date = '2020-01-31';
     const arimaData = await fetchCount('arima', countDirection, date);
     const movingAverageData = await fetchCount('MA', countDirection, date);
     let current_arima: countData[] = [];
@@ -194,6 +194,7 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
       // ApexCharts.exec() takes in chart ID, method, and data as parameters
       /* eslint-disable no-undef */
       ApexCharts.exec(chartID, 'updateSeries', [{ data: current_arima }, { data: current_mavg }]);
+      // FOR DEBUG PURPOSE
       // console.log(chartID);
       // console.log(current_arima);
       // console.log(current_mavg);

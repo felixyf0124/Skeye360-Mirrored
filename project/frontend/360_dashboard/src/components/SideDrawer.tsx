@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import { RootState } from '../reducers/rootReducer';
 import { logout, authenticated } from '../contexts/authentication';
-import { logClick } from '../contexts/LogClicks';
+import { logClick } from '../contexts/logClicks';
 import Weather from './Weather';
 // import { MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 

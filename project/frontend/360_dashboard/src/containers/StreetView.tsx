@@ -10,7 +10,7 @@ import {
   resetIntersection as resetCurrentIntersection,
   ResetIntersectionAction,
 } from '../contexts/intersection';
-import { logClick } from '../contexts/LogClicks';
+import { logClick } from '../contexts/logClicks';
 import GoogleMiniMap from '../components/GoogleMiniMap';
 import { SKEYE_WHITE, LOW_RES, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 // import DisplayCount from '../components/DisplayMovAVG';
