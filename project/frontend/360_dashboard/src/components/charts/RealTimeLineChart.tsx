@@ -18,6 +18,7 @@ async function loadArima(predictionData: countData[]): Promise<countData[]> {
   try {
     /* eslint-disable no-plusplus */
     // Populate the entire arima dataset if count is equal to zero
+    // prediction data loads once per hour, but chart x axis interval is 15mins
     for (let i = 0; i < predictionData.length; i++) {
       current_arima.push(predictionData[i].count);
       current_arima.push(predictionData[i].count);
@@ -41,6 +42,8 @@ async function loadMovingAverage(
     // Populate the moving average displayed on graph one by one
     if (COUNT < date.getHours()) {
       // populate the line chart
+      // will populate the same count 4x
+      // the chart is based on an interval of 15mins
       if (COUNT === 0) {
         current_mavg.push(movingAverageData[COUNT].count);
         current_mavg.push(movingAverageData[COUNT + 1].count);
@@ -115,6 +118,7 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
         markers: {
           size: 0,
         },
+        // 0-95 -> size = 96 = 4*24, because moving average is updated every 15minutes.
         xaxis: {
           min: 0,
           max: 95,
@@ -176,9 +180,10 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
   // The data gets retrieved here, in future implementations: Use async fetch from the database
   public async componentDidMount(): Promise<void> {
     const { chartID, countDirection } = this.props;
-    // const date = new Date().toISOString().split('T')[0];
+    // get today's date
+    const date = new Date().toISOString().split('T')[0];
     const time = new Date();
-    const date = '2020-01-31';
+    // const date = '2020-01-31';
     const arimaData = await fetchCount('arima', countDirection, date);
     const movingAverageData = await fetchCount('MA', countDirection, date);
     let current_arima: countData[] = [];
@@ -194,10 +199,12 @@ class RealTimeLine extends React.Component<{} & Props, ChartState> {
       // ApexCharts.exec() takes in chart ID, method, and data as parameters
       /* eslint-disable no-undef */
       ApexCharts.exec(chartID, 'updateSeries', [{ data: current_arima }, { data: current_mavg }]);
+      // FOR DEBUG PURPOSE
       // console.log(chartID);
       // console.log(current_arima);
       // console.log(current_mavg);
       COUNT++;
+      // interval will be shorter overtime so animation becomes faster.
     }, 1000 / time.getHours());
   }
 

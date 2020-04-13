@@ -10,7 +10,6 @@ import Profile from './containers/Profile';
 import './css/App.css';
 import AddIntersection from './containers/AddIntersection';
 import EditIntersection from './containers/EditIntersection';
-import ChartsPrototype from './components/charts/ChartsPrototype';
 import SessionRoutes from './SessionRoutes';
 import { authenticated, isStaff } from './contexts/authentication';
 import Home from './containers/Home';
@@ -33,7 +32,6 @@ const App = ({ authenticated, isStaff }: StateProps): JSX.Element => (
         <SessionRoutes authenticated={authenticated}>
           <Route exact path="/" component={Home} />
           <Route exact path="/camview/:intersectionId" component={CamView} />
-          <Route exact path="/chartsprototype" component={ChartsPrototype} />
           <AdminRoutes authenticated={authenticated} isStaff={isStaff}>
             <Route exact path="/intersection/add" component={AddIntersection} />
             <Route

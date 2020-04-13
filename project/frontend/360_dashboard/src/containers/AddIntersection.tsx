@@ -19,7 +19,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { RootState } from '../reducers/rootReducer';
 import { addNewIntersection } from '../contexts/intersection';
-import { logClick } from '../contexts/LogClicks';
+import { logClick } from '../contexts/logClicks';
 import { STATE as userState } from '../contexts/users';
 import { SKEYE_GREY, MOBILE_DEVICE_MAX_WIDTH } from '../css/custom';
 

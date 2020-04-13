@@ -23,7 +23,7 @@ import {
   ResetDistrictAction,
 } from '../contexts/districts';
 import { deleteExistingIntersection, DeleteIntersectionAction } from '../contexts/intersection';
-import { logClick, LogAction } from '../contexts/LogClicks';
+import { logClick, LogAction } from '../contexts/logClicks';
 import TrafficNews from '../components/TrafficNews';
 import GoogleMap from '../components/GoogleMap';
 import { LOW_RES, MOBILE_DEVICE_MAX_WIDTH, SKEYE_DARK_GREY } from '../css/custom';
@@ -109,6 +109,11 @@ const Map = styled.div`
 const AddButton = styled.div`
   float: right;
   margin: 1rem;
+`;
+
+const Loader = styled.div`
+  margin-top: 4rem;
+  text-align: center;
 `;
 
 interface StateProps {
@@ -243,7 +248,12 @@ const Home = (props: StateProps & DispatchProps): JSX.Element => {
             </AppBar>
             <TabPanel value={value} index={0}>
               <Map>
-                <GoogleMap districts={districts} districtName={currentDistrict} />
+                <GoogleMap
+                  districts={districts}
+                  districtName={currentDistrict}
+                  isStaff={isStaff}
+                  user_id={user_id}
+                />
               </Map>
             </TabPanel>
             <TabPanel value={value} index={1}>
@@ -256,7 +266,11 @@ const Home = (props: StateProps & DispatchProps): JSX.Element => {
       </Content>
     );
   }
-  return <CircularProgress />;
+  return (
+    <Loader>
+      <CircularProgress />
+    </Loader>
+  );
 };
 
 const mapStateToProps = (state: RootState): StateProps => ({

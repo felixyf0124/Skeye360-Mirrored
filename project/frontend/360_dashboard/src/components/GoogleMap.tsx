@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-key */
 import React, { useState, useEffect } from 'react';
 import GoogleMapReact from 'google-map-react';
@@ -6,12 +7,15 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Marker from './Marker';
 import { STATE as districtState } from '../contexts/districts';
 import { RootState } from '../reducers/rootReducer';
+import { filterList } from './IntersectionTable';
 
 const API_KEY = 'AIzaSyDF3Bsq5rm-uhEMAqqyMqzgc-dXUPl9Byw';
 
 interface Props {
   districts: districtState;
   districtName: string;
+  isStaff: boolean;
+  user_id: number;
 }
 
 interface StateProps {
@@ -31,6 +35,8 @@ const GoogleMap = (props: Props & StateProps): JSX.Element => {
     districtLng,
     defaultDistrictLat,
     defaultDistrictLng,
+    isStaff,
+    user_id,
   } = props;
   const [center, setCenter] = useState({ lat: defaultDistrictLat, lng: defaultDistrictLng });
   const [zoom, setZoom] = useState(appZoom);
@@ -58,7 +64,7 @@ const GoogleMap = (props: Props & StateProps): JSX.Element => {
         zoom={zoom}
         layerTypes={layerTypes}
       >
-        {districts[districtName].intersections.map((intersection) => (
+        {districts[districtName].intersections.map((intersection) => (filterList(isStaff, user_id, intersection.user_id) ? (
           <Marker
             key={intersection.id}
             name={intersection.intersection_name}
@@ -68,7 +74,9 @@ const GoogleMap = (props: Props & StateProps): JSX.Element => {
             color="red"
             link="/#map"
           />
-        ))}
+        ) : (
+          <div />
+        )))}
       </GoogleMapReact>
     );
   }

@@ -10,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { editExistingIntersection, EditIntersectionAction } from '../../contexts/intersection';
 import { RootState } from '../../reducers/rootReducer';
-import { logClick } from '../../contexts/LogClicks';
+import { logClick } from '../../contexts/logClicks';
 import { getUsers, STATE as userState } from '../../contexts/users';
 import { SKEYE_GREY } from '../../css/custom';
 
@@ -230,7 +230,13 @@ const EditIntersectionForm = (props: Props & StateProps & DispatchProps): JSX.El
                     aria-label="Assigned Operator"
                     onClick={handleClickListItem}
                     style={{
-                      backgroundColor: `${SKEYE_GREY}`, width: 'fit-content', marginLeft: '1rem', color: 'black', borderRadius: '5px', paddingTop: 0, paddingBottom: 0,
+                      backgroundColor: `${SKEYE_GREY}`,
+                      width: 'fit-content',
+                      marginLeft: '1rem',
+                      color: 'black',
+                      borderRadius: '5px',
+                      paddingTop: 0,
+                      paddingBottom: 0,
                     }}
                   >
                     <ListItemText
